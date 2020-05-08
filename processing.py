@@ -1,5 +1,8 @@
-from climpyrical.mask import *
-from climpyrical.gridding import *
+from climpyrical.gridding import (
+    flatten_coords,
+    transform_coords,
+    find_element_wise_nearest_pos,
+)
 
 import numpy as np
 
@@ -27,7 +30,9 @@ def coord_prep(ds, df, station_dv, dv):
     lat = lat.reshape(shape)
     station_value = np.ones(shape, dtype=object) * "No Station"
 
-    ix, iy = find_element_wise_nearest_pos(rlon, rlat, df.rlon.values, df.rlat.values)
+    ix, iy = find_element_wise_nearest_pos(
+        rlon, rlat, df.rlon.values, df.rlat.values
+    )
     station_value[iy, ix] = df[station_dv].values
 
     return lon, lat, station_value

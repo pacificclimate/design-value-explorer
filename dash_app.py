@@ -1,10 +1,7 @@
-from climpyrical.mask import *
-from climpyrical.gridding import *
-from climpyrical.datacube import *
-import climpyrical as cp
-from polygons import *
-from colorbar import *
-from processing import *
+from climpyrical.datacube import read_data
+from polygons import load_north_america_polygons_plotly
+from colorbar import get_cmap_divisions
+from processing import coord_prep
 
 import dash
 from dash.dependencies import Input, Output
@@ -14,20 +11,13 @@ import dash_bootstrap_components as dbc
 import dash_daq as daq
 import plotly.graph_objects as go
 import numpy as np
-import xarray as xr
-
-import matplotlib
-from matplotlib import cm
 
 import flask
 import pandas as pd
-import time
 import os
 
 import yaml
 
-import geopandas as gpd
-from shapely.geometry import MultiPolygon, Polygon
 
 with open("config.yml", "r") as ymlfile:
     cfg = yaml.load(ymlfile)
@@ -39,11 +29,16 @@ X, Y = load_north_america_polygons_plotly(cfg["polygon"]["path"])
 fields = [
     read_data(path, name)
     for path, name in list(
-        zip(cfg["data"]["fields"]["paths"], cfg["data"]["fields"]["key_name_in_netcdf"])
+        zip(
+            cfg["data"]["fields"]["paths"],
+            cfg["data"]["fields"]["key_name_in_netcdf"],
+        )
     )
 ]
 DS = dict(zip(cfg["data"]["names"], fields))
-KEYS = dict(zip(cfg["data"]["names"], cfg["data"]["fields"]["key_name_in_netcdf"]))
+KEYS = dict(
+    zip(cfg["data"]["names"], cfg["data"]["fields"]["key_name_in_netcdf"])
+)
 
 
 def load_sftlf_mask(mask, dvmask):
@@ -107,7 +102,9 @@ app.layout = html.Div(
             [
                 dbc.Col(
                     [
-                        html.H1("National Building Code Design Value Explorer"),
+                        html.H1(
+                            "National Building Code Design Value Explorer"
+                        ),
                         dcc.Dropdown(
                             id="dropdown",
                             options=dd_options,
@@ -126,7 +123,9 @@ app.layout = html.Div(
                 dbc.Col(
                     [
                         html.Div(id="mask-output-container"),
-                        daq.ToggleSwitch(id="toggle-switch", size=50, value=False),
+                        daq.ToggleSwitch(
+                            id="toggle-switch", size=50, value=False
+                        ),
                         html.Div(id="slider-output-container"),
                         dcc.Slider(
                             id="slider",
@@ -326,7 +325,9 @@ def update_ds(
             "font": dict(size=24),
             "xaxis": dict(range=[-30, 30]),
             "yaxis": dict(range=[-30, 30]),
-            "hoverlabel": dict(bgcolor="white", font_size=16, font_family="Rockwell"),
+            "hoverlabel": dict(
+                bgcolor="white", font_size=16, font_family="Rockwell"
+            ),
             "width": 1000,
             "height": 750,
             "showlegend": True,

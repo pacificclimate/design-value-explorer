@@ -1,7 +1,7 @@
 from climpyrical.mask import rotate_shapefile
 
 import geopandas as gpd
-from shapely.geometry import MultiPolygon, Polygon
+from shapely.geometry import MultiPolygon
 
 
 def load_north_america_polygons_plotly(path_to_shapefile: str) -> str:
