@@ -1,0 +1,36 @@
+polygon:
+    path: './assets/data/ne_10m_admin_1_states_provinces.shp'
+
+data:
+    names:
+        - 'SL50 (kPa)'
+        - 'HDD (degC-day)'
+    mask:
+        paths:
+            - './assets/data/land_mask_CanRCM4_sftlf.nc'
+        key_name_in_netcdf:
+            - 'sftlf'
+    fields:  
+        paths:
+            - './assets/data/snow_only_ensemble.nc'
+            - './assets/data/hdd_CanRCM4-LE_ens35_1951-2016_ann_ta.nc'
+        key_name_in_netcdf:
+            - 'snw'
+            - 'heating_degree_days_per_time_period'
+        colorbar:
+            minimum:
+                - -1
+                - 100
+            maximum:
+                - 15
+                - 16000
+            step:
+                - 0.5
+                - 100
+            default:
+                - [0, 10]
+                - [100, 15000]
+    stations:
+        paths:
+            - './assets/data/snow_stations.csv'
+            - './assets/data/hdd_rot.csv' 
