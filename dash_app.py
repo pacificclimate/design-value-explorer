@@ -1,3 +1,11 @@
+from climpyrical.mask import *
+from climpyrical.gridding import *
+from climpyrical.datacube import *
+import climpyrical as cp
+from polygons import *
+from colorbar import *
+from processing import *
+
 import dash
 from dash.dependencies import Input, Output
 import dash_core_components as dcc
@@ -16,13 +24,6 @@ import pandas as pd
 import time
 import os
 
-from climpyrical.mask import *
-from climpyrical.gridding import *
-from climpyrical.datacube import *
-import climpyrical as cp
-from polygons import *
-from colorbar import *
-
 import yaml
 
 import geopandas as gpd
@@ -37,6 +38,7 @@ X, Y = load_north_america_polygons_plotly(cfg['polygon']['path'])
 # create dict of field data from config
 fields = [read_data(path, name) for path, name in list(zip(cfg['data']['fields']['paths'], cfg['data']['fields']['key_name_in_netcdf']))]
 DS = dict(zip(cfg['data']['names'], fields))
+KEYS = dict(zip(cfg['data']['names'], cfg['data']['fields']['key_name_in_netcdf']))
 
 def load_sftlf_mask(mask, dvmask):
     mask = mask.squeeze('time')
@@ -221,40 +223,17 @@ def update_ds(toggle_value, toggle_station_value, dd_value, slider_value, range_
     zmin = range_slider[0]
     zmax = range_slider[1]
 
-    dv, station_dv = values[dd_value], dd_value
+    dv, station_dv = KEYS[dd_value], dd_value
     ds = DS[dd_value]
     df = DF[dd_value]
 
     ds_arr =  ds[dv].values.copy()
-    rlon, rlat = ds.rlon.values, ds.rlat.values
-
-    # clean up to include in original IO
+    
+    lon, lat, station_value_grid = coord_prep(ds, df, station_dv, dv)
 
     if toggle_value:
         mask = MASK['mask']
         ds_arr[0, ~mask] = np.nan
-
-    source_crs={"init": "epsg:4326"}
-    target_crs={
-        "proj": "ob_tran",
-        "o_proj": "longlat",
-        "lon_0": -97,
-        "o_lat_p": 42.5,
-        "a": 6378137,
-        "to_meter": 0.0174532925199,
-        "no_defs": True
-    }
-
-    rlonx, rlaty = flatten_coords(rlon, rlat, ds)
-    lon, lat = transform_coords(rlonx, rlaty, source_crs=target_crs, target_crs=source_crs)
-
-    lon = lon.reshape((ds_arr.shape[1], ds_arr.shape[2]))
-    lat = lat.reshape((ds_arr.shape[1], ds_arr.shape[2]))
-
-    station_value = np.ones((ds_arr.shape[1], ds_arr.shape[2]), dtype=object)*'No Station'
-
-    ix, iy = find_element_wise_nearest_pos(rlon, rlat, df.rlon.values, df.rlat.values)
-    station_value[iy, ix] = df[station_dv].values
 
     fig = {'data': 
                 [
@@ -268,9 +247,9 @@ def update_ds(toggle_value, toggle_station_value, dd_value, slider_value, range_
                   line=dict(width=0.5, color='black')),
                 go.Heatmap(
                     z=ds_arr[0, ...],
-                    x=rlon,
-                    y=rlat,
-                    customdata=np.dstack((lon, lat, station_value)),
+                    x=ds.rlon,
+                    y=ds.rlat,
+                    customdata=np.dstack((lon, lat, station_value_grid)),
                     zmin=zmin,
                     zmax=zmax,
                     hoverongaps = True,
