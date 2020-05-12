@@ -36,17 +36,19 @@ fields = [
     )
 ]
 DS = dict(zip(cfg["data"]["names"], fields))
+
+# create dict of data names and its corresponding key
 KEYS = dict(
     zip(cfg["data"]["names"], cfg["data"]["fields"]["key_name_in_netcdf"])
 )
 
-
+# load mask 
 def load_sftlf_mask(mask, dvmask):
     mask = mask.squeeze("time")
     mask = mask.drop("time")
     return mask[dvmask].values >= 1.0
 
-
+# create a mask dict
 MASK = {
     "mask": load_sftlf_mask(
         read_data(
@@ -64,12 +66,8 @@ DF = dict(zip(cfg["data"]["names"], stations))
 
 # initialize app
 server = flask.Flask("app")
-server.secret_key = os.environ.get("secret_key", "secret")
 
 app = dash.Dash("app", server=server)
-
-app.scripts.config.serve_locally = False
-
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
@@ -78,6 +76,10 @@ dd_options = [dict(label=name, value=name) for name in cfg["data"]["names"]]
 
 strs = [str(val) for val in range(0, 20, 2)]
 markers = dict(zip(list(range(0, 20, 2)), strs))
+
+strs_opacity = [str(val) for val in np.linspace(0, 1, 0.1)]
+markers_opacity = dict(zip(list(np.linspace(0, 1, 0.1)), strs_opacity))
+
 
 colorbar_params = [
     {
@@ -98,92 +100,75 @@ for d in colorbar_params:
 app.layout = html.Div(
     id="big-app-container",
     children=[
-        dbc.Row(
-            [
-                dbc.Col(
-                    [
-                        html.H1(
-                            "National Building Code Design Value Explorer"
-                        ),
-                        dcc.Dropdown(
-                            id="dropdown",
-                            options=dd_options,
-                            value=cfg["data"]["names"][0],
-                            placeholder="Select a design value to display...",
-                            searchable=False,
-                            clearable=False,
-                        ),
-                        html.Br(),
-                        html.Div(id="item-display"),
-                        dcc.Graph(id="my-graph"),
-                    ],
-                    align="right",
-                    width="auto",
-                ),
-                dbc.Col(
-                    [
-                        html.Div(id="mask-output-container"),
-                        daq.ToggleSwitch(
-                            id="toggle-switch", size=50, value=False
-                        ),
-                        html.Div(id="slider-output-container"),
-                        dcc.Slider(
-                            id="slider",
-                            min=2,
-                            max=20,
-                            step=1,
-                            value=10,
-                            marks=markers,
-                            vertical=True,
-                        ),
-                    ],
-                    align="right",
-                    width=1,
-                ),
-                dbc.Col(
-                    [
-                        html.Div(id="station-output-container"),
-                        daq.ToggleSwitch(
-                            id="toggle-station-switch", size=50, value=False
-                        ),
-                        html.Div(id="range-slider-output-container"),
-                        dcc.RangeSlider(
-                            id="range-slider",
-                            min=-1,
-                            max=15,
-                            step=0.5,
-                            vertical=True,
-                            value=[0, 10],
-                        ),
-                    ],
-                    align="right",
-                    width=1,
-                ),
-                dbc.Col(
-                    [
-                        html.Div(id="opacity-slider-output-container"),
-                        dcc.Slider(
-                            id="opacity-slider",
-                            min=0,
-                            max=1,
-                            step=0.05,
-                            vertical=True,
-                            value=0.9,
-                        ),
-                    ],
-                    align="right",
-                    width=1,
-                ),
+              dbc.Row([
+                        dbc.Col([html.H1("National Building Code Design Value Explorer"),
+                            dcc.Dropdown(
+                                id="dropdown",
+                                options=dd_options,
+                                value=cfg["data"]["names"][0],
+                                placeholder="Select a design value to display...",
+                                searchable=False,
+                                clearable=False,
+                            ), 
+                            html.Br(), 
+                            html.Div(id="item-display")])
+                        ]),
+              dbc.Row([
+                        dbc.Col([
+                                dcc.Graph(id="my-graph")], 
+                                align="center", width='auto'),
+                        dbc.Col([
+                                html.H4('Overlay Options'),
+                                dbc.Row(html.Div(id="mask-output-container", style={'align': 'center'})),
+                                dbc.Row(daq.ToggleSwitch(id="toggle-switch", size=50, value=True)),
+                                dbc.Row(html.Div(id="station-output-container")),
+                                dbc.Row(daq.ToggleSwitch( id="toggle-station-switch", size=50, value=False)),
+                                html.H4('Colorbar Options'),
+                                dbc.Row(html.Div(id="slider-output-container")),
+                                dbc.Row(
+                                    html.Div(
+                                        dcc.Slider(
+                                            id="slider",
+                                            min=2,
+                                            max=20,
+                                            step=1,
+                                            value=10,
+                                            marks=markers), style={'width': '500px'})
+                                ),
+                                dbc.Row(html.Div(id="range-slider-output-container")),
+                                dbc.Row(
+                                    html.Div(
+                                        dcc.RangeSlider(
+                                        id="range-slider",
+                                        min=-1,
+                                        max=15,
+                                        step=0.5,
+                                        vertical=False,
+                                        value=[0, 10],
+                                    ), style={'width': '500px'})
+                                ),
+                                dbc.Row(html.Div(id="opacity-slider-output-container")),
+                                dbc.Row(
+                                    html.Div(
+                                        dcc.Slider(
+                                            id="opacity-slider",
+                                            min=0,
+                                            max=1,
+                                            step=0.05,
+                                            vertical=False,
+                                            value=0.9,
+                                            marks=markers_opacity
+                                        ), style={'width': '500px'}
+                                    )
+                                )], align='center', width='auto')
+                ])
             ],
-            align="center",
-        )
-    ],
 )
 
 
 @app.callback(
     dash.dependencies.Output("mask-output-container", "children"),
-    [dash.dependencies.Input("toggle-switch", "value")],
+    [dash.dependencies.Input("toggle-switch", "value")]
 )
 def update_mask(value):
     d = {True: "ON", False: "OFF"}
@@ -201,15 +186,15 @@ def update_mask(value):
 
 @app.callback(
     dash.dependencies.Output("range-slider-output-container", "children"),
-    [dash.dependencies.Input("range-slider", "value")],
+    [dash.dependencies.Input("range-slider", "value")]
 )
 def update_range(value):
-    return f"{value[0]} to {value[1]}"
+    return f"Colorbar Range: {value[0]} to {value[1]}"
 
 
 @app.callback(
     dash.dependencies.Output("opacity-slider-output-container", "children"),
-    [dash.dependencies.Input("opacity-slider", "value")],
+    [dash.dependencies.Input("opacity-slider", "value")]
 )
 def update_opacity_range(value):
     return f"Opacity: {value}"
@@ -220,7 +205,7 @@ def update_opacity_range(value):
         Output(component_id="range-slider", component_property="min"),
         Output(component_id="range-slider", component_property="max"),
         Output(component_id="range-slider", component_property="step"),
-        Output(component_id="range-slider", component_property="value"),
+        Output(component_id="range-slider", component_property="value")
     ],
     [Input(component_id="dropdown", component_property="value")],
 )
@@ -281,7 +266,7 @@ def update_ds(
                 x=X,
                 y=Y,
                 mode="lines",
-                hoverinfo="none",
+                hoverinfo="skip",
                 visible=True,
                 name="Borders",
                 line=dict(width=0.5, color="black"),
@@ -298,9 +283,8 @@ def update_ds(
                 colorscale=get_cmap_divisions("viridis", slider_value),
                 hovertemplate="<b>Design Value: %{z} </b> <br>"
                 + "<b>Station Value: %{customdata[2]}</b> <br>"
-                + "rlon: %{x}<br>"
-                + "rlat: %{y}<br>"
-                + "lon: %{customdata[0]}<br>"
+                + "rlon, rlat: %{x}, %{y}<br>"
+                + "lon, lat: %{customdata[0]}, %{customdata[1]}<br>"
                 + "lat: %{customdata[1]}<br>",
                 name="Reconstruction",
             ),
@@ -337,7 +321,6 @@ def update_ds(
     }
 
     return fig
-
 
 if __name__ == "__main__":
     app.run_server()
