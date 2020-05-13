@@ -20,7 +20,7 @@ target_crs = {
 def coord_prep(ds, df, station_dv, dv):
     rlon, rlat = ds.rlon.values, ds.rlat.values
     shape = ds[dv].values.shape[1:]
-    rlonx, rlaty = flatten_coords(rlon, rlat, ds)
+    rlonx, rlaty = flatten_coords(rlon, rlat)
     lon, lat = transform_coords(
         rlonx, rlaty, source_crs=target_crs, target_crs=source_crs
     )
