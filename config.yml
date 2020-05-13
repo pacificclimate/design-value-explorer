@@ -1,5 +1,5 @@
 polygon:
-    path: './assets/data/ne_10m_admin_1_states_provinces.shp'
+    path: './assets/data/ne_50m_admin_1_states_provinces.shp'
 
 data:
     names:
