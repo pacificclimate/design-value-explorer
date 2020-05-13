@@ -72,6 +72,8 @@ external_stylesheets = [dbc.themes.BOOTSTRAP]
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
+app.title = 'PCIC DVE'
+
 dd_options = [dict(label=name, value=name) for name in cfg["data"]["names"]]
 
 strs = [str(val) for val in range(0, 20, 2)]
@@ -118,12 +120,21 @@ app.layout = html.Div(
                                 dcc.Graph(id="my-graph")], 
                                 align="center", width='auto'),
                         dbc.Col([
-                                html.H4('Overlay Options'),
-                                dbc.Row(html.Div(id="mask-output-container", style={'align': 'center'})),
-                                dbc.Row(daq.ToggleSwitch(id="toggle-switch", size=50, value=True)),
-                                dbc.Row(html.Div(id="station-output-container")),
-                                dbc.Row(daq.ToggleSwitch( id="toggle-station-switch", size=50, value=False)),
-                                html.H4('Colorbar Options'),
+                                html.Div(html.H4('Overlay Options')),
+                                dbc.Row([
+                                html.Div(dbc.Button('Ensemble Mean', id='mean-button'), style={'border-width': 'thin'}),
+                                html.Div(dbc.Button('Reconstruction', id='recon-button'), style={'border-width': 'thick'})]),
+                                dbc.Row([
+                                    html.Div(id="mask-output-container", style={'align': 'center', 'marginRight': '1em'}),
+                                    html.Div(id="station-output-container")
+                                ]),
+                                dbc.Row([
+
+                                    html.Div(daq.ToggleSwitch(id="toggle-switch", size=50, value=True), style={'align': 'center', 'marginRight': '1em'}),
+                                    daq.ToggleSwitch( id="toggle-station-switch", size=50, value=False)
+                                ]),
+                                html.Div(html.H4('Colorbar Options')),
+                                dbc.Row(html.Div(id='mean-button-out')),
                                 dbc.Row(html.Div(id="slider-output-container")),
                                 dbc.Row(
                                     html.Div(
@@ -164,7 +175,12 @@ app.layout = html.Div(
                 ])
             ],
 )
-
+@app.callback(Output('mean-button-out', 'children'),
+              [Input('mean-button', 'n_clicks')])
+def mean_button(click):
+    # Check if toggle on or of
+    click = 2 if click is None else click
+    return True if click % 2 == 0 else None
 
 @app.callback(
     dash.dependencies.Output("mask-output-container", "children"),
@@ -268,7 +284,7 @@ def update_ds(
                 mode="lines",
                 hoverinfo="skip",
                 visible=True,
-                name="Borders",
+                name="",
                 line=dict(width=0.5, color="black"),
             ),
             go.Heatmap(
@@ -284,9 +300,8 @@ def update_ds(
                 hovertemplate="<b>Design Value: %{z} </b> <br>"
                 + "<b>Station Value: %{customdata[2]}</b> <br>"
                 + "rlon, rlat: %{x}, %{y}<br>"
-                + "lon, lat: %{customdata[0]}, %{customdata[1]}<br>"
-                + "lat: %{customdata[1]}<br>",
-                name="Reconstruction",
+                + "lon, lat: %{customdata[0]}, %{customdata[1]}<br>",
+                name=""
             ),
             go.Scatter(
                 x=df.rlon.values,
@@ -301,14 +316,16 @@ def update_ds(
                 ),
                 hoverinfo="skip",
                 visible=toggle_station_value,
-                name="Stations",
+                name="",
             ),
         ],
         "layout": {
             "title": f"<b>{dd_value}</b>",
             "font": dict(size=24),
-            "xaxis": dict(range=[-30, 30]),
-            "yaxis": dict(range=[-30, 30]),
+            "xaxis": dict(zeroline=False, range=[-30, 30]),
+            "yaxis": dict(zeroline=False, range=[-7, 38]),
+            'xaxis_showgrid': False, 
+            'yaxis_showgrid': False,
             "hoverlabel": dict(
                 bgcolor="white", font_size=16, font_family="Rockwell"
             ),
@@ -317,7 +334,7 @@ def update_ds(
             "showlegend": True,
             "legend_orientation": "v",
             "scrollZoom": True,
-        },
+        }
     }
 
     return fig
