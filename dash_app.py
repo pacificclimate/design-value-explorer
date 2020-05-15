@@ -1,4 +1,5 @@
 from climpyrical.datacube import read_data
+from climpyrical.gridding import flatten_coords, transform_coords, find_nearest_index
 from polygons import load_north_america_polygons_plotly
 from colorbar import get_cmap_divisions
 from processing import coord_prep
@@ -272,12 +273,83 @@ def update_ds(
 
     lon, lat, station_value_grid = coord_prep(ds, df, station_dv, dv)
 
+
+    target_crs={'init': 'epsg:4326'}
+    source_crs={'proj': 'ob_tran', 'o_proj': 'longlat', 'lon_0': -97, 'o_lat_p': 42.5, 'a': 6378137, 'to_meter': 0.0174532925199, 'no_defs': True}
+
+
+    latlines = np.array([20, 45., 60, 75])
+    lonlines = np.linspace(ds.lon.min(), ds.lon.max(), 10)
+
+    plon, plat = flatten_coords(lonlines, latlines)
+    prlon, prlat = transform_coords(plon, plat)
+
+    latliney = [np.ones(ds.rlon.values.size)*latline for latline in latlines]
+    latlinex = np.linspace(ds.lon.min()-10, ds.lon.max()+10, ds.rlon.values.size)
+
+    lonlinex = [np.ones(ds.lat.values.size)*lonline for lonline in lonlines]
+    lonliney = np.linspace(20., 90, ds.lat.values.size)
+
+    lxarr, lyarr = [], []
+    txarr, tyarr = [], []
+    
+    for lonline in lonlinex:
+        lx, ly = transform_coords(lonline, lonliney)
+        lx = np.append(lx[::10], None)
+        ly = np.append(ly[::10], None)
+        lxarr.append(lx)
+        lyarr.append(ly)
+        
+    for latline in latliney:
+        tx, ty = transform_coords(latlinex, latline)
+        tx = np.append(tx[::10], None)
+        ty = np.append(ty[::10], None)
+        txarr.append(tx)
+        tyarr.append(ty)
+
+    # ticks = np.ones(np.array(txarr).shape, dtype=object)*""
+    # none_mask = np.array(txarr) == None
+    # ticks[none_mask] = latlines
+
+    lxarr = np.array(lxarr).flatten()
+    lyarr = np.array(lyarr).flatten()
+    txarr = np.array(txarr).flatten()
+    tyarr = np.array(tyarr).flatten()
+
     if toggle_value:
         mask = MASK["mask"]
         ds_arr[0, ~mask] = np.nan
 
+    lattext = [str(int(latval))+"N"+", "+str(int(360-lonval))+'W' for latval, lonval in zip(plat, plon)] 
+
     fig = {
         "data": [
+            go.Scatter(
+                x=lxarr,
+                y=lyarr,
+                mode="lines",
+                hoverinfo="skip",
+                visible=True,
+                name="lonlines",
+                line=dict(width=1, color="grey", dash='dash'),
+            ),
+            go.Scatter(
+                x=txarr,
+                y=tyarr,
+                mode="lines+text",
+                hoverinfo="skip",
+                visible=True,
+                name="latlines",
+                line=dict(width=1, color="grey", dash='dash'),
+            ),
+            go.Scatter(
+                x=prlon,
+                y=prlat,
+                mode="text",
+                text=lattext,
+                hoverinfo="skip",
+                visible=True
+            ),
             go.Scatter(
                 x=X,
                 y=Y,
@@ -321,9 +393,19 @@ def update_ds(
         ],
         "layout": {
             "title": f"<b>{dd_value}</b>",
-            "font": dict(size=24),
-            "xaxis": dict(zeroline=False, range=[-30, 30]),
-            "yaxis": dict(zeroline=False, range=[-7, 38]),
+            "font": dict(size=8, color='grey'),
+            "xaxis": dict(
+                zeroline=False, 
+                range=[-30, 30],
+                showgrid=False, # thin lines in the background
+                visible=False  # numbers below
+            ),
+            "yaxis": dict(
+                zeroline=False, 
+                range=[-7, 38], 
+                showgrid=False, # thin lines in the background
+                visible=False
+            ),
             'xaxis_showgrid': False, 
             'yaxis_showgrid': False,
             "hoverlabel": dict(
