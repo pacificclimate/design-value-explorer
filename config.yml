@@ -1,22 +1,36 @@
+# include path to polygons you wish to overlay
 polygon:
+    # only include one file. Can be shapefile or other standard 
+    #filetype read by geopandas
     path: './assets/data/shapes/ne_50m_admin_1_states_provinces.shp'
 
 data:
+    # These are the design value names that are displayed on the map
+    # and are also the names of the design values as they appear in
+    # the station values
     names:
         - 'SL50 (kPa)'
         - 'HDD (degC-day)'
     mask:
+        # path to the land mask
         paths:
             - './assets/data/land_mask_CanRCM4_sftlf.nc'
+        # key name to access mask in land mask in NetCDF file
         key_name_in_netcdf:
             - 'sftlf'
     fields:  
+        # paths to the reconstructions
         paths:
             - './assets/data/snow_only_ensemble.nc'
             - './assets/data/hdd_CanRCM4-LE_ens35_1951-2016_ann_ta.nc'
+        # key name to access reconstruction in NetCDF file
         key_name_in_netcdf:
             - 'snw'
             - 'heating_degree_days_per_time_period'
+        # sets the parameters to the colorbar options in the app
+        # choose reasonable values found within reconstructions
+        # or station values. Keeping manual for now to allow
+        # for greater flexibility
         colorbar:
             minimum:
                 - -1
@@ -27,10 +41,12 @@ data:
             step:
                 - 0.5
                 - 100
+            # default min/max value of colorbar slider
             default:
                 - [0, 10]
                 - [100, 15000]
     stations:
+        # paths to the station data csvs
         paths:
             - './assets/data/snow_stations.csv'
             - './assets/data/hdd_rot.csv' 
