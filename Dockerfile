@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.6-slim
 
 USER root
 
@@ -7,8 +7,8 @@ WORKDIR /app
 RUN mkdir /app/assets/
 
 # load app contents
-ADD . /app
-ADD ./assets/ /app/assets
+ADD . /app && \
+    ./assets/ /app/assets
 
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
