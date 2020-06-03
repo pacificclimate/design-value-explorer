@@ -1,0 +1,13 @@
+version: '0.1.0'
+services:
+  wps:
+    build: .
+    image: pacificclimate/dash-dv-explorer
+    ports:
+      - "8050:30023"
+
+
+# docker-compose build
+# docker-compose up
+# docker-compose down
+# docker-compose rm
