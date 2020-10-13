@@ -2,7 +2,7 @@
 polygon:
     # only include one file. Can be shapefile or other standard 
     #filetype read by geopandas
-    path: './assets/data/shapes/ne_50m_admin_1_states_provinces.shp'
+    path: './assets/data/shapes/canada_final.shp'
 
 data:
     # These are the design value names that are displayed on the map
