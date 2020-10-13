@@ -1,4 +1,4 @@
-from climpyrical.datacube import read_data
+from climpyrical.data import read_data
 from climpyrical.gridding import flatten_coords, transform_coords, find_nearest_index
 from polygons import load_north_america_polygons_plotly
 from colorbar import get_cmap_divisions
@@ -12,6 +12,7 @@ import dash_bootstrap_components as dbc
 import dash_daq as daq
 import plotly.graph_objects as go
 import numpy as np
+import matplotlib.cm
 
 import flask
 import pandas as pd
@@ -28,12 +29,9 @@ X, Y = load_north_america_polygons_plotly(cfg["polygon"]["path"])
 
 # create dict of field data from config
 fields = [
-    read_data(path, name)
-    for path, name in list(
-        zip(
-            cfg["data"]["fields"]["paths"],
-            cfg["data"]["fields"]["key_name_in_netcdf"],
-        )
+    read_data(path)
+    for path in list(
+            cfg["data"]["fields"]["paths"]
     )
 ]
 DS = dict(zip(cfg["data"]["names"], fields))
@@ -51,15 +49,13 @@ def load_sftlf_mask(mask, dvmask):
 
 # create a mask dict
 MASK = {
-    "mask": load_sftlf_mask(
-        read_data(
+    "mask": read_data(
             cfg["data"]["mask"]["paths"][0],
-            cfg["data"]["mask"]["key_name_in_netcdf"][0],
-            keys=["rlon", "rlat"],
-        ),
-        cfg["data"]["mask"]["key_name_in_netcdf"][0],
-    )
+            required_keys=["rlon", "rlat"],
+        )[cfg["data"]["mask"]["key_name_in_netcdf"][0]] >= 1.
 }
+
+# MASK['mask'] = MASK['mask'] >= 1.
 
 # create a dict of station data from config
 stations = [pd.read_csv(path) for path in cfg["data"]["stations"]["paths"]]
@@ -73,16 +69,15 @@ external_stylesheets = [dbc.themes.BOOTSTRAP]
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-app.title = 'PCIC DVE'
+app.title = 'Pacific Climate Impacts Consortium Design Value Explorer'
 
 dd_options = [dict(label=name, value=name) for name in cfg["data"]["names"]]
 
 strs = [str(val) for val in range(0, 20, 2)]
 markers = dict(zip(list(range(0, 20, 2)), strs))
 
-strs_opacity = [str(val) for val in np.linspace(0, 1, 0.1)]
-markers_opacity = dict(zip(list(np.linspace(0, 1, 0.1)), strs_opacity))
-
+strs_opacity = [str(val) for val in np.arange(0.0, 1.0, 0.1)]
+markers_opacity = dict(zip(list(np.arange(0, 1, 0.1)), strs_opacity))
 
 colorbar_params = [
     {
@@ -367,6 +362,7 @@ def update_ds(
                 zmin=zmin,
                 zmax=zmax,
                 hoverongaps=True,
+                zsmooth = 'best',
                 opacity=opacity_value,
                 colorscale=get_cmap_divisions("viridis", slider_value),
                 hovertemplate="<b>Design Value: %{z} </b> <br>"
