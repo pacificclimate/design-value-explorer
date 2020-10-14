@@ -264,6 +264,8 @@ def update_ds(
     ds = DS[dd_value]
     df = DF[dd_value]
 
+
+    print(ds[dv].values.shape)
     ds_arr = ds[dv].values.copy()
 
     lon, lat, station_value_grid = coord_prep(ds, df, station_dv, dv)
@@ -274,16 +276,16 @@ def update_ds(
 
 
     latlines = np.array([20, 45., 60, 75])
-    lonlines = np.linspace(ds.lon.min(), ds.lon.max(), 10)
+    lonlines = np.linspace(-146, 46, 10)
 
     plon, plat = flatten_coords(lonlines, latlines)
     prlon, prlat = transform_coords(plon, plat)
 
     latliney = [np.ones(ds.rlon.values.size)*latline for latline in latlines]
-    latlinex = np.linspace(ds.lon.min()-10, ds.lon.max()+10, ds.rlon.values.size)
+    latlinex = np.linspace(-146-10, 46+10, ds.rlon.values.size)
 
-    lonlinex = [np.ones(ds.lat.values.size)*lonline for lonline in lonlines]
-    lonliney = np.linspace(20., 90, ds.lat.values.size)
+    lonlinex = [np.ones(lat.size)*lonline for lonline in lonlines]
+    lonliney = np.linspace(20., 90, lat.size)
 
     lxarr, lyarr = [], []
     txarr, tyarr = [], []
@@ -313,7 +315,7 @@ def update_ds(
 
     if toggle_value:
         mask = MASK["mask"]
-        ds_arr[0, ~mask] = np.nan
+        ds_arr[~mask] = np.nan
 
     lattext = [str(int(latval))+"N"+", "+str(int(360-lonval))+'W' for latval, lonval in zip(plat, plon)] 
 
@@ -355,14 +357,14 @@ def update_ds(
                 line=dict(width=0.5, color="black"),
             ),
             go.Heatmap(
-                z=ds_arr[0, ...],
+                z=ds_arr[...],
                 x=ds.rlon,
                 y=ds.rlat,
                 customdata=np.dstack((lon, lat, station_value_grid)),
                 zmin=zmin,
                 zmax=zmax,
                 hoverongaps=True,
-                zsmooth = 'best',
+                # zsmooth = 'best',
                 opacity=opacity_value,
                 colorscale=get_cmap_divisions("viridis", slider_value),
                 hovertemplate="<b>Design Value: %{z} </b> <br>"
