@@ -11,7 +11,7 @@ data:
     names:
         - 'SL50 (kPa)'
         # - 'HDD (degC-day)'
-        # - 'SL50 (kPa)'
+        - 'SL50 (kPa)'
     mask:
         # path to the land mask
         paths:
@@ -27,10 +27,12 @@ data:
             # - './assets/data/snw_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc'
             # - './assets/data/hdd_CanRCM4-LE_ens35_1951-2016_ann_ensmean.nc'
             - './assets/data/sl50_reconstruction.nc'
+            - './assets/data/ensemble/snw_10_ensemble_mean.nc'
         # key name to access reconstruction in NetCDF file
         key_name_in_netcdf:
             # - 'snw'
             # - 'heating_degree_days_per_time_period'
+            - 'snw'
             - 'snw'
         # sets the parameters to the colorbar options in the app
         # choose reasonable values found within reconstructions
@@ -41,22 +43,27 @@ data:
                 # - -1
                 # - 100
                 - 0
+                - 0
             maximum:
                 # - 15
                 # - 16000
                 - 30
+                - 30
             step:
                 # - 0.5
                 # - 100
+                - 30
                 - 30
             # default min/max value of colorbar slider
             default:
                 # - [0, 10]
                 # - [100, 15000]
                 - [0, 20]
+                - [0, 20]
     stations:
         # paths to the station data csvs
         paths:
-            # - './assets/data/snow_stations.csv'
+            - './assets/data/snow_stations.csv'
+            - './assets/data/snow_stations.csv'
+            
             # - './assets/data/hdd_rot.csv'
-            - './assets/data/Interim_snow_rain_load_LR_composite_stations_tbd_v4.csv'

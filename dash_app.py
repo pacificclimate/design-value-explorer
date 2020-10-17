@@ -276,13 +276,13 @@ def update_ds(
 
 
     latlines = np.array([20, 45., 60, 75])
-    lonlines = np.linspace(-146, 46, 10)
+    lonlines = np.linspace(189.6, 336.4, 10)
 
     plon, plat = flatten_coords(lonlines, latlines)
     prlon, prlat = transform_coords(plon, plat)
 
     latliney = [np.ones(ds.rlon.values.size)*latline for latline in latlines]
-    latlinex = np.linspace(-146-10, 46+10, ds.rlon.values.size)
+    latlinex = np.linspace(189.6-10, 336.4+10, ds.rlon.values.size)
 
     lonlinex = [np.ones(lat.size)*lonline for lonline in lonlines]
     lonliney = np.linspace(20., 90, lat.size)
@@ -321,7 +321,7 @@ def update_ds(
 
     fig = {
         "data": [
-            go.Scatter(
+            go.Scattergl(
                 x=lxarr,
                 y=lyarr,
                 mode="lines",
@@ -330,7 +330,7 @@ def update_ds(
                 name="lonlines",
                 line=dict(width=1, color="grey", dash='dash'),
             ),
-            go.Scatter(
+            go.Scattergl(
                 x=txarr,
                 y=tyarr,
                 mode="lines+text",
@@ -339,7 +339,7 @@ def update_ds(
                 name="latlines",
                 line=dict(width=1, color="grey", dash='dash'),
             ),
-            go.Scatter(
+            go.Scattergl(
                 x=prlon,
                 y=prlat,
                 mode="text",
@@ -347,7 +347,7 @@ def update_ds(
                 hoverinfo="skip",
                 visible=True
             ),
-            go.Scatter(
+            go.Scattergl(
                 x=X,
                 y=Y,
                 mode="lines",
@@ -357,23 +357,31 @@ def update_ds(
                 line=dict(width=0.5, color="black"),
             ),
             go.Heatmap(
-                z=ds_arr[...],
+                z=ds_arr,
                 x=ds.rlon,
                 y=ds.rlat,
+                # contours=dict(
+                #     coloring ='heatmap',
+                #     showlabels = True, # show labels on contours
+                #     labelfont = dict( # label font properties
+                #         size = 12,
+                #         color = 'white',
+                #     )
+                # ),
                 customdata=np.dstack((lon, lat, station_value_grid)),
                 zmin=zmin,
                 zmax=zmax,
-                hoverongaps=True,
+                # hoverongaps=True,
                 # zsmooth = 'best',
                 opacity=opacity_value,
                 colorscale=get_cmap_divisions("viridis", slider_value),
-                hovertemplate="<b>Design Value: %{z} </b> <br>"
-                + "<b>Station Value: %{customdata[2]}</b> <br>"
-                + "rlon, rlat: %{x}, %{y}<br>"
-                + "lon, lat: %{customdata[0]}, %{customdata[1]}<br>",
-                name=""
+                # hoverinfo="<b>Design Value: %{z} </b> <br>"
+                # + "<b>Station Value: %{customdata[2]}</b> <br>"
+                # + "rlon, rlat: %{x}, %{y}<br>"
+                # + "lon, lat: %{customdata[0]}, %{customdata[1]}<br>",
+                # name=""
             ),
-            go.Scatter(
+            go.Scattergl(
                 x=df.rlon.values,
                 y=df.rlat.values,
                 mode="markers",
@@ -394,13 +402,13 @@ def update_ds(
             "font": dict(size=8, color='grey'),
             "xaxis": dict(
                 zeroline=False, 
-                range=[-30, 30],
+                range=[-24, 34],
                 showgrid=False, # thin lines in the background
                 visible=False  # numbers below
             ),
             "yaxis": dict(
                 zeroline=False, 
-                range=[-7, 38], 
+                range=[-7.4, 37], 
                 showgrid=False, # thin lines in the background
                 visible=False
             ),
