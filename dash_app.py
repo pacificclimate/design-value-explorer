@@ -3,6 +3,7 @@ from climpyrical.gridding import flatten_coords, transform_coords, find_nearest_
 from polygons import load_north_america_polygons_plotly
 from colorbar import get_cmap_divisions
 from processing import coord_prep
+from flask_caching import Cache
 
 import dash
 from dash.dependencies import Input, Output
@@ -22,7 +23,7 @@ import yaml
 
 
 with open("config.yml", "r") as ymlfile:
-    cfg = yaml.load(ymlfile)
+    cfg = yaml.safe_load(ymlfile)
 
 # load polygon data
 X, Y = load_north_america_polygons_plotly(cfg["polygon"]["path"])
@@ -34,12 +35,20 @@ fields = [
             cfg["data"]["fields"]["paths"]
     )
 ]
+
 DS = dict(zip(cfg["data"]["names"], fields))
 
 # create dict of data names and its corresponding key
 KEYS = dict(
     zip(cfg["data"]["names"], cfg["data"]["fields"]["key_name_in_netcdf"])
 )
+
+DF_KEYS = dict(
+    zip(cfg["data"]["names"], cfg["data"]["stations"]["station_keys"])
+)
+
+
+print("DATAFRAME", DF_KEYS)
 
 # load mask 
 def load_sftlf_mask(mask, dvmask):
@@ -63,13 +72,18 @@ DF = dict(zip(cfg["data"]["names"], stations))
 
 # initialize app
 server = flask.Flask("app")
-
 app = dash.Dash("app", server=server)
 external_stylesheets = [dbc.themes.BOOTSTRAP]
-
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
 app.title = 'Pacific Climate Impacts Consortium Design Value Explorer'
+
+cache = Cache(app.server, config={
+    'CACHE_TYPE': 'filesystem',
+    'CACHE_DIR': 'cache-directory'
+})
+
+TIMEOUT = 60
+app.config.suppress_callback_exceptions = True
 
 dd_options = [dict(label=name, value=name) for name in cfg["data"]["names"]]
 
@@ -90,7 +104,7 @@ colorbar_params = [
     }
     for i, name in enumerate(cfg["data"]["names"])
 ]
-
+# colorbar_params_dict = dict(colorbar_params)
 colorbar_params_dict = {}
 for d in colorbar_params:
     colorbar_params_dict.update(d)
@@ -103,7 +117,7 @@ app.layout = html.Div(
                             dcc.Dropdown(
                                 id="dropdown",
                                 options=dd_options,
-                                value=cfg["data"]["names"][0],
+                                value=cfg["data"]["names"][1],
                                 placeholder="Select a design value to display...",
                                 searchable=False,
                                 clearable=False,
@@ -113,13 +127,14 @@ app.layout = html.Div(
                         ]),
               dbc.Row([
                         dbc.Col([
-                                dcc.Graph(id="my-graph")], 
+                                dcc.Graph(id="my-graph"),
+                                ], 
                                 align="center", width='auto'),
                         dbc.Col([
                                 html.Div(html.H4('Overlay Options')),
-                                dbc.Row([
-                                html.Div(dbc.Button('Ensemble Mean', id='mean-button'), style={'border-width': 'thin'}),
-                                html.Div(dbc.Button('Reconstruction', id='recon-button'), style={'border-width': 'thick'})]),
+                                # dbc.Row([
+                                # html.Div(dbc.Button('Ensemble Mean', id='mean-button'), style={'border-width': 'thin'}),
+                                # html.Div(dbc.Button('Reconstruction', id='recon-button'), style={'border-width': 'thick'})]),
                                 dbc.Row([
                                     html.Div(id="mask-output-container", style={'align': 'center', 'marginRight': '1em'}),
                                     html.Div(id="station-output-container")
@@ -130,7 +145,7 @@ app.layout = html.Div(
                                     daq.ToggleSwitch( id="toggle-station-switch", size=50, value=False)
                                 ]),
                                 html.Div(html.H4('Colorbar Options')),
-                                dbc.Row(html.Div(id='mean-button-out')),
+                                # dbc.Row(html.Div(id='mean-button-out')),
                                 dbc.Row(html.Div(id="slider-output-container")),
                                 dbc.Row(
                                     html.Div(
@@ -171,12 +186,15 @@ app.layout = html.Div(
                 ])
             ],
 )
-@app.callback(Output('mean-button-out', 'children'),
-              [Input('mean-button', 'n_clicks')])
-def mean_button(click):
-    # Check if toggle on or of
-    click = 2 if click is None else click
-    return True if click % 2 == 0 else None
+
+
+
+# @app.callback(Output('mean-button-out', 'children'),
+#               [Input('mean-button', 'n_clicks')])
+# def mean_button(click):
+#     # Check if toggle on or of
+#     click = 2 if click is None else click
+#     return True if click % 2 == 0 else None
 
 @app.callback(
     dash.dependencies.Output("mask-output-container", "children"),
@@ -237,6 +255,64 @@ def update_slider(value):
     return f"N = {value}"
 
 
+ds = read_data(cfg["data"]["mask"]["paths"][0])
+
+# latlines = np.array([20, 45., 60, 75])
+# lonlines = np.linspace(189.6, 336.4, 10)
+
+x1 = min(value for value in X if value is not None)
+x2 = max(value for value in X if value is not None)
+y1 = min(value for value in Y if value is not None)
+y2 = max(value for value in Y if value is not None)
+
+
+ixmin = find_nearest_index(ds.rlon.values, np.nanmin(x1))
+ixmax = find_nearest_index(ds.rlon.values, np.nanmax(x2))
+iymin = find_nearest_index(ds.rlat.values, np.nanmin(y1))
+iymax = find_nearest_index(ds.rlat.values, np.nanmax(y2))
+
+
+latlines = np.array([45., 60, 70])
+lonlines = np.linspace(225, 305, 6)
+
+plon, plat = flatten_coords(lonlines, latlines)
+prlon, prlat = transform_coords(plon, plat)
+
+latliney = [np.ones(ds.rlon.values.size)*latline for latline in latlines]
+latlinex = np.linspace(lonlines.min()-3, lonlines.max()+3, ds.rlon.values.size)
+
+lonlinex = [np.ones(ds.rlat.size)*lonline for lonline in lonlines]
+lonliney = np.linspace(latlines.min(), lonlines.max(), ds.rlat.size)
+
+lxarr, lyarr = [], []
+txarr, tyarr = [], []
+
+for lonline in lonlinex:
+    lx, ly = transform_coords(lonline, lonliney)
+    lx = np.append(lx[::10], None)
+    ly = np.append(ly[::10], None)
+    lxarr.append(lx)
+    lyarr.append(ly)
+    
+for latline in latliney:
+    tx, ty = transform_coords(latlinex, latline)
+    tx = np.append(tx[::10], None)
+    ty = np.append(ty[::10], None)
+    txarr.append(tx)
+    tyarr.append(ty)
+
+# ticks = np.ones(np.array(txarr).shape, dtype=object)*""
+# none_mask = np.array(txarr) == None
+# ticks[none_mask] = latlines
+
+lxarr = np.array(lxarr).flatten()
+lyarr = np.array(lyarr).flatten()
+txarr = np.array(txarr).flatten()
+tyarr = np.array(tyarr).flatten()
+
+
+import time
+@cache.memoize(timeout=TIMEOUT)
 @app.callback(
     dash.dependencies.Output("my-graph", "figure"),
     [
@@ -257,16 +333,16 @@ def update_ds(
     opacity_value,
 ):
 
+    start_time = time.time()
     zmin = range_slider[0]
     zmax = range_slider[1]
 
-    dv, station_dv = KEYS[dd_value], dd_value
+    dv, station_dv = KEYS[dd_value], DF_KEYS[dd_value]
     ds = DS[dd_value]
     df = DF[dd_value]
 
+    ds_arr = ds[dv].values[iymin:iymax, ixmin:ixmax].copy()
 
-    print(ds[dv].values.shape)
-    ds_arr = ds[dv].values.copy()
 
     lon, lat, station_value_grid = coord_prep(ds, df, station_dv, dv)
 
@@ -275,49 +351,12 @@ def update_ds(
     source_crs={'proj': 'ob_tran', 'o_proj': 'longlat', 'lon_0': -97, 'o_lat_p': 42.5, 'a': 6378137, 'to_meter': 0.0174532925199, 'no_defs': True}
 
 
-    latlines = np.array([20, 45., 60, 75])
-    lonlines = np.linspace(189.6, 336.4, 10)
-
-    plon, plat = flatten_coords(lonlines, latlines)
-    prlon, prlat = transform_coords(plon, plat)
-
-    latliney = [np.ones(ds.rlon.values.size)*latline for latline in latlines]
-    latlinex = np.linspace(189.6-10, 336.4+10, ds.rlon.values.size)
-
-    lonlinex = [np.ones(lat.size)*lonline for lonline in lonlines]
-    lonliney = np.linspace(20., 90, lat.size)
-
-    lxarr, lyarr = [], []
-    txarr, tyarr = [], []
-    
-    for lonline in lonlinex:
-        lx, ly = transform_coords(lonline, lonliney)
-        lx = np.append(lx[::10], None)
-        ly = np.append(ly[::10], None)
-        lxarr.append(lx)
-        lyarr.append(ly)
-        
-    for latline in latliney:
-        tx, ty = transform_coords(latlinex, latline)
-        tx = np.append(tx[::10], None)
-        ty = np.append(ty[::10], None)
-        txarr.append(tx)
-        tyarr.append(ty)
-
-    # ticks = np.ones(np.array(txarr).shape, dtype=object)*""
-    # none_mask = np.array(txarr) == None
-    # ticks[none_mask] = latlines
-
-    lxarr = np.array(lxarr).flatten()
-    lyarr = np.array(lyarr).flatten()
-    txarr = np.array(txarr).flatten()
-    tyarr = np.array(tyarr).flatten()
-
     if toggle_value:
-        mask = MASK["mask"]
+        mask = MASK["mask"][iymin:iymax, ixmin:ixmax]
         ds_arr[~mask] = np.nan
 
     lattext = [str(int(latval))+"N"+", "+str(int(360-lonval))+'W' for latval, lonval in zip(plat, plon)] 
+    print("--- %s seconds ---" % (time.time() - start_time))
 
     fig = {
         "data": [
@@ -327,7 +366,7 @@ def update_ds(
                 mode="lines",
                 hoverinfo="skip",
                 visible=True,
-                name="lonlines",
+                name=" ",
                 line=dict(width=1, color="grey", dash='dash'),
             ),
             go.Scattergl(
@@ -336,7 +375,7 @@ def update_ds(
                 mode="lines+text",
                 hoverinfo="skip",
                 visible=True,
-                name="latlines",
+                name=" ",
                 line=dict(width=1, color="grey", dash='dash'),
             ),
             go.Scattergl(
@@ -345,7 +384,9 @@ def update_ds(
                 mode="text",
                 text=lattext,
                 hoverinfo="skip",
-                visible=True
+                visible=True,
+                name=""
+
             ),
             go.Scattergl(
                 x=X,
@@ -358,35 +399,27 @@ def update_ds(
             ),
             go.Heatmap(
                 z=ds_arr,
-                x=ds.rlon,
-                y=ds.rlat,
-                # contours=dict(
-                #     coloring ='heatmap',
-                #     showlabels = True, # show labels on contours
-                #     labelfont = dict( # label font properties
-                #         size = 12,
-                #         color = 'white',
-                #     )
-                # ),
+                x=ds.rlon.values[ixmin:ixmax],
+                y=ds.rlat.values[iymin:iymax],
                 customdata=np.dstack((lon, lat, station_value_grid)),
                 zmin=zmin,
                 zmax=zmax,
-                # hoverongaps=True,
-                # zsmooth = 'best',
+                hoverongaps=True,
                 opacity=opacity_value,
                 colorscale=get_cmap_divisions("viridis", slider_value),
-                # hoverinfo="<b>Design Value: %{z} </b> <br>"
-                # + "<b>Station Value: %{customdata[2]}</b> <br>"
-                # + "rlon, rlat: %{x}, %{y}<br>"
-                # + "lon, lat: %{customdata[0]}, %{customdata[1]}<br>",
-                # name=""
+                hovertemplate="<b>Design Value: %{z} </b> <br>"
+                + "<b>Station Value: %{customdata[2]}</b> <br>"
+                + "rlon, rlat: %{x}, %{y}<br>"
+                + "lon, lat: %{customdata[0]}, %{customdata[1]}<br>",
+                name=""
             ),
             go.Scattergl(
                 x=df.rlon.values,
                 y=df.rlat.values,
                 mode="markers",
                 marker=dict(
-                    symbol="x",
+                    size=10,
+                    symbol="circle",
                     color=df[station_dv].values,
                     colorscale=get_cmap_divisions("viridis", slider_value),
                     line=dict(width=0.35, color="DarkSlateGrey"),

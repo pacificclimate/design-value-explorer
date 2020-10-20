@@ -9,9 +9,9 @@ data:
     # and are also the names of the design values as they appear in
     # the station values
     names:
-        - 'SL50 (kPa)'
+        - 'SL50 (kPa) Reconstruction'
         # - 'HDD (degC-day)'
-        - 'SL50 (kPa)'
+        - 'SL50 (kPa) Mean'
     mask:
         # path to the land mask
         paths:
@@ -61,6 +61,9 @@ data:
                 - [0, 20]
                 - [0, 20]
     stations:
+        station_keys:
+            - 'SL50 (kPa)'
+            - 'SL50 (kPa)'
         # paths to the station data csvs
         paths:
             - './assets/data/snow_stations.csv'
