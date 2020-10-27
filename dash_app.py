@@ -154,7 +154,7 @@ app.layout = html.Div(
                                             min=2,
                                             max=20,
                                             step=1,
-                                            value=10,
+                                            value=15,
                                             marks=markers), style={'width': '500px'})
                                 ),
                                 dbc.Row(html.Div(id="range-slider-output-container")),
@@ -169,20 +169,21 @@ app.layout = html.Div(
                                         value=[0, 10],
                                     ), style={'width': '500px'})
                                 ),
-                                dbc.Row(html.Div(id="opacity-slider-output-container")),
-                                dbc.Row(
-                                    html.Div(
-                                        dcc.Slider(
-                                            id="opacity-slider",
-                                            min=0,
-                                            max=1,
-                                            step=0.05,
-                                            vertical=False,
-                                            value=0.9,
-                                            marks=markers_opacity
-                                        ), style={'width': '500px'}
-                                    )
-                                )], align='center', width='auto')
+                                # dbc.Row(html.Div(id="opacity-slider-output-container")),
+                                # dbc.Row(
+                                #     html.Div(
+                                #         dcc.Slider(
+                                #             id="opacity-slider",
+                                #             min=0,
+                                #             max=1,
+                                #             step=0.05,
+                                #             vertical=False,
+                                #             value=0.9,
+                                #             marks=markers_opacity
+                                #         ), style={'width': '500px'}
+                                #     )
+                                # )
+                                ], align='center', width='auto')
                 ])
             ],
 )
@@ -222,12 +223,12 @@ def update_range(value):
     return f"Colorbar Range: {value[0]} to {value[1]}"
 
 
-@app.callback(
-    dash.dependencies.Output("opacity-slider-output-container", "children"),
-    [dash.dependencies.Input("opacity-slider", "value")]
-)
-def update_opacity_range(value):
-    return f"Opacity: {value}"
+# @app.callback(
+#     dash.dependencies.Output("opacity-slider-output-container", "children"),
+#     [dash.dependencies.Input("opacity-slider", "value")]
+# )
+# def update_opacity_range(value):
+#     return f"Opacity: {value}"
 
 
 @app.callback(
@@ -312,6 +313,7 @@ tyarr = np.array(tyarr).flatten()
 
 
 import time
+
 @cache.memoize(timeout=TIMEOUT)
 @app.callback(
     dash.dependencies.Output("my-graph", "figure"),
@@ -321,7 +323,7 @@ import time
         dash.dependencies.Input("dropdown", "value"),
         dash.dependencies.Input("slider", "value"),
         dash.dependencies.Input("range-slider", "value"),
-        dash.dependencies.Input("opacity-slider", "value"),
+        # dash.dependencies.Input("opacity-slider", "value"),
     ],
 )
 def update_ds(
@@ -330,10 +332,9 @@ def update_ds(
     dd_value,
     slider_value,
     range_slider,
-    opacity_value,
+    # opacity_value,
 ):
 
-    start_time = time.time()
     zmin = range_slider[0]
     zmax = range_slider[1]
 
@@ -341,11 +342,16 @@ def update_ds(
     ds = DS[dd_value]
     df = DF[dd_value]
 
-    ds_arr = ds[dv].values[iymin:iymax, ixmin:ixmax].copy()
 
+    xy_min_cutoff = (iymin, iymax, ixmin, ixmax)
 
     lon, lat, station_value_grid = coord_prep(ds, df, station_dv, dv)
+    lon = lon[iymin:iymax, ixmin:ixmax]
+    lat = lat[iymin:iymax, ixmin:ixmax]
+    station_value_grid = station_value_grid[iymin:iymax, ixmin:ixmax]
 
+    print("station_value_grid_shape!", station_value_grid.shape)
+    ds_arr = ds[dv].values[iymin:iymax, ixmin:ixmax].copy()
 
     target_crs={'init': 'epsg:4326'}
     source_crs={'proj': 'ob_tran', 'o_proj': 'longlat', 'lon_0': -97, 'o_lat_p': 42.5, 'a': 6378137, 'to_meter': 0.0174532925199, 'no_defs': True}
@@ -356,7 +362,6 @@ def update_ds(
         ds_arr[~mask] = np.nan
 
     lattext = [str(int(latval))+"N"+", "+str(int(360-lonval))+'W' for latval, lonval in zip(plat, plon)] 
-    print("--- %s seconds ---" % (time.time() - start_time))
 
     fig = {
         "data": [
@@ -404,12 +409,12 @@ def update_ds(
                 customdata=np.dstack((lon, lat, station_value_grid)),
                 zmin=zmin,
                 zmax=zmax,
-                hoverongaps=True,
-                opacity=opacity_value,
+                hoverongaps=False,
+                # opacity=opacity_value,
                 colorscale=get_cmap_divisions("viridis", slider_value),
                 hovertemplate="<b>Design Value: %{z} </b> <br>"
                 + "<b>Station Value: %{customdata[2]}</b> <br>"
-                + "rlon, rlat: %{x}, %{y}<br>"
+                # + "rlon, rlat: %{x}, %{y}<br>"
                 + "lon, lat: %{customdata[0]}, %{customdata[1]}<br>",
                 name=""
             ),
@@ -432,7 +437,7 @@ def update_ds(
         ],
         "layout": {
             "title": f"<b>{dd_value}</b>",
-            "font": dict(size=8, color='grey'),
+            "font": dict(size=18, color='grey'),
             "xaxis": dict(
                 zeroline=False, 
                 range=[-24, 34],

@@ -18,6 +18,7 @@ target_crs = {
 }
 
 def coord_prep(ds, df, station_dv, dv):
+    
     rlon, rlat = ds.rlon.values, ds.rlat.values
     shape = ds[dv].values.shape#[1:]
     print(shape)
@@ -34,5 +35,6 @@ def coord_prep(ds, df, station_dv, dv):
         rlon, rlat, df.rlon.values, df.rlat.values
     )
     station_value[iy, ix] = df[station_dv].values
+    print("STATION VALUE:", station_value[iy, ix])
 
     return lon, lat, station_value
