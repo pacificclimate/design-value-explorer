@@ -3,7 +3,7 @@ from climpyrical.gridding import flatten_coords, transform_coords, find_nearest_
 from polygons import load_north_america_polygons_plotly
 from colorbar import get_cmap_divisions
 from processing import coord_prep
-from flask_caching import Cache
+#from flask_caching import Cache
 
 import dash
 import dash_table
@@ -82,10 +82,6 @@ external_stylesheets = [dbc.themes.BOOTSTRAP]
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 app.title = 'Pacific Climate Impacts Consortium Design Value Explorer'
 
-cache = Cache(app.server, config={
-    'CACHE_TYPE': 'filesystem',
-    'CACHE_DIR': 'cache-directory'
-})
 
 TIMEOUT = 60
 app.config.suppress_callback_exceptions = True
@@ -337,7 +333,6 @@ tyarr = np.array(tyarr).flatten()
 
 import time
 
-@cache.memoize(timeout=TIMEOUT)
 @app.callback(
     dash.dependencies.Output("my-graph", "figure"),
     [
