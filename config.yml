@@ -33,6 +33,7 @@ data:
         paths:
             - './assets/data/reconstructions/SL50_reconstruction.nc'
             - './assets/data/ensemble/SL50_10_ensemble_mean.nc'
+            # - '/home/nannau/nrc_data/snw_rain_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc'
             - './assets/data/reconstructions/RL50_reconstruction.nc'
             - './assets/data/ensemble/RL50_10_ensemble_mean.nc'
             - './assets/data/reconstructions/HDD_reconstruction.nc'
@@ -121,6 +122,18 @@ data:
             - 'TJan2.5 (degC)'
             - 'Q10_Gumbel-MM'
             - 'Q10_Gumbel-MM'
+
+        table_c2_path:
+            - './assets/data/tables/SL50TableC2.csv'
+            - './assets/data/tables/SL50TableC2.csv'
+            - './assets/data/tables/RL50TableC2.csv'
+            - './assets/data/tables/RL50TableC2.csv'
+            - './assets/data/tables/HDDTableC2.csv'
+            - './assets/data/tables/HDDTableC2.csv'
+            - './assets/data/tables/TJan2.5TableC2.csv'
+            - './assets/data/tables/TJan2.5TableC2.csv'
+            - './assets/data/tables/Q10_Gumbel-MMTableC2.csv'
+            - './assets/data/tables/Q10_Gumbel-MMTableC2.csv'
 
         # paths to the station data csvs
         paths:

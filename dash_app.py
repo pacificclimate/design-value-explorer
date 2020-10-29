@@ -6,6 +6,7 @@ from processing import coord_prep
 from flask_caching import Cache
 
 import dash
+import dash_table
 from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
@@ -18,9 +19,11 @@ import matplotlib.cm
 import flask
 import pandas as pd
 import os
-
+import warnings
 import yaml
 
+
+warnings.filterwarnings("ignore")
 
 with open("config.yml", "r") as ymlfile:
     cfg = yaml.safe_load(ymlfile)
@@ -48,8 +51,6 @@ DF_KEYS = dict(
 )
 
 
-print("DATAFRAME", DF_KEYS)
-
 # load mask 
 def load_sftlf_mask(mask, dvmask):
     mask = mask.squeeze("time")
@@ -69,6 +70,10 @@ MASK = {
 # create a dict of station data from config
 stations = [pd.read_csv(path) for path in cfg["data"]["stations"]["paths"]]
 DF = dict(zip(cfg["data"]["names"], stations))
+
+stations_c2 = [pd.read_csv(path) for path in cfg["data"]["stations"]["table_c2_path"]]
+DF_C2 = dict(zip(cfg["data"]["names"], stations_c2))
+
 
 # initialize app
 server = flask.Flask("app")
@@ -125,68 +130,61 @@ app.layout = html.Div(
                             html.Br(), 
                             html.Div(id="item-display")])
                         ]),
-              dbc.Row([
-                        dbc.Col([
-                                dcc.Graph(id="my-graph"),
-                                ], 
-                                align="center", width='auto'),
-                        dbc.Col([
-                                html.Div(html.H4('Overlay Options')),
-                                # dbc.Row([
-                                # html.Div(dbc.Button('Ensemble Mean', id='mean-button'), style={'border-width': 'thin'}),
-                                # html.Div(dbc.Button('Reconstruction', id='recon-button'), style={'border-width': 'thick'})]),
-                                dbc.Row([
-                                    html.Div(id="mask-output-container", style={'align': 'center', 'marginRight': '1em'}),
-                                    html.Div(id="station-output-container")
-                                ]),
-                                dbc.Row([
+              dcc.Tabs([
+                    dcc.Tab(label='Map', children=[
+                          dbc.Row([
+                                    dbc.Col([
+                                            dcc.Graph(id="my-graph"),
+                                            ], 
+                                            align="center", width='auto'),
+                                    dbc.Col([
+                                            html.Div(html.H4('Overlay Options')),
+                                            # dbc.Row([
+                                            # html.Div(dbc.Button('Ensemble Mean', id='mean-button'), style={'border-width': 'thin'}),
+                                            # html.Div(dbc.Button('Reconstruction', id='recon-button'), style={'border-width': 'thick'})]),
+                                            dbc.Row([
+                                                html.Div(id="mask-output-container", style={'align': 'center', 'marginRight': '1em'}),
+                                                html.Div(id="station-output-container")
+                                            ]),
+                                            dbc.Row([
 
-                                    html.Div(daq.ToggleSwitch(id="toggle-switch", size=50, value=True), style={'align': 'center', 'marginRight': '1em'}),
-                                    daq.ToggleSwitch( id="toggle-station-switch", size=50, value=False)
-                                ]),
-                                html.Div(html.H4('Colorbar Options')),
-                                # dbc.Row(html.Div(id='mean-button-out')),
-                                dbc.Row(html.Div(id="slider-output-container")),
-                                dbc.Row(
-                                    html.Div(
-                                        dcc.Slider(
-                                            id="slider",
-                                            min=2,
-                                            max=20,
-                                            step=1,
-                                            value=15,
-                                            marks=markers), style={'width': '500px'})
-                                ),
-                                dbc.Row(html.Div(id="range-slider-output-container")),
-                                dbc.Row(
-                                    html.Div(
-                                        dcc.RangeSlider(
-                                        id="range-slider",
-                                        min=-1,
-                                        max=15,
-                                        step=0.5,
-                                        vertical=False,
-                                        value=[0, 10],
-                                    ), style={'width': '500px'})
-                                ),
-                                # dbc.Row(html.Div(id="opacity-slider-output-container")),
-                                # dbc.Row(
-                                #     html.Div(
-                                #         dcc.Slider(
-                                #             id="opacity-slider",
-                                #             min=0,
-                                #             max=1,
-                                #             step=0.05,
-                                #             vertical=False,
-                                #             value=0.9,
-                                #             marks=markers_opacity
-                                #         ), style={'width': '500px'}
-                                #     )
-                                # )
-                                ], align='center', width='auto')
+                                                html.Div(daq.ToggleSwitch(id="toggle-switch", size=50, value=True), style={'align': 'center', 'marginRight': '1em'}),
+                                                daq.ToggleSwitch( id="toggle-station-switch", size=50, value=False)
+                                            ]),
+                                            html.Div(html.H4('Colorbar Options')),
+                                            # dbc.Row(html.Div(id='mean-button-out')),
+                                            dbc.Row(html.Div(id="slider-output-container")),
+                                            dbc.Row(
+                                                html.Div(
+                                                    dcc.Slider(
+                                                        id="slider",
+                                                        min=2,
+                                                        max=20,
+                                                        step=1,
+                                                        value=15,
+                                                        marks=markers), style={'width': '500px'})
+                                            ),
+                                            dbc.Row(html.Div(id="range-slider-output-container")),
+                                            dbc.Row(
+                                                html.Div(
+                                                    dcc.RangeSlider(
+                                                    id="range-slider",
+                                                    min=-1,
+                                                    max=15,
+                                                    step=0.5,
+                                                    vertical=False,
+                                                    value=[0, 10],
+                                                ), style={'width': '500px'})
+                                            ),
+                                            ], align='center', width='auto')
+                            ])
+                ]),
+                dcc.Tab(label='Table C-2', children=[
+                        html.H4('Reconstruction Values at Table C2 Locations'),
+                        html.Div(id="table")
+                    ])
                 ])
-            ],
-)
+        ])
 
 
 
@@ -196,6 +194,32 @@ app.layout = html.Div(
 #     # Check if toggle on or of
 #     click = 2 if click is None else click
 #     return True if click % 2 == 0 else None
+@app.callback(
+    dash.dependencies.Output("table", "children"),
+    [dash.dependencies.Input("dropdown", "value")]
+)
+def update_tablec2(value):
+    df = DF_C2[value]
+    station_dv = DF_KEYS[value]
+    df = df[["Location", "lon", "lat", station_dv]]
+
+    return dash_table.DataTable(
+                columns=[{"name": i, "id": i} for i in df.columns],
+                style_cell={
+                    'textAlign': 'center',
+                    'whiteSpace': 'normal',
+                    'height': 'auto',
+                    'padding': '5px'
+                },
+                style_as_list_view=True,
+                style_header={
+                    'backgroundColor': 'white',
+                    'fontWeight': 'bold'
+                },
+                data=df.to_dict('records'),
+           )
+
+
 
 @app.callback(
     dash.dependencies.Output("mask-output-container", "children"),
@@ -254,7 +278,6 @@ def update_slider(selection):
 )
 def update_slider(value):
     return f"N = {value}"
-
 
 ds = read_data(cfg["data"]["mask"]["paths"][0])
 
@@ -350,7 +373,6 @@ def update_ds(
     lat = lat[iymin:iymax, ixmin:ixmax]
     station_value_grid = station_value_grid[iymin:iymax, ixmin:ixmax]
 
-    print("station_value_grid_shape!", station_value_grid.shape)
     ds_arr = ds[dv].values[iymin:iymax, ixmin:ixmax].copy()
 
     target_crs={'init': 'epsg:4326'}
@@ -406,16 +428,17 @@ def update_ds(
                 z=ds_arr,
                 x=ds.rlon.values[ixmin:ixmax],
                 y=ds.rlat.values[iymin:iymax],
-                customdata=np.dstack((lon, lat, station_value_grid)),
+                # customdata=np.dstack((lon, lat, station_value_grid)),
                 zmin=zmin,
                 zmax=zmax,
                 hoverongaps=False,
+                zsmooth = 'best',
                 # opacity=opacity_value,
                 colorscale=get_cmap_divisions("viridis", slider_value),
-                hovertemplate="<b>Design Value: %{z} </b> <br>"
-                + "<b>Station Value: %{customdata[2]}</b> <br>"
-                # + "rlon, rlat: %{x}, %{y}<br>"
-                + "lon, lat: %{customdata[0]}, %{customdata[1]}<br>",
+                hovertemplate="<b>Design Value: %{z} </b> <br>",
+                # + "<b>Station Value: %{customdata[2]}</b> <br>"
+                # # + "rlon, rlat: %{x}, %{y}<br>"
+                # + "lon, lat: %{customdata[0]}, %{customdata[1]}<br>",
                 name=""
             ),
             go.Scattergl(
@@ -465,5 +488,6 @@ def update_ds(
 
     return fig
 
+
 if __name__ == "__main__":
-    app.run_server(host='0.0.0.0', debug=True)
+    app.run_server(host='0.0.0.0', debug=False)
