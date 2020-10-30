@@ -114,7 +114,7 @@ app.layout = html.Div(
     id="big-app-container",
     children=[
               dbc.Row([
-                        dbc.Col([html.H1("National Building Code Design Value Explorer"),
+                        dbc.Col([html.H1("Design Value Explorer"),
                             dcc.Dropdown(
                                 id="dropdown",
                                 options=dd_options,
@@ -360,6 +360,16 @@ def update_ds(
     ds = DS[dd_value]
     df = DF[dd_value]
 
+    x1 = min(value for value in X if value is not None)
+    x2 = max(value for value in X if value is not None)
+    y1 = min(value for value in Y if value is not None)
+    y2 = max(value for value in Y if value is not None)
+
+
+    ixmin = find_nearest_index(ds.rlon.values, np.nanmin(x1))
+    ixmax = find_nearest_index(ds.rlon.values, np.nanmax(x2))
+    iymin = find_nearest_index(ds.rlat.values, np.nanmin(y1))
+    iymax = find_nearest_index(ds.rlat.values, np.nanmax(y2))
 
     xy_min_cutoff = (iymin, iymax, ixmin, ixmax)
 
@@ -369,6 +379,8 @@ def update_ds(
     station_value_grid = station_value_grid[iymin:iymax, ixmin:ixmax]
 
     ds_arr = ds[dv].values[iymin:iymax, ixmin:ixmax].copy()
+
+    print("DSARR SHAPE", ds_arr.shape)
 
     target_crs={'init': 'epsg:4326'}
     source_crs={'proj': 'ob_tran', 'o_proj': 'longlat', 'lon_0': -97, 'o_lat_p': 42.5, 'a': 6378137, 'to_meter': 0.0174532925199, 'no_defs': True}
@@ -436,9 +448,10 @@ def update_ds(
                 # + "lon, lat: %{customdata[0]}, %{customdata[1]}<br>",
                 name=""
             ),
-            go.Scattergl(
+            go.Scatter(
                 x=df.rlon.values,
                 y=df.rlat.values,
+                customdata=df[station_dv].values,
                 mode="markers",
                 marker=dict(
                     size=10,
@@ -448,7 +461,8 @@ def update_ds(
                     line=dict(width=0.35, color="DarkSlateGrey"),
                     showscale=False,
                 ),
-                hoverinfo="skip",
+                hoveron="points+fills",
+                hovertemplate="<b>Station Value: %{customdata} </b> <br>",
                 visible=toggle_station_value,
                 name="",
             ),
@@ -473,6 +487,8 @@ def update_ds(
             "hoverlabel": dict(
                 bgcolor="white", font_size=16, font_family="Rockwell"
             ),
+            "hovermode": "closest",
+            "hoverdistance": 1,
             "width": 1000,
             "height": 750,
             "showlegend": True,

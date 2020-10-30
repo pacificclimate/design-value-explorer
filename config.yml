@@ -19,6 +19,8 @@ data:
         - 'TJan2.5 (degC) Mean'
         - 'Q10_Gumbel-MM (kPa) Reconstruction'
         - 'Q10_Gumbel-MM (kPa) Mean'
+        - 'mean RH (%) Reconstruction'
+        - 'mean RH (%) Mean'
     mask:
         # path to the land mask
         paths:
@@ -42,6 +44,9 @@ data:
             - './assets/data/ensemble/TJan2.5_10_ensemble_mean.nc'
             - './assets/data/reconstructions/Q10_Gumbel-MM_reconstruction.nc'
             - './assets/data/ensemble/rl10_10_ensemble_mean.nc'
+            - './assets/data/reconstructions/mean_reconstruction.nc'
+            - './assets/data/ensemble/mean_10_ensemble_mean.nc'
+
 
         # key name to access reconstruction in NetCDF file
         key_name_in_netcdf:
@@ -55,6 +60,8 @@ data:
             - 'tas'
             - 'rl10'
             - 'rl10'
+            - 'hurs'
+            - 'hurs'
 
         # sets the parameters to the colorbar options in the app
         # choose reasonable values found within reconstructions
@@ -72,6 +79,8 @@ data:
                 - -45
                 - 0
                 - 0
+                - 50
+                - 50
 
             maximum:
                 - 30
@@ -84,6 +93,8 @@ data:
                 - 10
                 - 1
                 - 1
+                - 100
+                - 100
 
             step:
                 - 1
@@ -96,6 +107,8 @@ data:
                 - 5
                 - 0.1
                 - 0.1
+                - 5
+                - 5
 
             # default min/max value of colorbar slider
             default:
@@ -109,6 +122,8 @@ data:
                 - [10, -50]
                 - [0, 1.0]
                 - [0, 1.0]
+                - [50, 100]
+                - [50, 100]
 
     stations:
         station_keys:
@@ -122,6 +137,8 @@ data:
             - 'TJan2.5 (degC)'
             - 'Q10_Gumbel-MM'
             - 'Q10_Gumbel-MM'
+            - 'mean RH (%)'
+            - 'mean RH (%)'
 
         table_c2_path:
             - './assets/data/tables/SL50TableC2.csv'
@@ -134,6 +151,9 @@ data:
             - './assets/data/tables/TJan2.5TableC2.csv'
             - './assets/data/tables/Q10_Gumbel-MMTableC2.csv'
             - './assets/data/tables/Q10_Gumbel-MMTableC2.csv'
+            - './assets/data/tables/meanTableC2.csv'
+            - './assets/data/tables/meanTableC2.csv'
+
 
         # paths to the station data csvs
         paths:
@@ -147,3 +167,5 @@ data:
             - './assets/data/stations/TJan2.5_stations.csv'
             - './assets/data/stations/Q10_Gumbel-MM_stations.csv'
             - './assets/data/stations/Q10_Gumbel-MM_stations.csv'
+            - './assets/data/stations/mean_stations.csv'
+            - './assets/data/stations/mean_stations.csv'
