@@ -1,11 +1,14 @@
-version: '0.1.0'
+version: '3'
 services:
   wps:
     build: .
     image: pacificclimate/dash-dv-explorer
     ports:
-      - "8050:30023"
-
+      - "30022:8050"
+networks:
+  default:
+    external:
+      name: pcicbr0
 
 # docker-compose build
 # docker-compose up
