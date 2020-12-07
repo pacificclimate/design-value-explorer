@@ -2,51 +2,148 @@
 polygon:
     # only include one file. Can be shapefile or other standard 
     #filetype read by geopandas
-    path: './assets/data/shapes/ne_50m_admin_1_states_provinces.shp'
+    path: './assets/data/shapes/canada_final.shp'
 
 data:
     # These are the design value names that are displayed on the map
     # and are also the names of the design values as they appear in
     # the station values
     names:
-        - 'SL50 (kPa)'
-        - 'HDD (degC-day)'
+        - 'SL50 (kPa) Reconstruction'
+        - 'SL50 (kPa) Mean'
+        - 'RL50 (kPa) Reconstruction'
+        - 'RL50 (kPa) Mean'
+        - 'HDD (degC-day) Reconstruction'
+        - 'HDD (degC-day) Mean'
+        - 'TJan2.5 (degC) Reconstruction'
+        - 'TJan2.5 (degC) Mean'
+        - 'Q10_Gumbel-MM (kPa) Reconstruction'
+        - 'Q10_Gumbel-MM (kPa) Mean'
     mask:
         # path to the land mask
         paths:
-            - './assets/data/land_mask_CanRCM4_sftlf.nc'
+            # - './assets/data/land_mask_CanRCM4_sftlf.nc'
+            - './assets/data/canada_mask_rp.nc'
         # key name to access mask in land mask in NetCDF file
         key_name_in_netcdf:
-            - 'sftlf'
+            # - 'sftlf'
+            - 'mask'
     fields:  
         # paths to the reconstructions
         paths:
-            - './assets/data/snow_only_ensemble.nc'
-            - './assets/data/hdd_CanRCM4-LE_ens35_1951-2016_ann_ta.nc'
+            - './assets/data/reconstructions/SL50_reconstruction.nc'
+            - './assets/data/ensemble/SL50_10_ensemble_mean.nc'
+            # - '/home/nannau/nrc_data/snw_rain_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc'
+            - './assets/data/reconstructions/RL50_reconstruction.nc'
+            - './assets/data/ensemble/RL50_10_ensemble_mean.nc'
+            - './assets/data/reconstructions/HDD_reconstruction.nc'
+            - './assets/data/ensemble/HDD_10_ensemble_mean.nc'
+            - './assets/data/reconstructions/TJan2.5_reconstruction.nc'
+            - './assets/data/ensemble/TJan2.5_10_ensemble_mean.nc'
+            - './assets/data/reconstructions/Q10_Gumbel-MM_reconstruction.nc'
+            - './assets/data/ensemble/rl10_10_ensemble_mean.nc'
+
         # key name to access reconstruction in NetCDF file
         key_name_in_netcdf:
             - 'snw'
+            - 'snw'
+            - 'Rain-RL50'
+            - 'Rain-RL50'
             - 'heating_degree_days_per_time_period'
+            - 'heating_degree_days_per_time_period'
+            - 'tas'
+            - 'tas'
+            - 'rl10'
+            - 'rl10'
+
         # sets the parameters to the colorbar options in the app
         # choose reasonable values found within reconstructions
         # or station values. Keeping manual for now to allow
         # for greater flexibility
         colorbar:
             minimum:
-                - -1
-                - 100
+                - 0
+                - 0
+                - 0
+                - 0
+                - 1000
+                - 1000
+                - -45
+                - -45
+                - 0
+                - 0
+
             maximum:
-                - 15
-                - 16000
+                - 30
+                - 30
+                - 1.5
+                - 1.5
+                - 15000
+                - 15000
+                - 10
+                - 10
+                - 1
+                - 1
+
             step:
-                - 0.5
-                - 100
+                - 1
+                - 1
+                - 0.1
+                - 0.1
+                - 1000
+                - 1000
+                - 5
+                - 5
+                - 0.1
+                - 0.1
+
             # default min/max value of colorbar slider
             default:
-                - [0, 10]
-                - [100, 15000]
+                - [0, 20]
+                - [0, 20]
+                - [0, 1.5]
+                - [0, 1.5]
+                - [1000, 15000]
+                - [1000, 15000]
+                - [10, -50]
+                - [10, -50]
+                - [0, 1.0]
+                - [0, 1.0]
+
     stations:
+        station_keys:
+            - 'SL50 (kPa)'
+            - 'SL50 (kPa)'
+            - 'RL50 (kPa)'
+            - 'RL50 (kPa)'
+            - 'HDD (degC-day)'
+            - 'HDD (degC-day)'
+            - 'TJan2.5 (degC)'
+            - 'TJan2.5 (degC)'
+            - 'Q10_Gumbel-MM'
+            - 'Q10_Gumbel-MM'
+
+        table_c2_path:
+            - './assets/data/tables/SL50TableC2.csv'
+            - './assets/data/tables/SL50TableC2.csv'
+            - './assets/data/tables/RL50TableC2.csv'
+            - './assets/data/tables/RL50TableC2.csv'
+            - './assets/data/tables/HDDTableC2.csv'
+            - './assets/data/tables/HDDTableC2.csv'
+            - './assets/data/tables/TJan2.5TableC2.csv'
+            - './assets/data/tables/TJan2.5TableC2.csv'
+            - './assets/data/tables/Q10_Gumbel-MMTableC2.csv'
+            - './assets/data/tables/Q10_Gumbel-MMTableC2.csv'
+
         # paths to the station data csvs
         paths:
-            - './assets/data/snow_stations.csv'
-            - './assets/data/hdd_rot.csv' 
+            - './assets/data/stations/SL50_stations.csv'
+            - './assets/data/stations/SL50_stations.csv'
+            - './assets/data/stations/RL50_stations.csv'
+            - './assets/data/stations/RL50_stations.csv'
+            - './assets/data/stations/HDD_stations.csv'
+            - './assets/data/stations/HDD_stations.csv'
+            - './assets/data/stations/TJan2.5_stations.csv'
+            - './assets/data/stations/TJan2.5_stations.csv'
+            - './assets/data/stations/Q10_Gumbel-MM_stations.csv'
+            - './assets/data/stations/Q10_Gumbel-MM_stations.csv'
