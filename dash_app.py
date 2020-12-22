@@ -97,7 +97,7 @@ app.layout = get_layout(app, data)
     [dash.dependencies.Input("ens-switch", "value")]
 )
 def update_ensemble(value):
-    d = {True: "CanRCM4 Ensemble Mean", False: "HSM Recosntruction"}
+    d = {True: "CanRCM4 Ensemble Mean", False: "HSM Reconstruction"}
     return f"{d[value]}"
 
 @app.callback(
@@ -127,11 +127,19 @@ def update_tablec2(value):
 
 @app.callback(
     dash.dependencies.Output("mask-output-container", "children"),
-    [dash.dependencies.Input("toggle-switch", "value")]
+    [dash.dependencies.Input("toggle-mask", "value")]
 )
 def update_mask(value):
     d = {True: "ON", False: "OFF"}
     return f"Mask: {d[value]}"
+
+@app.callback(
+    dash.dependencies.Output("log-output-container", "children"),
+    [dash.dependencies.Input("toggle-log", "value")]
+)
+def update_log(value):
+    d = {True: "Log", False: "Linear"}
+    return f"Colorscale: {d[value]}"
 
 
 @app.callback(
@@ -158,7 +166,7 @@ def update_range(value):
         Output(component_id="range-slider", component_property="value")
     ],
     [Input(component_id="dropdown", component_property="value"),
-    Input(component_id="slider", component_property="value")],
+    Input(component_id="cbar-slider", component_property="value")],
 )
 def update_slider(value, N):
     field = data[value]["reconstruction"][data[value]["dv"]].values
@@ -170,8 +178,8 @@ def update_slider(value, N):
 
 
 @app.callback(
-    dash.dependencies.Output("slider-output-container", "children"),
-    [dash.dependencies.Input("slider", "value")],
+    dash.dependencies.Output("cbar-slider-output-container", "children"),
+    [dash.dependencies.Input("cbar-slider", "value")],
 )
 def update_slider_n(value):
     return f"N = {value}"
@@ -182,27 +190,34 @@ ds = data[list(data.keys())[0]]["reconstruction"]
 @app.callback(
     dash.dependencies.Output("my-graph", "figure"),
     [
-        dash.dependencies.Input("toggle-switch", "value"),
+        dash.dependencies.Input("toggle-mask", "value"),
         dash.dependencies.Input("toggle-station-switch", "value"),
         dash.dependencies.Input("dropdown", "value"),
-        dash.dependencies.Input("slider", "value"),
+        dash.dependencies.Input("cbar-slider", "value"),
         dash.dependencies.Input("range-slider", "value"),
-        dash.dependencies.Input("ens-switch", "value")
+        dash.dependencies.Input("ens-switch", "value"),
+        dash.dependencies.Input("toggle-log", "value")
     ],
 )
 def update_ds(
-    toggle_value,
+    toggle_mask,
     toggle_station_value,
     dd_value,
     slider_value,
     range_slider,
-    mean_button
+    mean_button,
+    toggle_log
 ):
 
     zmin = range_slider[0]
     zmax = range_slider[1]
 
-    ticks = np.around(np.linspace(zmin, zmax, slider_value+1), 3)
+    if toggle_log:
+        ticks = np.linspace(np.log10(zmin), np.log10(zmax), slider_value+1)
+        ticks = np.around(10**(ticks), 2)
+    else:
+        ticks = np.around(np.linspace(zmin, zmax, slider_value+1), 2)
+
     cmap = matplotlib.cm.get_cmap("viridis", slider_value)
     hexes = []
     for i in range(cmap.N):
@@ -236,11 +251,10 @@ def update_ds(
     df = coord_prep(df, station_dv)
     ds_arr = ds[dv].values[iymin:iymax, ixmin:ixmax].copy()
 
-    if r_or_m == "model":
+    if r_or_m == "model" and toggle_mask:
         mask = native_mask[iymin:iymax, ixmin:ixmax]
         ds_arr[~mask] = np.nan
-    # print("CMAP", matplotlib_to_plotly("viridis", slider_value, zmax))
-    cmap = matplotlib.cm.get_cmap("viridis", slider_value)
+
     fig_list = [
             go.Heatmap(
                 z=ds_arr,
@@ -266,7 +280,6 @@ def update_ds(
                     size=10,
                     symbol="circle",
                     color=df[station_dv],
-                    # colorscale=get_cmap_divisions("viridis", slider_value),
                     line=dict(width=0.35, color="DarkSlateGrey"),
                     showscale=False,
                 ),
@@ -298,11 +311,12 @@ def update_ds(
             'xaxis_showgrid': False, 
             'yaxis_showgrid': False,
             "hoverlabel": dict(
-                bgcolor="white", font_size=16, font_family="Rockwell"
+                bgcolor="white",
+                font_size=16,
+                font_family="Rockwell"
             ),
             "colorbar": dict(
                 tickmode="array",
-                # tickvals=ticks,
                 ticktext=ticks
             ),
             "hoverdistance": 5,

@@ -29,7 +29,12 @@ def get_layout(app, data):
                                     clearable=False,
                                 ), 
                                 html.Br(), 
-                                html.Div(id="item-display")])
+                                html.Div(id="item-display")],
+                                style={
+                                        'margin-left' : '20px',
+                                        'margin-right' : '20px'
+                                        }
+                                )
                             ]),
                   dcc.Tabs([
                         dcc.Tab(label='Map', children=[
@@ -49,20 +54,28 @@ def get_layout(app, data):
                                                     html.Div(id="station-output-container")
                                                 ]),
                                                 dbc.Row([
-
-                                                    html.Div(daq.ToggleSwitch(id="toggle-switch", size=50, value=True), style={'align': 'center', 'marginRight': '1em'}),
+                                                    html.Div(daq.ToggleSwitch(id="toggle-mask", size=50, value=True), style={'align': 'center', 'marginRight': '1em'}),
                                                     daq.ToggleSwitch( id="toggle-station-switch", size=50, value=False)
                                                 ]),
                                                 html.Div(html.H4('Colorbar Options')),
-                                                dbc.Row(html.Div(id="slider-output-container")),
+                                                dbc.Row([
+                                                    html.Div(id="log-output-container"),
+                                                    ]),
+                                                dbc.Row(
+                                                    daq.ToggleSwitch(id="toggle-log", value=False, size=50),
+                                                ),
+                                                dbc.Row([
+                                                    html.Div(id="cbar-slider-output-container")
+                                                    ]),
                                                 dbc.Row(
                                                     html.Div(
                                                         dcc.Slider(
-                                                            id="slider",
+                                                            id="cbar-slider",
                                                             min=2,
                                                             max=30,
                                                             step=1,
-                                                            value=10), style={'width': '500px'})
+                                                            value=10), style={'width': '500px'}
+                                                        )
                                                 ),
                                                 dbc.Row(html.Div(id="range-slider-output-container")),
                                                 dbc.Row(
