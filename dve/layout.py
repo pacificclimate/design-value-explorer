@@ -25,7 +25,7 @@ def get_layout(app, data):
                                     options=dd_options,
                                     value=list(data.keys())[0],
                                     placeholder="Select a design value to display...",
-                                    searchable=False,
+                                    searchable=True,
                                     clearable=False,
                                 ), 
                                 html.Br(), 
@@ -39,8 +39,10 @@ def get_layout(app, data):
                                         dbc.Col([
                                                 html.Div(html.H4('Overlay Options')),
                                                 dbc.Row([
-                                                    html.Div(dbc.Button('Ensemble Mean', id='mean-button-out'), style={'border-width': 'thin'}),
-                                                    dbc.Button('Ensemble Mean', id='mean-button')
+                                                    html.Div(id='ens-output-container', style={'border-width': 'thin'}),
+                                                ]),
+                                                dbc.Row([
+                                                    daq.ToggleSwitch(id='ens-switch', value=False)
                                                 ]),
                                                 dbc.Row([
                                                     html.Div(id="mask-output-container", style={'align': 'center', 'marginRight': '1em'}),
@@ -60,8 +62,7 @@ def get_layout(app, data):
                                                             min=2,
                                                             max=30,
                                                             step=1,
-                                                            value=10,
-                                                            marks=default_markers), style={'width': '500px'})
+                                                            value=10), style={'width': '500px'})
                                                 ),
                                                 dbc.Row(html.Div(id="range-slider-output-container")),
                                                 dbc.Row(

@@ -2,7 +2,7 @@ from climpyrical.data import read_data
 from climpyrical.gridding import flatten_coords, transform_coords, find_nearest_index
 from climpyrical.mask import stratify_coords
 from climpyrical.cmd.find_matched_model_vals import add_model_values
-from dve.colorbar import get_cmap_divisions
+from dve.colorbar import get_cmap_divisions, matplotlib_to_plotly, discrete_colorscale
 from dve.processing import coord_prep
 from dve.generate_iso_lines import gen_lines
 from dve.layout import get_layout
@@ -96,9 +96,9 @@ app.layout = get_layout(app, data)
     dash.dependencies.Output("ens-output-container", "children"),
     [dash.dependencies.Input("ens-switch", "value")]
 )
-def update_mask(value):
+def update_ensemble(value):
     d = {True: "CanRCM4 Ensemble Mean", False: "HSM Recosntruction"}
-    return f"Mask: {d[value]}"
+    return f"{d[value]}"
 
 @app.callback(
     dash.dependencies.Output("table", "children"),
@@ -162,9 +162,9 @@ def update_range(value):
 )
 def update_slider(value, N):
     field = data[value]["reconstruction"][data[value]["dv"]].values
-    minimum = np.nanmax(field)
-    maximum = np.nanmin(field)
-    step = (maximum-minimum)/N
+    minimum = np.round(np.nanmin(field), 3)
+    maximum = np.round(np.nanmax(field), 3)
+    step = (maximum-minimum)/(N+1)
     default = [minimum, maximum]
     return minimum, maximum, step, default
 
@@ -187,7 +187,7 @@ ds = data[list(data.keys())[0]]["reconstruction"]
         dash.dependencies.Input("dropdown", "value"),
         dash.dependencies.Input("slider", "value"),
         dash.dependencies.Input("range-slider", "value"),
-        dash.dependencies.Input("mean-button-out", "value")
+        dash.dependencies.Input("ens-switch", "value")
     ],
 )
 def update_ds(
@@ -202,9 +202,18 @@ def update_ds(
     zmin = range_slider[0]
     zmax = range_slider[1]
 
+    ticks = np.around(np.linspace(zmin, zmax, slider_value+1), 3)
+    cmap = matplotlib.cm.get_cmap("viridis", slider_value)
+    hexes = []
+    for i in range(cmap.N):
+        rgba = cmap(i)
+        # rgb2hex accepts rgb or rgba
+        hexes.append(matplotlib.colors.rgb2hex(rgba))
+
+    dcolorsc = discrete_colorscale(ticks, hexes)
+    ticktext = [f'{ticks[0]}-{ticks[1]}'] + [f'{ticks[k]}-{ticks[k+1]}' for k in range(1, len(ticks)-1)]
+
     r_or_m = "model" if mean_button else "reconstruction"
-    logging.info("RORM:", r_or_m)
-    print("RORM:", r_or_m)
 
     dv, station_dv = data[dd_value]["dv"], data[dd_value]["station_dv"]
     ds = data[dd_value][r_or_m]
@@ -230,7 +239,8 @@ def update_ds(
     if r_or_m == "model":
         mask = native_mask[iymin:iymax, ixmin:ixmax]
         ds_arr[~mask] = np.nan
-
+    # print("CMAP", matplotlib_to_plotly("viridis", slider_value, zmax))
+    cmap = matplotlib.cm.get_cmap("viridis", slider_value)
     fig_list = [
             go.Heatmap(
                 z=ds_arr,
@@ -239,9 +249,12 @@ def update_ds(
                 zmin=zmin,
                 zmax=zmax,
                 hoverongaps=False,
-                zsmooth = 'best',
-                colorscale=get_cmap_divisions("viridis", slider_value),
-                hovertemplate="<b>Design Value: %{z} </b> <br>",
+                colorscale = dcolorsc,
+                colorbar = dict(
+                    tickvals=ticks,
+                    ticktext=ticktext
+                ),
+                hovertemplate="<b>Design Value: %{z} </b><br>",
                 name=""
             ),
             go.Scattergl(
@@ -252,8 +265,8 @@ def update_ds(
                 marker=dict(
                     size=10,
                     symbol="circle",
-                    color=df[station_dv].values,
-                    colorscale=get_cmap_divisions("viridis", slider_value),
+                    color=df[station_dv],
+                    # colorscale=get_cmap_divisions("viridis", slider_value),
                     line=dict(width=0.35, color="DarkSlateGrey"),
                     showscale=False,
                 ),
@@ -286,6 +299,11 @@ def update_ds(
             'yaxis_showgrid': False,
             "hoverlabel": dict(
                 bgcolor="white", font_size=16, font_family="Rockwell"
+            ),
+            "colorbar": dict(
+                tickmode="array",
+                # tickvals=ticks,
+                ticktext=ticks
             ),
             "hoverdistance": 5,
             "hovermode": "closest",
