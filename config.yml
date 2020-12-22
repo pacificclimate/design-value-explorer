@@ -1,149 +1,137 @@
-# include path to polygons you wish to overlay
-polygon:
-    # only include one file. Can be shapefile or other standard 
-    #filetype read by geopandas
-    path: './assets/data/shapes/canada_final.shp'
 
-data:
-    # These are the design value names that are displayed on the map
-    # and are also the names of the design values as they appear in
-    # the station values
-    names:
-        - 'SL50 (kPa) Reconstruction'
-        - 'SL50 (kPa) Mean'
-        - 'RL50 (kPa) Reconstruction'
-        - 'RL50 (kPa) Mean'
-        - 'HDD (degC-day) Reconstruction'
-        - 'HDD (degC-day) Mean'
-        - 'TJan2.5 (degC) Reconstruction'
-        - 'TJan2.5 (degC) Mean'
-        - 'Q10_Gumbel-MM (kPa) Reconstruction'
-        - 'Q10_Gumbel-MM (kPa) Mean'
-    mask:
-        # path to the land mask
-        paths:
-            # - './assets/data/land_mask_CanRCM4_sftlf.nc'
-            - './assets/data/canada_mask_rp.nc'
-        # key name to access mask in land mask in NetCDF file
-        key_name_in_netcdf:
-            # - 'sftlf'
-            - 'mask'
-    fields:  
-        # paths to the reconstructions
-        paths:
-            - './assets/data/reconstructions/SL50_reconstruction.nc'
-            - './assets/data/ensemble/SL50_10_ensemble_mean.nc'
-            # - '/home/nannau/nrc_data/snw_rain_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc'
-            - './assets/data/reconstructions/RL50_reconstruction.nc'
-            - './assets/data/ensemble/RL50_10_ensemble_mean.nc'
-            - './assets/data/reconstructions/HDD_reconstruction.nc'
-            - './assets/data/ensemble/HDD_10_ensemble_mean.nc'
-            - './assets/data/reconstructions/TJan2.5_reconstruction.nc'
-            - './assets/data/ensemble/TJan2.5_10_ensemble_mean.nc'
-            - './assets/data/reconstructions/Q10_Gumbel-MM_reconstruction.nc'
-            - './assets/data/ensemble/rl10_10_ensemble_mean.nc'
+# Parameterize the pipeline
+# The pipeline will iterate through each parent tree
+# in dvs and provide the associated parameters
 
-        # key name to access reconstruction in NetCDF file
-        key_name_in_netcdf:
-            - 'snw'
-            - 'snw'
-            - 'Rain-RL50'
-            - 'Rain-RL50'
-            - 'heating_degree_days_per_time_period'
-            - 'heating_degree_days_per_time_period'
-            - 'tas'
-            - 'tas'
-            - 'rl10'
-            - 'rl10'
+# Which notebooks to use in the pipeline
+paths:
+    mask_path: data/masks/canada_mask_rp.nc
+    north_mask_path: data/masks/canada_mask_north_rp.nc
+    canada_vector: data/vectors/canada_final.shp
+    native_mask: data/masks/land_mask_CanRCM4_sftlf.nc
+    total_table_c2: data/tables/combined_dv_tablec2.csv
+dvs:
+    RL50:
+        station_dv: "RL50 (kPa)"
+        station_path: data/station_inputs/sl50_rl50_for_maps.csv
+        input_model_path: data/model_inputs/snw_rain_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
+        reconstruction_path: data/reconstructions/RL50_reconstruction.nc
+        table: data/tables/RL50_TableC2.csv
+    RHann:
+        station_dv: "mean RH (%)"
+        station_path: data/station_inputs/rh_annual_mean_10yr_for_maps.csv
+        input_model_path: data/model_inputs/hurs_CanRCM4-LE_ens15_1951-2016_ensmean.nc        
+        reconstruction_path: data/reconstructions/RHann_reconstruction.nc
+        table: data/tables/RHann_TableC2.csv
+ 
+    HDD:
+        station_dv: "HDD (degC-day)"
+        station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
+        input_model_path: data/model_inputs/hdd_CanRCM4-LE_ens35_1951-2016_ann_ensmean.nc
+        reconstruction_path: data/reconstructions/HDD_reconstruction.nc
+        table: data/tables/HDD_TableC2.csv
+ 
+    SL50:
+        station_dv: "SL50 (kPa)"
+        station_path: data/station_inputs/sl50_rl50_for_maps.csv
+        input_model_path: data/model_inputs/snw_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
+        reconstruction_path: data/reconstructions/SL50_reconstruction.nc
+        table: data/tables/SL50_TableC2.csv
+ 
+    WP10:
+        station_dv: "WP10 (kPa)"
+        station_path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
+        input_model_path: data/model_inputs/wpress_CanRCM4-LE_ens35_1951-2016_max_rl10_kpa_ensmean.nc
+        reconstruction_path: data/reconstructions/WP10_reconstruction.nc
+        table: data/tables/WP10_TableC2.csv
+ 
+    WP50:
+        station_dv: "WP50 (kPa)"
+        station_path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
+        input_model_path: data/model_inputs/wpress_CanRCM4-LE_ens35_1951-2016_max_rl50_kpa_ensmean.nc
+        reconstruction_path: data/reconstructions/WP50_reconstruction.nc
+        table: data/tables/WP50_TableC2.csv
 
-        # sets the parameters to the colorbar options in the app
-        # choose reasonable values found within reconstructions
-        # or station values. Keeping manual for now to allow
-        # for greater flexibility
-        colorbar:
-            minimum:
-                - 0
-                - 0
-                - 0
-                - 0
-                - 1000
-                - 1000
-                - -45
-                - -45
-                - 0
-                - 0
+    TJan2.5:
+        station_dv: "TJan2.5 (degC)"
+        station_path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
+        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan2.5p_ensmean.nc
+        reconstruction_path: data/reconstructions/TJan2.5_reconstruction.nc
+        table: data/tables/TJan2.5_TableC2.csv
+        
+    TJan1.0:
+        station_dv: "TJan1.0 (degC)"
+        station_path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
+        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan1.0p_ensmean.nc
+        reconstruction_path: data/reconstructions/TJan1.0_reconstruction.nc
+        table: data/tables/TJan1.0_TableC2.csv
 
-            maximum:
-                - 30
-                - 30
-                - 1.5
-                - 1.5
-                - 15000
-                - 15000
-                - 10
-                - 10
-                - 1
-                - 1
+    Tmin:
+        station_dv: "Tmin (degC)"
+        station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
+        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_min_ensmean.nc
+        reconstruction_path: data/reconstructions/Tmin_reconstruction.nc
+        table: data/tables/Tmin_TableC2.csv
+        
+    Tmax:
+        station_dv: "Tmax (degC)"
+        station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
+        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_max_ensmean.nc
+        reconstruction_path: data/reconstructions/Tmax_reconstruction.nc
+        table: data/tables/Tmax_TableC2.csv
+        
+    TJul97.5:
+        station_dv:  "TJul2.5 (degC)"
+        station_path: data/station_inputs/julT97.5p_allstations_v3_min8yr_for_maps.csv
+        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
+        reconstruction_path: data/reconstructions/TJul97.5_reconstruction.nc
+        table: data/tables/TJul97.5_TableC2.csv
+        
+    TwJul97.5:
+        station_dv:  "TwJul2.5 (degC)"
+        station_path: data/station_inputs/julTwb97.5p_allstations_v3_for_maps.csv
+        input_model_path: data/model_inputs/twb_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
+        reconstruction_path: data/reconstructions/TwJul97.5_reconstruction.nc
+        table: data/tables/TwJul97.5_TableC2.csv
+        
+    DRWP5:
+        station_dv: "DRWP-RL5 (Pa)"
+        station_path: data/station_inputs/drwp_rl5_for_maps.csv
+        input_model_path: data/model_inputs/drwp_CanRCM4-LE_ens15_1951-2016_rl5_ensmean.nc
+        reconstruction_path: data/reconstructions/DRWP5_reconstruction.nc
+        table: data/tables/DRWP5_TableC2.csv
+        
+    PAnn:
+        station_dv: "annual_pr (mm)"
+        station_path: data/station_inputs/pr_annual_mean_doy_MSC_25yr_for_maps.csv
+        input_model_path: data/model_inputs/pr_CanRCM4-LE_ens35_1951-2016_ann_sum_ensmean.nc
+        reconstruction_path: data/reconstructions/PAnn_reconstruction.nc
+        table: data/tables/PAnn_TableC2.csv
+        
+    RAnn:
+        station_dv: "annual_rain (mm)"
+        station_path: data/station_inputs/rain_annual_mean_doy_MSC_25yr_for_maps.csv
+        input_model_path: data/model_inputs/rain_CanRCM4-LE_ens35_1951-2016_ann_sum_ensmean.nc
+        reconstruction_path: data/reconstructions/RAnn_reconstruction.nc
+        table: data/tables/RAnn_TableC2.csv
+        
+    R1d50:
+        station_dv: "1day rain RL50 (mm)"
+        station_path: data/station_inputs/1day_rain_rl50_for_maps.csv
+        input_model_path: data/model_inputs/rain_CanRCM4-LE_ens35_1951-2016_max1day_rl50_gum_lm_ensmean.nc
+        reconstruction_path: data/reconstructions/R1d50_reconstruction.nc
+        table: data/tables/R1d50_TableC2.csv
 
-            step:
-                - 1
-                - 1
-                - 0.1
-                - 0.1
-                - 1000
-                - 1000
-                - 5
-                - 5
-                - 0.1
-                - 0.1
-
-            # default min/max value of colorbar slider
-            default:
-                - [0, 20]
-                - [0, 20]
-                - [0, 1.5]
-                - [0, 1.5]
-                - [1000, 15000]
-                - [1000, 15000]
-                - [10, -50]
-                - [10, -50]
-                - [0, 1.0]
-                - [0, 1.0]
-
-    stations:
-        station_keys:
-            - 'SL50 (kPa)'
-            - 'SL50 (kPa)'
-            - 'RL50 (kPa)'
-            - 'RL50 (kPa)'
-            - 'HDD (degC-day)'
-            - 'HDD (degC-day)'
-            - 'TJan2.5 (degC)'
-            - 'TJan2.5 (degC)'
-            - 'Q10_Gumbel-MM'
-            - 'Q10_Gumbel-MM'
-
-        table_c2_path:
-            - './assets/data/tables/SL50TableC2.csv'
-            - './assets/data/tables/SL50TableC2.csv'
-            - './assets/data/tables/RL50TableC2.csv'
-            - './assets/data/tables/RL50TableC2.csv'
-            - './assets/data/tables/HDDTableC2.csv'
-            - './assets/data/tables/HDDTableC2.csv'
-            - './assets/data/tables/TJan2.5TableC2.csv'
-            - './assets/data/tables/TJan2.5TableC2.csv'
-            - './assets/data/tables/Q10_Gumbel-MMTableC2.csv'
-            - './assets/data/tables/Q10_Gumbel-MMTableC2.csv'
-
-        # paths to the station data csvs
-        paths:
-            - './assets/data/stations/SL50_stations.csv'
-            - './assets/data/stations/SL50_stations.csv'
-            - './assets/data/stations/RL50_stations.csv'
-            - './assets/data/stations/RL50_stations.csv'
-            - './assets/data/stations/HDD_stations.csv'
-            - './assets/data/stations/HDD_stations.csv'
-            - './assets/data/stations/TJan2.5_stations.csv'
-            - './assets/data/stations/TJan2.5_stations.csv'
-            - './assets/data/stations/Q10_Gumbel-MM_stations.csv'
-            - './assets/data/stations/Q10_Gumbel-MM_stations.csv'
+    MI:
+        station_dv: "moisture_index"
+        station_path: data/station_inputs/moisture_index_for_maps.csv
+        input_model_path: data/model_inputs/moisture_index_CanRCM4-LE_ens15_1951-2016_ensmean.nc
+        reconstruction_path: data/reconstructions/MI_reconstruction.nc
+        table: data/tables/MI_TableC2.csv
+        
+    R15m10:
+        station_dv: "Gum-LM RL10 (mm)"
+        station_path: data/station_inputs/15min_rain_rl10_for_maps.csv
+        input_model_path: data/model_inputs/rain_CanRCM4-LE_ens15_1951-2016_max1hr_rl10_gum_lm_ensmean.nc
+        reconstruction_path: data/reconstructions/R15m10_reconstruction.nc
+        table: data/tables/R15m10_TableC2.csv
