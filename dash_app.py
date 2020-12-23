@@ -44,6 +44,10 @@ native_mask = read_data(
     resource_filename("dve", config["paths"]["native_mask"])
 )["sftlf"] >= 1.0
 
+colormaps = config["colormaps"]
+# Add reverse options, too
+cmap_r = [f"{color}_r" for color in colormaps]
+colormaps += cmap_r
 
 data = {}
 for key in config["dvs"].keys():
@@ -72,7 +76,8 @@ for key in config["dvs"].keys():
                                     "dve",
                                     config["dvs"][key]["table"]
                                 )
-                            )
+                            ),
+            "cmap": config["dvs"][key]["cmap"]
     }
     data[key] = info
 
@@ -90,15 +95,24 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 app.title = 'Pacific Climate Impacts Consortium Design Value Explorer'
 app.config.suppress_callback_exceptions = True
 
-app.layout = get_layout(app, data)
+app.layout = get_layout(app, data, colormaps)
 
 @app.callback(
     dash.dependencies.Output("ens-output-container", "children"),
     [dash.dependencies.Input("ens-switch", "value")]
 )
 def update_ensemble(value):
-    d = {True: "CanRCM4 Ensemble Mean", False: "HSM Recosntruction"}
+    d = {True: "CanRCM4 Ensemble Mean", False: "HSM Reconstruction"}
     return f"{d[value]}"
+
+@app.callback(
+    dash.dependencies.Output("raster-output-container", "children"),
+    [dash.dependencies.Input("raster-switch", "value")]
+)
+def update_ensemble(value):
+    d = {True: "Raster On", False: "Raster Off"}
+    return f"{d[value]}"
+
 
 @app.callback(
     dash.dependencies.Output("table", "children"),
@@ -127,12 +141,31 @@ def update_tablec2(value):
 
 @app.callback(
     dash.dependencies.Output("mask-output-container", "children"),
-    [dash.dependencies.Input("toggle-switch", "value")]
+    [dash.dependencies.Input("toggle-mask", "value")]
 )
 def update_mask(value):
     d = {True: "ON", False: "OFF"}
     return f"Mask: {d[value]}"
 
+@app.callback(
+    dash.dependencies.Output("log-output-container", "children"),
+    [dash.dependencies.Input("toggle-log", "value")]
+)
+def update_log(loglin):
+    d = {True: "Log", False: "Linear"}
+    return f"Colourscale: {d[loglin]}"
+
+
+@app.callback(
+    dash.dependencies.Output("input-colorbar-output-container", "children"),
+    [dash.dependencies.Input("input-colorbar", "value")]
+)
+def update_input(value):
+    try:
+        matplotlib.cm.get_cmap(value, 10)
+    except ValueError:
+        value = "Invalid cmap!"
+    return f"Colour Map: {value}"
 
 @app.callback(
     dash.dependencies.Output("station-output-container", "children"),
@@ -148,7 +181,7 @@ def update_stations(value):
     [dash.dependencies.Input("range-slider", "value")]
 )
 def update_range(value):
-    return f"Colorbar Range: {value[0]} to {value[1]}"
+    return f"Colourbar Range: {value[0]} to {value[1]}"
 
 @app.callback(
     [
@@ -158,7 +191,7 @@ def update_range(value):
         Output(component_id="range-slider", component_property="value")
     ],
     [Input(component_id="dropdown", component_property="value"),
-    Input(component_id="slider", component_property="value")],
+    Input(component_id="cbar-slider", component_property="value")],
 )
 def update_slider(value, N):
     field = data[value]["reconstruction"][data[value]["dv"]].values
@@ -170,40 +203,54 @@ def update_slider(value, N):
 
 
 @app.callback(
-    dash.dependencies.Output("slider-output-container", "children"),
-    [dash.dependencies.Input("slider", "value")],
+    dash.dependencies.Output("cbar-slider-output-container", "children"),
+    [dash.dependencies.Input("cbar-slider", "value")],
 )
 def update_slider_n(value):
-    return f"N = {value}"
+    return f"Number of Discrete Colours = {value}"
 
 ds = data[list(data.keys())[0]]["reconstruction"]
-# lxarr, lyarr, txarr, tyarr, ixmin, ixmax, iymin, iymax, plon, plat, prlon, prlat = gen_lines(ds, X, Y)
 
 @app.callback(
     dash.dependencies.Output("my-graph", "figure"),
     [
-        dash.dependencies.Input("toggle-switch", "value"),
+        dash.dependencies.Input("toggle-mask", "value"),
         dash.dependencies.Input("toggle-station-switch", "value"),
         dash.dependencies.Input("dropdown", "value"),
-        dash.dependencies.Input("slider", "value"),
+        dash.dependencies.Input("cbar-slider", "value"),
         dash.dependencies.Input("range-slider", "value"),
-        dash.dependencies.Input("ens-switch", "value")
+        dash.dependencies.Input("ens-switch", "value"),
+        dash.dependencies.Input("toggle-log", "value"),
+        dash.dependencies.Input("colorscale", "value"),
+        dash.dependencies.Input("raster-switch", "value"),
     ],
 )
 def update_ds(
-    toggle_value,
+    toggle_mask,
     toggle_station_value,
     dd_value,
     slider_value,
     range_slider,
-    mean_button
+    mean_button,
+    toggle_log,
+    input_colorbar,
+    raster_switch
 ):
 
     zmin = range_slider[0]
     zmax = range_slider[1]
 
-    ticks = np.around(np.linspace(zmin, zmax, slider_value+1), 3)
-    cmap = matplotlib.cm.get_cmap("viridis", slider_value)
+    if toggle_log:
+        ticks = np.linspace(np.log10(zmin), np.log10(zmax), slider_value+1)
+        ticks = np.around(10**(ticks), 2)
+    else:
+        ticks = np.around(np.linspace(zmin, zmax, slider_value+1), 3)
+
+    if input_colorbar is None:
+        input_colorbar = data[dd_value]["cmap"]
+
+    cmap = matplotlib.cm.get_cmap(input_colorbar, slider_value)
+
     hexes = []
     for i in range(cmap.N):
         rgba = cmap(i)
@@ -236,11 +283,10 @@ def update_ds(
     df = coord_prep(df, station_dv)
     ds_arr = ds[dv].values[iymin:iymax, ixmin:ixmax].copy()
 
-    if r_or_m == "model":
+    if r_or_m == "model" and toggle_mask:
         mask = native_mask[iymin:iymax, ixmin:ixmax]
         ds_arr[~mask] = np.nan
-    # print("CMAP", matplotlib_to_plotly("viridis", slider_value, zmax))
-    cmap = matplotlib.cm.get_cmap("viridis", slider_value)
+
     fig_list = [
             go.Heatmap(
                 z=ds_arr,
@@ -254,6 +300,7 @@ def update_ds(
                     tickvals=ticks,
                     ticktext=ticktext
                 ),
+                visible=raster_switch,
                 hovertemplate="<b>Design Value: %{z} </b><br>",
                 name=""
             ),
@@ -266,52 +313,59 @@ def update_ds(
                     size=10,
                     symbol="circle",
                     color=df[station_dv],
-                    # colorscale=get_cmap_divisions("viridis", slider_value),
-                    line=dict(width=0.35, color="DarkSlateGrey"),
-                    showscale=False,
+                    cmin=zmin,
+                    cmax=zmax,
+                    line=dict(
+                        width=1,
+                        color="DarkSlateGrey"
+                    ),
+                    showscale=(raster_switch==False),
+                    colorscale = dcolorsc,
+                    colorbar = dict(
+                        tickvals=ticks,
+                        ticktext=ticktext,
+                    ),
                 ),
                 hovertemplate="<b>Station Value: %{text}</b><br>",
                 visible=toggle_station_value,
-                name="",
+                name=""
             ),
         ]
     
     go_list += fig_list
-
+    units = ds[dv].attrs["units"]
     fig = {
         "data": go_list,
         "layout": {
-            "title": f"<b>{dd_value}</b>",
-            "font": dict(size=18, color='grey'),
+            "title": f"<b>{dd_value} ({units})</b>",
+            "font": dict(size=13, color='grey'),
             "xaxis": dict(
                 zeroline=False, 
-                range=[-24, 34],
+                range=[ds.rlon.values[ixmin], ds.rlon.values[ixmax]],
                 showgrid=False, # thin lines in the background
                 visible=False  # numbers below
             ),
             "yaxis": dict(
                 zeroline=False, 
-                range=[-7.4, 37], 
+                range=[ds.rlat.values[iymin], ds.rlat.values[iymax]],
                 showgrid=False, # thin lines in the background
                 visible=False
             ),
             'xaxis_showgrid': False, 
             'yaxis_showgrid': False,
             "hoverlabel": dict(
-                bgcolor="white", font_size=16, font_family="Rockwell"
-            ),
-            "colorbar": dict(
-                tickmode="array",
-                # tickvals=ticks,
-                ticktext=ticks
+                bgcolor="white",
+                font_size=16,
+                font_family="Rockwell"
             ),
             "hoverdistance": 5,
             "hovermode": "closest",
             "width": 1000,
             "height": 750,
-            "showlegend": True,
+            "showlegend": False,
             "legend_orientation": "v",
             "scrollZoom": True,
+            "uirevision": "None"
         }
     }
 

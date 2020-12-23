@@ -2,10 +2,11 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_daq as daq
-
+import plotly.express as px
 import numpy as np
 
-def get_layout(app, data):
+
+def get_layout(app, data, colormaps):
 
     (first_dv, ) = data[list(data.keys())[0]]["reconstruction"].data_vars
     first_rfield = data[list(data.keys())[0]]["reconstruction"][first_dv]
@@ -29,7 +30,12 @@ def get_layout(app, data):
                                     clearable=False,
                                 ), 
                                 html.Br(), 
-                                html.Div(id="item-display")])
+                                html.Div(id="item-display")],
+                                style={
+                                        'margin-left' : '20px',
+                                        'margin-right' : '20px'
+                                        }
+                                )
                             ]),
                   dcc.Tabs([
                         dcc.Tab(label='Map', children=[
@@ -39,30 +45,47 @@ def get_layout(app, data):
                                         dbc.Col([
                                                 html.Div(html.H4('Overlay Options')),
                                                 dbc.Row([
-                                                    html.Div(id='ens-output-container', style={'border-width': 'thin'}),
+                                                    html.Div(id='ens-output-container', style={'align': 'center', 'marginRight': '1em'}),
+                                                    html.Div(id='raster-output-container', style={'align': 'center', 'marginRight': '1em'}),
                                                 ]),
                                                 dbc.Row([
-                                                    daq.ToggleSwitch(id='ens-switch', value=False)
+                                                    html.Div(daq.ToggleSwitch(id='ens-switch', value=False), style={'align': 'center', 'marginRight': '6.5em'}),
+                                                    html.Div(daq.ToggleSwitch(id='raster-switch', value=True), style={'align': 'center', 'marginRight': '1em'}),                                                
                                                 ]),
                                                 dbc.Row([
                                                     html.Div(id="mask-output-container", style={'align': 'center', 'marginRight': '1em'}),
                                                     html.Div(id="station-output-container")
                                                 ]),
                                                 dbc.Row([
-
-                                                    html.Div(daq.ToggleSwitch(id="toggle-switch", size=50, value=True), style={'align': 'center', 'marginRight': '1em'}),
+                                                    html.Div(daq.ToggleSwitch(id="toggle-mask", size=50, value=True), style={'align': 'center', 'marginRight': '1em'}),
                                                     daq.ToggleSwitch( id="toggle-station-switch", size=50, value=False)
                                                 ]),
-                                                html.Div(html.H4('Colorbar Options')),
-                                                dbc.Row(html.Div(id="slider-output-container")),
+                                                html.Div(html.H4('Colourbar Options')),
+                                                html.Div(html.P('Colour Map')),
+                                                dcc.Dropdown(
+                                                    id='colorscale', 
+                                                    options=[{"value": x, "label": x} 
+                                                             for x in colormaps],
+                                                    value=None
+                                                ),
+                                                dbc.Row([
+                                                    html.Div(id="log-output-container"),
+                                                    ]),
+                                                dbc.Row(
+                                                    daq.ToggleSwitch(id="toggle-log", value=True, size=50),
+                                                ),
+                                                dbc.Row([
+                                                    html.Div(id="cbar-slider-output-container")
+                                                    ]),
                                                 dbc.Row(
                                                     html.Div(
                                                         dcc.Slider(
-                                                            id="slider",
+                                                            id="cbar-slider",
                                                             min=2,
                                                             max=30,
                                                             step=1,
-                                                            value=10), style={'width': '500px'})
+                                                            value=10), style={'width': '500px'}
+                                                        )
                                                 ),
                                                 dbc.Row(html.Div(id="range-slider-output-container")),
                                                 dbc.Row(

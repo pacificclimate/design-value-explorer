@@ -59,7 +59,7 @@ def gen_lines(ds, X, Y):
                     mode="lines",
                     hoverinfo="skip",
                     visible=True,
-                    name=" ",
+                    name="",
                     line=dict(width=1, color="grey", dash='dash'),
                 ),
                 go.Scattergl(
@@ -68,7 +68,7 @@ def gen_lines(ds, X, Y):
                     mode="lines+text",
                     hoverinfo="skip",
                     visible=True,
-                    name=" ",
+                    name="",
                     line=dict(width=1, color="grey", dash='dash'),
                 ),
                 go.Scattergl(
@@ -93,4 +93,3 @@ def gen_lines(ds, X, Y):
     ]
 
     return go_list
-    # return lxarr, lyarr, txarr, tyarr, ixmin, ixmax, iymin, iymax, plon, plat, prlon, prlat
