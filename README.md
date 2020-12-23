@@ -1,5 +1,8 @@
-# dash-dv-explorer
+# Design Value Explorer
 Plotly/Dash for interactive visualization of design value fields.
+
+# Build Status
+![Docker Publishing](https://github.com/pacificclimate/dash-dv-explorer/workflows/Docker%20Publishing/badge.svg)
 
 # Install
 Clone this repository
