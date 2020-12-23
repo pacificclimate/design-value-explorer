@@ -106,6 +106,15 @@ def update_ensemble(value):
     return f"{d[value]}"
 
 @app.callback(
+    dash.dependencies.Output("raster-output-container", "children"),
+    [dash.dependencies.Input("raster-switch", "value")]
+)
+def update_ensemble(value):
+    d = {True: "Raster On", False: "Raster Off"}
+    return f"{d[value]}"
+
+
+@app.callback(
     dash.dependencies.Output("table", "children"),
     [dash.dependencies.Input("dropdown", "value")]
 )
@@ -144,7 +153,7 @@ def update_mask(value):
 )
 def update_log(loglin):
     d = {True: "Log", False: "Linear"}
-    return f"Colorscale: {d[loglin]}"
+    return f"Colourscale: {d[loglin]}"
 
 
 @app.callback(
@@ -172,7 +181,7 @@ def update_stations(value):
     [dash.dependencies.Input("range-slider", "value")]
 )
 def update_range(value):
-    return f"Colorbar Range: {value[0]} to {value[1]}"
+    return f"Colourbar Range: {value[0]} to {value[1]}"
 
 @app.callback(
     [
@@ -198,10 +207,9 @@ def update_slider(value, N):
     [dash.dependencies.Input("cbar-slider", "value")],
 )
 def update_slider_n(value):
-    return f"N = {value}"
+    return f"Number of Discrete Colours = {value}"
 
 ds = data[list(data.keys())[0]]["reconstruction"]
-# lxarr, lyarr, txarr, tyarr, ixmin, ixmax, iymin, iymax, plon, plat, prlon, prlat = gen_lines(ds, X, Y)
 
 @app.callback(
     dash.dependencies.Output("my-graph", "figure"),
@@ -213,8 +221,8 @@ ds = data[list(data.keys())[0]]["reconstruction"]
         dash.dependencies.Input("range-slider", "value"),
         dash.dependencies.Input("ens-switch", "value"),
         dash.dependencies.Input("toggle-log", "value"),
-        # dash.dependencies.Input("input-colorbar", "value")
-        dash.dependencies.Input("colorscale", "value")
+        dash.dependencies.Input("colorscale", "value"),
+        dash.dependencies.Input("raster-switch", "value"),
     ],
 )
 def update_ds(
@@ -225,7 +233,8 @@ def update_ds(
     range_slider,
     mean_button,
     toggle_log,
-    input_colorbar
+    input_colorbar,
+    raster_switch
 ):
 
     zmin = range_slider[0]
@@ -235,7 +244,7 @@ def update_ds(
         ticks = np.linspace(np.log10(zmin), np.log10(zmax), slider_value+1)
         ticks = np.around(10**(ticks), 2)
     else:
-        ticks = np.around(np.linspace(zmin, zmax, slider_value+1), 2)
+        ticks = np.around(np.linspace(zmin, zmax, slider_value+1), 3)
 
     if input_colorbar is None:
         input_colorbar = data[dd_value]["cmap"]
@@ -291,6 +300,7 @@ def update_ds(
                     tickvals=ticks,
                     ticktext=ticktext
                 ),
+                visible=raster_switch,
                 hovertemplate="<b>Design Value: %{z} </b><br>",
                 name=""
             ),
@@ -303,23 +313,31 @@ def update_ds(
                     size=10,
                     symbol="circle",
                     color=df[station_dv],
-                    line=dict(width=0.35, color="DarkSlateGrey"),
-                    showscale=False,
+                    cmin=zmin,
+                    cmax=zmax,
+                    line=dict(
+                        width=1,
+                        color="DarkSlateGrey"
+                    ),
+                    showscale=(raster_switch==False),
                     colorscale = dcolorsc,
-
+                    colorbar = dict(
+                        tickvals=ticks,
+                        ticktext=ticktext,
+                    ),
                 ),
                 hovertemplate="<b>Station Value: %{text}</b><br>",
                 visible=toggle_station_value,
-                name=None,
+                name=""
             ),
         ]
     
     go_list += fig_list
-
+    units = ds[dv].attrs["units"]
     fig = {
         "data": go_list,
         "layout": {
-            "title": f"<b>{dd_value}</b>",
+            "title": f"<b>{dd_value} ({units})</b>",
             "font": dict(size=13, color='grey'),
             "xaxis": dict(
                 zeroline=False, 
@@ -340,15 +358,11 @@ def update_ds(
                 font_size=16,
                 font_family="Rockwell"
             ),
-            "colorbar": dict(
-                tickmode="array",
-                ticktext=ticks
-            ),
             "hoverdistance": 5,
             "hovermode": "closest",
             "width": 1000,
             "height": 750,
-            "showlegend": True,
+            "showlegend": False,
             "legend_orientation": "v",
             "scrollZoom": True,
         }

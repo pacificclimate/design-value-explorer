@@ -45,10 +45,12 @@ def get_layout(app, data, colormaps):
                                         dbc.Col([
                                                 html.Div(html.H4('Overlay Options')),
                                                 dbc.Row([
-                                                    html.Div(id='ens-output-container', style={'border-width': 'thin'}),
+                                                    html.Div(id='ens-output-container', style={'align': 'center', 'marginRight': '1em'}),
+                                                    html.Div(id='raster-output-container', style={'align': 'center', 'marginRight': '1em'}),
                                                 ]),
                                                 dbc.Row([
-                                                    daq.ToggleSwitch(id='ens-switch', value=False)
+                                                    html.Div(daq.ToggleSwitch(id='ens-switch', value=False), style={'align': 'center', 'marginRight': '6.5em'}),
+                                                    html.Div(daq.ToggleSwitch(id='raster-switch', value=True), style={'align': 'center', 'marginRight': '1em'}),                                                
                                                 ]),
                                                 dbc.Row([
                                                     html.Div(id="mask-output-container", style={'align': 'center', 'marginRight': '1em'}),
@@ -58,7 +60,8 @@ def get_layout(app, data, colormaps):
                                                     html.Div(daq.ToggleSwitch(id="toggle-mask", size=50, value=True), style={'align': 'center', 'marginRight': '1em'}),
                                                     daq.ToggleSwitch( id="toggle-station-switch", size=50, value=False)
                                                 ]),
-                                                html.Div(html.H4('Colorbar Options')),
+                                                html.Div(html.H4('Colourbar Options')),
+                                                html.Div(html.P('Colour Map')),
                                                 dcc.Dropdown(
                                                     id='colorscale', 
                                                     options=[{"value": x, "label": x} 
