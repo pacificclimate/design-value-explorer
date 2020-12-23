@@ -59,7 +59,7 @@ def gen_lines(ds, X, Y):
                     mode="lines",
                     hoverinfo="skip",
                     visible=True,
-                    name=" ",
+                    name="",
                     line=dict(width=1, color="grey", dash='dash'),
                 ),
                 go.Scattergl(
@@ -68,7 +68,7 @@ def gen_lines(ds, X, Y):
                     mode="lines+text",
                     hoverinfo="skip",
                     visible=True,
-                    name=" ",
+                    name="",
                     line=dict(width=1, color="grey", dash='dash'),
                 ),
                 go.Scattergl(

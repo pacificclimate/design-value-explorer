@@ -44,6 +44,10 @@ native_mask = read_data(
     resource_filename("dve", config["paths"]["native_mask"])
 )["sftlf"] >= 1.0
 
+colormaps = config["colormaps"]
+# Add reverse options, too
+cmap_r = [f"{color}_r" for color in colormaps]
+colormaps += cmap_r
 
 data = {}
 for key in config["dvs"].keys():
@@ -72,7 +76,8 @@ for key in config["dvs"].keys():
                                     "dve",
                                     config["dvs"][key]["table"]
                                 )
-                            )
+                            ),
+            "cmap": config["dvs"][key]["cmap"]
     }
     data[key] = info
 
@@ -90,7 +95,7 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 app.title = 'Pacific Climate Impacts Consortium Design Value Explorer'
 app.config.suppress_callback_exceptions = True
 
-app.layout = get_layout(app, data)
+app.layout = get_layout(app, data, colormaps)
 
 @app.callback(
     dash.dependencies.Output("ens-output-container", "children"),
@@ -137,10 +142,21 @@ def update_mask(value):
     dash.dependencies.Output("log-output-container", "children"),
     [dash.dependencies.Input("toggle-log", "value")]
 )
-def update_log(value):
+def update_log(loglin):
     d = {True: "Log", False: "Linear"}
-    return f"Colorscale: {d[value]}"
+    return f"Colorscale: {d[loglin]}"
 
+
+@app.callback(
+    dash.dependencies.Output("input-colorbar-output-container", "children"),
+    [dash.dependencies.Input("input-colorbar", "value")]
+)
+def update_input(value):
+    try:
+        matplotlib.cm.get_cmap(value, 10)
+    except ValueError:
+        value = "Invalid cmap!"
+    return f"Colour Map: {value}"
 
 @app.callback(
     dash.dependencies.Output("station-output-container", "children"),
@@ -196,7 +212,10 @@ ds = data[list(data.keys())[0]]["reconstruction"]
         dash.dependencies.Input("cbar-slider", "value"),
         dash.dependencies.Input("range-slider", "value"),
         dash.dependencies.Input("ens-switch", "value"),
-        dash.dependencies.Input("toggle-log", "value")
+        dash.dependencies.Input("toggle-log", "value"),
+        # dash.dependencies.Input("input-colorbar", "value")
+        dash.dependencies.Input("colorscale", "value")
+
     ],
 )
 def update_ds(
@@ -206,7 +225,8 @@ def update_ds(
     slider_value,
     range_slider,
     mean_button,
-    toggle_log
+    toggle_log,
+    input_colorbar
 ):
 
     zmin = range_slider[0]
@@ -218,7 +238,11 @@ def update_ds(
     else:
         ticks = np.around(np.linspace(zmin, zmax, slider_value+1), 2)
 
-    cmap = matplotlib.cm.get_cmap("viridis", slider_value)
+    if input_colorbar is None:
+        input_colorbar = data[dd_value]["cmap"]
+
+    cmap = matplotlib.cm.get_cmap(input_colorbar, slider_value)
+
     hexes = []
     for i in range(cmap.N):
         rgba = cmap(i)
@@ -269,7 +293,7 @@ def update_ds(
                     ticktext=ticktext
                 ),
                 hovertemplate="<b>Design Value: %{z} </b><br>",
-                name=""
+                name=None
             ),
             go.Scattergl(
                 x=df.rlon,
@@ -282,10 +306,12 @@ def update_ds(
                     color=df[station_dv],
                     line=dict(width=0.35, color="DarkSlateGrey"),
                     showscale=False,
+                    colorscale = dcolorsc,
+
                 ),
                 hovertemplate="<b>Station Value: %{text}</b><br>",
                 visible=toggle_station_value,
-                name="",
+                name=None,
             ),
         ]
     
@@ -295,7 +321,7 @@ def update_ds(
         "data": go_list,
         "layout": {
             "title": f"<b>{dd_value}</b>",
-            "font": dict(size=18, color='grey'),
+            "font": dict(size=13, color='grey'),
             "xaxis": dict(
                 zeroline=False, 
                 range=[-24, 34],

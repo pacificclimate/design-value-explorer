@@ -2,10 +2,11 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_daq as daq
-
+import plotly.express as px
 import numpy as np
 
-def get_layout(app, data):
+
+def get_layout(app, data, colormaps):
 
     (first_dv, ) = data[list(data.keys())[0]]["reconstruction"].data_vars
     first_rfield = data[list(data.keys())[0]]["reconstruction"][first_dv]
@@ -58,6 +59,12 @@ def get_layout(app, data):
                                                     daq.ToggleSwitch( id="toggle-station-switch", size=50, value=False)
                                                 ]),
                                                 html.Div(html.H4('Colorbar Options')),
+                                                dcc.Dropdown(
+                                                    id='colorscale', 
+                                                    options=[{"value": x, "label": x} 
+                                                             for x in colormaps],
+                                                    value=None
+                                                ),
                                                 dbc.Row([
                                                     html.Div(id="log-output-container"),
                                                     ]),

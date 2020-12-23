@@ -17,40 +17,47 @@ dvs:
         input_model_path: data/model_inputs/snw_rain_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
         reconstruction_path: data/reconstructions/RL50_reconstruction.nc
         table: data/tables/RL50_TableC2.csv
+        cmap: "terrain_r"
+
     RHann:
         station_dv: "mean RH (%)"
         station_path: data/station_inputs/rh_annual_mean_10yr_for_maps.csv
         input_model_path: data/model_inputs/hurs_CanRCM4-LE_ens15_1951-2016_ensmean.nc        
         reconstruction_path: data/reconstructions/RHann_reconstruction.nc
         table: data/tables/RHann_TableC2.csv
- 
+        cmap: "terrain_r"
+
     HDD:
         station_dv: "HDD (degC-day)"
         station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
         input_model_path: data/model_inputs/hdd_CanRCM4-LE_ens35_1951-2016_ann_ensmean.nc
         reconstruction_path: data/reconstructions/HDD_reconstruction.nc
         table: data/tables/HDD_TableC2.csv
- 
+        cmap: "RdBu"
+
     SL50:
         station_dv: "SL50 (kPa)"
         station_path: data/station_inputs/sl50_rl50_for_maps.csv
         input_model_path: data/model_inputs/snw_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
         reconstruction_path: data/reconstructions/SL50_reconstruction.nc
         table: data/tables/SL50_TableC2.csv
- 
+        cmap: "terrain_r"
+
     WP10:
         station_dv: "WP10 (kPa)"
         station_path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
         input_model_path: data/model_inputs/wpress_CanRCM4-LE_ens35_1951-2016_max_rl10_kpa_ensmean.nc
         reconstruction_path: data/reconstructions/WP10_reconstruction.nc
         table: data/tables/WP10_TableC2.csv
- 
+        cmap: "terrain_r"
+
     WP50:
         station_dv: "WP50 (kPa)"
         station_path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
         input_model_path: data/model_inputs/wpress_CanRCM4-LE_ens35_1951-2016_max_rl50_kpa_ensmean.nc
         reconstruction_path: data/reconstructions/WP50_reconstruction.nc
         table: data/tables/WP50_TableC2.csv
+        cmap: "terrain_r"
 
     TJan2.5:
         station_dv: "TJan2.5 (degC)"
@@ -58,13 +65,15 @@ dvs:
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan2.5p_ensmean.nc
         reconstruction_path: data/reconstructions/TJan2.5_reconstruction.nc
         table: data/tables/TJan2.5_TableC2.csv
-        
+        cmap: "RdBu_r"
+
     TJan1.0:
         station_dv: "TJan1.0 (degC)"
         station_path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan1.0p_ensmean.nc
         reconstruction_path: data/reconstructions/TJan1.0_reconstruction.nc
         table: data/tables/TJan1.0_TableC2.csv
+        cmap: "RdBu_r"
 
     Tmin:
         station_dv: "Tmin (degC)"
@@ -72,41 +81,47 @@ dvs:
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_min_ensmean.nc
         reconstruction_path: data/reconstructions/Tmin_reconstruction.nc
         table: data/tables/Tmin_TableC2.csv
-        
+        cmap: "RdBu_r"
+
     Tmax:
         station_dv: "Tmax (degC)"
         station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_max_ensmean.nc
         reconstruction_path: data/reconstructions/Tmax_reconstruction.nc
         table: data/tables/Tmax_TableC2.csv
-        
+        cmap: "RdBu_r"
+
     TJul97.5:
         station_dv:  "TJul2.5 (degC)"
         station_path: data/station_inputs/julT97.5p_allstations_v3_min8yr_for_maps.csv
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
         reconstruction_path: data/reconstructions/TJul97.5_reconstruction.nc
         table: data/tables/TJul97.5_TableC2.csv
-        
+        cmap: "RdBu_r"
+
     TwJul97.5:
         station_dv:  "TwJul2.5 (degC)"
         station_path: data/station_inputs/julTwb97.5p_allstations_v3_for_maps.csv
         input_model_path: data/model_inputs/twb_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
         reconstruction_path: data/reconstructions/TwJul97.5_reconstruction.nc
         table: data/tables/TwJul97.5_TableC2.csv
-        
+        cmap: "RdBu_r"
+
     DRWP5:
         station_dv: "DRWP-RL5 (Pa)"
         station_path: data/station_inputs/drwp_rl5_for_maps.csv
         input_model_path: data/model_inputs/drwp_CanRCM4-LE_ens15_1951-2016_rl5_ensmean.nc
         reconstruction_path: data/reconstructions/DRWP5_reconstruction.nc
         table: data/tables/DRWP5_TableC2.csv
-        
+        cmap: "terrain_r"
+ 
     PAnn:
         station_dv: "annual_pr (mm)"
         station_path: data/station_inputs/pr_annual_mean_doy_MSC_25yr_for_maps.csv
         input_model_path: data/model_inputs/pr_CanRCM4-LE_ens35_1951-2016_ann_sum_ensmean.nc
         reconstruction_path: data/reconstructions/PAnn_reconstruction.nc
         table: data/tables/PAnn_TableC2.csv
+        cmap: "terrain_r"
         
     RAnn:
         station_dv: "annual_rain (mm)"
@@ -114,6 +129,7 @@ dvs:
         input_model_path: data/model_inputs/rain_CanRCM4-LE_ens35_1951-2016_ann_sum_ensmean.nc
         reconstruction_path: data/reconstructions/RAnn_reconstruction.nc
         table: data/tables/RAnn_TableC2.csv
+        cmap: "terrain_r"
         
     R1d50:
         station_dv: "1day rain RL50 (mm)"
@@ -121,6 +137,7 @@ dvs:
         input_model_path: data/model_inputs/rain_CanRCM4-LE_ens35_1951-2016_max1day_rl50_gum_lm_ensmean.nc
         reconstruction_path: data/reconstructions/R1d50_reconstruction.nc
         table: data/tables/R1d50_TableC2.csv
+        cmap: "terrain_r"
 
     MI:
         station_dv: "moisture_index"
@@ -128,6 +145,7 @@ dvs:
         input_model_path: data/model_inputs/moisture_index_CanRCM4-LE_ens15_1951-2016_ensmean.nc
         reconstruction_path: data/reconstructions/MI_reconstruction.nc
         table: data/tables/MI_TableC2.csv
+        cmap: "terrain_r"
         
     R15m10:
         station_dv: "Gum-LM RL10 (mm)"
@@ -135,3 +153,21 @@ dvs:
         input_model_path: data/model_inputs/rain_CanRCM4-LE_ens15_1951-2016_max1hr_rl10_gum_lm_ensmean.nc
         reconstruction_path: data/reconstructions/R15m10_reconstruction.nc
         table: data/tables/R15m10_TableC2.csv
+        cmap: "terrain_r"
+
+colormaps:
+    ['viridis', 'plasma', 'inferno', 'magma', 'cividis',
+    'Greys', 'Purples', 'Blues', 'Greens',
+    'Oranges', 'Reds', 'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd',
+    'RdPu', 'BuPu', 'GnBu', 'PuBu', 'YlGnBu', 'PuBuGn',
+    'BuGn', 'YlGn', 'binary', 'gist_yarg', 'gist_gray',
+    'gray', 'bone', 'pink', 'spring', 'summer', 'autumn',
+    'winter', 'cool', 'Wistia', 'hot', 'afmhot', 'gist_heat',
+    'copper', 'PiYG', 'PRGn', 'BrBG', 'PuOr', 'RdGy', 'RdBu',
+    'RdYlBu', 'RdYlGn', 'Spectral', 'coolwarm', 'bwr', 'seismic',
+    'twilight', 'twilight_shifted', 'hsv', 'Pastel1', 'Pastel2',
+    'Paired', 'Accent', 'Dark2', 'Set1', 'Set2', 'Set3', 'tab10',
+    'tab20', 'tab20b', 'tab20c', 'flag', 'prism', 'ocean',
+    'gist_earth', 'terrain', 'gist_stern', 'gnuplot', 'gnuplot2',
+    'CMRmap', 'cubehelix', 'brg', 'gist_rainbow', 'rainbow',
+    'jet', 'nipy_spectral', 'gist_ncar']
