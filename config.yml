@@ -82,7 +82,7 @@ dvs:
         reconstruction_path: data/reconstructions/Tmin_reconstruction.nc
         table: data/tables/Tmin_TableC2.csv
         cmap: "RdBu_r"
-
+        
     Tmax:
         station_dv: "Tmax (degC)"
         station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv

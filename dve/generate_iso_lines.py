@@ -93,4 +93,3 @@ def gen_lines(ds, X, Y):
     ]
 
     return go_list
-    # return lxarr, lyarr, txarr, tyarr, ixmin, ixmax, iymin, iymax, plon, plat, prlon, prlat

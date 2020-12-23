@@ -215,7 +215,6 @@ ds = data[list(data.keys())[0]]["reconstruction"]
         dash.dependencies.Input("toggle-log", "value"),
         # dash.dependencies.Input("input-colorbar", "value")
         dash.dependencies.Input("colorscale", "value")
-
     ],
 )
 def update_ds(
@@ -293,7 +292,7 @@ def update_ds(
                     ticktext=ticktext
                 ),
                 hovertemplate="<b>Design Value: %{z} </b><br>",
-                name=None
+                name=""
             ),
             go.Scattergl(
                 x=df.rlon,
