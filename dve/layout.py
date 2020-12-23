@@ -72,7 +72,7 @@ def get_layout(app, data, colormaps):
                                                     html.Div(id="log-output-container"),
                                                     ]),
                                                 dbc.Row(
-                                                    daq.ToggleSwitch(id="toggle-log", value=False, size=50),
+                                                    daq.ToggleSwitch(id="toggle-log", value=True, size=50),
                                                 ),
                                                 dbc.Row([
                                                     html.Div(id="cbar-slider-output-container")
