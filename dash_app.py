@@ -341,13 +341,13 @@ def update_ds(
             "font": dict(size=13, color='grey'),
             "xaxis": dict(
                 zeroline=False, 
-                range=[-24, 34],
+                range=[ds.rlon.values[ixmin], ds.rlon.values[ixmax]],
                 showgrid=False, # thin lines in the background
                 visible=False  # numbers below
             ),
             "yaxis": dict(
                 zeroline=False, 
-                range=[-7.4, 37], 
+                range=[ds.rlat.values[iymin], ds.rlat.values[iymax]],
                 showgrid=False, # thin lines in the background
                 visible=False
             ),
@@ -365,6 +365,7 @@ def update_ds(
             "showlegend": False,
             "legend_orientation": "v",
             "scrollZoom": True,
+            "uirevision": "None"
         }
     }
 
