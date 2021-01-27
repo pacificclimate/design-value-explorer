@@ -8,7 +8,7 @@ on:
       - '[0-9]+\.[0-9]+\.[0-9]+'
 
 jobs:
-  publish:
+  publish-production:
 
     runs-on: ubuntu-20.04
 
@@ -19,5 +19,6 @@ jobs:
         with:
           username: ${{ secrets.pcicdevops_at_dockerhub_username }}
           password: ${{ secrets.pcicdevops_at_dockerhub_password }}
+          dockerfile: ./docker/production/Dockerfile
           repository: pcic/dash-dv-explorer
           tag_with_ref: true
