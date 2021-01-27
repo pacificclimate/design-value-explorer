@@ -1,2 +1,3 @@
-# Add Station Files
-Add station files here.
+# Station Files
+
+Mount externally stored  station files to this directory.

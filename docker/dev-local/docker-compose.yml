@@ -1,0 +1,43 @@
+version: '3.2'
+services:
+  dve-dev-local:
+    build:
+      context: ../..
+      dockerfile: ./docker/dev-local/Dockerfile
+    image: pcic/dve-dev-local
+    container_name: dve-dev-local
+    stdin_open: true
+    tty: true
+    ports:
+      - "30023:8050"
+    volumes:
+      - type: bind
+        source: ../..
+        target: /codebase
+#        read_only: true
+      - type: bind
+        source: /storage/data/projects/comp_support/dv-explorer/data/model_inputs/
+        target: /codebase/dve/data/model_inputs/
+        read_only: true
+      - type: bind
+        source: /storage/data/projects/comp_support/dv-explorer/data/reconstructions/
+        target: /codebase/dve/data/reconstructions/
+        read_only: true
+      - type: bind
+        source: /storage/data/projects/comp_support/dv-explorer/data/station_inputs/
+        target: /codebase/dve/data/station_inputs/
+        read_only: true
+      - type: bind
+        source: /storage/data/projects/comp_support/dv-explorer/data/tables/
+        target: /codebase/dve/data/tables/
+        read_only: true
+
+networks:
+  default:
+    external:
+      name: pcicbr0
+
+# docker-compose build
+# docker-compose up
+# docker-compose down
+# docker-compose rm
