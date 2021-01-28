@@ -20,7 +20,7 @@ def get_layout(app, data, colormaps):
         id="big-app-container",
         children=[
                   dbc.Row([
-                            dbc.Col([html.H1("Design Value Explorer"),
+                            dbc.Col([html.H1("YYY Design Value Explorer"),
                                 dcc.Dropdown(
                                     id="dropdown",
                                     options=dd_options,
