@@ -89,7 +89,7 @@ The image need only be (re)built when the project is first cloned and when
 `requirements.txt` changes. To build the image:
 
 ```
-docker-compose -f docker/dev-local/Dockerfile build
+docker-compose -f docker/dev-local/docker-compose.yml build
 ```
 
 The image name is `pcic/dve-dev-local`.
@@ -97,7 +97,7 @@ The image name is `pcic/dve-dev-local`.
 #### Start the container
 
 ```
-docker-compose -f docker/dev-local/Dockerfile up -d
+docker-compose -f docker/dev-local/docker-compose.yml up -d
 ```
 
 The container name is `dve-dev-local`.
@@ -145,7 +145,7 @@ When you have completed a cycle of development and testing, you may wish
 to stop the Docker container.
 
 ```
-docker-compose -f docker/dev-local/Dockerfile down
+docker-compose -f docker/dev-local/docker-compose.yml down
 ```
 
 ## Installing and running directly (no Docker)
