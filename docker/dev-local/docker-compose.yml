@@ -9,7 +9,7 @@ services:
     stdin_open: true
     tty: true
     ports:
-      - "30023:8050"
+      - "30023:5000"
     volumes:
       - type: bind
         source: ../..
@@ -40,8 +40,3 @@ networks:
   default:
     external:
       name: pcicbr0
-
-# docker-compose build
-# docker-compose up
-# docker-compose down
-# docker-compose rm
