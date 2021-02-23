@@ -10,7 +10,7 @@ def get_layout(app, data, colormaps):
 
     # TODO: Replace this use of preloaded data with on-demand requests
     #   for the data to be loaded.
-    (first_dv, ) = data[list(data.keys())[0]]["reconstruction"].data_vars
+    (first_dv,) = data[list(data.keys())[0]]["reconstruction"].data_vars
     first_rfield = data[list(data.keys())[0]]["reconstruction"][first_dv]
     dmin = np.nanmin(first_rfield)
     dmax = np.nanmax(first_rfield)
@@ -21,94 +21,202 @@ def get_layout(app, data, colormaps):
     app.layout = html.Div(
         id="big-app-container",
         children=[
-                  dbc.Row([
-                            dbc.Col([html.H1("YYY Design Value Explorer"),
-                                dcc.Dropdown(
-                                    id="dropdown",
-                                    options=dd_options,
-                                    value=list(data.keys())[0],
-                                    placeholder="Select a design value to display...",
-                                    searchable=True,
-                                    clearable=False,
-                                ), 
-                                html.Br(), 
-                                html.Div(id="item-display")],
-                                style={
-                                        'margin-left' : '20px',
-                                        'margin-right' : '20px'
-                                        }
-                                )
-                            ]),
-                  dcc.Tabs([
-                        dcc.Tab(label='Map', children=[
-                              dbc.Row([
-                                        dbc.Col([dcc.Graph(id="my-graph"),], 
-                                                align="center", width='auto'),
-                                        dbc.Col([
-                                                html.Div(html.H4('Overlay Options')),
-                                                dbc.Row([
-                                                    html.Div(id='ens-output-container', style={'align': 'center', 'marginRight': '1em'}),
-                                                    html.Div(id='raster-output-container', style={'align': 'center', 'marginRight': '1em'}),
-                                                ]),
-                                                dbc.Row([
-                                                    html.Div(daq.ToggleSwitch(id='ens-switch', value=False), style={'align': 'center', 'marginRight': '6.5em'}),
-                                                    html.Div(daq.ToggleSwitch(id='raster-switch', value=True), style={'align': 'center', 'marginRight': '1em'}),                                                
-                                                ]),
-                                                dbc.Row([
-                                                    html.Div(id="mask-output-container", style={'align': 'center', 'marginRight': '1em'}),
-                                                    html.Div(id="station-output-container")
-                                                ]),
-                                                dbc.Row([
-                                                    html.Div(daq.ToggleSwitch(id="toggle-mask", size=50, value=True), style={'align': 'center', 'marginRight': '1em'}),
-                                                    daq.ToggleSwitch( id="toggle-station-switch", size=50, value=False)
-                                                ]),
-                                                html.Div(html.H4('Colourbar Options')),
-                                                html.Div(html.P('Colour Map')),
-                                                dcc.Dropdown(
-                                                    id='colorscale', 
-                                                    options=[{"value": x, "label": x} 
-                                                             for x in colormaps],
-                                                    value=None
-                                                ),
-                                                dbc.Row([
-                                                    html.Div(id="log-output-container"),
-                                                    ]),
-                                                dbc.Row(
-                                                    daq.ToggleSwitch(id="toggle-log", value=True, size=50),
-                                                ),
-                                                dbc.Row([
-                                                    html.Div(id="cbar-slider-output-container")
-                                                    ]),
-                                                dbc.Row(
+            dbc.Row(
+                [
+                    dbc.Col(
+                        [
+                            html.H1("Design Value Explorer"),
+                            dcc.Dropdown(
+                                id="dropdown",
+                                options=dd_options,
+                                value=list(data.keys())[0],
+                                placeholder="Select a design value to display...",
+                                searchable=True,
+                                clearable=False,
+                            ),
+                            html.Br(),
+                            html.Div(id="item-display"),
+                        ],
+                        style={"margin-left": "20px", "margin-right": "20px"},
+                    )
+                ]
+            ),
+            dcc.Tabs(
+                [
+                    dcc.Tab(
+                        label="Map",
+                        children=[
+                            dbc.Row(
+                                [
+                                    dbc.Col(
+                                        [dcc.Graph(id="my-graph")],
+                                        align="center",
+                                        width="auto",
+                                    ),
+                                    dbc.Col(
+                                        [
+                                            html.Div(
+                                                html.H4("Overlay Options")
+                                            ),
+                                            dbc.Row(
+                                                [
                                                     html.Div(
-                                                        dcc.Slider(
-                                                            id="cbar-slider",
-                                                            min=2,
-                                                            max=30,
-                                                            step=1,
-                                                            value=10), style={'width': '500px'}
-                                                        )
-                                                ),
-                                                dbc.Row(html.Div(id="range-slider-output-container")),
-                                                dbc.Row(
+                                                        id="ens-output-container",
+                                                        style={
+                                                            "align": "center",
+                                                            "marginRight": "1em",
+                                                        },
+                                                    ),
                                                     html.Div(
-                                                        dcc.RangeSlider(
+                                                        id="raster-output-container",
+                                                        style={
+                                                            "align": "center",
+                                                            "marginRight": "1em",
+                                                        },
+                                                    ),
+                                                ]
+                                            ),
+                                            dbc.Row(
+                                                [
+                                                    html.Div(
+                                                        daq.ToggleSwitch(
+                                                            id="ens-switch",
+                                                            value=False,
+                                                        ),
+                                                        style={
+                                                            "align": "center",
+                                                            "marginRight": "6.5em",
+                                                        },
+                                                    ),
+                                                    html.Div(
+                                                        daq.ToggleSwitch(
+                                                            id="raster-switch",
+                                                            value=True,
+                                                        ),
+                                                        style={
+                                                            "align": "center",
+                                                            "marginRight": "1em",
+                                                        },
+                                                    ),
+                                                ]
+                                            ),
+                                            dbc.Row(
+                                                [
+                                                    html.Div(
+                                                        id="mask-output-container",
+                                                        style={
+                                                            "align": "center",
+                                                            "marginRight": "1em",
+                                                        },
+                                                    ),
+                                                    html.Div(
+                                                        id="station-output-container"
+                                                    ),
+                                                ]
+                                            ),
+                                            dbc.Row(
+                                                [
+                                                    html.Div(
+                                                        daq.ToggleSwitch(
+                                                            id="toggle-mask",
+                                                            size=50,
+                                                            value=True,
+                                                        ),
+                                                        style={
+                                                            "align": "center",
+                                                            "marginRight": "1em",
+                                                        },
+                                                    ),
+                                                    daq.ToggleSwitch(
+                                                        id="toggle-station-switch",
+                                                        size=50,
+                                                        value=False,
+                                                    ),
+                                                ]
+                                            ),
+                                            html.Div(
+                                                html.H4("Colourbar Options")
+                                            ),
+                                            html.Div(html.P("Colour Map")),
+                                            dcc.Dropdown(
+                                                id="colorscale",
+                                                options=[
+                                                    {"value": x, "label": x}
+                                                    for x in colormaps
+                                                ],
+                                                value=None,
+                                            ),
+                                            dbc.Row(
+                                                [
+                                                    html.Div(
+                                                        id="log-output-container"
+                                                    )
+                                                ]
+                                            ),
+                                            dbc.Row(
+                                                daq.ToggleSwitch(
+                                                    id="toggle-log",
+                                                    value=True,
+                                                    size=50,
+                                                )
+                                            ),
+                                            dbc.Row(
+                                                [
+                                                    html.Div(
+                                                        id="cbar-slider-output-container"
+                                                    )
+                                                ]
+                                            ),
+                                            dbc.Row(
+                                                html.Div(
+                                                    dcc.Slider(
+                                                        id="cbar-slider",
+                                                        min=2,
+                                                        max=30,
+                                                        step=1,
+                                                        value=10,
+                                                    ),
+                                                    style={"width": "500px"},
+                                                )
+                                            ),
+                                            dbc.Row(
+                                                html.Div(
+                                                    id="range-slider-output-container"
+                                                )
+                                            ),
+                                            dbc.Row(
+                                                html.Div(
+                                                    dcc.RangeSlider(
                                                         id="range-slider",
                                                         min=dmin,
                                                         max=dmax,
-                                                        step=(dmax-dmin)/N,
+                                                        step=(dmax - dmin) / N,
                                                         vertical=False,
                                                         value=[dmin, dmax],
-                                                    ), style={'width': '500px'})
-                                                ),
-                                                ], align='center', width='auto')
-                                ])
-                    ]),
-                    dcc.Tab(label='Table C-2', children=[
-                            html.H4('Reconstruction Values at Table C2 Locations'),
-                            html.Div(id="table")
-                        ])
-                    ])
-            ])
+                                                    ),
+                                                    style={"width": "500px"},
+                                                )
+                                            ),
+                                        ],
+                                        align="center",
+                                        width="auto",
+                                    ),
+                                ]
+                            )
+                        ],
+                    ),
+                    dcc.Tab(
+                        label="Table C-2",
+                        children=[
+                            html.H4(
+                                "Reconstruction Values at Table C2 Locations"
+                            ),
+                            html.Div(id="table"),
+                        ],
+                    ),
+                ]
+            ),
+        ],
+    )
 
     return app.layout
