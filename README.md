@@ -124,14 +124,15 @@ At this prompt you can enter bash commands, including the following:
 From the bash prompt:
 
 ```
-export FLASK_APP=run_app.py
-export FLASK_ENV=development
-flask run
+python run_app.py
 ```
 
+Aside: Dash apps are based on Flask. 
 Flask documentation 
 [stronly recommends](https://flask.palletsprojects.com/en/1.1.x/server/#command-line)
-this way of running the app for development. 
+running apps for development using the Flask command line `flask run`.
+Unfortunately, that does not work for a Dash app, and we must run it more
+directly from a script as above. 
 
 This enables the development environment, including the interactive debugger 
 and reloader, and then starts the server on `http://localhost:5000/`.
