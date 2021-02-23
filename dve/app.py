@@ -77,7 +77,7 @@ def get_app(config, data):
 
     @app.callback(
         dash.dependencies.Output("table", "children"),
-        [dash.dependencies.Input("dropdown", "value")]
+        [dash.dependencies.Input("design-value-name", "value")]
     )
     def update_tablec2(value):
         df = data[value]["table"]
@@ -151,7 +151,7 @@ def get_app(config, data):
             Output(component_id="range-slider", component_property="step"),
             Output(component_id="range-slider", component_property="value")
         ],
-        [Input(component_id="dropdown", component_property="value"),
+        [Input(component_id="design-value-name", component_property="value"),
         Input(component_id="cbar-slider", component_property="value")],
     )
     def update_slider(value, N):
@@ -177,7 +177,7 @@ def get_app(config, data):
         [
             dash.dependencies.Input("toggle-mask", "value"),
             dash.dependencies.Input("toggle-station-switch", "value"),
-            dash.dependencies.Input("dropdown", "value"),
+            dash.dependencies.Input("design-value-name", "value"),
             dash.dependencies.Input("cbar-slider", "value"),
             dash.dependencies.Input("range-slider", "value"),
             dash.dependencies.Input("ens-switch", "value"),
@@ -189,7 +189,7 @@ def get_app(config, data):
     def update_ds(
         toggle_mask,
         toggle_station_switch,
-        dd_value,
+        design_value_name,
         cbar_slider,
         range_slider,
         mean_button,
@@ -208,7 +208,7 @@ def get_app(config, data):
             ticks = np.around(np.linspace(zmin, zmax, cbar_slider + 1), 3)
 
         if colorscale is None:
-            colorscale = data[dd_value]["cmap"]
+            colorscale = data[design_value_name]["cmap"]
 
         cmap = matplotlib.cm.get_cmap(colorscale, cbar_slider)
 
@@ -223,9 +223,9 @@ def get_app(config, data):
 
         r_or_m = "model" if mean_button else "reconstruction"
 
-        dv, station_dv = data[dd_value]["dv"], data[dd_value]["station_dv"]
-        ds = data[dd_value][r_or_m]
-        df = data[dd_value]["stations"]
+        dv, station_dv = data[design_value_name]["dv"], data[design_value_name]["station_dv"]
+        ds = data[design_value_name][r_or_m]
+        df = data[design_value_name]["stations"]
 
         x1 = min(value for value in X if value is not None)
         x2 = max(value for value in X if value is not None)
@@ -298,7 +298,7 @@ def get_app(config, data):
         fig = {
             "data": go_list,
             "layout": {
-                "title": f"<b>{dd_value} ({units})</b>",
+                "title": f"<b>{design_value_name} ({units})</b>",
                 "font": dict(size=13, color='grey'),
                 "xaxis": dict(
                     zeroline=False,

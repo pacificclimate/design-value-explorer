@@ -19,7 +19,7 @@ def header(data):
                 [
                     html.H1("Design Value Explorer"),
                     dcc.Dropdown(
-                        id="dropdown",
+                        id="design-value-name",
                         options=dd_options,
                         value=list(data.keys())[0],
                         placeholder="Select a design value to display...",
