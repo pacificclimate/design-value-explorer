@@ -117,6 +117,8 @@ def get_app(config, data):
         return f"Colourscale: {d[loglin]}"
 
 
+    # TODO: Element "input-colorbar-output-container" does not exist (any more?)
+    #   in the layout. Therefore this callback has no effect or purpose. Remove?
     @app.callback(
         dash.dependencies.Output("input-colorbar-output-container", "children"),
         [dash.dependencies.Input("input-colorbar", "value")]
