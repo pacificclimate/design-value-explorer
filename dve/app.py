@@ -4,11 +4,11 @@ from climpyrical.mask import stratify_coords
 from climpyrical.cmd.find_matched_model_vals import add_model_values
 from dve.colorbar import get_cmap_divisions, matplotlib_to_plotly, discrete_colorscale
 
+import dve
 import dve.data
+import dve.layout
 from dve.processing import coord_prep
 from dve.generate_iso_lines import gen_lines
-from dve.layout import get_layout
-import dve
 
 import dash
 import dash_table
@@ -56,7 +56,7 @@ def get_app(config, data):
     app.title = 'Pacific Climate Impacts Consortium Design Value Explorer'
     app.config.suppress_callback_exceptions = True
 
-    app.layout = get_layout(app, data, colormaps)
+    app.layout = dve.layout.main(app, data, colormaps)
 
     @app.callback(
         dash.dependencies.Output("ens-output-container", "children"),

@@ -6,7 +6,7 @@ import plotly.express as px
 import numpy as np
 
 
-def get_layout(app, data, colormaps):
+def main(app, data, colormaps):
 
     # TODO: Replace this use of preloaded data with on-demand requests
     #   for the data to be loaded.
