@@ -8,6 +8,8 @@ import numpy as np
 
 def get_layout(app, data, colormaps):
 
+    # TODO: Replace this use of preloaded data with on-demand requests
+    #   for the data to be loaded.
     (first_dv, ) = data[list(data.keys())[0]]["reconstruction"].data_vars
     first_rfield = data[list(data.keys())[0]]["reconstruction"][first_dv]
     dmin = np.nanmin(first_rfield)
@@ -20,7 +22,7 @@ def get_layout(app, data, colormaps):
         id="big-app-container",
         children=[
                   dbc.Row([
-                            dbc.Col([html.H1("Design Value Explorer"),
+                            dbc.Col([html.H1("YYY Design Value Explorer"),
                                 dcc.Dropdown(
                                     id="dropdown",
                                     options=dd_options,

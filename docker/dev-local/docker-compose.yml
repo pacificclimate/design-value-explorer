@@ -9,12 +9,16 @@ services:
     stdin_open: true
     tty: true
     ports:
-      - "30023:8050"
+      - "30023:5000"
     volumes:
       - type: bind
         source: ../..
         target: /codebase
 #        read_only: true
+      - type: bind
+        source: ./config.yml
+        target: /codebase/config.yml
+        read_only: true
       - type: bind
         source: /storage/data/projects/comp_support/dv-explorer/data/model_inputs/
         target: /codebase/dve/data/model_inputs/
@@ -36,8 +40,3 @@ networks:
   default:
     external:
       name: pcicbr0
-
-# docker-compose build
-# docker-compose up
-# docker-compose down
-# docker-compose rm

@@ -2,4 +2,4 @@
 pip install -e .
 
 /bin/bash
-#python dash_app.py
+#python run_app.py
