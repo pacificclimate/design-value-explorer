@@ -188,13 +188,13 @@ def get_app(config, data):
     )
     def update_ds(
         toggle_mask,
-        toggle_station_value,
+        toggle_station_switch,
         dd_value,
-        slider_value,
+        cbar_slider,
         range_slider,
         mean_button,
         toggle_log,
-        input_colorbar,
+        colorscale,
         raster_switch
     ):
 
@@ -202,15 +202,15 @@ def get_app(config, data):
         zmax = range_slider[1]
 
         if toggle_log:
-            ticks = np.linspace(np.log10(zmin), np.log10(zmax), slider_value+1)
+            ticks = np.linspace(np.log10(zmin), np.log10(zmax), cbar_slider + 1)
             ticks = np.around(10**(ticks), 2)
         else:
-            ticks = np.around(np.linspace(zmin, zmax, slider_value+1), 3)
+            ticks = np.around(np.linspace(zmin, zmax, cbar_slider + 1), 3)
 
-        if input_colorbar is None:
-            input_colorbar = data[dd_value]["cmap"]
+        if colorscale is None:
+            colorscale = data[dd_value]["cmap"]
 
-        cmap = matplotlib.cm.get_cmap(input_colorbar, slider_value)
+        cmap = matplotlib.cm.get_cmap(colorscale, cbar_slider)
 
         hexes = []
         for i in range(cmap.N):
@@ -288,7 +288,7 @@ def get_app(config, data):
                         ),
                     ),
                     hovertemplate="<b>Station Value: %{text}</b><br>",
-                    visible=toggle_station_value,
+                    visible=toggle_station_switch,
                     name=""
                 ),
             ]
