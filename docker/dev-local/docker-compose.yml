@@ -16,6 +16,10 @@ services:
         target: /codebase
 #        read_only: true
       - type: bind
+        source: ./config.yml
+        target: /codebase/config.yml
+        read_only: true
+      - type: bind
         source: /storage/data/projects/comp_support/dv-explorer/data/model_inputs/
         target: /codebase/dve/data/model_inputs/
         read_only: true
