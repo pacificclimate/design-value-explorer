@@ -56,7 +56,7 @@ def get_app(config, data):
     app.title = 'Pacific Climate Impacts Consortium Design Value Explorer'
     app.config.suppress_callback_exceptions = True
 
-    app.layout = dve.layout.main(app, data, colormaps)
+    app.layout = dve.layout.main(data, colormaps)
 
     @app.callback(
         dash.dependencies.Output("ens-output-container", "children"),

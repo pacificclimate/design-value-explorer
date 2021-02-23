@@ -6,7 +6,10 @@ import plotly.express as px
 import numpy as np
 
 
-def main(app, data, colormaps):
+# def header():
+
+
+def main(data, colormaps):
 
     # TODO: Replace this use of preloaded data with on-demand requests
     #   for the data to be loaded.
@@ -18,7 +21,7 @@ def main(app, data, colormaps):
     default_markers = np.linspace(dmin, dmax, N)
     dd_options = [dict(label=name, value=name) for name in data.keys()]
 
-    app.layout = html.Div(
+    return html.Div(
         id="big-app-container",
         children=[
             dbc.Row(
@@ -218,5 +221,3 @@ def main(app, data, colormaps):
             ),
         ],
     )
-
-    return app.layout
