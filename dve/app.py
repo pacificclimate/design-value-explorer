@@ -1,3 +1,5 @@
+import math
+
 from climpyrical.data import read_data
 from climpyrical.gridding import flatten_coords, transform_coords, find_nearest_index
 from climpyrical.mask import stratify_coords
@@ -144,7 +146,14 @@ def get_app(config, data):
         [dash.dependencies.Input("range-slider", "value")]
     )
     def update_range(value):
-        return f"Colourbar Range: {value[0]} to {value[1]}"
+        # TODO: Put this in a utility library
+        def sigfigs(x, n=3):
+            if not isinstance(x, float):
+                return x
+            if x == 0:
+                return x
+            return round(x, -int(math.floor(math.log10(abs(x)))) + (n - 1))
+        return f"Colourbar Range: {sigfigs(value[0])} to {sigfigs(value[1])}"
 
     @app.callback(
         [
@@ -170,7 +179,7 @@ def get_app(config, data):
         [dash.dependencies.Input("cbar-slider", "value")],
     )
     def update_slider_n(value):
-        return f"Number of Discrete Colours = {value}"
+        return f"Number of Colours: {value}"
 
     ds = data[list(data.keys())[0]]["reconstruction"]
 

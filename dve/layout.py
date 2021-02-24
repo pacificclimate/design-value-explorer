@@ -40,10 +40,12 @@ def overlay_options():
     Layout for Overlay Options section.
     This function returns a list of rows.
     """
+    
     return [
+        # Section title
         dbc.Row(dbc.Col(html.H4("Overlay Options"))),
 
-        # Control echoes
+        # Control titles
         dbc.Row(
             [
                 dbc.Col(html.Div(
@@ -102,13 +104,80 @@ def overlay_options():
         ),
     ]
 
-def map_tab(data, colormaps):
+
+def colourbar_options(data, colormaps):
+    """
+    Layout for Colourbar Options section.
+    This function returns a list of rows.
+    """
+    
     (first_dv,) = data[list(data.keys())[0]]["reconstruction"].data_vars
     first_rfield = data[list(data.keys())[0]]["reconstruction"][first_dv]
     dmin = np.nanmin(first_rfield)
     dmax = np.nanmax(first_rfield)
     num_range_slider_steps = 10
 
+    return [
+        # Section title
+        # TODO: Improve title -- something like Colour Scale Options
+        dbc.Row(dbc.Col(html.H4("Colourbar Options"))),
+        
+        # Control titles
+        dbc.Row(
+            [
+                dbc.Col(html.Div(html.P("Colour Map"))),
+                dbc.Col(html.Div(id="log-output-container")),
+                dbc.Col(html.Div(id="cbar-slider-output-container")),
+                dbc.Col(html.Div(id="range-slider-output-container")),
+            ]
+        ),
+        
+        # Controls
+        dbc.Row(
+            [
+                dbc.Col(dcc.Dropdown(
+                    # TODO: Rename this to colour-map
+                    id="colorscale",
+                    options=[
+                        {"value": x, "label": x} for x in colormaps
+                    ],
+                    value=None,
+                )),
+                dbc.Col(
+                    daq.ToggleSwitch(
+                        # TODO: Rename
+                        id="toggle-log", value=True, size=50
+                    )
+                ),
+                dbc.Col(
+                    dcc.Slider(
+                        # TODO: Rename to colourscale-range
+                        id="cbar-slider",
+                        min=2,
+                        max=30,
+                        step=1,
+                        value=10,
+                    ),
+                ),
+                dbc.Col(
+                    dcc.RangeSlider(
+                        # TODO: Rename
+                        id="range-slider",
+                        min=dmin,
+                        max=dmax,
+                        step=(dmax - dmin)
+                             / num_range_slider_steps,
+                        vertical=False,
+                        value=[dmin, dmax],
+                    ),
+                ),
+
+            ]
+        ),
+    ]
+
+
+def map_tab(data, colormaps):
     return dcc.Tab(
         label="Map",
         children=[
@@ -120,54 +189,7 @@ def map_tab(data, colormaps):
                     dbc.Col(
                         [
                             *overlay_options(),
-
-                            html.Div(html.H4("Colourbar Options")),
-                            html.Div(html.P("Colour Map")),
-                            dcc.Dropdown(
-                                id="colorscale",
-                                options=[
-                                    {"value": x, "label": x} for x in colormaps
-                                ],
-                                value=None,
-                            ),
-                            dbc.Row([html.Div(id="log-output-container")]),
-                            dbc.Row(
-                                daq.ToggleSwitch(
-                                    id="toggle-log", value=True, size=50
-                                )
-                            ),
-                            dbc.Row(
-                                [html.Div(id="cbar-slider-output-container")]
-                            ),
-                            dbc.Row(
-                                html.Div(
-                                    dcc.Slider(
-                                        id="cbar-slider",
-                                        min=2,
-                                        max=30,
-                                        step=1,
-                                        value=10,
-                                    ),
-                                    style={"width": "500px"},
-                                )
-                            ),
-                            dbc.Row(
-                                html.Div(id="range-slider-output-container")
-                            ),
-                            dbc.Row(
-                                html.Div(
-                                    dcc.RangeSlider(
-                                        id="range-slider",
-                                        min=dmin,
-                                        max=dmax,
-                                        step=(dmax - dmin)
-                                        / num_range_slider_steps,
-                                        vertical=False,
-                                        value=[dmin, dmax],
-                                    ),
-                                    style={"width": "500px"},
-                                )
-                            ),
+                            *colourbar_options(data, colormaps)
                         ],
                         align="center",
                         width="auto",
