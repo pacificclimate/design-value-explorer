@@ -178,7 +178,7 @@ def colourbar_options(data, colormaps):
 
 
 def map_tab(data, colormaps):
-    return dcc.Tab(
+    return dbc.Tab(
         label="Map",
         children=[
             dbc.Row(
@@ -201,7 +201,7 @@ def map_tab(data, colormaps):
 
 
 def table_C2_tab():
-    return dcc.Tab(
+    return dbc.Tab(
         label="Table C-2",
         children=[
             html.H4("Reconstruction Values at Table C2 Locations"),
@@ -218,10 +218,15 @@ def main(data, colormaps):
     # TODO: Remove? What were these for?
     # default_markers = np.linspace(dmin, dmax, N)
 
-    return html.Div(
+    return dbc.Container(
         id="big-app-container",
+        fluid=True,
         children=[
             header(data),
-            dcc.Tabs([map_tab(data, colormaps), table_C2_tab()]),
+            dbc.Row(
+                dbc.Col(
+                    dbc.Tabs([map_tab(data, colormaps), table_C2_tab()]),
+                )
+            ),
         ],
     )
