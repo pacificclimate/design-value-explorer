@@ -48,10 +48,10 @@ def overlay_options():
         # Control titles
         dbc.Row(
             [
-                dbc.Col(html.P("Dataset"), width=6),
-                dbc.Col(html.P("Raster")),
-                dbc.Col(html.P("Mask")),
-                dbc.Col(html.P("Stations")),
+                dbc.Col(html.Label("Dataset"), width=6),
+                dbc.Col(html.Label("Raster")),
+                dbc.Col(html.Label("Mask")),
+                dbc.Col(html.Label("Stations")),
             ]
         ),
 
@@ -112,10 +112,10 @@ def colourbar_options(data, colormaps):
         # Control titles
         dbc.Row(
             [
-                dbc.Col(html.Div(html.P("Colour Map"))),
-                dbc.Col(html.Div(id="log-output-container")),
-                dbc.Col(html.Div(id="cbar-slider-output-container")),
-                dbc.Col(html.Div(id="range-slider-output-container")),
+                dbc.Col(html.Label("Colour Map")),
+                dbc.Col(html.Label(id="log-output-container")),
+                dbc.Col(html.Label(id="cbar-slider-output-container")),
+                dbc.Col(html.Label(id="range-slider-output-container")),
             ]
         ),
         
