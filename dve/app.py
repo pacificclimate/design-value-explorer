@@ -4,11 +4,11 @@ from climpyrical.mask import stratify_coords
 from climpyrical.cmd.find_matched_model_vals import add_model_values
 from dve.colorbar import get_cmap_divisions, matplotlib_to_plotly, discrete_colorscale
 
+import dve
 import dve.data
+import dve.layout
 from dve.processing import coord_prep
 from dve.generate_iso_lines import gen_lines
-from dve.layout import get_layout
-import dve
 
 import dash
 import dash_table
@@ -22,6 +22,8 @@ import numpy as np
 import matplotlib.cm
 import geopandas as gpd
 from pkg_resources import resource_filename
+
+from dve.utils import sigfigs
 
 import flask
 import os
@@ -56,28 +58,12 @@ def get_app(config, data):
     app.title = 'Pacific Climate Impacts Consortium Design Value Explorer'
     app.config.suppress_callback_exceptions = True
 
-    app.layout = get_layout(app, data, colormaps)
-
-    @app.callback(
-        dash.dependencies.Output("ens-output-container", "children"),
-        [dash.dependencies.Input("ens-switch", "value")]
-    )
-    def update_ensemble(value):
-        d = {True: "CanRCM4 Ensemble Mean", False: "HSM Reconstruction"}
-        return f"{d[value]}"
-
-    @app.callback(
-        dash.dependencies.Output("raster-output-container", "children"),
-        [dash.dependencies.Input("raster-switch", "value")]
-    )
-    def update_ensemble(value):
-        d = {True: "Raster On", False: "Raster Off"}
-        return f"{d[value]}"
+    app.layout = dve.layout.main(data, colormaps)
 
 
     @app.callback(
         dash.dependencies.Output("table", "children"),
-        [dash.dependencies.Input("dropdown", "value")]
+        [dash.dependencies.Input("design-value-name", "value")]
     )
     def update_tablec2(value):
         df = data[value]["table"]
@@ -100,23 +86,8 @@ def get_app(config, data):
                )
 
 
-    @app.callback(
-        dash.dependencies.Output("mask-output-container", "children"),
-        [dash.dependencies.Input("toggle-mask", "value")]
-    )
-    def update_mask(value):
-        d = {True: "ON", False: "OFF"}
-        return f"Mask: {d[value]}"
-
-    @app.callback(
-        dash.dependencies.Output("log-output-container", "children"),
-        [dash.dependencies.Input("toggle-log", "value")]
-    )
-    def update_log(loglin):
-        d = {True: "Log", False: "Linear"}
-        return f"Colourscale: {d[loglin]}"
-
-
+    # TODO: Element "input-colorbar-output-container" does not exist (any more?)
+    #   in the layout. Therefore this callback has no effect or purpose. Remove?
     @app.callback(
         dash.dependencies.Output("input-colorbar-output-container", "children"),
         [dash.dependencies.Input("input-colorbar", "value")]
@@ -128,21 +99,13 @@ def get_app(config, data):
             value = "Invalid cmap!"
         return f"Colour Map: {value}"
 
-    @app.callback(
-        dash.dependencies.Output("station-output-container", "children"),
-        [dash.dependencies.Input("toggle-station-switch", "value")],
-    )
-    def update_stations(value):
-        d = {True: "ON", False: "OFF"}
-        return f"Stations: {d[value]}"
-
 
     @app.callback(
         dash.dependencies.Output("range-slider-output-container", "children"),
         [dash.dependencies.Input("range-slider", "value")]
     )
     def update_range(value):
-        return f"Colourbar Range: {value[0]} to {value[1]}"
+        return f"Range: {sigfigs(value[0])} to {sigfigs(value[1])}"
 
     @app.callback(
         [
@@ -151,7 +114,7 @@ def get_app(config, data):
             Output(component_id="range-slider", component_property="step"),
             Output(component_id="range-slider", component_property="value")
         ],
-        [Input(component_id="dropdown", component_property="value"),
+        [Input(component_id="design-value-name", component_property="value"),
         Input(component_id="cbar-slider", component_property="value")],
     )
     def update_slider(value, N):
@@ -163,54 +126,54 @@ def get_app(config, data):
         return minimum, maximum, step, default
 
 
-    @app.callback(
-        dash.dependencies.Output("cbar-slider-output-container", "children"),
-        [dash.dependencies.Input("cbar-slider", "value")],
-    )
-    def update_slider_n(value):
-        return f"Number of Discrete Colours = {value}"
+    # @app.callback(
+    #     dash.dependencies.Output("cbar-slider-output-container", "children"),
+    #     [dash.dependencies.Input("cbar-slider", "value")],
+    # )
+    # def update_slider_n(value):
+    #     return f"Number of Colours: {value}"
 
     ds = data[list(data.keys())[0]]["reconstruction"]
 
     @app.callback(
         dash.dependencies.Output("my-graph", "figure"),
         [
-            dash.dependencies.Input("toggle-mask", "value"),
-            dash.dependencies.Input("toggle-station-switch", "value"),
-            dash.dependencies.Input("dropdown", "value"),
+            dash.dependencies.Input("mask-ctrl", "on"),
+            dash.dependencies.Input("stations-ctrl", "on"),
+            dash.dependencies.Input("design-value-name", "value"),
             dash.dependencies.Input("cbar-slider", "value"),
             dash.dependencies.Input("range-slider", "value"),
-            dash.dependencies.Input("ens-switch", "value"),
-            dash.dependencies.Input("toggle-log", "value"),
+            dash.dependencies.Input("ens-ctrl", "value"),
+            dash.dependencies.Input("scale-ctrl", "value"),
             dash.dependencies.Input("colorscale", "value"),
-            dash.dependencies.Input("raster-switch", "value"),
+            dash.dependencies.Input("raster-ctrl", "on"),
         ],
     )
     def update_ds(
-        toggle_mask,
-        toggle_station_value,
-        dd_value,
-        slider_value,
+        mask_ctrl,
+        stations_ctrl,
+        design_value_name,
+        cbar_slider,
         range_slider,
-        mean_button,
-        toggle_log,
-        input_colorbar,
-        raster_switch
+        ens_ctrl,
+        scale_ctrl,
+        colorscale,
+        raster_ctrl
     ):
 
         zmin = range_slider[0]
         zmax = range_slider[1]
 
-        if toggle_log:
-            ticks = np.linspace(np.log10(zmin), np.log10(zmax), slider_value+1)
+        if scale_ctrl == "logarithmic":
+            ticks = np.linspace(np.log10(zmin), np.log10(zmax), cbar_slider + 1)
             ticks = np.around(10**(ticks), 2)
         else:
-            ticks = np.around(np.linspace(zmin, zmax, slider_value+1), 3)
+            ticks = np.around(np.linspace(zmin, zmax, cbar_slider + 1), 3)
 
-        if input_colorbar is None:
-            input_colorbar = data[dd_value]["cmap"]
+        if colorscale is None:
+            colorscale = data[design_value_name]["cmap"]
 
-        cmap = matplotlib.cm.get_cmap(input_colorbar, slider_value)
+        cmap = matplotlib.cm.get_cmap(colorscale, cbar_slider)
 
         hexes = []
         for i in range(cmap.N):
@@ -221,11 +184,11 @@ def get_app(config, data):
         dcolorsc = discrete_colorscale(ticks, hexes)
         ticktext = [f'{ticks[0]}-{ticks[1]}'] + [f'{ticks[k]}-{ticks[k+1]}' for k in range(1, len(ticks)-1)]
 
-        r_or_m = "model" if mean_button else "reconstruction"
+        r_or_m = ens_ctrl
 
-        dv, station_dv = data[dd_value]["dv"], data[dd_value]["station_dv"]
-        ds = data[dd_value][r_or_m]
-        df = data[dd_value]["stations"]
+        dv, station_dv = data[design_value_name]["dv"], data[design_value_name]["station_dv"]
+        ds = data[design_value_name][r_or_m]
+        df = data[design_value_name]["stations"]
 
         x1 = min(value for value in X if value is not None)
         x2 = max(value for value in X if value is not None)
@@ -244,7 +207,7 @@ def get_app(config, data):
         df = coord_prep(df, station_dv)
         ds_arr = ds[dv].values[iymin:iymax, ixmin:ixmax].copy()
 
-        if r_or_m == "model" and toggle_mask:
+        if r_or_m == "model" and mask_ctrl:
             mask = native_mask[iymin:iymax, ixmin:ixmax]
             ds_arr[~mask] = np.nan
 
@@ -261,7 +224,7 @@ def get_app(config, data):
                         tickvals=ticks,
                         ticktext=ticktext
                     ),
-                    visible=raster_switch,
+                    visible=raster_ctrl,
                     hovertemplate="<b>Design Value: %{z} </b><br>",
                     name=""
                 ),
@@ -280,7 +243,7 @@ def get_app(config, data):
                             width=1,
                             color="DarkSlateGrey"
                         ),
-                        showscale=(raster_switch==False),
+                        showscale=(raster_ctrl == False),
                         colorscale = dcolorsc,
                         colorbar = dict(
                             tickvals=ticks,
@@ -288,7 +251,7 @@ def get_app(config, data):
                         ),
                     ),
                     hovertemplate="<b>Station Value: %{text}</b><br>",
-                    visible=toggle_station_value,
+                    visible=stations_ctrl,
                     name=""
                 ),
             ]
@@ -298,7 +261,7 @@ def get_app(config, data):
         fig = {
             "data": go_list,
             "layout": {
-                "title": f"<b>{dd_value} ({units})</b>",
+                "title": f"<b>{design_value_name} ({units})</b>",
                 "font": dict(size=13, color='grey'),
                 "xaxis": dict(
                     zeroline=False,
