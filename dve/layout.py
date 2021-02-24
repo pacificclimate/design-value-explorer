@@ -53,6 +53,8 @@ def map_tab(data, colormaps):
                     dbc.Col(
                         [
                             dbc.Row(dbc.Col(html.H4("Overlay Options"))),
+
+                            # Control echoes
                             dbc.Row(
                                 [
                                     dbc.Col(html.Div(
@@ -69,32 +71,6 @@ def map_tab(data, colormaps):
                                             "marginRight": "1em",
                                         },
                                     )),
-                                ]
-                            ),
-                            dbc.Row(
-                                [
-                                    dbc.Col(
-                                        daq.ToggleSwitch(
-                                            id="ens-switch", value=False
-                                        ),
-                                        # style={
-                                        #     "align": "center",
-                                        #     "marginRight": "6.5em",
-                                        # },
-                                    ),
-                                    dbc.Col(
-                                        daq.ToggleSwitch(
-                                            id="raster-switch", value=True
-                                        ),
-                                        # style={
-                                        #     "align": "center",
-                                        #     "marginRight": "1em",
-                                        # },
-                                    ),
-                                ]
-                            ),
-                            dbc.Row(
-                                [
                                     dbc.Col(html.Div(
                                         id="mask-output-container",
                                         style={
@@ -105,18 +81,26 @@ def map_tab(data, colormaps):
                                     dbc.Col(html.Div(id="station-output-container")),
                                 ]
                             ),
+
+                            # Controls
                             dbc.Row(
                                 [
+                                    dbc.Col(
+                                        daq.ToggleSwitch(
+                                            id="ens-switch", value=False
+                                        ),
+                                    ),
+                                    dbc.Col(
+                                        daq.ToggleSwitch(
+                                            id="raster-switch", value=True
+                                        ),
+                                    ),
                                     dbc.Col(
                                         daq.ToggleSwitch(
                                             id="toggle-mask",
                                             size=50,
                                             value=True,
                                         ),
-                                        # style={
-                                        #     "align": "center",
-                                        #     "marginRight": "1em",
-                                        # },
                                     ),
                                     dbc.Col(
                                         daq.ToggleSwitch(
@@ -127,6 +111,7 @@ def map_tab(data, colormaps):
                                     ),
                                 ]
                             ),
+
                             html.Div(html.H4("Colourbar Options")),
                             html.Div(html.P("Colour Map")),
                             dcc.Dropdown(
