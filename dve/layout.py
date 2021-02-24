@@ -71,18 +71,18 @@ def overlay_options():
                 ),
                 dbc.Col(
                     daq.BooleanSwitch(
-                        id="raster-switch", on=True
+                        id="raster-ctrl", on=True
                     ),
                 ),
                 dbc.Col(
                     daq.BooleanSwitch(
-                        id="toggle-mask",
+                        id="mask-ctrl",
                         on=True,
                     ),
                 ),
                 dbc.Col(
                     daq.BooleanSwitch(
-                        id="toggle-station-switch",
+                        id="stations-ctrl",
                         on=False,
                     ),
                 ),

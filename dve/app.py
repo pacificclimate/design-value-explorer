@@ -70,7 +70,7 @@ def get_app(config, data):
 
     # @app.callback(
     #     dash.dependencies.Output("raster-output-container", "children"),
-    #     [dash.dependencies.Input("raster-switch", "value")]
+    #     [dash.dependencies.Input("raster-ctrl", "value")]
     # )
     # def update_ensemble(value):
     #     d = {True: "Raster On", False: "Raster Off"}
@@ -104,7 +104,7 @@ def get_app(config, data):
 
     # @app.callback(
     #     dash.dependencies.Output("mask-output-container", "children"),
-    #     [dash.dependencies.Input("toggle-mask", "value")]
+    #     [dash.dependencies.Input("mask-ctrl", "value")]
     # )
     # def update_mask(value):
     #     d = {True: "ON", False: "OFF"}
@@ -134,7 +134,7 @@ def get_app(config, data):
 
     # @app.callback(
     #     dash.dependencies.Output("station-output-container", "children"),
-    #     [dash.dependencies.Input("toggle-station-switch", "value")],
+    #     [dash.dependencies.Input("stations-ctrl", "value")],
     # )
     # def update_stations(value):
     #     d = {True: "ON", False: "OFF"}
@@ -186,27 +186,27 @@ def get_app(config, data):
     @app.callback(
         dash.dependencies.Output("my-graph", "figure"),
         [
-            dash.dependencies.Input("toggle-mask", "on"),
-            dash.dependencies.Input("toggle-station-switch", "on"),
+            dash.dependencies.Input("mask-ctrl", "on"),
+            dash.dependencies.Input("stations-ctrl", "on"),
             dash.dependencies.Input("design-value-name", "value"),
             dash.dependencies.Input("cbar-slider", "value"),
             dash.dependencies.Input("range-slider", "value"),
             dash.dependencies.Input("ens-switch", "value"),
             dash.dependencies.Input("toggle-log", "value"),
             dash.dependencies.Input("colorscale", "value"),
-            dash.dependencies.Input("raster-switch", "on"),
+            dash.dependencies.Input("raster-ctrl", "on"),
         ],
     )
     def update_ds(
-        toggle_mask,
-        toggle_station_switch,
+        mask_ctrl,
+        stations_ctrl,
         design_value_name,
         cbar_slider,
         range_slider,
         mean_button,
         toggle_log,
         colorscale,
-        raster_switch
+        raster_ctrl
     ):
 
         zmin = range_slider[0]
@@ -255,7 +255,7 @@ def get_app(config, data):
         df = coord_prep(df, station_dv)
         ds_arr = ds[dv].values[iymin:iymax, ixmin:ixmax].copy()
 
-        if r_or_m == "model" and toggle_mask:
+        if r_or_m == "model" and mask_ctrl:
             mask = native_mask[iymin:iymax, ixmin:ixmax]
             ds_arr[~mask] = np.nan
 
@@ -272,7 +272,7 @@ def get_app(config, data):
                         tickvals=ticks,
                         ticktext=ticktext
                     ),
-                    visible=raster_switch,
+                    visible=raster_ctrl,
                     hovertemplate="<b>Design Value: %{z} </b><br>",
                     name=""
                 ),
@@ -291,7 +291,7 @@ def get_app(config, data):
                             width=1,
                             color="DarkSlateGrey"
                         ),
-                        showscale=(raster_switch==False),
+                        showscale=(raster_ctrl == False),
                         colorscale = dcolorsc,
                         colorbar = dict(
                             tickvals=ticks,
@@ -299,7 +299,7 @@ def get_app(config, data):
                         ),
                     ),
                     hovertemplate="<b>Station Value: %{text}</b><br>",
-                    visible=toggle_station_switch,
+                    visible=stations_ctrl,
                     name=""
                 ),
             ]
