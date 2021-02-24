@@ -126,13 +126,6 @@ def get_app(config, data):
         return minimum, maximum, step, default
 
 
-    # @app.callback(
-    #     dash.dependencies.Output("cbar-slider-output-container", "children"),
-    #     [dash.dependencies.Input("cbar-slider", "value")],
-    # )
-    # def update_slider_n(value):
-    #     return f"Number of Colours: {value}"
-
     ds = data[list(data.keys())[0]]["reconstruction"]
 
     @app.callback(
