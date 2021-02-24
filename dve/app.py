@@ -62,15 +62,6 @@ def get_app(config, data):
 
 
     @app.callback(
-        dash.dependencies.Output("ens-output-container", "children"),
-        [dash.dependencies.Input("ens-switch", "value")]
-    )
-    def update_ensemble(value):
-        d = {True: "CanRCM4 Ensemble Mean", False: "HSM Reconstruction"}
-        return f"{d[value]}"
-
-
-    @app.callback(
         dash.dependencies.Output("table", "children"),
         [dash.dependencies.Input("design-value-name", "value")]
     )
@@ -168,7 +159,7 @@ def get_app(config, data):
             dash.dependencies.Input("design-value-name", "value"),
             dash.dependencies.Input("cbar-slider", "value"),
             dash.dependencies.Input("range-slider", "value"),
-            dash.dependencies.Input("ens-switch", "value"),
+            dash.dependencies.Input("ens-ctrl", "value"),
             dash.dependencies.Input("toggle-log", "value"),
             dash.dependencies.Input("colorscale", "value"),
             dash.dependencies.Input("raster-ctrl", "on"),
@@ -180,7 +171,7 @@ def get_app(config, data):
         design_value_name,
         cbar_slider,
         range_slider,
-        mean_button,
+        ens_ctrl,
         toggle_log,
         colorscale,
         raster_ctrl
@@ -209,7 +200,7 @@ def get_app(config, data):
         dcolorsc = discrete_colorscale(ticks, hexes)
         ticktext = [f'{ticks[0]}-{ticks[1]}'] + [f'{ticks[k]}-{ticks[k+1]}' for k in range(1, len(ticks)-1)]
 
-        r_or_m = "model" if mean_button else "reconstruction"
+        r_or_m = ens_ctrl
 
         dv, station_dv = data[design_value_name]["dv"], data[design_value_name]["station_dv"]
         ds = data[design_value_name][r_or_m]

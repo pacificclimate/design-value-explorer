@@ -48,13 +48,7 @@ def overlay_options():
         # Control titles
         dbc.Row(
             [
-                dbc.Col(html.Div(
-                    id="ens-output-container",
-                    style={
-                        "align": "center",
-                        "marginRight": "1em",
-                    },
-                )),
+                dbc.Col(html.P("Dataset"), width=6),
                 dbc.Col(html.P("Raster")),
                 dbc.Col(html.P("Mask")),
                 dbc.Col(html.P("Stations")),
@@ -65,9 +59,16 @@ def overlay_options():
         dbc.Row(
             [
                 dbc.Col(
-                    daq.ToggleSwitch(
-                        id="ens-switch", value=False
+                    dcc.Dropdown(
+                        id="ens-ctrl",
+                        options=[
+                            {"label": "HSM Reconstruction", "value": "reconstruction"},
+                            {"label": "CanRCM4 Ensemble Mean", "value": "model"},
+                        ],
+                        value="reconstruction",
+                        clearable=False,
                     ),
+                    width=6,
                 ),
                 dbc.Col(
                     daq.BooleanSwitch(
