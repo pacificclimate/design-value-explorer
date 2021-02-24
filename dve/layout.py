@@ -55,21 +55,9 @@ def overlay_options():
                         "marginRight": "1em",
                     },
                 )),
-                dbc.Col(html.Div(
-                    id="raster-output-container",
-                    style={
-                        "align": "center",
-                        "marginRight": "1em",
-                    },
-                )),
-                dbc.Col(html.Div(
-                    id="mask-output-container",
-                    style={
-                        "align": "center",
-                        "marginRight": "1em",
-                    },
-                )),
-                dbc.Col(html.Div(id="station-output-container")),
+                dbc.Col(html.P("Raster")),
+                dbc.Col(html.P("Mask")),
+                dbc.Col(html.P("Stations")),
             ]
         ),
 
@@ -82,22 +70,20 @@ def overlay_options():
                     ),
                 ),
                 dbc.Col(
-                    daq.ToggleSwitch(
-                        id="raster-switch", value=True
+                    daq.BooleanSwitch(
+                        id="raster-switch", on=True
                     ),
                 ),
                 dbc.Col(
-                    daq.ToggleSwitch(
+                    daq.BooleanSwitch(
                         id="toggle-mask",
-                        size=50,
-                        value=True,
+                        on=True,
                     ),
                 ),
                 dbc.Col(
-                    daq.ToggleSwitch(
+                    daq.BooleanSwitch(
                         id="toggle-station-switch",
-                        size=50,
-                        value=False,
+                        on=False,
                     ),
                 ),
             ]

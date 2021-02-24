@@ -68,13 +68,13 @@ def get_app(config, data):
         d = {True: "CanRCM4 Ensemble Mean", False: "HSM Reconstruction"}
         return f"{d[value]}"
 
-    @app.callback(
-        dash.dependencies.Output("raster-output-container", "children"),
-        [dash.dependencies.Input("raster-switch", "value")]
-    )
-    def update_ensemble(value):
-        d = {True: "Raster On", False: "Raster Off"}
-        return f"{d[value]}"
+    # @app.callback(
+    #     dash.dependencies.Output("raster-output-container", "children"),
+    #     [dash.dependencies.Input("raster-switch", "value")]
+    # )
+    # def update_ensemble(value):
+    #     d = {True: "Raster On", False: "Raster Off"}
+    #     return f"{d[value]}"
 
 
     @app.callback(
@@ -102,13 +102,13 @@ def get_app(config, data):
                )
 
 
-    @app.callback(
-        dash.dependencies.Output("mask-output-container", "children"),
-        [dash.dependencies.Input("toggle-mask", "value")]
-    )
-    def update_mask(value):
-        d = {True: "ON", False: "OFF"}
-        return f"Mask: {d[value]}"
+    # @app.callback(
+    #     dash.dependencies.Output("mask-output-container", "children"),
+    #     [dash.dependencies.Input("toggle-mask", "value")]
+    # )
+    # def update_mask(value):
+    #     d = {True: "ON", False: "OFF"}
+    #     return f"Mask: {d[value]}"
 
     @app.callback(
         dash.dependencies.Output("log-output-container", "children"),
@@ -132,13 +132,13 @@ def get_app(config, data):
             value = "Invalid cmap!"
         return f"Colour Map: {value}"
 
-    @app.callback(
-        dash.dependencies.Output("station-output-container", "children"),
-        [dash.dependencies.Input("toggle-station-switch", "value")],
-    )
-    def update_stations(value):
-        d = {True: "ON", False: "OFF"}
-        return f"Stations: {d[value]}"
+    # @app.callback(
+    #     dash.dependencies.Output("station-output-container", "children"),
+    #     [dash.dependencies.Input("toggle-station-switch", "value")],
+    # )
+    # def update_stations(value):
+    #     d = {True: "ON", False: "OFF"}
+    #     return f"Stations: {d[value]}"
 
 
     @app.callback(
@@ -186,15 +186,15 @@ def get_app(config, data):
     @app.callback(
         dash.dependencies.Output("my-graph", "figure"),
         [
-            dash.dependencies.Input("toggle-mask", "value"),
-            dash.dependencies.Input("toggle-station-switch", "value"),
+            dash.dependencies.Input("toggle-mask", "on"),
+            dash.dependencies.Input("toggle-station-switch", "on"),
             dash.dependencies.Input("design-value-name", "value"),
             dash.dependencies.Input("cbar-slider", "value"),
             dash.dependencies.Input("range-slider", "value"),
             dash.dependencies.Input("ens-switch", "value"),
             dash.dependencies.Input("toggle-log", "value"),
             dash.dependencies.Input("colorscale", "value"),
-            dash.dependencies.Input("raster-switch", "value"),
+            dash.dependencies.Input("raster-switch", "on"),
         ],
     )
     def update_ds(
