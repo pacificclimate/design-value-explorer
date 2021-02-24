@@ -60,6 +60,7 @@ def get_app(config, data):
 
     app.layout = dve.layout.main(data, colormaps)
 
+
     @app.callback(
         dash.dependencies.Output("ens-output-container", "children"),
         [dash.dependencies.Input("ens-switch", "value")]
@@ -67,14 +68,6 @@ def get_app(config, data):
     def update_ensemble(value):
         d = {True: "CanRCM4 Ensemble Mean", False: "HSM Reconstruction"}
         return f"{d[value]}"
-
-    # @app.callback(
-    #     dash.dependencies.Output("raster-output-container", "children"),
-    #     [dash.dependencies.Input("raster-ctrl", "value")]
-    # )
-    # def update_ensemble(value):
-    #     d = {True: "Raster On", False: "Raster Off"}
-    #     return f"{d[value]}"
 
 
     @app.callback(
@@ -102,14 +95,6 @@ def get_app(config, data):
                )
 
 
-    # @app.callback(
-    #     dash.dependencies.Output("mask-output-container", "children"),
-    #     [dash.dependencies.Input("mask-ctrl", "value")]
-    # )
-    # def update_mask(value):
-    #     d = {True: "ON", False: "OFF"}
-    #     return f"Mask: {d[value]}"
-
     @app.callback(
         dash.dependencies.Output("log-output-container", "children"),
         [dash.dependencies.Input("toggle-log", "value")]
@@ -131,14 +116,6 @@ def get_app(config, data):
         except ValueError:
             value = "Invalid cmap!"
         return f"Colour Map: {value}"
-
-    # @app.callback(
-    #     dash.dependencies.Output("station-output-container", "children"),
-    #     [dash.dependencies.Input("stations-ctrl", "value")],
-    # )
-    # def update_stations(value):
-    #     d = {True: "ON", False: "OFF"}
-    #     return f"Stations: {d[value]}"
 
 
     @app.callback(
