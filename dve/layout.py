@@ -111,7 +111,7 @@ def colourbar_options(data, colormaps):
         dbc.Row(
             dbc.Col(html.H4("Colourbar Options")),
             # TODO: Replace with class
-            style={"margin-top": "1.5em"},
+            style={"margin-top": "2.5em"},
         ),
         
         # Control titles
@@ -120,7 +120,6 @@ def colourbar_options(data, colormaps):
                 dbc.Col(html.Label("Colour Map")),
                 dbc.Col(html.Label("Scale")),
                 dbc.Col(html.Label("Num. Colours")),
-                # dbc.Col(html.Label(id="cbar-slider-output-container")),
                 dbc.Col(html.Label(id="range-slider-output-container")),
             ]
         ),
@@ -154,15 +153,15 @@ def colourbar_options(data, colormaps):
                         max=30,
                         step=1,
                         value=10,
-                        size=100,
+                        size=150,
                         handleLabel={
                             "showCurrentValue": True,
                             "label": " ",
-                            "style": {"font-size": "1em"},
+                            "style": {"font-size": "0.8em", "color": "black"},
                         },
                         marks={x: str(x) for x in (2, 30)},
                     ),
-                    style={"padding-top": "1.5em"},
+                    style={"padding-top": "2em"},
                 ),
                 dbc.Col(
                     html.Div(
@@ -177,11 +176,11 @@ def colourbar_options(data, colormaps):
                             value=[dmin, dmax],
                             marks={
                                 x: str(sigfigs(x))
-                                for x in (dmin*1.005, (dmin + dmax) / 2, dmax)
+                                for x in (dmin*1.008, (dmin + dmax) / 2, dmax)
                             }
                         ),
                         # RangeSlider has unwanted horiz padding of 25px.
-                        style={"margin": "1.5em -25px"},
+                        style={"margin": "2em -25px"},
                     ),
                 ),
             ]
@@ -196,7 +195,7 @@ def map_tab(data, colormaps):
             dbc.Row(
                 [
                     dbc.Col(
-                        [dcc.Graph(id="my-graph")], align="center", width="auto"
+                        [dcc.Graph(id="my-graph")], align="center", width=7
                     ),
                     dbc.Col(
                         [
@@ -204,7 +203,7 @@ def map_tab(data, colormaps):
                             *colourbar_options(data, colormaps)
                         ],
                         align="center",
-                        width="auto",
+                        width=5,
                     ),
                 ]
             )
