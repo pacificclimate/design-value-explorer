@@ -4,6 +4,7 @@ import dash_core_components as dcc
 import dash_daq as daq
 import plotly.express as px
 import numpy as np
+from dve.utils import sigfigs
 
 
 def header(data):
@@ -118,7 +119,8 @@ def colourbar_options(data, colormaps):
             [
                 dbc.Col(html.Label("Colour Map")),
                 dbc.Col(html.Label("Scale")),
-                dbc.Col(html.Label(id="cbar-slider-output-container")),
+                dbc.Col(html.Label("Num. Colours")),
+                # dbc.Col(html.Label(id="cbar-slider-output-container")),
                 dbc.Col(html.Label(id="range-slider-output-container")),
             ]
         ),
@@ -146,28 +148,42 @@ def colourbar_options(data, colormaps):
                     )
                 ),
                 dbc.Col(
-                    dcc.Slider(
-                        # TODO: Rename to colourscale-range
+                    daq.Slider(
                         id="cbar-slider",
                         min=2,
                         max=30,
                         step=1,
                         value=10,
+                        size=100,
+                        handleLabel={
+                            "showCurrentValue": True,
+                            "label": " ",
+                            "style": {"font-size": "1em"},
+                        },
+                        marks={x: str(x) for x in (2, 30)},
                     ),
+                    style={"padding-top": "1.5em"},
                 ),
                 dbc.Col(
-                    dcc.RangeSlider(
-                        # TODO: Rename
-                        id="range-slider",
-                        min=dmin,
-                        max=dmax,
-                        step=(dmax - dmin)
-                             / num_range_slider_steps,
-                        vertical=False,
-                        value=[dmin, dmax],
+                    html.Div(
+                        dcc.RangeSlider(
+                            # TODO: Rename
+                            id="range-slider",
+                            min=dmin,
+                            max=dmax,
+                            step=(dmax - dmin)
+                                 / num_range_slider_steps,
+                            vertical=False,
+                            value=[dmin, dmax],
+                            marks={
+                                x: str(sigfigs(x))
+                                for x in (dmin*1.005, (dmin + dmax) / 2, dmax)
+                            }
+                        ),
+                        # RangeSlider has unwanted horiz padding of 25px.
+                        style={"margin": "1.5em -25px"},
                     ),
                 ),
-
             ]
         ),
     ]

@@ -1,5 +1,3 @@
-import math
-
 from climpyrical.data import read_data
 from climpyrical.gridding import flatten_coords, transform_coords, find_nearest_index
 from climpyrical.mask import stratify_coords
@@ -24,6 +22,8 @@ import numpy as np
 import matplotlib.cm
 import geopandas as gpd
 from pkg_resources import resource_filename
+
+from dve.utils import sigfigs
 
 import flask
 import os
@@ -105,14 +105,7 @@ def get_app(config, data):
         [dash.dependencies.Input("range-slider", "value")]
     )
     def update_range(value):
-        # TODO: Put this in a utility library
-        def sigfigs(x, n=3):
-            if not isinstance(x, float):
-                return x
-            if x == 0:
-                return x
-            return round(x, -int(math.floor(math.log10(abs(x)))) + (n - 1))
-        return f"Colourbar Range: {sigfigs(value[0])} to {sigfigs(value[1])}"
+        return f"Range: {sigfigs(value[0])} to {sigfigs(value[1])}"
 
     @app.callback(
         [
@@ -133,12 +126,12 @@ def get_app(config, data):
         return minimum, maximum, step, default
 
 
-    @app.callback(
-        dash.dependencies.Output("cbar-slider-output-container", "children"),
-        [dash.dependencies.Input("cbar-slider", "value")],
-    )
-    def update_slider_n(value):
-        return f"Number of Colours: {value}"
+    # @app.callback(
+    #     dash.dependencies.Output("cbar-slider-output-container", "children"),
+    #     [dash.dependencies.Input("cbar-slider", "value")],
+    # )
+    # def update_slider_n(value):
+    #     return f"Number of Colours: {value}"
 
     ds = data[list(data.keys())[0]]["reconstruction"]
 
