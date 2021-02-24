@@ -86,15 +86,6 @@ def get_app(config, data):
                )
 
 
-    @app.callback(
-        dash.dependencies.Output("log-output-container", "children"),
-        [dash.dependencies.Input("toggle-log", "value")]
-    )
-    def update_log(loglin):
-        d = {True: "Log", False: "Linear"}
-        return f"Colourscale: {d[loglin]}"
-
-
     # TODO: Element "input-colorbar-output-container" does not exist (any more?)
     #   in the layout. Therefore this callback has no effect or purpose. Remove?
     @app.callback(
@@ -160,7 +151,7 @@ def get_app(config, data):
             dash.dependencies.Input("cbar-slider", "value"),
             dash.dependencies.Input("range-slider", "value"),
             dash.dependencies.Input("ens-ctrl", "value"),
-            dash.dependencies.Input("toggle-log", "value"),
+            dash.dependencies.Input("scale-ctrl", "value"),
             dash.dependencies.Input("colorscale", "value"),
             dash.dependencies.Input("raster-ctrl", "on"),
         ],
@@ -172,7 +163,7 @@ def get_app(config, data):
         cbar_slider,
         range_slider,
         ens_ctrl,
-        toggle_log,
+        scale_ctrl,
         colorscale,
         raster_ctrl
     ):
@@ -180,7 +171,7 @@ def get_app(config, data):
         zmin = range_slider[0]
         zmax = range_slider[1]
 
-        if toggle_log:
+        if scale_ctrl == "logarithmic":
             ticks = np.linspace(np.log10(zmin), np.log10(zmax), cbar_slider + 1)
             ticks = np.around(10**(ticks), 2)
         else:

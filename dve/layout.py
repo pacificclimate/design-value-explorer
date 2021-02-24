@@ -107,13 +107,17 @@ def colourbar_options(data, colormaps):
     return [
         # Section title
         # TODO: Improve title -- something like Colour Scale Options
-        dbc.Row(dbc.Col(html.H4("Colourbar Options"))),
+        dbc.Row(
+            dbc.Col(html.H4("Colourbar Options")),
+            # TODO: Replace with class
+            style={"margin-top": "1.5em"},
+        ),
         
         # Control titles
         dbc.Row(
             [
                 dbc.Col(html.Label("Colour Map")),
-                dbc.Col(html.Label(id="log-output-container")),
+                dbc.Col(html.Label("Scale")),
                 dbc.Col(html.Label(id="cbar-slider-output-container")),
                 dbc.Col(html.Label(id="range-slider-output-container")),
             ]
@@ -131,9 +135,14 @@ def colourbar_options(data, colormaps):
                     value=None,
                 )),
                 dbc.Col(
-                    daq.ToggleSwitch(
-                        # TODO: Rename
-                        id="toggle-log", value=True, size=50
+                    dcc.Dropdown(
+                        id="scale-ctrl",
+                        options=[
+                            {"label": "Linear", "value": "linear"},
+                            {"label": "Logarithmic", "value": "logarithmic"},
+                        ],
+                        value="logarithmic",
+                        clearable=False,
                     )
                 ),
                 dbc.Col(
