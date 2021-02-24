@@ -52,76 +52,78 @@ def map_tab(data, colormaps):
                     ),
                     dbc.Col(
                         [
-                            html.Div(html.H4("Overlay Options")),
+                            dbc.Row(dbc.Col(html.H4("Overlay Options"))),
                             dbc.Row(
                                 [
-                                    html.Div(
+                                    dbc.Col(html.Div(
                                         id="ens-output-container",
                                         style={
                                             "align": "center",
                                             "marginRight": "1em",
                                         },
-                                    ),
-                                    html.Div(
+                                    )),
+                                    dbc.Col(html.Div(
                                         id="raster-output-container",
                                         style={
                                             "align": "center",
                                             "marginRight": "1em",
                                         },
-                                    ),
+                                    )),
                                 ]
                             ),
                             dbc.Row(
                                 [
-                                    html.Div(
+                                    dbc.Col(
                                         daq.ToggleSwitch(
                                             id="ens-switch", value=False
                                         ),
-                                        style={
-                                            "align": "center",
-                                            "marginRight": "6.5em",
-                                        },
+                                        # style={
+                                        #     "align": "center",
+                                        #     "marginRight": "6.5em",
+                                        # },
                                     ),
-                                    html.Div(
+                                    dbc.Col(
                                         daq.ToggleSwitch(
                                             id="raster-switch", value=True
                                         ),
-                                        style={
-                                            "align": "center",
-                                            "marginRight": "1em",
-                                        },
+                                        # style={
+                                        #     "align": "center",
+                                        #     "marginRight": "1em",
+                                        # },
                                     ),
                                 ]
                             ),
                             dbc.Row(
                                 [
-                                    html.Div(
+                                    dbc.Col(html.Div(
                                         id="mask-output-container",
                                         style={
                                             "align": "center",
                                             "marginRight": "1em",
                                         },
-                                    ),
-                                    html.Div(id="station-output-container"),
+                                    )),
+                                    dbc.Col(html.Div(id="station-output-container")),
                                 ]
                             ),
                             dbc.Row(
                                 [
-                                    html.Div(
+                                    dbc.Col(
                                         daq.ToggleSwitch(
                                             id="toggle-mask",
                                             size=50,
                                             value=True,
                                         ),
-                                        style={
-                                            "align": "center",
-                                            "marginRight": "1em",
-                                        },
+                                        # style={
+                                        #     "align": "center",
+                                        #     "marginRight": "1em",
+                                        # },
                                     ),
-                                    daq.ToggleSwitch(
-                                        id="toggle-station-switch",
-                                        size=50,
-                                        value=False,
+                                    dbc.Col(
+                                        daq.ToggleSwitch(
+                                            id="toggle-station-switch",
+                                            size=50,
+                                            value=False,
+                                        ),
                                     ),
                                 ]
                             ),
