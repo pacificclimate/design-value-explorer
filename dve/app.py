@@ -44,11 +44,6 @@ def get_app(config, data):
         resource_filename("dve", config["paths"]["native_mask"])
     )["sftlf"] >= 1.0
 
-    colormaps = config["colormaps"]
-    # Add reverse options, too
-    cmap_r = tuple(f"{color}_r" for color in colormaps)
-    colormaps += cmap_r
-
     # initialize app
     TIMEOUT = 60
     server = flask.Flask("app")
@@ -58,12 +53,12 @@ def get_app(config, data):
     app.title = 'Pacific Climate Impacts Consortium Design Value Explorer'
     app.config.suppress_callback_exceptions = True
 
-    app.layout = dve.layout.main(data, colormaps)
+    app.layout = dve.layout.main(config, data)
 
 
     @app.callback(
         dash.dependencies.Output("table", "children"),
-        [dash.dependencies.Input("design-value-name", "value")]
+        [dash.dependencies.Input("design-value-id-ctrl", "value")]
     )
     def update_tablec2(value):
         df = data[value]["table"]
@@ -114,7 +109,7 @@ def get_app(config, data):
             Output(component_id="range-slider", component_property="step"),
             Output(component_id="range-slider", component_property="value")
         ],
-        [Input(component_id="design-value-name", component_property="value"),
+        [Input(component_id="design-value-id-ctrl", component_property="value"),
         Input(component_id="cbar-slider", component_property="value")],
     )
     def update_slider(value, N):
@@ -133,7 +128,7 @@ def get_app(config, data):
         [
             dash.dependencies.Input("mask-ctrl", "on"),
             dash.dependencies.Input("stations-ctrl", "on"),
-            dash.dependencies.Input("design-value-name", "value"),
+            dash.dependencies.Input("design-value-id-ctrl", "value"),
             dash.dependencies.Input("cbar-slider", "value"),
             dash.dependencies.Input("range-slider", "value"),
             dash.dependencies.Input("ens-ctrl", "value"),
@@ -145,7 +140,7 @@ def get_app(config, data):
     def update_ds(
         mask_ctrl,
         stations_ctrl,
-        design_value_name,
+        design_value_id_ctrl,
         cbar_slider,
         range_slider,
         ens_ctrl,
@@ -164,7 +159,7 @@ def get_app(config, data):
             ticks = np.around(np.linspace(zmin, zmax, cbar_slider + 1), 3)
 
         if colour_map_ctrl is None:
-            colour_map_ctrl = data[design_value_name]["cmap"]
+            colour_map_ctrl = data[design_value_id_ctrl]["cmap"]
 
         cmap = matplotlib.cm.get_cmap(colour_map_ctrl, cbar_slider)
 
@@ -177,9 +172,10 @@ def get_app(config, data):
 
         r_or_m = ens_ctrl
 
-        dv, station_dv = data[design_value_name]["dv"], data[design_value_name]["station_dv"]
-        ds = data[design_value_name][r_or_m]
-        df = data[design_value_name]["stations"]
+        dv = data[design_value_id_ctrl]["dv"]
+        station_dv = data[design_value_id_ctrl]["station_dv"]
+        ds = data[design_value_id_ctrl][r_or_m]
+        df = data[design_value_id_ctrl]["stations"]
 
         x1 = min(value for value in X if value is not None)
         x2 = max(value for value in X if value is not None)
@@ -246,7 +242,11 @@ def get_app(config, data):
         fig = {
             "data": go_list,
             "layout": {
-                "title": f"<b>{design_value_name} ({units})</b>",
+                "title": (
+                    f"<b>{design_value_id_ctrl} "
+                    f"[{config['dvs'][design_value_id_ctrl]['description']}] "
+                    f"({units})</b>"
+                ),
                 "font": dict(size=13, color='grey'),
                 "xaxis": dict(
                     zeroline=False,

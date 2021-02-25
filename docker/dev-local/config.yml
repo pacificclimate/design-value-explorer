@@ -1,3 +1,6 @@
+ui:
+    defaults:
+        dv: RL50
 
 # Parameterize the pipeline
 # The pipeline will iterate through each parent tree
@@ -10,8 +13,10 @@ paths:
     canada_vector: data/vectors/canada_final.shp
     native_mask: data/masks/land_mask_CanRCM4_sftlf.nc
     total_table_c2: data/tables/combined_dv_tablec2.csv
+
 dvs:
     RL50:
+        description: 50-year return level of rain-on-snow
         station_dv: "RL50 (kPa)"
         station_path: data/station_inputs/sl50_rl50_for_maps.csv
         input_model_path: data/model_inputs/snw_rain_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
@@ -20,6 +25,7 @@ dvs:
         cmap: "terrain_r"
 
 #    RHann:
+#        description: description
 #        station_dv: "mean RH (%)"
 #        station_path: data/station_inputs/rh_annual_mean_10yr_for_maps.csv
 #        input_model_path: data/model_inputs/hurs_CanRCM4-LE_ens15_1951-2016_ensmean.nc
@@ -28,6 +34,7 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    HDD:
+#        description: description
 #        station_dv: "HDD (degC-day)"
 #        station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
 #        input_model_path: data/model_inputs/hdd_CanRCM4-LE_ens35_1951-2016_ann_ensmean.nc
@@ -36,6 +43,7 @@ dvs:
 #        cmap: "RdBu"
 #
 #    SL50:
+#        description: description
 #        station_dv: "SL50 (kPa)"
 #        station_path: data/station_inputs/sl50_rl50_for_maps.csv
 #        input_model_path: data/model_inputs/snw_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
@@ -44,6 +52,7 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    WP10:
+#        description: description
 #        station_dv: "WP10 (kPa)"
 #        station_path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
 #        input_model_path: data/model_inputs/wpress_CanRCM4-LE_ens35_1951-2016_max_rl10_kpa_ensmean.nc
@@ -52,6 +61,7 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    WP50:
+#        description: description
 #        station_dv: "WP50 (kPa)"
 #        station_path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
 #        input_model_path: data/model_inputs/wpress_CanRCM4-LE_ens35_1951-2016_max_rl50_kpa_ensmean.nc
@@ -60,6 +70,7 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    TJan2.5:
+#        description: description
 #        station_dv: "TJan2.5 (degC)"
 #        station_path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
 #        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan2.5p_ensmean.nc
@@ -68,6 +79,7 @@ dvs:
 #        cmap: "RdBu_r"
 #
 #    TJan1.0:
+#        description: description
 #        station_dv: "TJan1.0 (degC)"
 #        station_path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
 #        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan1.0p_ensmean.nc
@@ -76,6 +88,7 @@ dvs:
 #        cmap: "RdBu_r"
 #
 #    Tmin:
+#        description: description
 #        station_dv: "Tmin (degC)"
 #        station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
 #        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_min_ensmean.nc
@@ -84,6 +97,7 @@ dvs:
 #        cmap: "RdBu_r"
 #
 #    Tmax:
+#        description: description
 #        station_dv: "Tmax (degC)"
 #        station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
 #        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_max_ensmean.nc
@@ -92,6 +106,7 @@ dvs:
 #        cmap: "RdBu_r"
 #
 #    TJul97.5:
+#        description: description
 #        station_dv:  "TJul2.5 (degC)"
 #        station_path: data/station_inputs/julT97.5p_allstations_v3_min8yr_for_maps.csv
 #        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
@@ -100,6 +115,7 @@ dvs:
 #        cmap: "RdBu_r"
 #
 #    TwJul97.5:
+#        description: description
 #        station_dv:  "TwJul2.5 (degC)"
 #        station_path: data/station_inputs/julTwb97.5p_allstations_v3_for_maps.csv
 #        input_model_path: data/model_inputs/twb_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
@@ -108,6 +124,7 @@ dvs:
 #        cmap: "RdBu_r"
 #
 #    DRWP5:
+#        description: description
 #        station_dv: "DRWP-RL5 (Pa)"
 #        station_path: data/station_inputs/drwp_rl5_for_maps.csv
 #        input_model_path: data/model_inputs/drwp_CanRCM4-LE_ens15_1951-2016_rl5_ensmean.nc
@@ -116,6 +133,7 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    PAnn:
+#        description: description
 #        station_dv: "annual_pr (mm)"
 #        station_path: data/station_inputs/pr_annual_mean_doy_MSC_25yr_for_maps.csv
 #        input_model_path: data/model_inputs/pr_CanRCM4-LE_ens35_1951-2016_ann_sum_ensmean.nc
@@ -124,6 +142,7 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    RAnn:
+#        description: description
 #        station_dv: "annual_rain (mm)"
 #        station_path: data/station_inputs/rain_annual_mean_doy_MSC_25yr_for_maps.csv
 #        input_model_path: data/model_inputs/rain_CanRCM4-LE_ens35_1951-2016_ann_sum_ensmean.nc
@@ -132,6 +151,7 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    R1d50:
+#        description: description
 #        station_dv: "1day rain RL50 (mm)"
 #        station_path: data/station_inputs/1day_rain_rl50_for_maps.csv
 #        input_model_path: data/model_inputs/rain_CanRCM4-LE_ens35_1951-2016_max1day_rl50_gum_lm_ensmean.nc
@@ -140,6 +160,7 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    MI:
+#        description: description
 #        station_dv: "moisture_index"
 #        station_path: data/station_inputs/moisture_index_for_maps.csv
 #        input_model_path: data/model_inputs/moisture_index_CanRCM4-LE_ens15_1951-2016_ensmean.nc
@@ -148,6 +169,7 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    R15m10:
+#        description: description
 #        station_dv: "Gum-LM RL10 (mm)"
 #        station_path: data/station_inputs/15min_rain_rl10_for_maps.csv
 #        input_model_path: data/model_inputs/rain_CanRCM4-LE_ens15_1951-2016_max1hr_rl10_gum_lm_ensmean.nc

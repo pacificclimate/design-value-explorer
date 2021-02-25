@@ -7,33 +7,37 @@ import numpy as np
 from dve.utils import sigfigs
 
 
-def header(data):
+def header(config):
     """
     Layout element for parts common to all tabs.
     Not actually a "header" so should probably be renamed or broken up into
     true header and other parts.
+
+    Returns a list of rows.
     """
-    dd_options = [dict(label=name, value=name) for name in data.keys()]
-    return dbc.Row(
-        [
-            dbc.Col(
-                [
-                    html.H1("Design Value Explorer"),
+    dd_options = [
+        {"label": f'{name} [{defn["description"]}]', "value": name}
+        for name, defn in config["dvs"].items()
+    ]
+    return [
+        dbc.Row(dbc.Col(html.H1("Design Value Explorer"))),
+        dbc.Row(
+            [
+                dbc.Col(html.Label("Design Value"), width=1),
+                dbc.Col(
                     dcc.Dropdown(
-                        id="design-value-name",
+                        id="design-value-id-ctrl",
                         options=dd_options,
-                        value=list(data.keys())[0],
+                        value=config["ui"]["defaults"]["dv"],
                         placeholder="Select a design value to display...",
                         searchable=True,
                         clearable=False,
                     ),
-                    html.Br(),
-                    html.Div(id="item-display"),
-                ],
-                style={"margin-left": "20px", "margin-right": "20px"},
-            )
-        ]
-    )
+                    width=3,
+                )
+            ]
+        )
+    ]
 
 
 def overlay_options():
@@ -189,7 +193,12 @@ def colourbar_options(data, colormaps):
     ]
 
 
-def map_tab(data, colormaps):
+def map_tab(config, data):
+    colormaps = config["colormaps"]
+    # Add reverse options, too
+    cmap_r = tuple(f"{color}_r" for color in colormaps)
+    colormaps += cmap_r
+
     return dbc.Tab(
         label="Map",
         children=[
@@ -222,23 +231,25 @@ def table_C2_tab():
     )
 
 
-def main(data, colormaps):
+def main(config, data):
+    """
+    Top-level layout component. `app.layout` should be set to the this value.
+    """
 
-    # TODO: Replace this use of preloaded data with on-demand requests
+    # TODO: Replace the use of preloaded data with on-demand requests
     #   for the data to be loaded.
-
-    # TODO: Remove? What were these for?
-    # default_markers = np.linspace(dmin, dmax, N)
 
     return dbc.Container(
         id="big-app-container",
         fluid=True,
+        style={"padding": "0.5em 1em 0"},
         children=[
-            header(data),
+            *header(config),
             dbc.Row(
                 dbc.Col(
-                    dbc.Tabs([map_tab(data, colormaps), table_C2_tab()]),
-                )
+                    dbc.Tabs([map_tab(config, data), table_C2_tab()]),
+                ),
+                style={"margin-top": "1em"},
             ),
         ],
     )
