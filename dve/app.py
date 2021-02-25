@@ -168,13 +168,12 @@ def get_app(config, data):
 
         cmap = matplotlib.cm.get_cmap(colour_map_ctrl, cbar_slider)
 
-        hexes = []
-        for i in range(cmap.N):
-            rgba = cmap(i)
-            # rgb2hex accepts rgb or rgba
-            hexes.append(matplotlib.colors.rgb2hex(rgba))
+        colours = [
+            matplotlib.colors.rgb2hex(cmap(i))
+            for i in range(cmap.N)
+        ]
 
-        discrete_colorscale = plotly_discrete_colorscale(ticks, hexes)
+        discrete_colorscale = plotly_discrete_colorscale(ticks, colours)
 
         r_or_m = ens_ctrl
 
