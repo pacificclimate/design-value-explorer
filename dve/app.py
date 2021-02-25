@@ -175,7 +175,6 @@ def get_app(config, data):
             hexes.append(matplotlib.colors.rgb2hex(rgba))
 
         dcolorsc = discrete_colorscale(ticks, hexes)
-        ticktext = [f'{ticks[0]}-{ticks[1]}'] + [f'{ticks[k]}-{ticks[k+1]}' for k in range(1, len(ticks)-1)]
 
         r_or_m = ens_ctrl
 
