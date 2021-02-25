@@ -127,14 +127,15 @@ def colourbar_options(data, colormaps):
         # Controls
         dbc.Row(
             [
-                dbc.Col(dcc.Dropdown(
-                    # TODO: Rename this to colour-map
-                    id="colorscale",
-                    options=[
-                        {"value": x, "label": x} for x in colormaps
-                    ],
-                    value=None,
-                )),
+                dbc.Col(
+                    dcc.Dropdown(
+                        id="colour-map-ctrl",
+                        options=[
+                            {"value": x, "label": x} for x in colormaps
+                        ],
+                        value=None,
+                    )
+                ),
                 dbc.Col(
                     dcc.Dropdown(
                         id="scale-ctrl",

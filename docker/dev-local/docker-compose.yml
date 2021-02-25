@@ -11,6 +11,7 @@ services:
     ports:
       - "30023:5000"
     volumes:
+      # Source code
       - type: bind
         source: ../..
         target: /codebase
@@ -19,12 +20,17 @@ services:
         source: ./config.yml
         target: /codebase/config.yml
         read_only: true
+
+        # Data files
+        # Reconstructions are large (54M) files, and take a long time to load
+        # from `/storage/data/...`, so we make local copies of the ones we
+        # are using to support development.
       - type: bind
         source: /storage/data/projects/comp_support/dv-explorer/data/model_inputs/
         target: /codebase/dve/data/model_inputs/
         read_only: true
       - type: bind
-        source: /storage/data/projects/comp_support/dv-explorer/data/reconstructions/
+        source: ../../local-data/reconstructions/
         target: /codebase/dve/data/reconstructions/
         read_only: true
       - type: bind

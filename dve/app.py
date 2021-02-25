@@ -2,7 +2,7 @@ from climpyrical.data import read_data
 from climpyrical.gridding import flatten_coords, transform_coords, find_nearest_index
 from climpyrical.mask import stratify_coords
 from climpyrical.cmd.find_matched_model_vals import add_model_values
-from dve.colorbar import get_cmap_divisions, matplotlib_to_plotly, discrete_colorscale
+from dve.colorbar import get_cmap_divisions, matplotlib_to_plotly, plotly_discrete_colorscale
 
 import dve
 import dve.data
@@ -126,13 +126,6 @@ def get_app(config, data):
         return minimum, maximum, step, default
 
 
-    # @app.callback(
-    #     dash.dependencies.Output("cbar-slider-output-container", "children"),
-    #     [dash.dependencies.Input("cbar-slider", "value")],
-    # )
-    # def update_slider_n(value):
-    #     return f"Number of Colours: {value}"
-
     ds = data[list(data.keys())[0]]["reconstruction"]
 
     @app.callback(
@@ -145,7 +138,7 @@ def get_app(config, data):
             dash.dependencies.Input("range-slider", "value"),
             dash.dependencies.Input("ens-ctrl", "value"),
             dash.dependencies.Input("scale-ctrl", "value"),
-            dash.dependencies.Input("colorscale", "value"),
+            dash.dependencies.Input("colour-map-ctrl", "value"),
             dash.dependencies.Input("raster-ctrl", "on"),
         ],
     )
@@ -157,7 +150,7 @@ def get_app(config, data):
         range_slider,
         ens_ctrl,
         scale_ctrl,
-        colorscale,
+        colour_map_ctrl,
         raster_ctrl
     ):
 
@@ -170,19 +163,17 @@ def get_app(config, data):
         else:
             ticks = np.around(np.linspace(zmin, zmax, cbar_slider + 1), 3)
 
-        if colorscale is None:
-            colorscale = data[design_value_name]["cmap"]
+        if colour_map_ctrl is None:
+            colour_map_ctrl = data[design_value_name]["cmap"]
 
-        cmap = matplotlib.cm.get_cmap(colorscale, cbar_slider)
+        cmap = matplotlib.cm.get_cmap(colour_map_ctrl, cbar_slider)
 
-        hexes = []
-        for i in range(cmap.N):
-            rgba = cmap(i)
-            # rgb2hex accepts rgb or rgba
-            hexes.append(matplotlib.colors.rgb2hex(rgba))
+        colours = [
+            matplotlib.colors.rgb2hex(cmap(i))
+            for i in range(cmap.N)
+        ]
 
-        dcolorsc = discrete_colorscale(ticks, hexes)
-        ticktext = [f'{ticks[0]}-{ticks[1]}'] + [f'{ticks[k]}-{ticks[k+1]}' for k in range(1, len(ticks)-1)]
+        discrete_colorscale = plotly_discrete_colorscale(ticks, colours)
 
         r_or_m = ens_ctrl
 
@@ -219,11 +210,8 @@ def get_app(config, data):
                     zmin=zmin,
                     zmax=zmax,
                     hoverongaps=False,
-                    colorscale = dcolorsc,
-                    colorbar = dict(
-                        tickvals=ticks,
-                        ticktext=ticktext
-                    ),
+                    colorscale = discrete_colorscale,
+                    colorbar={"tickvals": ticks},
                     visible=raster_ctrl,
                     hovertemplate="<b>Design Value: %{z} </b><br>",
                     name=""
@@ -244,11 +232,8 @@ def get_app(config, data):
                             color="DarkSlateGrey"
                         ),
                         showscale=(raster_ctrl == False),
-                        colorscale = dcolorsc,
-                        colorbar = dict(
-                            tickvals=ticks,
-                            ticktext=ticktext,
-                        ),
+                        colorscale = discrete_colorscale,
+                        colorbar={"tickvals": ticks},
                     ),
                     hovertemplate="<b>Station Value: %{text}</b><br>",
                     visible=stations_ctrl,
