@@ -44,12 +44,6 @@ def get_app(config, data):
         resource_filename("dve", config["paths"]["native_mask"])
     )["sftlf"] >= 1.0
 
-    # TODO: colormaps belongs inside layout
-    colormaps = config["colormaps"]
-    # Add reverse options, too
-    cmap_r = tuple(f"{color}_r" for color in colormaps)
-    colormaps += cmap_r
-
     # initialize app
     TIMEOUT = 60
     server = flask.Flask("app")
@@ -59,7 +53,7 @@ def get_app(config, data):
     app.title = 'Pacific Climate Impacts Consortium Design Value Explorer'
     app.config.suppress_callback_exceptions = True
 
-    app.layout = dve.layout.main(config, data, colormaps)
+    app.layout = dve.layout.main(config, data)
 
 
     @app.callback(

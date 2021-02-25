@@ -193,7 +193,12 @@ def colourbar_options(data, colormaps):
     ]
 
 
-def map_tab(data, colormaps):
+def map_tab(config, data):
+    colormaps = config["colormaps"]
+    # Add reverse options, too
+    cmap_r = tuple(f"{color}_r" for color in colormaps)
+    colormaps += cmap_r
+
     return dbc.Tab(
         label="Map",
         children=[
@@ -226,7 +231,7 @@ def table_C2_tab():
     )
 
 
-def main(config, data, colormaps):
+def main(config, data):
     """
     Top-level layout component. `app.layout` should be set to the this value.
     """
@@ -242,7 +247,7 @@ def main(config, data, colormaps):
             *header(config),
             dbc.Row(
                 dbc.Col(
-                    dbc.Tabs([map_tab(data, colormaps), table_C2_tab()]),
+                    dbc.Tabs([map_tab(config, data), table_C2_tab()]),
                 ),
                 style={"margin-top": "1em"},
             ),
