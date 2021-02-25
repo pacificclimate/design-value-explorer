@@ -16,7 +16,7 @@ def header(config):
     Returns a list of rows.
     """
     dd_options = [
-        {"label": f'{name} ({defn["description"]})', "value": name}
+        {"label": f'{name} [{defn["description"]}]', "value": name}
         for name, defn in config["dvs"].items()
     ]
     return [

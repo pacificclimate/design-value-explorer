@@ -172,7 +172,8 @@ def get_app(config, data):
 
         r_or_m = ens_ctrl
 
-        dv, station_dv = data[design_value_id_ctrl]["dv"], data[design_value_id_ctrl]["station_dv"]
+        dv = data[design_value_id_ctrl]["dv"]
+        station_dv = data[design_value_id_ctrl]["station_dv"]
         ds = data[design_value_id_ctrl][r_or_m]
         df = data[design_value_id_ctrl]["stations"]
 
@@ -241,7 +242,11 @@ def get_app(config, data):
         fig = {
             "data": go_list,
             "layout": {
-                "title": f"<b>{design_value_id_ctrl} ({units})</b>",
+                "title": (
+                    f"<b>{design_value_id_ctrl} "
+                    f"[{config['dvs'][design_value_id_ctrl]['description']}] "
+                    f"({units})</b>"
+                ),
                 "font": dict(size=13, color='grey'),
                 "xaxis": dict(
                     zeroline=False,
