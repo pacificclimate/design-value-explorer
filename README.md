@@ -56,7 +56,10 @@ colormaps:
 The `dve-dev-local` Docker image is the primary means for running the app while
 developing and debugging. Using it has two advantages:
 - It is very similar to the production environment.
-- It removes the need for a separate development configuration (`./config.yml`).
+- It reduces effort needed to install the supporting software.
+- It maps a development configuration file onto the `config.yml`.
+  Typically, this configuration has a reduced dataset to speed startup, and
+  uses local copies of large files ditto.
 
 #### Overview
 
@@ -82,6 +85,14 @@ With the container running, the developer can run commands from inside it by
 using `docker exec` commands. Most convenient is to use `docker exec` to run
 an interactive `bash` shell in the container. From that bash shell all ordinary
 commands can be run, including running tests and running the app.
+
+#### Prepare
+
+1. Update the development config (`docker/dev-local/config.yml`) as needed.
+1. Copy any large datasets (e.g., reconstructions) to your local codebase
+   (typically under `local-data/`). This cuts app startup time from minutes
+   to seconds. App startup is incurred every time you make a change to the
+   codebase and want to see the results.
 
 #### Build the image
 
