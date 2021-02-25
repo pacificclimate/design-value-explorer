@@ -1,3 +1,6 @@
+ui:
+    defaults:
+        dv: RL50
 
 # Parameterize the pipeline
 # The pipeline will iterate through each parent tree
@@ -12,6 +15,7 @@ paths:
     total_table_c2: data/tables/combined_dv_tablec2.csv
 dvs:
     RL50:
+        description: 50-year return level of rain-on-snow
         station_dv: "RL50 (kPa)"
         station_path: data/station_inputs/sl50_rl50_for_maps.csv
         input_model_path: data/model_inputs/snw_rain_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
