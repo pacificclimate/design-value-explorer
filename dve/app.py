@@ -138,7 +138,7 @@ def get_app(config, data):
             dash.dependencies.Input("range-slider", "value"),
             dash.dependencies.Input("ens-ctrl", "value"),
             dash.dependencies.Input("scale-ctrl", "value"),
-            dash.dependencies.Input("colorscale", "value"),
+            dash.dependencies.Input("colour-map-ctrl", "value"),
             dash.dependencies.Input("raster-ctrl", "on"),
         ],
     )
@@ -150,7 +150,7 @@ def get_app(config, data):
         range_slider,
         ens_ctrl,
         scale_ctrl,
-        colorscale,
+        colour_map_ctrl,
         raster_ctrl
     ):
 
@@ -163,10 +163,10 @@ def get_app(config, data):
         else:
             ticks = np.around(np.linspace(zmin, zmax, cbar_slider + 1), 3)
 
-        if colorscale is None:
-            colorscale = data[design_value_name]["cmap"]
+        if colour_map_ctrl is None:
+            colour_map_ctrl = data[design_value_name]["cmap"]
 
-        cmap = matplotlib.cm.get_cmap(colorscale, cbar_slider)
+        cmap = matplotlib.cm.get_cmap(colour_map_ctrl, cbar_slider)
 
         hexes = []
         for i in range(cmap.N):
@@ -212,10 +212,7 @@ def get_app(config, data):
                     zmax=zmax,
                     hoverongaps=False,
                     colorscale = dcolorsc,
-                    colorbar = dict(
-                        tickvals=ticks,
-                        ticktext=ticktext
-                    ),
+                    colorbar={"tickvals": ticks},
                     visible=raster_ctrl,
                     hovertemplate="<b>Design Value: %{z} </b><br>",
                     name=""
@@ -237,10 +234,7 @@ def get_app(config, data):
                         ),
                         showscale=(raster_ctrl == False),
                         colorscale = dcolorsc,
-                        colorbar = dict(
-                            tickvals=ticks,
-                            ticktext=ticktext,
-                        ),
+                        colorbar={"tickvals": ticks},
                     ),
                     hovertemplate="<b>Station Value: %{text}</b><br>",
                     visible=stations_ctrl,
