@@ -40,19 +40,34 @@ def get_cmap_divisions(colorscheme, n):
     nmcopy.append(magma[len(magma) - 1])
     return nmcopy
 
-def discrete_colorscale(bvals, colors):
+
+def plotly_discrete_colorscale(bvals, colors):
     """
-    bvals - list of values bounding intervals/ranges of interest
-    colors - list of rgb or hex colorcodes for values in [bvals[k], bvals[k+1]],0<=k < len(bvals)-1
-    returns the plotly  discrete colorscale
-    taken from: https://chart-studio.plotly.com/~empet/15229/heatmap-with-a-discrete-colorscale/#/
+    Create a Plotly discrete colourscale from a list of boundary values and
+    colours.
+
+    :param bvals: list of values bounding intervals to be coloured
+    :param colors: list of rgb or hex colorcodes; color[k] colours interval
+        [bvals[k], bvals[k+1]], 0 <= k < len(bvals)-1
+    :return:
+
+    Taken from:
+    https://chart-studio.plotly.com/~empet/15229/heatmap-with-a-discrete-colorscale/#/
     """
     if len(bvals) != len(colors)+1:
-        raise ValueError('len(boundary values) should be equal to  len(colors)+1')
+        raise ValueError(
+            'len(boundary values) should be equal to  len(colors)+1'
+        )
     bvals = sorted(bvals)     
-    nvals = [(v-bvals[0])/(bvals[-1]-bvals[0]) for v in bvals]  #normalized values
+    normalized_vals = [(v-bvals[0])/(bvals[-1]-bvals[0]) for v in bvals]
     
-    dcolorscale = [] #discrete colorscale
+    discrete_colorscale = []
     for k in range(len(colors)):
-        dcolorscale.extend([[nvals[k], colors[k]], [nvals[k+1], colors[k]]])
-    return dcolorscale  
+        discrete_colorscale.extend(
+            [
+                [normalized_vals[k], colors[k]],
+                [normalized_vals[k+1], colors[k]]
+            ]
+        )
+
+    return discrete_colorscale

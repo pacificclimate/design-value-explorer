@@ -2,7 +2,7 @@ from climpyrical.data import read_data
 from climpyrical.gridding import flatten_coords, transform_coords, find_nearest_index
 from climpyrical.mask import stratify_coords
 from climpyrical.cmd.find_matched_model_vals import add_model_values
-from dve.colorbar import get_cmap_divisions, matplotlib_to_plotly, discrete_colorscale
+from dve.colorbar import get_cmap_divisions, matplotlib_to_plotly, plotly_discrete_colorscale
 
 import dve
 import dve.data
@@ -174,7 +174,7 @@ def get_app(config, data):
             # rgb2hex accepts rgb or rgba
             hexes.append(matplotlib.colors.rgb2hex(rgba))
 
-        dcolorsc = discrete_colorscale(ticks, hexes)
+        discrete_colorscale = plotly_discrete_colorscale(ticks, hexes)
 
         r_or_m = ens_ctrl
 
@@ -211,7 +211,7 @@ def get_app(config, data):
                     zmin=zmin,
                     zmax=zmax,
                     hoverongaps=False,
-                    colorscale = dcolorsc,
+                    colorscale = discrete_colorscale,
                     colorbar={"tickvals": ticks},
                     visible=raster_ctrl,
                     hovertemplate="<b>Design Value: %{z} </b><br>",
@@ -233,7 +233,7 @@ def get_app(config, data):
                             color="DarkSlateGrey"
                         ),
                         showscale=(raster_ctrl == False),
-                        colorscale = dcolorsc,
+                        colorscale = discrete_colorscale,
                         colorbar={"tickvals": ticks},
                     ),
                     hovertemplate="<b>Station Value: %{text}</b><br>",
