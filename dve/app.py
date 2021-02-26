@@ -269,7 +269,9 @@ def get_app(config, data):
                     colorscale = discrete_colorscale,
                     colorbar={"tickvals": ticks},
                     visible=raster_ctrl,
-                    hovertemplate="<b>Design Value: %{z} </b><br>",
+                    hovertemplate=(
+                        f"<b>Interp. {design_value_id_ctrl}: %{{z}} </b><br>"
+                    ),
                     name=""
                 ),
                 go.Scattergl(
@@ -291,7 +293,9 @@ def get_app(config, data):
                         colorscale = discrete_colorscale,
                         colorbar={"tickvals": ticks},
                     ),
-                    hovertemplate="<b>Station Value: %{text}</b><br>",
+                    hovertemplate=(
+                        f"<b>Station {design_value_id_ctrl}: %{{text}}</b><br>"
+                    ),
                     visible=stations_ctrl,
                     name=""
                 ),
