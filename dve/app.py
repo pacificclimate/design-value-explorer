@@ -57,8 +57,8 @@ def get_app(config, data):
 
 
     @app.callback(
-        dash.dependencies.Output("table", "children"),
-        [dash.dependencies.Input("design-value-id-ctrl", "value")]
+        Output("table", "children"),
+        [Input("design-value-id-ctrl", "value")]
     )
     def update_tablec2(value):
         df = data[value]["table"]
@@ -84,8 +84,8 @@ def get_app(config, data):
     # TODO: Element "input-colorbar-output-container" does not exist (any more?)
     #   in the layout. Therefore this callback has no effect or purpose. Remove?
     @app.callback(
-        dash.dependencies.Output("input-colorbar-output-container", "children"),
-        [dash.dependencies.Input("input-colorbar", "value")]
+        Output("input-colorbar-output-container", "children"),
+        [Input("input-colorbar", "value")]
     )
     def update_input(value):
         try:
@@ -96,8 +96,8 @@ def get_app(config, data):
 
 
     @app.callback(
-        dash.dependencies.Output("range-slider-output-container", "children"),
-        [dash.dependencies.Input("range-slider", "value")]
+        Output("range-slider-output-container", "children"),
+        [Input("range-slider", "value")]
     )
     def update_range(value):
         return f"Range: {sigfigs(value[0])} to {sigfigs(value[1])}"
@@ -124,17 +124,17 @@ def get_app(config, data):
     ds = data[list(data.keys())[0]]["reconstruction"]
 
     @app.callback(
-        dash.dependencies.Output("my-graph", "figure"),
+        Output("my-graph", "figure"),
         [
-            dash.dependencies.Input("mask-ctrl", "on"),
-            dash.dependencies.Input("stations-ctrl", "on"),
-            dash.dependencies.Input("design-value-id-ctrl", "value"),
-            dash.dependencies.Input("cbar-slider", "value"),
-            dash.dependencies.Input("range-slider", "value"),
-            dash.dependencies.Input("ens-ctrl", "value"),
-            dash.dependencies.Input("scale-ctrl", "value"),
-            dash.dependencies.Input("colour-map-ctrl", "value"),
-            dash.dependencies.Input("raster-ctrl", "on"),
+            Input("mask-ctrl", "on"),
+            Input("stations-ctrl", "on"),
+            Input("design-value-id-ctrl", "value"),
+            Input("cbar-slider", "value"),
+            Input("range-slider", "value"),
+            Input("ens-ctrl", "value"),
+            Input("scale-ctrl", "value"),
+            Input("colour-map-ctrl", "value"),
+            Input("raster-ctrl", "on"),
         ],
     )
     def update_ds(
