@@ -144,20 +144,29 @@ def get_app(config, data):
         # TODO: Can we use a fixed value ("model" or "reconstruction" instead
         #  of dataset_ctrl?
         if hover_data is None:
-            return "no hover"
-        ds = data[design_value_id_ctrl][dataset_ctrl]
-        x, y, z = (hover_data["points"][0][name] for name in ("x", "y", "z"))
-        ix = find_nearest_index(ds.rlon.values, x)
-        iy = find_nearest_index(ds.rlat.values, y)
-        lat = ds.lat.values[iy, ix]
-        lon = ds.lon.values[iy, ix] - 360
+            lat, lon, z = ("--",) * 3
+        else:
+            ds = data[design_value_id_ctrl][dataset_ctrl]
+            x, y, z = (
+                hover_data["points"][0][name] for name in ("x", "y", "z")
+            )
+            ix = find_nearest_index(ds.rlon.values, x)
+            iy = find_nearest_index(ds.rlat.values, y)
+            lat = ds.lat.values[iy, ix]
+            lon = ds.lon.values[iy, ix] - 360
 
         return dbc.Table(
             [
                 html.Tbody(
                     [
                         html.Tr(
-                            [html.Th(name), html.Td(round(value, 6))]
+                            [
+                                html.Th(name, style={"width": "5em"}),
+                                html.Td(
+                                    round(value, 6) if isinstance(value, float)
+                                    else value
+                                )
+                            ]
                         )
                         for name, value in zip(
                             ("Lat", "Lon", design_value_id_ctrl),
