@@ -65,7 +65,7 @@ def overlay_options():
             [
                 dbc.Col(
                     dcc.Dropdown(
-                        id="ens-ctrl",
+                        id="dataset-ctrl",
                         options=[
                             {"label": "HSM Reconstruction", "value": "reconstruction"},
                             {"label": "CanRCM4 Ensemble Mean", "value": "model"},
@@ -193,7 +193,35 @@ def colourbar_options(data, colormaps):
     ]
 
 
+def user_graph_interaction():
+    """
+    Layout for user graph interaction elements.
+    :return: list of dbc.Row
+    """
+    return [
+        dbc.Row(
+            dbc.Col(
+                html.Div(
+                    id="hover-output",
+                    children=[
+                        dcc.Markdown("**Hover Data**"),
+                        html.Div(id="hover-info"),
+                        html.Pre(id="hover-data")
+                    ]
+                )
+            ),
+        ),
+    ]
+
+
 def map_tab(config, data):
+    """
+    Top-level layout of map tab.
+
+    :param config:
+    :param data:
+    :return: dbc.Tab
+    """
     colormaps = config["colormaps"]
     # Add reverse options, too
     cmap_r = tuple(f"{color}_r" for color in colormaps)
@@ -210,7 +238,8 @@ def map_tab(config, data):
                     dbc.Col(
                         [
                             *overlay_options(),
-                            *colourbar_options(data, colormaps)
+                            *colourbar_options(data, colormaps),
+                            *user_graph_interaction(),
                         ],
                         align="center",
                         width=5,

@@ -1,3 +1,5 @@
+import json
+
 from climpyrical.data import read_data
 from climpyrical.gridding import flatten_coords, transform_coords, find_nearest_index
 from climpyrical.mask import stratify_coords
@@ -121,6 +123,55 @@ def get_app(config, data):
         return minimum, maximum, step, default
 
 
+    # TODO: Remove when no longer needed for development
+    # @app.callback(
+    #     Output("hover-data", "children"),
+    #     [Input("my-graph", "hoverData")]
+    # )
+    # def display_hover_data(hover_data):
+    #     return json.dumps(hover_data, indent=2)
+
+
+    @app.callback(
+        Output("hover-info", "children"),
+        [
+            Input("my-graph", "hoverData"),
+            Input("design-value-id-ctrl", "value"),
+            Input("dataset-ctrl", "value"),
+        ]
+    )
+    def display_hover_info(hover_data, design_value_id_ctrl, dataset_ctrl):
+        # TODO: Can we use a fixed value ("model" or "reconstruction" instead
+        #  of dataset_ctrl?
+        if hover_data is None:
+            return "no hover"
+        ds = data[design_value_id_ctrl][dataset_ctrl]
+        x, y, z = (hover_data["points"][0][name] for name in ("x", "y", "z"))
+        ix = find_nearest_index(ds.rlon.values, x)
+        iy = find_nearest_index(ds.rlat.values, y)
+        lat = ds.lat.values[iy, ix]
+        lon = ds.lon.values[iy, ix] - 360
+
+        return dbc.Table(
+            [
+                html.Tbody(
+                    [
+                        html.Tr(
+                            [html.Th(name), html.Td(round(value, 6))]
+                        )
+                        for name, value in zip(
+                            ("Lat", "Lon", design_value_id_ctrl),
+                            (lat, lon, z)
+                        )
+                    ]
+                )
+            ],
+            bordered=True,
+            size="sm",
+        )
+
+
+    # TODO: What is this?
     ds = data[list(data.keys())[0]]["reconstruction"]
 
     @app.callback(
@@ -131,7 +182,7 @@ def get_app(config, data):
             Input("design-value-id-ctrl", "value"),
             Input("cbar-slider", "value"),
             Input("range-slider", "value"),
-            Input("ens-ctrl", "value"),
+            Input("dataset-ctrl", "value"),
             Input("scale-ctrl", "value"),
             Input("colour-map-ctrl", "value"),
             Input("raster-ctrl", "on"),
@@ -143,7 +194,7 @@ def get_app(config, data):
         design_value_id_ctrl,
         cbar_slider,
         range_slider,
-        ens_ctrl,
+        dataset_ctrl,
         scale_ctrl,
         colour_map_ctrl,
         raster_ctrl
@@ -170,7 +221,7 @@ def get_app(config, data):
 
         discrete_colorscale = plotly_discrete_colorscale(ticks, colours)
 
-        r_or_m = ens_ctrl
+        r_or_m = dataset_ctrl
 
         dv = data[design_value_id_ctrl]["dv"]
         station_dv = data[design_value_id_ctrl]["station_dv"]
