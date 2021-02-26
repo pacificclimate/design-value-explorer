@@ -144,16 +144,27 @@ def get_app(config, data):
         # TODO: Can we use a fixed value ("model" or "reconstruction" instead
         #  of dataset_ctrl?
         if hover_data is None:
-            lat, lon, z = ("--",) * 3
+            lat, lon, z, source = ("--",) * 4
         else:
-            ds = data[design_value_id_ctrl][dataset_ctrl]
-            x, y, z = (
-                hover_data["points"][0][name] for name in ("x", "y", "z")
+            curve_number, x, y = (
+                hover_data["points"][0][name]
+                for name in ("curveNumber", "x", "y")
             )
+            ds = data[design_value_id_ctrl][dataset_ctrl]
             ix = find_nearest_index(ds.rlon.values, x)
             iy = find_nearest_index(ds.rlat.values, y)
             lat = ds.lat.values[iy, ix]
             lon = ds.lon.values[iy, ix] - 360
+
+            try:
+                z = hover_data["points"][0][{4: "z", 5: "text"}[curve_number]]
+            except KeyError:
+                z = f"Unknown curveNumber {curve_number}"
+
+            try:
+                source = {4: "Interp", 5: "Station"}[curve_number]
+            except KeyError:
+                source = f"?"
 
         return dbc.Table(
             [
@@ -169,7 +180,7 @@ def get_app(config, data):
                             ]
                         )
                         for name, value in zip(
-                            ("Lat", "Lon", design_value_id_ctrl),
+                            ("Lat", "Lon", f"{design_value_id_ctrl} ({source})"),
                             (lat, lon, z)
                         )
                     ]
@@ -270,7 +281,7 @@ def get_app(config, data):
                     colorbar={"tickvals": ticks},
                     visible=raster_ctrl,
                     hovertemplate=(
-                        f"<b>Interp. {design_value_id_ctrl}: %{{z}} </b><br>"
+                        f"<b>{design_value_id_ctrl} (Interp.): %{{z}} </b><br>"
                     ),
                     name=""
                 ),
@@ -294,7 +305,8 @@ def get_app(config, data):
                         colorbar={"tickvals": ticks},
                     ),
                     hovertemplate=(
-                        f"<b>Station {design_value_id_ctrl}: %{{text}}</b><br>"
+                        f"<b>{design_value_id_ctrl} (Station): "
+                        f"%{{text}}</b><br>"
                     ),
                     visible=stations_ctrl,
                     name=""
