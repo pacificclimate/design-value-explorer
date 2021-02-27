@@ -1,3 +1,5 @@
+import json
+
 from climpyrical.data import read_data
 from climpyrical.gridding import flatten_coords, transform_coords, find_nearest_index
 from climpyrical.mask import stratify_coords
@@ -57,8 +59,8 @@ def get_app(config, data):
 
 
     @app.callback(
-        dash.dependencies.Output("table", "children"),
-        [dash.dependencies.Input("design-value-id-ctrl", "value")]
+        Output("table", "children"),
+        [Input("design-value-id-ctrl", "value")]
     )
     def update_tablec2(value):
         df = data[value]["table"]
@@ -84,8 +86,8 @@ def get_app(config, data):
     # TODO: Element "input-colorbar-output-container" does not exist (any more?)
     #   in the layout. Therefore this callback has no effect or purpose. Remove?
     @app.callback(
-        dash.dependencies.Output("input-colorbar-output-container", "children"),
-        [dash.dependencies.Input("input-colorbar", "value")]
+        Output("input-colorbar-output-container", "children"),
+        [Input("input-colorbar", "value")]
     )
     def update_input(value):
         try:
@@ -96,8 +98,8 @@ def get_app(config, data):
 
 
     @app.callback(
-        dash.dependencies.Output("range-slider-output-container", "children"),
-        [dash.dependencies.Input("range-slider", "value")]
+        Output("range-slider-output-container", "children"),
+        [Input("range-slider", "value")]
     )
     def update_range(value):
         return f"Range: {sigfigs(value[0])} to {sigfigs(value[1])}"
@@ -121,20 +123,89 @@ def get_app(config, data):
         return minimum, maximum, step, default
 
 
+    # TODO: Remove when no longer needed for development
+    # @app.callback(
+    #     Output("hover-data", "children"),
+    #     [Input("my-graph", "hoverData")]
+    # )
+    # def display_hover_data(hover_data):
+    #     return json.dumps(hover_data, indent=2)
+
+
+    @app.callback(
+        Output("hover-info", "children"),
+        [
+            Input("my-graph", "hoverData"),
+            Input("design-value-id-ctrl", "value"),
+            Input("dataset-ctrl", "value"),
+        ]
+    )
+    def display_hover_info(hover_data, design_value_id_ctrl, dataset_ctrl):
+        # TODO: Can we use a fixed value ("model" or "reconstruction" instead
+        #  of dataset_ctrl?
+        if hover_data is None:
+            lat, lon, z, source = ("--",) * 4
+        else:
+            curve_number, x, y = (
+                hover_data["points"][0][name]
+                for name in ("curveNumber", "x", "y")
+            )
+            ds = data[design_value_id_ctrl][dataset_ctrl]
+            ix = find_nearest_index(ds.rlon.values, x)
+            iy = find_nearest_index(ds.rlat.values, y)
+            lat = ds.lat.values[iy, ix]
+            lon = ds.lon.values[iy, ix] - 360
+
+            try:
+                z = hover_data["points"][0][{4: "z", 5: "text"}[curve_number]]
+            except KeyError:
+                z = f"Unknown curveNumber {curve_number}"
+
+            try:
+                source = {4: "Interp", 5: "Station"}[curve_number]
+            except KeyError:
+                source = f"?"
+
+        return dbc.Table(
+            [
+                html.Tbody(
+                    [
+                        html.Tr(
+                            [
+                                html.Th(name, style={"width": "5em"}),
+                                html.Td(
+                                    round(value, 6) if isinstance(value, float)
+                                    else value
+                                )
+                            ]
+                        )
+                        for name, value in zip(
+                            ("Lat", "Lon", f"{design_value_id_ctrl} ({source})"),
+                            (lat, lon, z)
+                        )
+                    ]
+                )
+            ],
+            bordered=True,
+            size="sm",
+        )
+
+
+    # TODO: What is this?
     ds = data[list(data.keys())[0]]["reconstruction"]
 
     @app.callback(
-        dash.dependencies.Output("my-graph", "figure"),
+        Output("my-graph", "figure"),
         [
-            dash.dependencies.Input("mask-ctrl", "on"),
-            dash.dependencies.Input("stations-ctrl", "on"),
-            dash.dependencies.Input("design-value-id-ctrl", "value"),
-            dash.dependencies.Input("cbar-slider", "value"),
-            dash.dependencies.Input("range-slider", "value"),
-            dash.dependencies.Input("ens-ctrl", "value"),
-            dash.dependencies.Input("scale-ctrl", "value"),
-            dash.dependencies.Input("colour-map-ctrl", "value"),
-            dash.dependencies.Input("raster-ctrl", "on"),
+            Input("mask-ctrl", "on"),
+            Input("stations-ctrl", "on"),
+            Input("design-value-id-ctrl", "value"),
+            Input("cbar-slider", "value"),
+            Input("range-slider", "value"),
+            Input("dataset-ctrl", "value"),
+            Input("scale-ctrl", "value"),
+            Input("colour-map-ctrl", "value"),
+            Input("raster-ctrl", "on"),
         ],
     )
     def update_ds(
@@ -143,7 +214,7 @@ def get_app(config, data):
         design_value_id_ctrl,
         cbar_slider,
         range_slider,
-        ens_ctrl,
+        dataset_ctrl,
         scale_ctrl,
         colour_map_ctrl,
         raster_ctrl
@@ -170,7 +241,7 @@ def get_app(config, data):
 
         discrete_colorscale = plotly_discrete_colorscale(ticks, colours)
 
-        r_or_m = ens_ctrl
+        r_or_m = dataset_ctrl
 
         dv = data[design_value_id_ctrl]["dv"]
         station_dv = data[design_value_id_ctrl]["station_dv"]
@@ -209,7 +280,9 @@ def get_app(config, data):
                     colorscale = discrete_colorscale,
                     colorbar={"tickvals": ticks},
                     visible=raster_ctrl,
-                    hovertemplate="<b>Design Value: %{z} </b><br>",
+                    hovertemplate=(
+                        f"<b>{design_value_id_ctrl} (Interp.): %{{z}} </b><br>"
+                    ),
                     name=""
                 ),
                 go.Scattergl(
@@ -231,7 +304,10 @@ def get_app(config, data):
                         colorscale = discrete_colorscale,
                         colorbar={"tickvals": ticks},
                     ),
-                    hovertemplate="<b>Station Value: %{text}</b><br>",
+                    hovertemplate=(
+                        f"<b>{design_value_id_ctrl} (Station): "
+                        f"%{{text}}</b><br>"
+                    ),
                     visible=stations_ctrl,
                     name=""
                 ),
