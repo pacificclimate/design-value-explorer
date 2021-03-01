@@ -132,11 +132,130 @@ def get_app(config, data):
     #     return json.dumps(hover_data, indent=2)
 
 
-    def dv_nv(name, dataset, ix, iy):
-        dv_ = data[name]["dv"]
+    def dv_nv(name, interpolation, ix, iy):
+        data_var_name = data[name]["dv"]
         return (
-            f"{name} ({dv_})",
-            data[name][dataset][dv_].values[iy, ix]
+            f"{name} ({data_var_name})",
+            data[name][interpolation][data_var_name].values[iy, ix]
+        )
+
+
+    def pointer_rlonlat(pointer_data):
+        if pointer_data is None:
+            return None, None
+        return tuple(pointer_data["points"][0][name] for name in ("x", "y"))
+
+
+
+    def rlonlat_to_indices(dataset, rlon, rlat):
+        ix = find_nearest_index(dataset.rlon.values, rlon)
+        iy = find_nearest_index(dataset.rlat.values, rlat)
+        return ix, iy
+
+
+    def pointer_indices(pointer_data, dataset):
+        if pointer_data is None:
+            return None, None
+        # TODO: DRY
+        rlon, rlat = (pointer_data["points"][0][name] for name in ("x", "y"))
+        ix = find_nearest_index(dataset.rlon.values, rlon)
+        iy = find_nearest_index(dataset.rlat.values, rlat)
+        return ix, iy
+
+
+    def pointer_lonlat(ds, ix, iy):
+        if ix is None or iy is None:
+            return None, None
+        lat = ds.lat.values[iy, ix]
+        lon = ds.lon.values[iy, ix] - 360
+        return lon, lat
+
+
+    def pointer_value(pointer_data):
+        curve_number = pointer_data["points"][0]["curveNumber"]
+
+        try:
+            z = pointer_data["points"][0][{4: "z", 5: "text"}[curve_number]]
+        except KeyError:
+            z = None
+
+        try:
+            source = {4: "Interp", 5: "Station"}[curve_number]
+        except KeyError:
+            source = None
+
+        return z, source
+
+
+    def value_table(*items):
+        return dbc.Table(
+            [
+                html.Tbody(
+                    [
+                        html.Tr(
+                            [
+                                html.Th(name, style={"width": "5em"}),
+                                html.Td(value),
+                            ]
+                        )
+                        for name, value in items
+                    ]
+                )
+            ],
+            bordered=True,
+            size="sm",
+        )
+
+
+    def dv_value(name, interpolation, rlon, rlat):
+        var_name = data[name]["dv"]
+        dataset = data[name][interpolation]
+        ix, iy = rlonlat_to_indices(dataset, rlon, rlat)
+        # print(f"ix={ix}, iy={iy}, var_name={var_name},")
+        # print(f"data[name] {data[name]}")
+        return dataset[var_name].values[iy, ix]
+
+
+    def dv_table(rlon, rlat, selected_dv=None, selected_interp=None):
+        """
+        Return a table listing values of design values at a location specified
+        by rotated coordinates rlon, rlat
+
+        :param rlon:
+        :param rlat:
+        :return:
+        """
+        return dbc.Table(
+            [
+                html.Thead(
+                    [
+                        html.Tr(
+                            [
+                                html.Th("DV"),
+                                html.Th("Model"),
+                                html.Th("Reconstruction"),
+                            ]
+                        )
+                    ]
+                ),
+                html.Tbody(
+                    [
+                        html.Tr(
+                            [html.Th(name, style={"width": "5em"})] +
+                            [
+                                html.Td(
+                                    round(float(dv_value(name, interp, rlon, rlat)), 3),
+                                    style={"color": "red" if name == selected_dv and interp == selected_interp else "inherit"}
+                                )
+                                for interp in ("model", "reconstruction")
+                            ]
+                        )
+                        for name in config["dvs"].keys()
+                    ],
+                )
+            ],
+            bordered=True,
+            size="sm",
         )
 
     @app.callback(
@@ -147,64 +266,38 @@ def get_app(config, data):
             Input("dataset-ctrl", "value"),
         ]
     )
-    def display_hover_info(hover_data, design_value_id_ctrl, dataset_ctrl):
-        # TODO: Can we use a fixed value ("model" or "reconstruction" instead
-        #  of dataset_ctrl?
+    def display_hover_info(
+        hover_data, design_value_id_ctrl, interpolation_ctrl
+    ):
+        # TODO: Can we use a fixed value ("model" or "reconstruction") instead
+        #  of interpolation_ctrl? Note: Each type of dataset has a different
+        #  lat-lon grid.
 
         if hover_data is None:
-            lat, lon, z, source = ("--",) * 4
-            items = tuple()
-        else:
-            curve_number, x, y = (
-                hover_data["points"][0][name]
-                for name in ("curveNumber", "x", "y")
-            )
-            ds = data[design_value_id_ctrl][dataset_ctrl]
-            ix = find_nearest_index(ds.rlon.values, x)
-            iy = find_nearest_index(ds.rlat.values, y)
-            lat = ds.lat.values[iy, ix]
-            lon = ds.lon.values[iy, ix] - 360
+            return "no hover"
 
-            try:
-                z = hover_data["points"][0][{4: "z", 5: "text"}[curve_number]]
-            except KeyError:
-                z = f"Unknown curveNumber {curve_number}"
+        dataset = data[design_value_id_ctrl][interpolation_ctrl]
+        rlon, rlat = pointer_rlonlat(hover_data)
+        ix, iy = pointer_indices(hover_data, dataset)
+        lon, lat = pointer_lonlat(dataset, ix, iy)
+        z, source = pointer_value(hover_data)
 
-            try:
-                source = {4: "Interp", 5: "Station"}[curve_number]
-            except KeyError:
-                source = f"?"
+        return [
+            value_table(
+                ("Lat", round(lat, 6)),
+                ("Lon", round(lon, 6)),
+                # (f"Z ({design_value_id_ctrl}) ({source})", round(z, 6)),
+                # ("ix", ix),
+                # ("iy", iy),
+            ),
+            dv_table(
+                rlon,
+                rlat,
+                selected_dv=design_value_id_ctrl,
+                selected_interp=interpolation_ctrl
+            ),
+        ]
 
-            dv_items = tuple(
-                dv_nv(name, dataset_ctrl, ix, iy) for name in config["dvs"].keys()
-            )
-
-            items = (
-                ("Lat", lat),
-                ("Lon", lon),
-                (f"Z ({design_value_id_ctrl} )({source})", z),
-            ) + dv_items
-
-        return dbc.Table(
-            [
-                html.Tbody(
-                    [
-                        html.Tr(
-                            [
-                                html.Th(name, style={"width": "5em"}),
-                                html.Td(
-                                    round(value, 6) if isinstance(value, float)
-                                    else value
-                                )
-                            ]
-                        )
-                        for name, value in items
-                    ]
-                )
-            ],
-            bordered=True,
-            size="sm",
-        )
 
 
     # TODO: Remove when no longer needed for development
@@ -224,109 +317,40 @@ def get_app(config, data):
             Input("dataset-ctrl", "value"),
         ]
     )
-    def display_click_info(click_data, design_value_id_ctrl, dataset_ctrl):
+    def display_click_info(
+        click_data, design_value_id_ctrl, interpolation_ctrl
+    ):
         # TODO: Can we use a fixed value ("model" or "reconstruction" instead
-        #  of dataset_ctrl? ... The grids for each are slightly different and
-        #  give slightly different values for lat/lon at the same pointer locn.
+        #  of interp_ctrl? ... The grids for each are different and
+        #  give different values for lat/lon at the same pointer locn.
         # TODO: DRY
         if click_data is None:
-            lat, lon, z = ("--",) * 3
-            dv_items = tuple()
-            nearbys = html.P("nearbys")
-        else:
-            curve_number, x, y = (
-                click_data["points"][0][name]
-                for name in ("curveNumber", "x", "y")
-            )
-            ds = data[design_value_id_ctrl][dataset_ctrl]
-            ix = find_nearest_index(ds.rlon.values, x)
-            iy = find_nearest_index(ds.rlat.values, y)
-            lat = ds.lat.values[iy, ix]
-            lon = ds.lon.values[iy, ix] - 360
+            return "no click"
 
-            try:
-                z = click_data["points"][0][{4: "z", 5: "text"}[curve_number]]
-            except KeyError:
-                z = f"Unknown curveNumber {curve_number}"
-
-            dv_items = tuple(
-                dv_nv(name, dataset_ctrl, ix, iy) for name in config["dvs"].keys()
-            )
-
-            nearbys = dbc.Table(
-                [
-                    html.Tbody(
-                        [html.Tr(html.Th(name, colSpan=3))] +
-                        [
-                            html.Tr(
-                                [
-                                    html.Td(dv_nv(name, dataset_ctrl, ix + di, iy + dj)[1])
-                                    for di in (-1, 0, 1)
-                                ]
-                            )
-                            for dj in (1, 0, -1)
-                        ]
-                    )
-                    for name in config["dvs"].keys()
-                ]
-            )
-
-        items = (
-            ("Lat", lat),
-            ("Lon", lon),
-            ("Z", z),
-        ) + dv_items
+        dataset = data[design_value_id_ctrl][interpolation_ctrl]
+        rlon, rlat = pointer_rlonlat(click_data)
+        ix, iy = pointer_indices(click_data, dataset)
+        # Note that lon, lat is derived from selected dataset, which may have
+        # a different (coarser, finer) grid than the other datasets.
+        lon, lat = pointer_lonlat(dataset, ix, iy)
+        z, source = pointer_value(click_data)
 
         return [
-            dbc.Table(
-                [
-                    html.Tbody(
-                        [
-                            html.Tr(
-                                [
-                                    html.Th(name, style={"width": "5em"}),
-                                    html.Td(
-                                        round(value, 6) if isinstance(value, float)
-                                        else value
-                                    )
-                                ]
-                            )
-                            for name, value in items
-                        ],
-                    ),
-                ],
-                bordered=True,
-                size="sm",
+            value_table(
+                ("Lat", round(lat, 6)),
+                ("Lon", round(lon, 6)),
+                # (f"Z ({design_value_id_ctrl}) ({source})", round(z, 6)),
+                # *(
+                #     dv_nv(name, dataset_ctrl, ix, iy)
+                #     for name in config["dvs"].keys()
+                # )
             ),
-            # nearbys,
-            # dbc.Table(
-            #     [
-            #         html.Thead(
-            #           [
-            #               html.Tr(
-            #                   [html.Th("DV name"), html.Th("")]
-            #               )
-            #           ],
-            #         ),
-            #         html.Tbody(
-            #             [
-            #                 html.Tr(
-            #                     [
-            #                         html.Th(name, style={"width": "5em"}),
-            #                         html.Td(
-            #                             round(value, 6) if isinstance(value, float)
-            #                             else value
-            #                         )
-            #                     ]
-            #                 )
-            #                 for name, value in zip(("Lat", "Lon"), (lat, lon))
-            #             ]
-            #         ),
-            #
-            #     ],
-            #     bordered=True,
-            #     size="sm",
-            # ),
+            dv_table(
+                rlon,
+                rlat,
+                selected_dv=design_value_id_ctrl,
+                selected_interp=interpolation_ctrl
+            ),
         ]
 
 

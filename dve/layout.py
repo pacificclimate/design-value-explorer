@@ -205,9 +205,9 @@ def user_graph_interaction():
                     id="hover-output",
                     children=[
                         dcc.Markdown("**Hover Data**"),
-                        html.Div(id="hover-info"),
+                        html.Div(id="hover-info", style={"font-size": "0.8em"}),
                         html.Pre(id="hover-data")
-                    ]
+                    ],
                 )
             ),
             dbc.Col(
@@ -215,9 +215,9 @@ def user_graph_interaction():
                     id="click-output",
                     children=[
                         dcc.Markdown("**Click Data**"),
-                        html.Div(id="click-info"),
+                        html.Div(id="click-info", style={"font-size": "0.8em"}),
                         html.Pre(id="click-data")
-                    ]
+                    ],
                 )
             ),
         ]),
