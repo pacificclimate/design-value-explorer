@@ -132,6 +132,13 @@ def get_app(config, data):
     #     return json.dumps(hover_data, indent=2)
 
 
+    def dv_nv(name, dataset, ix, iy):
+        dv_ = data[name]["dv"]
+        return (
+            f"{name} ({dv_})",
+            data[name][dataset][dv_].values[iy, ix]
+        )
+
     @app.callback(
         Output("hover-info", "children"),
         [
@@ -143,8 +150,10 @@ def get_app(config, data):
     def display_hover_info(hover_data, design_value_id_ctrl, dataset_ctrl):
         # TODO: Can we use a fixed value ("model" or "reconstruction" instead
         #  of dataset_ctrl?
+
         if hover_data is None:
             lat, lon, z, source = ("--",) * 4
+            items = tuple()
         else:
             curve_number, x, y = (
                 hover_data["points"][0][name]
@@ -166,6 +175,16 @@ def get_app(config, data):
             except KeyError:
                 source = f"?"
 
+            dv_items = tuple(
+                dv_nv(name, dataset_ctrl, ix, iy) for name in config["dvs"].keys()
+            )
+
+            items = (
+                ("Lat", lat),
+                ("Lon", lon),
+                (f"Z ({design_value_id_ctrl} )({source})", z),
+            ) + dv_items
+
         return dbc.Table(
             [
                 html.Tbody(
@@ -179,16 +198,136 @@ def get_app(config, data):
                                 )
                             ]
                         )
-                        for name, value in zip(
-                            ("Lat", "Lon", f"{design_value_id_ctrl} ({source})"),
-                            (lat, lon, z)
-                        )
+                        for name, value in items
                     ]
                 )
             ],
             bordered=True,
             size="sm",
         )
+
+
+    # TODO: Remove when no longer needed for development
+    # @app.callback(
+    #     Output("click-data", "children"),
+    #     [Input("my-graph", "clickData")]
+    # )
+    # def display_click_data(click_data):
+    #     return json.dumps(click_data, indent=2)
+
+
+    @app.callback(
+        Output("click-info", "children"),
+        [
+            Input("my-graph", "clickData"),
+            Input("design-value-id-ctrl", "value"),
+            Input("dataset-ctrl", "value"),
+        ]
+    )
+    def display_click_info(click_data, design_value_id_ctrl, dataset_ctrl):
+        # TODO: Can we use a fixed value ("model" or "reconstruction" instead
+        #  of dataset_ctrl? ... The grids for each are slightly different and
+        #  give slightly different values for lat/lon at the same pointer locn.
+        # TODO: DRY
+        if click_data is None:
+            lat, lon, z = ("--",) * 3
+            dv_items = tuple()
+            nearbys = html.P("nearbys")
+        else:
+            curve_number, x, y = (
+                click_data["points"][0][name]
+                for name in ("curveNumber", "x", "y")
+            )
+            ds = data[design_value_id_ctrl][dataset_ctrl]
+            ix = find_nearest_index(ds.rlon.values, x)
+            iy = find_nearest_index(ds.rlat.values, y)
+            lat = ds.lat.values[iy, ix]
+            lon = ds.lon.values[iy, ix] - 360
+
+            try:
+                z = click_data["points"][0][{4: "z", 5: "text"}[curve_number]]
+            except KeyError:
+                z = f"Unknown curveNumber {curve_number}"
+
+            dv_items = tuple(
+                dv_nv(name, dataset_ctrl, ix, iy) for name in config["dvs"].keys()
+            )
+
+            nearbys = dbc.Table(
+                [
+                    html.Tbody(
+                        [html.Tr(html.Th(name, colSpan=3))] +
+                        [
+                            html.Tr(
+                                [
+                                    html.Td(dv_nv(name, dataset_ctrl, ix + di, iy + dj)[1])
+                                    for di in (-1, 0, 1)
+                                ]
+                            )
+                            for dj in (1, 0, -1)
+                        ]
+                    )
+                    for name in config["dvs"].keys()
+                ]
+            )
+
+        items = (
+            ("Lat", lat),
+            ("Lon", lon),
+            ("Z", z),
+        ) + dv_items
+
+        return [
+            dbc.Table(
+                [
+                    html.Tbody(
+                        [
+                            html.Tr(
+                                [
+                                    html.Th(name, style={"width": "5em"}),
+                                    html.Td(
+                                        round(value, 6) if isinstance(value, float)
+                                        else value
+                                    )
+                                ]
+                            )
+                            for name, value in items
+                        ],
+                    ),
+                ],
+                bordered=True,
+                size="sm",
+            ),
+            # nearbys,
+            # dbc.Table(
+            #     [
+            #         html.Thead(
+            #           [
+            #               html.Tr(
+            #                   [html.Th("DV name"), html.Th("")]
+            #               )
+            #           ],
+            #         ),
+            #         html.Tbody(
+            #             [
+            #                 html.Tr(
+            #                     [
+            #                         html.Th(name, style={"width": "5em"}),
+            #                         html.Td(
+            #                             round(value, 6) if isinstance(value, float)
+            #                             else value
+            #                         )
+            #                     ]
+            #                 )
+            #                 for name, value in zip(("Lat", "Lon"), (lat, lon))
+            #             ]
+            #         ),
+            #
+            #     ],
+            #     bordered=True,
+            #     size="sm",
+            # ),
+        ]
 
 
     # TODO: What is this?

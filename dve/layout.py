@@ -199,7 +199,7 @@ def user_graph_interaction():
     :return: list of dbc.Row
     """
     return [
-        dbc.Row(
+        dbc.Row([
             dbc.Col(
                 html.Div(
                     id="hover-output",
@@ -210,7 +210,17 @@ def user_graph_interaction():
                     ]
                 )
             ),
-        ),
+            dbc.Col(
+                html.Div(
+                    id="click-output",
+                    children=[
+                        dcc.Markdown("**Click Data**"),
+                        html.Div(id="click-info"),
+                        html.Pre(id="click-data")
+                    ]
+                )
+            ),
+        ]),
     ]
 
 
