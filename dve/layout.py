@@ -54,9 +54,8 @@ def overlay_options():
         dbc.Row(
             [
                 dbc.Col(html.Label("Dataset"), width=6),
-                dbc.Col(html.Label("Raster")),
-                dbc.Col(html.Label("Mask")),
-                dbc.Col(html.Label("Stations")),
+                dbc.Col(html.Label("Mask"), width=2),
+                dbc.Col(html.Label("Stations"), width=2),
             ]
         ),
 
@@ -77,20 +76,19 @@ def overlay_options():
                 ),
                 dbc.Col(
                     daq.BooleanSwitch(
-                        id="raster-ctrl", on=True
-                    ),
-                ),
-                dbc.Col(
-                    daq.BooleanSwitch(
                         id="mask-ctrl",
                         on=True,
+                        style={"width": "50px"}
                     ),
+                    width=2,
                 ),
                 dbc.Col(
                     daq.BooleanSwitch(
                         id="stations-ctrl",
                         on=False,
+                        style={"width": "50px"}
                     ),
+                    width=2,
                 ),
             ]
         ),

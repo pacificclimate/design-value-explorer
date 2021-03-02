@@ -379,7 +379,6 @@ def get_app(config, data):
             Input("dataset-ctrl", "value"),
             Input("scale-ctrl", "value"),
             Input("colour-map-ctrl", "value"),
-            Input("raster-ctrl", "on"),
         ],
     )
     def update_ds(
@@ -391,9 +390,7 @@ def get_app(config, data):
         dataset_ctrl,
         scale_ctrl,
         colour_map_ctrl,
-        raster_ctrl
     ):
-
         zmin = range_slider[0]
         zmax = range_slider[1]
 
@@ -453,7 +450,7 @@ def get_app(config, data):
                     hoverongaps=False,
                     colorscale = discrete_colorscale,
                     colorbar={"tickvals": ticks},
-                    visible=raster_ctrl,
+                    visible=True,
                     hovertemplate=(
                         f"<b>{design_value_id_ctrl} (Interp.): %{{z}} </b><br>"
                     ),
@@ -474,7 +471,7 @@ def get_app(config, data):
                             width=1,
                             color="DarkSlateGrey"
                         ),
-                        showscale=(raster_ctrl == False),
+                        showscale=False,
                         colorscale = discrete_colorscale,
                         colorbar={"tickvals": ticks},
                     ),
