@@ -33,6 +33,7 @@ import warnings
 import logging
 import uuid
 import csv
+from functools import lru_cache
 
 
 def get_app(config, data):
@@ -278,7 +279,7 @@ def get_app(config, data):
         #  lat-lon grid.
 
         if hover_data is None:
-            return "no hover"
+            return None
 
         dataset = data[design_value_id_ctrl][interpolation_ctrl]
         rlon, rlat = pointer_rlonlat(hover_data)
@@ -291,8 +292,6 @@ def get_app(config, data):
                 ("Lat", round(lat, 6)),
                 ("Lon", round(lon, 6)),
                 # (f"Z ({design_value_id_ctrl}) ({source})", round(z, 6)),
-                # ("ix", ix),
-                # ("iy", iy),
             ),
             dv_table(
                 rlon,
@@ -303,7 +302,6 @@ def get_app(config, data):
         ]
 
 
-
     # TODO: Remove when no longer needed for development
     # @app.callback(
     #     Output("click-data", "children"),
@@ -311,6 +309,57 @@ def get_app(config, data):
     # )
     # def display_click_data(click_data):
     #     return json.dumps(click_data, indent=2)
+
+
+    def download_filename(lon, lat):
+        return f"dvs_{lon}_{lat}.csv"
+
+
+    def download_filepath(lon, lat):
+        """
+        Return a unique filepath for the download data for position lon, lat.
+        :param lon:
+        :param lat:
+        :return:
+        """
+        return f"/downloads/by-location/{download_filename(lon, lat)}"
+
+
+    @app.callback(
+        Output("data-download-header", "children"),
+        [
+            Input("my-graph", "clickData"),
+            Input("design-value-id-ctrl", "value"),
+            Input("dataset-ctrl", "value"),
+        ]
+    )
+    def display_download_button(
+        click_data, design_value_id_ctrl, interpolation_ctrl
+    ):
+        """
+        To get the layout we want, we have to break the map-click callback into
+        two parts: Download button and data display. Unfortunately this is
+        repetitive but no other solution is known.
+        """
+        if click_data is None:
+            return None
+
+        dataset = data[design_value_id_ctrl][interpolation_ctrl]
+        rlon, rlat = pointer_rlonlat(click_data)
+        ix, iy = pointer_indices(click_data, dataset)
+        # Note that lon, lat is derived from selected dataset, which may have
+        # a different (coarser, finer) grid than the other datasets.
+        lon, lat = pointer_lonlat(dataset, ix, iy)
+        z, source = pointer_value(click_data)
+
+        return [
+           html.A(
+                "Download this data",
+                href=download_filepath(lon, lat),
+                download=download_filename(lon, lat),
+                className="btn btn-primary btn-sm mb-1"
+            ),
+        ]
 
 
     @app.callback(
@@ -324,12 +373,17 @@ def get_app(config, data):
     def display_click_info(
         click_data, design_value_id_ctrl, interpolation_ctrl
     ):
+        """
+        To get the layout we want, we have to break the map-click callback into
+        two parts: Download button and data display. Unfortunately this is
+        repetitive but no other solution is known.
+        """
         # TODO: Can we use a fixed value ("model" or "reconstruction" instead
         #  of interp_ctrl? ... The grids for each are different and
         #  give different values for lat/lon at the same pointer locn.
         # TODO: DRY
         if click_data is None:
-            return "no click"
+            return None
 
         dataset = data[design_value_id_ctrl][interpolation_ctrl]
         rlon, rlat = pointer_rlonlat(click_data)
@@ -340,8 +394,7 @@ def get_app(config, data):
         z, source = pointer_value(click_data)
 
         # Create data table for download
-        download_filepath = f"/downloads/by-location/{uuid.uuid1()}.csv"
-        with open(download_filepath, "w") as file:
+        with open(download_filepath(lon, lat), "w") as file:
             writer = csv.writer(file, delimiter=",")
             writer.writerow(("Latitude", lat))
             writer.writerow(("Longitude", lon))
@@ -359,20 +412,10 @@ def get_app(config, data):
                 )
 
         return [
-            html.A(
-                "Download this data",
-                href=download_filepath,
-                download=f"dvs_{lon}_{lat}.csv",
-                className="btn btn-primary btn-sm mb-1"
-            ),
             value_table(
                 ("Lat", round(lat, 6)),
                 ("Lon", round(lon, 6)),
                 # (f"Z ({design_value_id_ctrl}) ({source})", round(z, 6)),
-                # *(
-                #     dv_nv(name, dataset_ctrl, ix, iy)
-                #     for name in config["dvs"].keys()
-                # )
             ),
             dv_table(
                 rlon,
