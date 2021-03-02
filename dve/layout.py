@@ -247,7 +247,12 @@ def map_tab(config, data):
             dbc.Row(
                 [
                     dbc.Col(
-                        [dcc.Graph(id="my-graph")], align="center", width=7
+                        [dcc.Graph(id="my-graph")],
+                        align="center",
+                        lg=7,
+                        md=12,
+                        sm=12,
+                        xs=12,
                     ),
                     dbc.Col(
                         [
@@ -256,7 +261,10 @@ def map_tab(config, data):
                             *user_graph_interaction(),
                         ],
                         align="center",
-                        width=5,
+                        lg=5,
+                        md=12,
+                        sm=12,
+                        xs=12,
                     ),
                 ]
             )

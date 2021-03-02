@@ -516,7 +516,7 @@ def get_app(config, data):
                 ),
                 "hoverdistance": 5,
                 "hovermode": "closest",
-                "width": 1000,
+                # "width": 1000,
                 "height": 750,
                 "showlegend": False,
                 "legend_orientation": "v",
