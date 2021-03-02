@@ -16,7 +16,8 @@ paths:
 
 dvs:
     RL50:
-        description: 50-year return level of rain-on-snow
+        description: 50-year return level of annual maximum rain-on-snow load
+        units: kPa
         station_dv: "RL50 (kPa)"
         station_path: data/station_inputs/sl50_rl50_for_maps.csv
         input_model_path: data/model_inputs/snw_rain_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
@@ -25,16 +26,18 @@ dvs:
         cmap: "terrain_r"
 
     RHann:
-        description: description
+        description: Annual mean of relative humidity
+        units: "%"
         station_dv: "mean RH (%)"
         station_path: data/station_inputs/rh_annual_mean_10yr_for_maps.csv
         input_model_path: data/model_inputs/hurs_CanRCM4-LE_ens15_1951-2016_ensmean.nc
         reconstruction_path: data/reconstructions/RHann_reconstruction.nc
         table: data/tables/RHann_TableC2.csv
         cmap: "terrain_r"
-#
+
 #    HDD:
-#        description: description
+#        description: Heating degree days (threshold: 18 °C)
+#        units: °C-day
 #        station_dv: "HDD (degC-day)"
 #        station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
 #        input_model_path: data/model_inputs/hdd_CanRCM4-LE_ens35_1951-2016_ann_ensmean.nc
@@ -43,7 +46,8 @@ dvs:
 #        cmap: "RdBu"
 #
 #    SL50:
-#        description: description
+#        description: 50-year return level of annual maximum snow load
+#        units: kPa
 #        station_dv: "SL50 (kPa)"
 #        station_path: data/station_inputs/sl50_rl50_for_maps.csv
 #        input_model_path: data/model_inputs/snw_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
@@ -52,7 +56,8 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    WP10:
-#        description: description
+#        description: 10-year return level of maximum annual wind pressure
+#        units: kPa
 #        station_dv: "WP10 (kPa)"
 #        station_path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
 #        input_model_path: data/model_inputs/wpress_CanRCM4-LE_ens35_1951-2016_max_rl10_kpa_ensmean.nc
@@ -61,7 +66,8 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    WP50:
-#        description: description
+#        description: 50-year return level of wind pressure
+#        units: kPa
 #        station_dv: "WP50 (kPa)"
 #        station_path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
 #        input_model_path: data/model_inputs/wpress_CanRCM4-LE_ens35_1951-2016_max_rl50_kpa_ensmean.nc
@@ -70,7 +76,8 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    TJan2.5:
-#        description: description
+#        description: 2.5th percentile of January temperature
+#        units: °C
 #        station_dv: "TJan2.5 (degC)"
 #        station_path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
 #        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan2.5p_ensmean.nc
@@ -79,7 +86,8 @@ dvs:
 #        cmap: "RdBu_r"
 #
 #    TJan1.0:
-#        description: description
+#        description: 1st percentile of January temperature
+#        units: °C
 #        station_dv: "TJan1.0 (degC)"
 #        station_path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
 #        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan1.0p_ensmean.nc
@@ -88,7 +96,8 @@ dvs:
 #        cmap: "RdBu_r"
 #
 #    Tmin:
-#        description: description
+#        description: Annual minimum of mean daily temperature
+#        units: °C
 #        station_dv: "Tmin (degC)"
 #        station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
 #        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_min_ensmean.nc
@@ -97,7 +106,8 @@ dvs:
 #        cmap: "RdBu_r"
 #
 #    Tmax:
-#        description: description
+#        description: Annual maximum of mean daily temperature
+#        units: °C
 #        station_dv: "Tmax (degC)"
 #        station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
 #        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_max_ensmean.nc
@@ -106,7 +116,8 @@ dvs:
 #        cmap: "RdBu_r"
 #
 #    TJul97.5:
-#        description: description
+#        description: 97.5th percentile of July temperature
+#        units: °C
 #        station_dv:  "TJul2.5 (degC)"
 #        station_path: data/station_inputs/julT97.5p_allstations_v3_min8yr_for_maps.csv
 #        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
@@ -115,7 +126,8 @@ dvs:
 #        cmap: "RdBu_r"
 #
 #    TwJul97.5:
-#        description: description
+#        description: 97.5th percentile of July wet-bulb  temperature
+#        units: °C
 #        station_dv:  "TwJul2.5 (degC)"
 #        station_path: data/station_inputs/julTwb97.5p_allstations_v3_for_maps.csv
 #        input_model_path: data/model_inputs/twb_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
@@ -124,7 +136,8 @@ dvs:
 #        cmap: "RdBu_r"
 #
 #    DRWP5:
-#        description: description
+#        description: 5-year return level of driving rain wind pressure
+#        units: kPa
 #        station_dv: "DRWP-RL5 (Pa)"
 #        station_path: data/station_inputs/drwp_rl5_for_maps.csv
 #        input_model_path: data/model_inputs/drwp_CanRCM4-LE_ens15_1951-2016_rl5_ensmean.nc
@@ -133,7 +146,8 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    PAnn:
-#        description: description
+#        description: Annual total precipitation
+#        units: mm
 #        station_dv: "annual_pr (mm)"
 #        station_path: data/station_inputs/pr_annual_mean_doy_MSC_25yr_for_maps.csv
 #        input_model_path: data/model_inputs/pr_CanRCM4-LE_ens35_1951-2016_ann_sum_ensmean.nc
@@ -142,7 +156,8 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    RAnn:
-#        description: description
+#        description: Annual total rainfall
+#        units: mm
 #        station_dv: "annual_rain (mm)"
 #        station_path: data/station_inputs/rain_annual_mean_doy_MSC_25yr_for_maps.csv
 #        input_model_path: data/model_inputs/rain_CanRCM4-LE_ens35_1951-2016_ann_sum_ensmean.nc
@@ -151,7 +166,8 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    R1d50:
-#        description: description
+#        description: 50-year return level of 1-day rainfall
+#        units: mm
 #        station_dv: "1day rain RL50 (mm)"
 #        station_path: data/station_inputs/1day_rain_rl50_for_maps.csv
 #        input_model_path: data/model_inputs/rain_CanRCM4-LE_ens35_1951-2016_max1day_rl50_gum_lm_ensmean.nc
@@ -160,7 +176,8 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    MI:
-#        description: description
+#        description: Moisture index
+#        units: ""
 #        station_dv: "moisture_index"
 #        station_path: data/station_inputs/moisture_index_for_maps.csv
 #        input_model_path: data/model_inputs/moisture_index_CanRCM4-LE_ens15_1951-2016_ensmean.nc
@@ -169,7 +186,8 @@ dvs:
 #        cmap: "terrain_r"
 #
 #    R15m10:
-#        description: description
+#        description: 10-year return level of 15-minute rainfall
+#        units: mm
 #        station_dv: "Gum-LM RL10 (mm)"
 #        station_path: data/station_inputs/15min_rain_rl10_for_maps.csv
 #        input_model_path: data/model_inputs/rain_CanRCM4-LE_ens15_1951-2016_max1hr_rl10_gum_lm_ensmean.nc
