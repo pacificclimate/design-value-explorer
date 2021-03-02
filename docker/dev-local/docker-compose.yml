@@ -34,6 +34,9 @@ services:
         target: /codebase/dve/data/reconstructions/
         read_only: true
       - type: bind
+        source: ./downloads
+        target: /downloads
+      - type: bind
         source: /storage/data/projects/comp_support/dv-explorer/data/station_inputs/
         target: /codebase/dve/data/station_inputs/
         read_only: true

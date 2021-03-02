@@ -26,11 +26,20 @@ import geopandas as gpd
 from pkg_resources import resource_filename
 
 from dve.utils import sigfigs
+from .map_utils import (
+    pointer_rlonlat,
+    rlonlat_to_rindices,
+    pointer_rindices,
+    rindices_to_lonlat,
+    pointer_value,
+)
+from .download_utils import (download_filename, download_filepath)
 
 import flask
 import os
 import warnings
 import logging
+import csv
 
 
 def get_app(config, data):
@@ -132,6 +141,78 @@ def get_app(config, data):
     #     return json.dumps(hover_data, indent=2)
 
 
+    def value_table(*items):
+        return dbc.Table(
+            [
+                html.Tbody(
+                    [
+                        html.Tr(
+                            [
+                                html.Th(name, style={"width": "5em"}),
+                                html.Td(value),
+                            ]
+                        )
+                        for name, value in items
+                    ]
+                )
+            ],
+            bordered=True,
+            size="sm",
+        )
+
+
+    def dv_value(name, interpolation, rlon, rlat):
+        var_name = data[name]["dv"]
+        dataset = data[name][interpolation]
+        ix, iy = rlonlat_to_rindices(dataset, rlon, rlat)
+        # print(f"ix={ix}, iy={iy}, var_name={var_name},")
+        # print(f"data[name] {data[name]}")
+        return dataset[var_name].values[iy, ix]
+
+
+    def dv_table(rlon, rlat, selected_dv=None, selected_interp=None):
+        """
+        Return a table listing values of design values at a location specified
+        by rotated coordinates rlon, rlat
+
+        :param rlon:
+        :param rlat:
+        :return:
+        """
+        return dbc.Table(
+            [
+                html.Thead(
+                    [
+                        html.Tr(
+                            [
+                                html.Th("DV"),
+                                html.Th("Model"),
+                                html.Th("Reconstruction"),
+                            ]
+                        )
+                    ]
+                ),
+                html.Tbody(
+                    [
+                        html.Tr(
+                            [html.Th(name, style={"width": "5em"})] +
+                            [
+                                html.Td(
+                                    round(float(dv_value(name, interp, rlon, rlat)), 3),
+                                    style={"color": "red" if name == selected_dv and interp == selected_interp else "inherit"}
+                                )
+                                for interp in ("model", "reconstruction")
+                            ]
+                        )
+                        for name in config["dvs"].keys()
+                    ],
+                )
+            ],
+            bordered=True,
+            size="sm",
+        )
+
+
     @app.callback(
         Output("hover-info", "children"),
         [
@@ -140,55 +221,148 @@ def get_app(config, data):
             Input("dataset-ctrl", "value"),
         ]
     )
-    def display_hover_info(hover_data, design_value_id_ctrl, dataset_ctrl):
-        # TODO: Can we use a fixed value ("model" or "reconstruction" instead
-        #  of dataset_ctrl?
+    def display_hover_info(
+        hover_data, design_value_id_ctrl, interpolation_ctrl
+    ):
+        # TODO: Can we use a fixed value ("model" or "reconstruction") instead
+        #  of interpolation_ctrl? Note: Each type of dataset has a different
+        #  lat-lon grid.
+
+        # TODO: DRY this up with respect to display_click_info when we have
+        #   settled interface.
+
         if hover_data is None:
-            lat, lon, z, source = ("--",) * 4
-        else:
-            curve_number, x, y = (
-                hover_data["points"][0][name]
-                for name in ("curveNumber", "x", "y")
+            return None
+
+        dataset = data[design_value_id_ctrl][interpolation_ctrl]
+        rlon, rlat = pointer_rlonlat(hover_data)
+        ix, iy = pointer_rindices(hover_data, dataset)
+        lon, lat = rindices_to_lonlat(dataset, ix, iy)
+        z, source = pointer_value(hover_data)
+
+        return [
+            value_table(
+                ("Lat", round(lat, 6)),
+                ("Lon", round(lon, 6)),
+                # (f"Z ({design_value_id_ctrl}) ({source})", round(z, 6)),
+            ),
+            dv_table(
+                rlon,
+                rlat,
+                selected_dv=design_value_id_ctrl,
+                selected_interp=interpolation_ctrl
+            ),
+        ]
+
+
+    # TODO: Remove when no longer needed for development
+    # @app.callback(
+    #     Output("click-data", "children"),
+    #     [Input("my-graph", "clickData")]
+    # )
+    # def display_click_data(click_data):
+    #     return json.dumps(click_data, indent=2)
+
+
+    @app.callback(
+        Output("data-download-header", "children"),
+        [
+            Input("my-graph", "clickData"),
+            Input("design-value-id-ctrl", "value"),
+            Input("dataset-ctrl", "value"),
+        ]
+    )
+    def display_download_button(
+        click_data, design_value_id_ctrl, interpolation_ctrl
+    ):
+        """
+        To get the layout we want, we have to break the map-click callback into
+        two parts: Download button and data display. Unfortunately this is
+        repetitive but no other solution is known.
+        """
+        if click_data is None:
+            return None
+
+        dataset = data[design_value_id_ctrl][interpolation_ctrl]
+        rlon, rlat = pointer_rlonlat(click_data)
+        ix, iy = pointer_rindices(click_data, dataset)
+        # Note that lon, lat is derived from selected dataset, which may have
+        # a different (coarser, finer) grid than the other datasets.
+        lon, lat = rindices_to_lonlat(dataset, ix, iy)
+        z, source = pointer_value(click_data)
+
+        return [
+           html.A(
+                "Download this data",
+                href=download_filepath(lon, lat),
+                download=download_filename(lon, lat),
+                className="btn btn-primary btn-sm mb-1"
+            ),
+        ]
+
+
+    @app.callback(
+        Output("click-info", "children"),
+        [
+            Input("my-graph", "clickData"),
+            Input("design-value-id-ctrl", "value"),
+            Input("dataset-ctrl", "value"),
+        ]
+    )
+    def display_click_info(
+        click_data, design_value_id_ctrl, interpolation_ctrl
+    ):
+        """
+        To get the layout we want, we have to break the map-click callback into
+        two parts: Download button and data display. Unfortunately this is
+        repetitive but no other solution is known.
+        """
+        # TODO: Can we use a fixed value ("model" or "reconstruction" instead
+        #  of interp_ctrl? ... The grids for each are different and
+        #  give different values for lat/lon at the same pointer locn.
+        # TODO: DRY
+        if click_data is None:
+            return None
+
+        dataset = data[design_value_id_ctrl][interpolation_ctrl]
+        rlon, rlat = pointer_rlonlat(click_data)
+        ix, iy = pointer_rindices(click_data, dataset)
+        # Note that lon, lat is derived from selected dataset, which may have
+        # a different (coarser, finer) grid than the other datasets.
+        lon, lat = rindices_to_lonlat(dataset, ix, iy)
+        z, source = pointer_value(click_data)
+
+        # Create data table for download
+        with open(download_filepath(lon, lat), "w") as file:
+            writer = csv.writer(file, delimiter=",")
+            writer.writerow(("Latitude", lat))
+            writer.writerow(("Longitude", lon))
+            writer.writerow(tuple())
+            writer.writerow(
+                ("Design Value ID", "Model Value", "Reconstruction Value")
             )
-            ds = data[design_value_id_ctrl][dataset_ctrl]
-            ix = find_nearest_index(ds.rlon.values, x)
-            iy = find_nearest_index(ds.rlat.values, y)
-            lat = ds.lat.values[iy, ix]
-            lon = ds.lon.values[iy, ix] - 360
-
-            try:
-                z = hover_data["points"][0][{4: "z", 5: "text"}[curve_number]]
-            except KeyError:
-                z = f"Unknown curveNumber {curve_number}"
-
-            try:
-                source = {4: "Interp", 5: "Station"}[curve_number]
-            except KeyError:
-                source = f"?"
-
-        return dbc.Table(
-            [
-                html.Tbody(
-                    [
-                        html.Tr(
-                            [
-                                html.Th(name, style={"width": "5em"}),
-                                html.Td(
-                                    round(value, 6) if isinstance(value, float)
-                                    else value
-                                )
-                            ]
-                        )
-                        for name, value in zip(
-                            ("Lat", "Lon", f"{design_value_id_ctrl} ({source})"),
-                            (lat, lon, z)
-                        )
-                    ]
+            for dv_id in config["dvs"].keys():
+                writer.writerow(
+                    (
+                        dv_id,
+                        float(dv_value(dv_id, "model", rlon, rlat)),
+                        float(dv_value(dv_id, "reconstruction", rlon, rlat)),
+                    )
                 )
-            ],
-            bordered=True,
-            size="sm",
-        )
+
+        return [
+            value_table(
+                ("Lat", round(lat, 6)),
+                ("Lon", round(lon, 6)),
+                # (f"Z ({design_value_id_ctrl}) ({source})", round(z, 6)),
+            ),
+            dv_table(
+                rlon,
+                rlat,
+                selected_dv=design_value_id_ctrl,
+                selected_interp=interpolation_ctrl
+            ),
+        ]
 
 
     # TODO: What is this?
@@ -355,5 +529,12 @@ def get_app(config, data):
         }
 
         return fig
+
+
+    @app.server.route("/downloads/by-location/<filename>")
+    def serve_static(filename):
+        return flask.send_from_directory(
+            os.path.join('/downloads/by-location'), filename
+        )
 
     return app

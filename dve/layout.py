@@ -199,18 +199,34 @@ def user_graph_interaction():
     :return: list of dbc.Row
     """
     return [
-        dbc.Row(
+        dbc.Row(dbc.Col(dcc.Markdown("#### Data from map pointer"))),
+        dbc.Row([
+            dbc.Col(
+                dcc.Markdown("*Click to hold values for download.*"),
+                style={"font-size": "0.8em"},
+            ),
+            dbc.Col(id="data-download-header"),
+        ]),
+        dbc.Row([
             dbc.Col(
                 html.Div(
                     id="hover-output",
                     children=[
-                        dcc.Markdown("**Hover Data**"),
-                        html.Div(id="hover-info"),
+                        html.Div(id="hover-info", style={"font-size": "0.8em"}),
                         html.Pre(id="hover-data")
-                    ]
+                    ],
                 )
             ),
-        ),
+            dbc.Col(
+                html.Div(
+                    id="click-output",
+                    children=[
+                        html.Div(id="click-info", style={"font-size": "0.8em"}),
+                        html.Pre(id="click-data")
+                    ],
+                )
+            ),
+        ]),
     ]
 
 

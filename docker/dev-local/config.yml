@@ -24,14 +24,14 @@ dvs:
         table: data/tables/RL50_TableC2.csv
         cmap: "terrain_r"
 
-#    RHann:
-#        description: description
-#        station_dv: "mean RH (%)"
-#        station_path: data/station_inputs/rh_annual_mean_10yr_for_maps.csv
-#        input_model_path: data/model_inputs/hurs_CanRCM4-LE_ens15_1951-2016_ensmean.nc
-#        reconstruction_path: data/reconstructions/RHann_reconstruction.nc
-#        table: data/tables/RHann_TableC2.csv
-#        cmap: "terrain_r"
+    RHann:
+        description: description
+        station_dv: "mean RH (%)"
+        station_path: data/station_inputs/rh_annual_mean_10yr_for_maps.csv
+        input_model_path: data/model_inputs/hurs_CanRCM4-LE_ens15_1951-2016_ensmean.nc
+        reconstruction_path: data/reconstructions/RHann_reconstruction.nc
+        table: data/tables/RHann_TableC2.csv
+        cmap: "terrain_r"
 #
 #    HDD:
 #        description: description
