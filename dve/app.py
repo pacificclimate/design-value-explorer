@@ -26,14 +26,19 @@ import geopandas as gpd
 from pkg_resources import resource_filename
 
 from dve.utils import sigfigs
+from .map_utils import (
+    pointer_rlonlat,
+    rlonlat_to_rindices,
+    pointer_rindices,
+    rindices_to_lonlat,
+    pointer_value,
+)
 
 import flask
 import os
 import warnings
 import logging
-import uuid
 import csv
-from functools import lru_cache
 
 
 def get_app(config, data):
@@ -135,62 +140,7 @@ def get_app(config, data):
     #     return json.dumps(hover_data, indent=2)
 
 
-    # TODO: Remove?
-    def dv_nv(name, interpolation, ix, iy):
-        data_var_name = data[name]["dv"]
-        return (
-            f"{name} ({data_var_name})",
-            data[name][interpolation][data_var_name].values[iy, ix]
-        )
-
-
-    def pointer_rlonlat(pointer_data):
-        if pointer_data is None:
-            return None, None
-        return tuple(pointer_data["points"][0][name] for name in ("x", "y"))
-
-
-
-    def rlonlat_to_indices(dataset, rlon, rlat):
-        ix = find_nearest_index(dataset.rlon.values, rlon)
-        iy = find_nearest_index(dataset.rlat.values, rlat)
-        return ix, iy
-
-
-    def pointer_indices(pointer_data, dataset):
-        if pointer_data is None:
-            return None, None
-        # TODO: DRY
-        rlon, rlat = (pointer_data["points"][0][name] for name in ("x", "y"))
-        ix = find_nearest_index(dataset.rlon.values, rlon)
-        iy = find_nearest_index(dataset.rlat.values, rlat)
-        return ix, iy
-
-
-    def pointer_lonlat(ds, ix, iy):
-        if ix is None or iy is None:
-            return None, None
-        lat = ds.lat.values[iy, ix]
-        lon = ds.lon.values[iy, ix] - 360
-        return lon, lat
-
-
-    def pointer_value(pointer_data):
-        curve_number = pointer_data["points"][0]["curveNumber"]
-
-        try:
-            z = pointer_data["points"][0][{4: "z", 5: "text"}[curve_number]]
-        except KeyError:
-            z = None
-
-        try:
-            source = {4: "Interp", 5: "Station"}[curve_number]
-        except KeyError:
-            source = None
-
-        return z, source
-
-
+    # TODO: Move these functions into a separate module
     def value_table(*items):
         return dbc.Table(
             [
@@ -214,7 +164,7 @@ def get_app(config, data):
     def dv_value(name, interpolation, rlon, rlat):
         var_name = data[name]["dv"]
         dataset = data[name][interpolation]
-        ix, iy = rlonlat_to_indices(dataset, rlon, rlat)
+        ix, iy = rlonlat_to_rindices(dataset, rlon, rlat)
         # print(f"ix={ix}, iy={iy}, var_name={var_name},")
         # print(f"data[name] {data[name]}")
         return dataset[var_name].values[iy, ix]
@@ -283,8 +233,8 @@ def get_app(config, data):
 
         dataset = data[design_value_id_ctrl][interpolation_ctrl]
         rlon, rlat = pointer_rlonlat(hover_data)
-        ix, iy = pointer_indices(hover_data, dataset)
-        lon, lat = pointer_lonlat(dataset, ix, iy)
+        ix, iy = pointer_rindices(hover_data, dataset)
+        lon, lat = rindices_to_lonlat(dataset, ix, iy)
         z, source = pointer_value(hover_data)
 
         return [
@@ -346,10 +296,10 @@ def get_app(config, data):
 
         dataset = data[design_value_id_ctrl][interpolation_ctrl]
         rlon, rlat = pointer_rlonlat(click_data)
-        ix, iy = pointer_indices(click_data, dataset)
+        ix, iy = pointer_rindices(click_data, dataset)
         # Note that lon, lat is derived from selected dataset, which may have
         # a different (coarser, finer) grid than the other datasets.
-        lon, lat = pointer_lonlat(dataset, ix, iy)
+        lon, lat = rindices_to_lonlat(dataset, ix, iy)
         z, source = pointer_value(click_data)
 
         return [
@@ -387,10 +337,10 @@ def get_app(config, data):
 
         dataset = data[design_value_id_ctrl][interpolation_ctrl]
         rlon, rlat = pointer_rlonlat(click_data)
-        ix, iy = pointer_indices(click_data, dataset)
+        ix, iy = pointer_rindices(click_data, dataset)
         # Note that lon, lat is derived from selected dataset, which may have
         # a different (coarser, finer) grid than the other datasets.
-        lon, lat = pointer_lonlat(dataset, ix, iy)
+        lon, lat = rindices_to_lonlat(dataset, ix, iy)
         z, source = pointer_value(click_data)
 
         # Create data table for download
