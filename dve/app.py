@@ -33,6 +33,7 @@ from .map_utils import (
     rindices_to_lonlat,
     pointer_value,
 )
+from .download_utils import (download_filename, download_filepath)
 
 import flask
 import os
@@ -140,7 +141,6 @@ def get_app(config, data):
     #     return json.dumps(hover_data, indent=2)
 
 
-    # TODO: Move these functions into a separate module
     def value_table(*items):
         return dbc.Table(
             [
@@ -228,6 +228,9 @@ def get_app(config, data):
         #  of interpolation_ctrl? Note: Each type of dataset has a different
         #  lat-lon grid.
 
+        # TODO: DRY this up with respect to display_click_info when we have
+        #   settled interface.
+
         if hover_data is None:
             return None
 
@@ -259,20 +262,6 @@ def get_app(config, data):
     # )
     # def display_click_data(click_data):
     #     return json.dumps(click_data, indent=2)
-
-
-    def download_filename(lon, lat):
-        return f"dvs_{lon}_{lat}.csv"
-
-
-    def download_filepath(lon, lat):
-        """
-        Return a unique filepath for the download data for position lon, lat.
-        :param lon:
-        :param lat:
-        :return:
-        """
-        return f"/downloads/by-location/{download_filename(lon, lat)}"
 
 
     @app.callback(
