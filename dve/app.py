@@ -31,6 +31,8 @@ import flask
 import os
 import warnings
 import logging
+import uuid
+import csv
 
 
 def get_app(config, data):
@@ -132,6 +134,7 @@ def get_app(config, data):
     #     return json.dumps(hover_data, indent=2)
 
 
+    # TODO: Remove?
     def dv_nv(name, interpolation, ix, iy):
         data_var_name = data[name]["dv"]
         return (
@@ -258,6 +261,7 @@ def get_app(config, data):
             size="sm",
         )
 
+
     @app.callback(
         Output("hover-info", "children"),
         [
@@ -335,7 +339,32 @@ def get_app(config, data):
         lon, lat = pointer_lonlat(dataset, ix, iy)
         z, source = pointer_value(click_data)
 
+        # Create data table for download
+        download_filepath = f"/downloads/by-location/{uuid.uuid1()}.csv"
+        with open(download_filepath, "w") as file:
+            writer = csv.writer(file, delimiter=",")
+            writer.writerow(("Latitude", lat))
+            writer.writerow(("Longitude", lon))
+            writer.writerow(tuple())
+            writer.writerow(
+                ("Design Value ID", "Model Value", "Reconstruction Value")
+            )
+            for dv_id in config["dvs"].keys():
+                writer.writerow(
+                    (
+                        dv_id,
+                        float(dv_value(dv_id, "model", rlon, rlat)),
+                        float(dv_value(dv_id, "reconstruction", rlon, rlat)),
+                    )
+                )
+
         return [
+            html.A(
+                "Download this data",
+                href=download_filepath,
+                download=f"dvs_{lon}_{lat}.csv",
+                className="btn btn-primary btn-sm mb-1"
+            ),
             value_table(
                 ("Lat", round(lat, 6)),
                 ("Lon", round(lon, 6)),
@@ -518,5 +547,12 @@ def get_app(config, data):
         }
 
         return fig
+
+
+    @app.server.route("/downloads/by-location/<filename>")
+    def serve_static(filename):
+        return flask.send_from_directory(
+            os.path.join('/downloads/by-location'), filename
+        )
 
     return app
