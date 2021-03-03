@@ -455,6 +455,7 @@ def get_app(config, data):
                     hoverongaps=False,
                     colorscale = discrete_colorscale,
                     colorbar={"tickvals": ticks},
+                    # showscale=False,
                     visible=True,
                     hovertemplate=(
                         f"<b>{design_value_id_ctrl} (Interp.): %{{z}} </b><br>"

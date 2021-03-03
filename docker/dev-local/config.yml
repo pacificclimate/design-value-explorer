@@ -1,6 +1,6 @@
 ui:
     defaults:
-        dv: RL50
+        dv: TJan2.5
 
 # Parameterize the pipeline
 # The pipeline will iterate through each parent tree
@@ -84,7 +84,7 @@ dvs:
         reconstruction_path: data/reconstructions/TJan2.5_reconstruction.nc
         table: data/tables/TJan2.5_TableC2.csv
         cmap: "RdBu_r"
-        z_offset: 100
+        z_offset: 1000
 #
 #    TJan1.0:
 #        description: 1st percentile of January temperature
