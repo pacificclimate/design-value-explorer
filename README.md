@@ -195,12 +195,15 @@ At this prompt you can enter bash commands, including the following:
 From the bash prompt:
 
 ```
-python run_app.py
+python run_app.py --debug
 ```
+
+The `--debug` option does two things: Runs the server with `debug=True`, and
+defaults the logging level to `DEBUG`.
 
 Aside: Dash apps are based on Flask. 
 Flask documentation 
-[stronly recommends](https://flask.palletsprojects.com/en/1.1.x/server/#command-line)
+[strongly recommends](https://flask.palletsprojects.com/en/1.1.x/server/#command-line)
 running apps for development using the Flask command line `flask run`.
 Unfortunately, that does not work for a Dash app, and we must run it more
 directly from a script as above. 
