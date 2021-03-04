@@ -1,8 +1,6 @@
 from argparse import ArgumentParser
 import logging
-import yaml
-from dve.data import load_data
-from dve.app import get_app
+from dve.app import make_app
 
 
 # Set up logging
@@ -38,16 +36,9 @@ if __name__ == "__main__":
     loglevel = args.loglevel or "DEBUG" if args.debug else "INFO"
     logger.setLevel(getattr(logging, loglevel))
 
-    logger.debug("Loading configuration")
-    with open("config.yml", "r") as ymlfile:
-        config = yaml.load(ymlfile)
-    logger.debug(f"Configuration loaded. {config}")
+    app = make_app()
 
-    data = load_data(config)
-
-    app = get_app(config, data)
-
-    logger.debug("Running app")
+    logger.debug("Running app on development server")
     app.run_server(
         host='0.0.0.0',
         port=5000,
