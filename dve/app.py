@@ -92,6 +92,13 @@ def get_app(config, data):
                )
 
 
+    @app.callback(
+        Output("scale-ctrl", "value"),
+        [Input("design-value-id-ctrl", "value")]
+    )
+    def update_scale_ctrl(design_value_id):
+        return config["dvs"][design_value_id]["scale"]["default"]
+
 
     @app.callback(
         Output("range-slider-output-container", "children"),

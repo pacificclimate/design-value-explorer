@@ -24,6 +24,9 @@ dvs:
         reconstruction_path: data/reconstructions/RL50_reconstruction.nc
         table: data/tables/RL50_TableC2.csv
         cmap: "terrain_r"
+        scale:
+            disable_logarithmic: False
+            default: logarithmic
 
     RHann:
         description: Annual mean of relative humidity
@@ -34,6 +37,9 @@ dvs:
         reconstruction_path: data/reconstructions/RHann_reconstruction.nc
         table: data/tables/RHann_TableC2.csv
         cmap: "terrain_r"
+        scale:
+            disable_logarithmic: False
+            default: linear
 
 #    HDD:
 #        description: Heating degree days (threshold: 18 °C)
@@ -86,7 +92,10 @@ dvs:
         table: data/tables/TJan2.5_TableC2.csv
         cmap: "RdBu_r"
         z_offset: 1000
-#
+        scale:
+            disable_logarithmic: True
+            default: linear
+
 #    TJan1.0:
 #        description: 1st percentile of January temperature
 #        units: °C
