@@ -19,7 +19,9 @@ directly on a development machine.
 
 ## App configuration
 
-Configuration paths go into `config.yml`. An example is provided by default. Note that the paths are not absolute, and use `resource_pkgs.resource_filename` set within `dve/` as a reference.
+Configuration paths go into `config.yml`. An example is provided by default. 
+Note that the paths are not absolute, and use `resource_pkgs.resource_filename` 
+set within `dve/` as a reference.
 
 The generic recipe is:
 ```yaml
@@ -30,7 +32,9 @@ paths:
     native_mask: data/masks/land_mask_CanRCM4_sftlf.nc
     total_table_c2: data/tables/combined_dv_tablec2.csv
 dvs:
-    RL50: # appears in dropdown
+    RL50:
+        description: 50-year return level of annual maximum rain-on-snow load
+        units: kPa
         station_dv: "RL50 (kPa)" # As found in the station DV column csv
         station_path: data/station_inputs/sl50_rl50_for_maps.csv # station csv (requires lat, lon columns)
         input_model_path: data/model_inputs/snw_rain_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc # is the input model path associated with the dv
@@ -38,6 +42,8 @@ dvs:
         table: data/tables/RL50_TableC2.csv # the table generated from the HSM for NBCC locations
         cmap: "terrain_r" # default colormap
     HDD:
+        description: "Heating degree days (threshold: 18 °C)"
+        units: °C-day
         station_dv: "HDD (degC-day)"
         station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
         input_model_path: data/model_inputs/hdd_CanRCM4-LE_ens35_1951-2016_ann_ensmean.nc
@@ -47,6 +53,53 @@ dvs:
     # and so on...
 colormaps:
     ['viridis', 'plasma', 'inferno', ...] # list of colormaps as found in matplotlib.cm
+```
+
+## Deploying to production
+
+### Overview
+
+1. A production Docker image, `pcic/dash-dv-explorer` is automatically built.
+ 
+1. All production-related Docker infrastructure is in the repo under 
+   `docker/production`.
+   
+1. Data files are mounted to the docker container. 
+   The `docker-compose.yml` contains mounts for all currently required data 
+   files.
+   
+1. A live-updatable configuration file can be mounted to the container.
+   The `docker-compose.yml` contains a mount for this already, for a 
+   file at  `docker/production/config.yml`. You may wish to change this.
+   
+1. The usual `docker-compose` commands can be used to start, stop, and restart
+   the container. 
+   - IMPORTANT: The port to which the container is mapped is
+     defined by the *environment variable* `DEV_PORT`, which must be specified
+     in the command line, thus: `DVE_PORT=<port> docker-compose ...` 
+   
+Details follow.
+
+#### Prepare
+
+1. Pull the latest version of `pcic/dash-dv-explorer` from Dockerhub.
+1. Update (your copy of) the docker-compose.yml file to reflect the version
+   of the image you want to run.
+1. Update the configuration file mount and/or the configuration file proper
+   as required.
+
+#### Start the container
+
+```
+DVE_PORT=<port> docker-compose -f docker/production/docker-compose.yml up -d
+```
+
+The container name is `dv-explorer-prod`. It immediately starts the application.
+
+#### Stop the container
+
+```
+docker-compose -f docker/production/docker-compose.yml down
 ```
 
 ## Development and debugging
@@ -195,13 +248,6 @@ flask run
 
 This enables the development environment, including the interactive debugger 
 and reloader, and then starts the server on `http://localhost:5000/`.
-
-## Deploying to production
-
-A production Docker image is automatically built. In a while I will tell you
-how to deploy it.
-
-**TBD**
 
 ## Authors
 

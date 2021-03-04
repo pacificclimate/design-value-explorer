@@ -1,11 +1,15 @@
 version: '3.2'
 services:
-  wps:
+  dv-explorer-prod:
     image: pcic/dash-dv-explorer
-    container_name: dash-dv-explorer
+    container_name: dv-explorer-prod
     ports:
-      - "30022:8050"
+      # To specify the external port, run `DVE_PORT=<port> docker-compose ...`
+      # Most unfortunately, that value can't be in a .env file, must be on
+      # command line. :(
+      - "${DVE_PORT}:5000"
     volumes:
+        # Data files
       - type: bind
         source: /storage/data/projects/comp_support/dv-explorer/data/model_inputs/
         target: /app/dve/data/model_inputs/
@@ -23,12 +27,20 @@ services:
         target: /app/dve/data/tables/
         read_only: true
 
+        # Configuration file: to mount an external one, uncomment these lines
+      - type: bind
+        source: ./config.yml
+        target: /app/config.yml
+        read_only: true
+
+        # Download files: presently are permanent so best stored in an
+        # external mount where old ones can be deleted periodically.
+        # TODO: Remove after upgrading to use temporary files
+      - type: bind
+        source: ./downloads
+        target: /downloads
+
 networks:
   default:
     external:
       name: pcicbr0
-
-# docker-compose build
-# docker-compose up
-# docker-compose down
-# docker-compose rm

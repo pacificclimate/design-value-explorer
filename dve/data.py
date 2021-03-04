@@ -1,10 +1,14 @@
+import logging
 from pkg_resources import resource_filename
 from climpyrical.data import read_data
 import pandas as pd
 
 
+logger = logging.getLogger("dve")
+
+
 def load_file(path):
-    print(f"Loading data from '{path}'")
+    logger.info(f"Loading data from '{path}'")
     filename = resource_filename("dve", path)
     if path.endswith(".csv"):
         return pd.read_csv(filename)
@@ -41,7 +45,7 @@ def load_data(config):
     on demand. If this is possible ... we have to watch out for how
     data[key]["dv"] is used ... maybe it can be lazy loaded, maybe not.
     """
-    print(f"### Loading data from files.")
+    logger.info(f"Loading data from files.")
     data = {
         key: {
             "stations": load_file(value["station_path"]),
@@ -53,6 +57,7 @@ def load_data(config):
         }
         for key, value in config["dvs"].items()
     }
+    logger.info("Data loaded")
 
     for key, value in data.items():
         (dv,) = value["model"].data_vars

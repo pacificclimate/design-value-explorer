@@ -1,6 +1,6 @@
 ui:
     defaults:
-        dv: RL50
+        dv: TJan2.5
 
 # Parameterize the pipeline
 # The pipeline will iterate through each parent tree
@@ -44,6 +44,7 @@ dvs:
 #        reconstruction_path: data/reconstructions/HDD_reconstruction.nc
 #        table: data/tables/HDD_TableC2.csv
 #        cmap: "RdBu"
+#        z_offset: 0
 #
 #    SL50:
 #        description: 50-year return level of annual maximum snow load
@@ -75,15 +76,16 @@ dvs:
 #        table: data/tables/WP50_TableC2.csv
 #        cmap: "terrain_r"
 #
-#    TJan2.5:
-#        description: 2.5th percentile of January temperature
-#        units: °C
-#        station_dv: "TJan2.5 (degC)"
-#        station_path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
-#        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan2.5p_ensmean.nc
-#        reconstruction_path: data/reconstructions/TJan2.5_reconstruction.nc
-#        table: data/tables/TJan2.5_TableC2.csv
-#        cmap: "RdBu_r"
+    TJan2.5:
+        description: 2.5th percentile of January temperature
+        units: °C
+        station_dv: "TJan2.5 (degC)"
+        station_path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
+        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan2.5p_ensmean.nc
+        reconstruction_path: data/reconstructions/TJan2.5_reconstruction.nc
+        table: data/tables/TJan2.5_TableC2.csv
+        cmap: "RdBu_r"
+        z_offset: 1000
 #
 #    TJan1.0:
 #        description: 1st percentile of January temperature
