@@ -36,7 +36,7 @@ dvs:
         cmap: "terrain_r"
 
     HDD:
-        description: Heating degree days (threshold: 18 °C)
+        description: "Heating degree days (threshold: 18 °C)"
         units: °C-day
         station_dv: "HDD (degC-day)"
         station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
