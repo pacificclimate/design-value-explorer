@@ -25,7 +25,7 @@ import matplotlib.cm
 import geopandas as gpd
 from pkg_resources import resource_filename
 
-from dve.utils import sigfigs
+from .utils import sigfigs
 from .map_utils import (
     pointer_rlonlat,
     rlonlat_to_rindices,
@@ -96,8 +96,27 @@ def get_app(config, data):
         Output("scale-ctrl", "value"),
         [Input("design-value-id-ctrl", "value")]
     )
-    def update_scale_ctrl(design_value_id):
+    def update_scale_ctrl_value(design_value_id):
         return config["dvs"][design_value_id]["scale"]["default"]
+
+
+    @app.callback(
+        Output("scale-ctrl", "options"),
+        [Input("design-value-id-ctrl", "value")]
+    )
+    def update_scale_ctrl_options(design_value_id):
+        options = [
+            {
+                **option,
+                "disabled": (
+                    option["value"] == "logarithmic" and
+                    config["dvs"][design_value_id]["scale"]
+                        .get("disable_logarithmic", False)
+                ),
+            }
+            for option in dve.layout.scale_ctrl_options
+        ]
+        return options
 
 
     @app.callback(
