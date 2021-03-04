@@ -92,19 +92,6 @@ def get_app(config, data):
                )
 
 
-    # TODO: Element "input-colorbar-output-container" does not exist (any more?)
-    #   in the layout. Therefore this callback has no effect or purpose. Remove?
-    @app.callback(
-        Output("input-colorbar-output-container", "children"),
-        [Input("input-colorbar", "value")]
-    )
-    def update_input(value):
-        try:
-            matplotlib.cm.get_cmap(value, 10)
-        except ValueError:
-            value = "Invalid cmap!"
-        return f"Colour Map: {value}"
-
 
     @app.callback(
         Output("range-slider-output-container", "children"),
