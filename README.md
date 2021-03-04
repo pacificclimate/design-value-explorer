@@ -31,6 +31,7 @@ paths:
     canada_vector: data/vectors/canada_final.shp
     native_mask: data/masks/land_mask_CanRCM4_sftlf.nc
     total_table_c2: data/tables/combined_dv_tablec2.csv
+
 dvs:
     RL50:
         description: 50-year return level of annual maximum rain-on-snow load
@@ -41,6 +42,10 @@ dvs:
         reconstruction_path: data/reconstructions/RL50_reconstruction.nc # the HSM reconstruction from climpyrical
         table: data/tables/RL50_TableC2.csv # the table generated from the HSM for NBCC locations
         cmap: "terrain_r" # default colormap
+        scale:
+            disable_logarithmic: False  # optional: default False
+            default: logarithmic
+
     HDD:
         description: "Heating degree days (threshold: 18 °C)"
         units: °C-day
@@ -50,16 +55,23 @@ dvs:
         reconstruction_path: data/reconstructions/HDD_reconstruction.nc
         table: data/tables/HDD_TableC2.csv
         cmap: "RdBu"
+        scale:
+            disable_logarithmic: False
+            default: linear
+
     # and so on...
+
 colormaps:
-    ['viridis', 'plasma', 'inferno', ...] # list of colormaps as found in matplotlib.cm
+    # list of colormaps as found in matplotlib.cm
+    ['viridis', 'plasma', 'inferno', ...] 
 ```
 
 ## Deploying to production
 
 ### Overview
 
-1. A production Docker image, `pcic/dash-dv-explorer` is automatically built.
+1. A production Docker image, `pcic/dash-dv-explorer` is automatically built
+   on Dockerhub.
  
 1. All production-related Docker infrastructure is in the repo under 
    `docker/production`.
@@ -82,7 +94,7 @@ Details follow.
 
 #### Prepare
 
-1. Pull the latest version of `pcic/dash-dv-explorer` from Dockerhub.
+1. Pull the desired version of `pcic/dash-dv-explorer` from Dockerhub.
 1. Update (your copy of) the docker-compose.yml file to reflect the version
    of the image you want to run.
 1. Update the configuration file mount and/or the configuration file proper
@@ -99,7 +111,7 @@ The container name is `dv-explorer-prod`. It immediately starts the application.
 #### Stop the container
 
 ```
-docker-compose -f docker/production/docker-compose.yml down
+DVE_PORT=<port> docker-compose -f docker/production/docker-compose.yml down
 ```
 
 ## Development and debugging

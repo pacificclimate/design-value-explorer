@@ -7,6 +7,18 @@ import numpy as np
 from dve.utils import sigfigs
 
 
+scale_ctrl_options = [
+    {
+        "label": "Linear",
+        "value": "linear"
+    },
+    {
+        "label": "Logarithmic",
+        "value": "logarithmic"
+    },
+]
+
+
 def header(config):
     """
     Layout element for parts common to all tabs.
@@ -33,7 +45,7 @@ def header(config):
                         searchable=True,
                         clearable=False,
                     ),
-                    width=3,
+                    width=4,
                 )
             ]
         )
@@ -141,10 +153,7 @@ def colourbar_options(data, colormaps):
                 dbc.Col(
                     dcc.Dropdown(
                         id="scale-ctrl",
-                        options=[
-                            {"label": "Linear", "value": "linear"},
-                            {"label": "Logarithmic", "value": "logarithmic"},
-                        ],
+                        options=scale_ctrl_options,
                         value="logarithmic",
                         clearable=False,
                     )

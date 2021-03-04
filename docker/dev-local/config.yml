@@ -24,6 +24,8 @@ dvs:
         reconstruction_path: data/reconstructions/RL50_reconstruction.nc
         table: data/tables/RL50_TableC2.csv
         cmap: "terrain_r"
+        scale:
+            default: logarithmic
 
     RHann:
         description: Annual mean of relative humidity
@@ -34,9 +36,11 @@ dvs:
         reconstruction_path: data/reconstructions/RHann_reconstruction.nc
         table: data/tables/RHann_TableC2.csv
         cmap: "terrain_r"
+        scale:
+            default: linear
 
 #    HDD:
-#        description: Heating degree days (threshold: 18 °C)
+#        description: "Heating degree days (threshold: 18 °C)"
 #        units: °C-day
 #        station_dv: "HDD (degC-day)"
 #        station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
@@ -44,7 +48,8 @@ dvs:
 #        reconstruction_path: data/reconstructions/HDD_reconstruction.nc
 #        table: data/tables/HDD_TableC2.csv
 #        cmap: "RdBu"
-#        z_offset: 0
+#        scale:
+#            default: linear
 #
 #    SL50:
 #        description: 50-year return level of annual maximum snow load
@@ -55,6 +60,8 @@ dvs:
 #        reconstruction_path: data/reconstructions/SL50_reconstruction.nc
 #        table: data/tables/SL50_TableC2.csv
 #        cmap: "terrain_r"
+#        scale:
+#            default: linear
 #
 #    WP10:
 #        description: 10-year return level of maximum annual wind pressure
@@ -65,6 +72,8 @@ dvs:
 #        reconstruction_path: data/reconstructions/WP10_reconstruction.nc
 #        table: data/tables/WP10_TableC2.csv
 #        cmap: "terrain_r"
+#        scale:
+#            default: linear
 #
 #    WP50:
 #        description: 50-year return level of wind pressure
@@ -75,7 +84,9 @@ dvs:
 #        reconstruction_path: data/reconstructions/WP50_reconstruction.nc
 #        table: data/tables/WP50_TableC2.csv
 #        cmap: "terrain_r"
-#
+#        scale:
+#            default: linear
+
     TJan2.5:
         description: 2.5th percentile of January temperature
         units: °C
@@ -86,7 +97,10 @@ dvs:
         table: data/tables/TJan2.5_TableC2.csv
         cmap: "RdBu_r"
         z_offset: 1000
-#
+        scale:
+            disable_logarithmic: True
+            default: linear
+
 #    TJan1.0:
 #        description: 1st percentile of January temperature
 #        units: °C
@@ -96,6 +110,9 @@ dvs:
 #        reconstruction_path: data/reconstructions/TJan1.0_reconstruction.nc
 #        table: data/tables/TJan1.0_TableC2.csv
 #        cmap: "RdBu_r"
+#        scale:
+#            disable_logarithmic: True
+#            default: linear
 #
 #    Tmin:
 #        description: Annual minimum of mean daily temperature
@@ -106,6 +123,9 @@ dvs:
 #        reconstruction_path: data/reconstructions/Tmin_reconstruction.nc
 #        table: data/tables/Tmin_TableC2.csv
 #        cmap: "RdBu_r"
+#        scale:
+#            disable_logarithmic: True
+#            default: linear
 #
 #    Tmax:
 #        description: Annual maximum of mean daily temperature
@@ -116,6 +136,9 @@ dvs:
 #        reconstruction_path: data/reconstructions/Tmax_reconstruction.nc
 #        table: data/tables/Tmax_TableC2.csv
 #        cmap: "RdBu_r"
+#        scale:
+#            disable_logarithmic: True
+#            default: linear
 #
 #    TJul97.5:
 #        description: 97.5th percentile of July temperature
@@ -126,6 +149,9 @@ dvs:
 #        reconstruction_path: data/reconstructions/TJul97.5_reconstruction.nc
 #        table: data/tables/TJul97.5_TableC2.csv
 #        cmap: "RdBu_r"
+#        scale:
+#            disable_logarithmic: True
+#            default: linear
 #
 #    TwJul97.5:
 #        description: 97.5th percentile of July wet-bulb  temperature
@@ -136,6 +162,9 @@ dvs:
 #        reconstruction_path: data/reconstructions/TwJul97.5_reconstruction.nc
 #        table: data/tables/TwJul97.5_TableC2.csv
 #        cmap: "RdBu_r"
+#        scale:
+#            disable_logarithmic: True
+#            default: linear
 #
 #    DRWP5:
 #        description: 5-year return level of driving rain wind pressure
@@ -146,6 +175,8 @@ dvs:
 #        reconstruction_path: data/reconstructions/DRWP5_reconstruction.nc
 #        table: data/tables/DRWP5_TableC2.csv
 #        cmap: "terrain_r"
+#        scale:
+#            default: linear
 #
 #    PAnn:
 #        description: Annual total precipitation
@@ -156,6 +187,8 @@ dvs:
 #        reconstruction_path: data/reconstructions/PAnn_reconstruction.nc
 #        table: data/tables/PAnn_TableC2.csv
 #        cmap: "terrain_r"
+#        scale:
+#            default: linear
 #
 #    RAnn:
 #        description: Annual total rainfall
@@ -166,6 +199,8 @@ dvs:
 #        reconstruction_path: data/reconstructions/RAnn_reconstruction.nc
 #        table: data/tables/RAnn_TableC2.csv
 #        cmap: "terrain_r"
+#        scale:
+#            default: logarithmic
 #
 #    R1d50:
 #        description: 50-year return level of 1-day rainfall
@@ -176,6 +211,8 @@ dvs:
 #        reconstruction_path: data/reconstructions/R1d50_reconstruction.nc
 #        table: data/tables/R1d50_TableC2.csv
 #        cmap: "terrain_r"
+#        scale:
+#            default: logarithmic
 #
 #    MI:
 #        description: Moisture index
@@ -186,6 +223,9 @@ dvs:
 #        reconstruction_path: data/reconstructions/MI_reconstruction.nc
 #        table: data/tables/MI_TableC2.csv
 #        cmap: "terrain_r"
+#        scale:
+#            disable_logarithmic: False  # ??
+#            default: logarithmic
 #
 #    R15m10:
 #        description: 10-year return level of 15-minute rainfall
@@ -196,6 +236,8 @@ dvs:
 #        reconstruction_path: data/reconstructions/R15m10_reconstruction.nc
 #        table: data/tables/R15m10_TableC2.csv
 #        cmap: "terrain_r"
+#        scale:
+#            default: logarithmic
 
 colormaps:
     ['viridis', 'plasma', 'inferno', 'magma', 'cividis',
