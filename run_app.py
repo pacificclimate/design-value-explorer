@@ -32,10 +32,11 @@ if __name__ == "__main__":
         "--loglevel",
         help="Logging level",
         choices=log_level_choices,
-        default="INFO",
+        default=None,
     )
     args = parser.parse_args()
-    logger.setLevel(getattr(logging, args.loglevel))
+    loglevel = args.loglevel or "DEBUG" if args.debug else "INFO"
+    logger.setLevel(getattr(logging, loglevel))
 
     logger.debug("Loading configuration")
     with open("config.yml", "r") as ymlfile:
@@ -46,7 +47,7 @@ if __name__ == "__main__":
 
     app = get_app(config, data)
 
-    logger.debug("### Running app")
+    logger.debug("Running app")
     app.run_server(
         host='0.0.0.0',
         port=5000,
