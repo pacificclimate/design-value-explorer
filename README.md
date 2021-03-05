@@ -200,7 +200,7 @@ At this prompt you can enter bash commands, including the following:
 From the bash prompt:
 
 ```
-python run_app.py
+python dve_app.py --debug
 ```
 
 Aside: Dash apps are based on Flask. 
