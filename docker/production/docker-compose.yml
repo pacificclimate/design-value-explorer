@@ -3,6 +3,8 @@ services:
   dv-explorer-prod:
     image: pcic/dash-dv-explorer
     container_name: dv-explorer-prod
+    env_file:
+      - .env
     ports:
       - "30020:5000"
     volumes:
