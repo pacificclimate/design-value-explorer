@@ -33,7 +33,7 @@ if __name__ == "__main__":
         default=None,
     )
     args = parser.parse_args()
-    loglevel = args.loglevel or "DEBUG" if args.debug else "INFO"
+    loglevel = args.loglevel or ("DEBUG" if args.debug else "INFO")
     logger.setLevel(getattr(logging, loglevel))
 
     app = make_app()
