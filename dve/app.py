@@ -93,6 +93,14 @@ def get_app(config, data):
 
 
     @app.callback(
+        Output("colour-map-ctrl", "value"),
+        [Input("design-value-id-ctrl", "value")]
+    )
+    def update_colour_map_ctrl_value(design_value_id):
+        return config["dvs"][design_value_id]["colour_map"]
+
+
+    @app.callback(
         Output("scale-ctrl", "value"),
         [Input("design-value-id-ctrl", "value")]
     )
@@ -417,9 +425,6 @@ def get_app(config, data):
             ticks = np.around(10**(ticks) - z_offset, 2)
         else:
             ticks = np.around(np.linspace(zmin, zmax, cbar_slider + 1), 3)
-
-        if colour_map_ctrl is None:
-            colour_map_ctrl = data[design_value_id_ctrl]["cmap"]
 
         cmap = matplotlib.cm.get_cmap(colour_map_ctrl, cbar_slider)
 
