@@ -3,18 +3,23 @@ import logging
 from dve.app import make_app
 
 
-# Set up logging
-logger = logging.getLogger("dve")
-formatter = logging.Formatter(
-    "%(asctime)s %(levelname)s: %(message)s", "%Y-%m-%d %H:%M:%S"
-)
-handler = logging.StreamHandler()
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-log_level_choices = "NOTSET DEBUG INFO WARNING ERROR CRITICAL".split()
+# Create app
+app = make_app()
+# Expose Flask server for deployment with Gunicorn
+server = app.server
 
 
 if __name__ == "__main__":
+    # Set up logging
+    logger = logging.getLogger("dve")
+    formatter = logging.Formatter(
+        "%(asctime)s %(levelname)s: %(message)s", "%Y-%m-%d %H:%M:%S"
+    )
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    log_level_choices = "NOTSET DEBUG INFO WARNING ERROR CRITICAL".split()
+
     parser = ArgumentParser(
         description="Run the Design Value Explorer Dash app"
     )
@@ -35,8 +40,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     loglevel = args.loglevel or ("DEBUG" if args.debug else "INFO")
     logger.setLevel(getattr(logging, loglevel))
-
-    app = make_app()
 
     logger.debug("Running app on development server")
     app.run_server(
