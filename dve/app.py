@@ -35,7 +35,7 @@ import matplotlib.cm
 import geopandas as gpd
 from pkg_resources import resource_filename
 
-from .utils import sigfigs
+from .math_utils import sigfigs
 from .map_utils import (
     pointer_rlonlat,
     rlonlat_to_rindices,

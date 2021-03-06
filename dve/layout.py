@@ -4,7 +4,7 @@ import dash_core_components as dcc
 import dash_daq as daq
 import plotly.express as px
 import numpy as np
-from dve.utils import sigfigs
+from dve.math_utils import sigfigs
 
 
 scale_ctrl_options = [
