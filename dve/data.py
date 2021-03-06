@@ -30,7 +30,7 @@ def load_data(config):
             "model": # climpyrical data object read from "input_model_path"
             "reconstruction": # climpyrical data object read from "reconstruction_path"
             "station_dv": # value from config
-            "cmap": # value from config
+            "colour_map": # value from config
             "dv":  # 'data_vars' value from model data (possible problem)
         }
         for key, value in config["dvs"].items()
@@ -53,7 +53,7 @@ def load_data(config):
             "model": load_file(value["input_model_path"]),
             "reconstruction": load_file(value["reconstruction_path"]),
             "station_dv": value["station_dv"],
-            "cmap": value["cmap"],
+            "colour_map": value["colour_map"],
         }
         for key, value in config["dvs"].items()
     }
