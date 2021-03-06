@@ -4,7 +4,7 @@ import numpy as np
 
 def matplotlib_to_plotly(cmap, vmin, vmax, N):
     # h = 1.0 / (pl_entries - 1)
-    ticks = np.linspace(0, 1, N+1)
+    ticks = np.linspace(0, 1, N + 1)
     pl_colorscale = []
 
     for k in range(N):
@@ -54,19 +54,19 @@ def plotly_discrete_colorscale(bvals, colors):
     Taken from:
     https://chart-studio.plotly.com/~empet/15229/heatmap-with-a-discrete-colorscale/#/
     """
-    if len(bvals) != len(colors)+1:
+    if len(bvals) != len(colors) + 1:
         raise ValueError(
-            'len(boundary values) should be equal to  len(colors)+1'
+            "len(boundary values) should be equal to  len(colors)+1"
         )
-    bvals = sorted(bvals)     
-    normalized_vals = [(v-bvals[0])/(bvals[-1]-bvals[0]) for v in bvals]
-    
+    bvals = sorted(bvals)
+    normalized_vals = [(v - bvals[0]) / (bvals[-1] - bvals[0]) for v in bvals]
+
     discrete_colorscale = []
     for k in range(len(colors)):
         discrete_colorscale.extend(
             [
                 [normalized_vals[k], colors[k]],
-                [normalized_vals[k+1], colors[k]]
+                [normalized_vals[k + 1], colors[k]],
             ]
         )
 

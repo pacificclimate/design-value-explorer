@@ -8,14 +8,8 @@ from dve.utils import sigfigs
 
 
 scale_ctrl_options = [
-    {
-        "label": "Linear",
-        "value": "linear"
-    },
-    {
-        "label": "Logarithmic",
-        "value": "logarithmic"
-    },
+    {"label": "Linear", "value": "linear"},
+    {"label": "Logarithmic", "value": "logarithmic"},
 ]
 
 
@@ -46,9 +40,9 @@ def header(config):
                         clearable=False,
                     ),
                     width=4,
-                )
+                ),
             ]
-        )
+        ),
     ]
 
 
@@ -57,11 +51,10 @@ def overlay_options():
     Layout for Overlay Options section.
     This function returns a list of rows.
     """
-    
+
     return [
         # Section title
         dbc.Row(dbc.Col(html.H4("Overlay Options"))),
-
         # Control titles
         dbc.Row(
             [
@@ -70,7 +63,6 @@ def overlay_options():
                 dbc.Col(html.Label("Stations"), width=2),
             ]
         ),
-
         # Controls
         dbc.Row(
             [
@@ -78,8 +70,14 @@ def overlay_options():
                     dcc.Dropdown(
                         id="dataset-ctrl",
                         options=[
-                            {"label": "HSM Reconstruction", "value": "reconstruction"},
-                            {"label": "CanRCM4 Ensemble Mean", "value": "model"},
+                            {
+                                "label": "HSM Reconstruction",
+                                "value": "reconstruction",
+                            },
+                            {
+                                "label": "CanRCM4 Ensemble Mean",
+                                "value": "model",
+                            },
                         ],
                         value="reconstruction",
                         clearable=False,
@@ -88,17 +86,13 @@ def overlay_options():
                 ),
                 dbc.Col(
                     daq.BooleanSwitch(
-                        id="mask-ctrl",
-                        on=True,
-                        style={"width": "50px"}
+                        id="mask-ctrl", on=True, style={"width": "50px"}
                     ),
                     width=2,
                 ),
                 dbc.Col(
                     daq.BooleanSwitch(
-                        id="stations-ctrl",
-                        on=False,
-                        style={"width": "50px"}
+                        id="stations-ctrl", on=False, style={"width": "50px"}
                     ),
                     width=2,
                 ),
@@ -112,7 +106,7 @@ def colourbar_options(data, colormaps):
     Layout for Colourbar Options section.
     This function returns a list of rows.
     """
-    
+
     (first_dv,) = data[list(data.keys())[0]]["reconstruction"].data_vars
     first_rfield = data[list(data.keys())[0]]["reconstruction"][first_dv]
     dmin = np.nanmin(first_rfield)
@@ -127,7 +121,6 @@ def colourbar_options(data, colormaps):
             # TODO: Replace with class
             style={"margin-top": "2.5em"},
         ),
-        
         # Control titles
         dbc.Row(
             [
@@ -137,16 +130,13 @@ def colourbar_options(data, colormaps):
                 dbc.Col(html.Label(id="range-slider-output-container")),
             ]
         ),
-        
         # Controls
         dbc.Row(
             [
                 dbc.Col(
                     dcc.Dropdown(
                         id="colour-map-ctrl",
-                        options=[
-                            {"value": x, "label": x} for x in colormaps
-                        ],
+                        options=[{"value": x, "label": x} for x in colormaps],
                         value=None,
                     )
                 ),
@@ -182,18 +172,17 @@ def colourbar_options(data, colormaps):
                             id="range-slider",
                             min=dmin,
                             max=dmax,
-                            step=(dmax - dmin)
-                                 / num_range_slider_steps,
+                            step=(dmax - dmin) / num_range_slider_steps,
                             vertical=False,
                             value=[dmin, dmax],
                             marks={
                                 x: str(sigfigs(x))
-                                for x in (dmin*1.008, (dmin + dmax) / 2, dmax)
-                            }
+                                for x in (dmin * 1.008, (dmin + dmax) / 2, dmax)
+                            },
                         ),
                         # RangeSlider has unwanted horiz padding of 25px.
                         style={"margin": "2em -25px"},
-                    ),
+                    )
                 ),
             ]
         ),
@@ -207,33 +196,41 @@ def user_graph_interaction():
     """
     return [
         dbc.Row(dbc.Col(dcc.Markdown("#### Data from map pointer"))),
-        dbc.Row([
-            dbc.Col(
-                dcc.Markdown("*Click to hold values for download.*"),
-                style={"font-size": "0.8em"},
-            ),
-            dbc.Col(id="data-download-header"),
-        ]),
-        dbc.Row([
-            dbc.Col(
-                html.Div(
-                    id="hover-output",
-                    children=[
-                        html.Div(id="hover-info", style={"font-size": "0.8em"}),
-                        html.Pre(id="hover-data")
-                    ],
-                )
-            ),
-            dbc.Col(
-                html.Div(
-                    id="click-output",
-                    children=[
-                        html.Div(id="click-info", style={"font-size": "0.8em"}),
-                        html.Pre(id="click-data")
-                    ],
-                )
-            ),
-        ]),
+        dbc.Row(
+            [
+                dbc.Col(
+                    dcc.Markdown("*Click to hold values for download.*"),
+                    style={"font-size": "0.8em"},
+                ),
+                dbc.Col(id="data-download-header"),
+            ]
+        ),
+        dbc.Row(
+            [
+                dbc.Col(
+                    html.Div(
+                        id="hover-output",
+                        children=[
+                            html.Div(
+                                id="hover-info", style={"font-size": "0.8em"}
+                            ),
+                            html.Pre(id="hover-data"),
+                        ],
+                    )
+                ),
+                dbc.Col(
+                    html.Div(
+                        id="click-output",
+                        children=[
+                            html.Div(
+                                id="click-info", style={"font-size": "0.8em"}
+                            ),
+                            html.Pre(id="click-data"),
+                        ],
+                    )
+                ),
+            ]
+        ),
     ]
 
 
@@ -306,9 +303,7 @@ def main(config, data):
         children=[
             *header(config),
             dbc.Row(
-                dbc.Col(
-                    dbc.Tabs([map_tab(config, data), table_C2_tab()]),
-                ),
+                dbc.Col(dbc.Tabs([map_tab(config, data), table_C2_tab()])),
                 style={"margin-top": "1em"},
             ),
         ],
