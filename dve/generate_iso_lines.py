@@ -8,19 +8,8 @@ import plotly.graph_objects as go
 
 
 def gen_lines(ds, X, Y):
-
-    x1 = min(value for value in X if value is not None)
-    x2 = max(value for value in X if value is not None)
-    y1 = min(value for value in Y if value is not None)
-    y2 = max(value for value in Y if value is not None)
-
-    ixmin = find_nearest_index(ds.rlon.values, np.nanmin(x1))
-    ixmax = find_nearest_index(ds.rlon.values, np.nanmax(x2))
-    iymin = find_nearest_index(ds.rlat.values, np.nanmin(y1))
-    iymax = find_nearest_index(ds.rlat.values, np.nanmax(y2))
-
-    latlines = np.array([45.0, 60, 70])
-    lonlines = np.linspace(225, 305, 6)
+    latlines = np.linspace(45, 85, 9)
+    lonlines = np.linspace(225, 305, 12)
 
     plon, plat = flatten_coords(lonlines, latlines)
     prlon, prlat = transform_coords(plon, plat)
@@ -88,6 +77,8 @@ def gen_lines(ds, X, Y):
             visible=True,
             name="",
         ),
+
+        # TODO: Move out of here
         go.Scattergl(
             x=X,
             y=Y,
