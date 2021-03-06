@@ -22,7 +22,6 @@ def pointer_rlonlat(pointer_data):
     return tuple(pointer_data["points"][0][name] for name in ("x", "y"))
 
 
-
 def rlonlat_to_rindices(dataset, rlon, rlat):
     """
     Return the indices in the rotated pole coordinate system corresponding to

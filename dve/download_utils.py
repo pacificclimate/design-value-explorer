@@ -17,5 +17,3 @@ def download_filepath(lon, lat, directory="/downloads/by-location"):
     :return: string
     """
     return f"{directory}/{download_filename(lon, lat)}"
-
-
