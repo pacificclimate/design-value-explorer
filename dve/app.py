@@ -314,6 +314,8 @@ def get_app(config, data):
     # def display_click_data(click_data):
     #     return json.dumps(click_data, indent=2)
 
+    # TODO: This can be better done by setting the "href" and "download"
+    #   properties on a static download link established in layout.py.
     @app.callback(
         Output("data-download-header", "children"),
         [
@@ -443,6 +445,7 @@ def get_app(config, data):
         zmax = range_slider[1]
 
         if scale_ctrl == "logarithmic":
+            # TODO: Remove z_offset stuff. Defunct.
             z_offset = config["dvs"][design_value_id_ctrl].get("z_offset", 0)
             ticks = np.linspace(
                 np.log10(zmin + z_offset),
@@ -476,7 +479,19 @@ def get_app(config, data):
         iymin = find_nearest_index(ds.rlat.values, np.nanmin(y1))
         iymax = find_nearest_index(ds.rlat.values, np.nanmax(y2))
 
-        go_list = gen_lines(ds, X, Y)
+        go_list = []
+        go_list += gen_lines(ds)
+        go_list += [
+            go.Scattergl(
+                x=X,
+                y=Y,
+                mode="lines",
+                hoverinfo="skip",
+                visible=True,
+                name="",
+                line=dict(width=0.5, color="black"),
+            ),
+        ]
 
         # need to process stations
         df = coord_prep(df, station_dv)
@@ -486,7 +501,7 @@ def get_app(config, data):
             mask = native_mask[iymin:iymax, ixmin:ixmax]
             ds_arr[~mask] = np.nan
 
-        fig_list = [
+        go_list += [
             go.Heatmap(
                 z=ds_arr,
                 x=ds.rlon.values[ixmin:ixmax],
@@ -528,7 +543,6 @@ def get_app(config, data):
             ),
         ]
 
-        go_list += fig_list
         units = ds[dv].attrs["units"]
         fig = {
             "data": go_list,
