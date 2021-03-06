@@ -96,7 +96,6 @@ dvs:
         reconstruction_path: data/reconstructions/TJan2.5_reconstruction.nc
         table: data/tables/TJan2.5_TableC2.csv
         colour_map: "RdBu_r"
-        z_offset: 1000
         scale:
             disable_logarithmic: True
             default: linear
