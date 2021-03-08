@@ -7,7 +7,15 @@ import numpy as np
 import plotly.graph_objects as go
 
 
-def gen_lines(ds):
+def gen_lines(
+    ds,
+    lon_min = 225,
+    lon_max = 305,
+    num_lon_lines = 6,
+    lat_min = 45,
+    lat_max = 85,
+    num_lat_lines = 5,
+):
     """
     Returns a list of graphical objects that render latitude and longitude lines
     in the map graph.
@@ -21,19 +29,22 @@ def gen_lines(ds):
     :return:
     """
     # Lines of latitude and longitude to draw
-    latlines = np.linspace(45, 85, 9)
-    lonlines = np.linspace(225, 305, 12)
+    lat_lines = np.linspace(lat_min, lat_max, num_lat_lines)
+    lon_lines = np.linspace(lon_min, lon_max, num_lon_lines)
 
+    rlon_size = ds.rlon.values.size
+    rlat_size = ds.rlat.size
+    print(f"### rlon_size={rlon_size}, rlat_size={rlat_size}, ")
     # x and y coordinates for lines of latitude.
     # Why +/- 3?
     x_lat_line = np.linspace(
-        lonlines.min() - 3, lonlines.max() + 3, ds.rlon.values.size
+        lon_lines.min() - 3, lon_lines.max() + 3, rlon_size
     )
-    y_lat_line = [np.ones(ds.rlon.values.size) * latline for latline in latlines]
+    y_lat_line = [np.ones(rlon_size) * latline for latline in lat_lines]
 
     # x and y coordinates for lines of longitude. Why does this need to be done?
-    x_lon_line = [np.ones(ds.rlat.size) * lonline for lonline in lonlines]
-    y_lon_line = np.linspace(latlines.min(), lonlines.max(), ds.rlat.size)
+    x_lon_line = [np.ones(rlat_size) * lonline for lonline in lon_lines]
+    y_lon_line = np.linspace(lat_lines.min(), lon_lines.max(), rlat_size)
 
     # "Dotted line" rotated pole coordinates for lines of longitude
     rp_x_lon_line, rp_y_lon_line = [], []
@@ -58,7 +69,7 @@ def gen_lines(ds):
     rp_y_lat_line = np.array(rp_y_lat_line).flatten()
 
     # Text for labelling lines of lon, lat (at intersections)
-    plon, plat = flatten_coords(lonlines, latlines)
+    plon, plat = flatten_coords(lon_lines, lat_lines)
     prlon, prlat = transform_coords(plon, plat)
     lattext = [
         str(int(latval)) + "N" + ", " + str(int(360 - lonval)) + "W"
