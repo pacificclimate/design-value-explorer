@@ -1,6 +1,6 @@
 ui:
     defaults:
-        dv: TJan2.5
+        dv: RL50
 
 # Parameterize the pipeline
 # The pipeline will iterate through each parent tree
@@ -27,17 +27,17 @@ dvs:
         scale:
             default: logarithmic
 
-    RHann:
-        description: Annual mean of relative humidity
-        units: "%"
-        station_dv: "mean RH (%)"
-        station_path: data/station_inputs/rh_annual_mean_10yr_for_maps.csv
-        input_model_path: data/model_inputs/hurs_CanRCM4-LE_ens15_1951-2016_ensmean.nc
-        reconstruction_path: data/reconstructions/RHann_reconstruction.nc
-        table: data/tables/RHann_TableC2.csv
-        colour_map: "terrain_r"
-        scale:
-            default: linear
+#    RHann:
+#        description: Annual mean of relative humidity
+#        units: "%"
+#        station_dv: "mean RH (%)"
+#        station_path: data/station_inputs/rh_annual_mean_10yr_for_maps.csv
+#        input_model_path: data/model_inputs/hurs_CanRCM4-LE_ens15_1951-2016_ensmean.nc
+#        reconstruction_path: data/reconstructions/RHann_reconstruction.nc
+#        table: data/tables/RHann_TableC2.csv
+#        colour_map: "terrain_r"
+#        scale:
+#            default: linear
 
 #    HDD:
 #        description: "Heating degree days (threshold: 18 °C)"
@@ -87,18 +87,18 @@ dvs:
 #        scale:
 #            default: linear
 
-    TJan2.5:
-        description: 2.5th percentile of January temperature
-        units: °C
-        station_dv: "TJan2.5 (degC)"
-        station_path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
-        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan2.5p_ensmean.nc
-        reconstruction_path: data/reconstructions/TJan2.5_reconstruction.nc
-        table: data/tables/TJan2.5_TableC2.csv
-        colour_map: "RdBu_r"
-        scale:
-            disable_logarithmic: True
-            default: linear
+#    TJan2.5:
+#        description: 2.5th percentile of January temperature
+#        units: °C
+#        station_dv: "TJan2.5 (degC)"
+#        station_path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
+#        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan2.5p_ensmean.nc
+#        reconstruction_path: data/reconstructions/TJan2.5_reconstruction.nc
+#        table: data/tables/TJan2.5_TableC2.csv
+#        colour_map: "RdBu_r"
+#        scale:
+#            disable_logarithmic: True
+#            default: linear
 
 #    TJan1.0:
 #        description: 1st percentile of January temperature
@@ -177,17 +177,17 @@ dvs:
 #        scale:
 #            default: linear
 #
-    PAnn:
-        description: Annual total precipitation
-        units: mm
-        station_dv: "annual_pr (mm)"
-        station_path: data/station_inputs/pr_annual_mean_doy_MSC_25yr_for_maps.csv
-        input_model_path: data/model_inputs/pr_CanRCM4-LE_ens35_1951-2016_ann_sum_ensmean.nc
-        reconstruction_path: data/reconstructions/PAnn_reconstruction.nc
-        table: data/tables/PAnn_TableC2.csv
-        colour_map: "PuBuGn"
-        scale:
-            default: logarithmic
+#    PAnn:
+#        description: Annual total precipitation
+#        units: mm
+#        station_dv: "annual_pr (mm)"
+#        station_path: data/station_inputs/pr_annual_mean_doy_MSC_25yr_for_maps.csv
+#        input_model_path: data/model_inputs/pr_CanRCM4-LE_ens35_1951-2016_ann_sum_ensmean.nc
+#        reconstruction_path: data/reconstructions/PAnn_reconstruction.nc
+#        table: data/tables/PAnn_TableC2.csv
+#        colour_map: "PuBuGn"
+#        scale:
+#            default: logarithmic
 
 #    RAnn:
 #        description: Annual total rainfall
