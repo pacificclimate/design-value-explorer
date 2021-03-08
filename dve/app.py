@@ -429,6 +429,7 @@ def get_app(config, data):
             Input("dataset-ctrl", "value"),
             Input("scale-ctrl", "value"),
             Input("colour-map-ctrl", "value"),
+            Input("my-graph", "relayoutData"),
         ],
     )
     def update_ds(
@@ -440,7 +441,9 @@ def get_app(config, data):
         dataset_ctrl,
         scale_ctrl,
         colour_map_ctrl,
+        relayout_data,
     ):
+        print(f"relayoutData={relayout_data}")
         zmin = range_slider[0]
         zmax = range_slider[1]
 
@@ -480,7 +483,7 @@ def get_app(config, data):
         iymax = find_nearest_index(ds.rlat.values, np.nanmax(y2))
 
         go_list = []
-        go_list += gen_lines(ds)
+        go_list += gen_lines(ds, lon_min=360-80, lon_max=360-100)
         go_list += [
             go.Scattergl(
                 x=X,
