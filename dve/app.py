@@ -2,10 +2,18 @@ import json
 import yaml
 
 from climpyrical.data import read_data
-from climpyrical.gridding import flatten_coords, transform_coords, find_nearest_index
+from climpyrical.gridding import (
+    flatten_coords,
+    transform_coords,
+    find_nearest_index,
+)
 from climpyrical.mask import stratify_coords
 from climpyrical.cmd.find_matched_model_vals import add_model_values
-from dve.colorbar import get_cmap_divisions, matplotlib_to_plotly, plotly_discrete_colorscale
+from dve.colorbar import (
+    get_cmap_divisions,
+    matplotlib_to_plotly,
+    plotly_discrete_colorscale,
+)
 
 from dve.data import load_data
 import dve
@@ -35,7 +43,7 @@ from .map_utils import (
     rindices_to_lonlat,
     pointer_value,
 )
-from .download_utils import (download_filename, download_filepath)
+from .download_utils import download_filename, download_filepath
 
 import flask
 import os
@@ -71,9 +79,12 @@ def get_app(config, data):
     ).geometry
     X, Y = stratify_coords(canada)
 
-    native_mask = read_data(
-        resource_filename("dve", config["paths"]["native_mask"])
-    )["sftlf"] >= 1.0
+    native_mask = (
+        read_data(resource_filename("dve", config["paths"]["native_mask"]))[
+            "sftlf"
+        ]
+        >= 1.0
+    )
 
     # initialize app
     TIMEOUT = 60
@@ -81,67 +92,66 @@ def get_app(config, data):
     app = dash.Dash("app", server=server)
     external_stylesheets = [dbc.themes.BOOTSTRAP]
     app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-    app.title = 'Pacific Climate Impacts Consortium Design Value Explorer'
+    app.title = "Pacific Climate Impacts Consortium Design Value Explorer"
     app.config.suppress_callback_exceptions = True
 
     app.layout = dve.layout.main(config, data)
 
-
     @app.callback(
-        Output("table", "children"),
-        [Input("design-value-id-ctrl", "value")]
+        Output("table", "children"), [Input("design-value-id-ctrl", "value")]
     )
     def update_tablec2(value):
         df = data[value]["table"]
         df = df[["Location", "lon", "lat", data[value]["station_dv"]]].round(3)
 
         return dash_table.DataTable(
-                    columns=[{"name": i, "id": i} for i in df.columns],
-                    style_cell={
-                        'textAlign': 'center',
-                        'whiteSpace': 'normal',
-                        'height': 'auto',
-                        'padding': '5px'
-                    },
-                    style_as_list_view=True,
-                    style_header={
-                        'backgroundColor': 'white',
-                        'fontWeight': 'bold'
-                    },
-                    data=df.to_dict('records'),
-               )
-
+            columns=[{"name": i, "id": i} for i in df.columns],
+            style_cell={
+                "textAlign": "center",
+                "whiteSpace": "normal",
+                "height": "auto",
+                "padding": "5px",
+            },
+            style_as_list_view=True,
+            style_header={"backgroundColor": "white", "fontWeight": "bold"},
+            data=df.to_dict("records"),
+        )
 
     @app.callback(
-        Output("scale-ctrl", "value"),
-        [Input("design-value-id-ctrl", "value")]
+        Output("colour-map-ctrl", "value"),
+        [Input("design-value-id-ctrl", "value")],
+    )
+    def update_colour_map_ctrl_value(design_value_id):
+        return config["dvs"][design_value_id]["colour_map"]
+
+    @app.callback(
+        Output("scale-ctrl", "value"), [Input("design-value-id-ctrl", "value")]
     )
     def update_scale_ctrl_value(design_value_id):
         return config["dvs"][design_value_id]["scale"]["default"]
 
-
     @app.callback(
         Output("scale-ctrl", "options"),
-        [Input("design-value-id-ctrl", "value")]
+        [Input("design-value-id-ctrl", "value")],
     )
     def update_scale_ctrl_options(design_value_id):
         options = [
             {
                 **option,
                 "disabled": (
-                    option["value"] == "logarithmic" and
-                    config["dvs"][design_value_id]["scale"]
-                        .get("disable_logarithmic", False)
+                    option["value"] == "logarithmic"
+                    and config["dvs"][design_value_id]["scale"].get(
+                        "disable_logarithmic", False
+                    )
                 ),
             }
             for option in dve.layout.scale_ctrl_options
         ]
         return options
 
-
     @app.callback(
         Output("range-slider-output-container", "children"),
-        [Input("range-slider", "value")]
+        [Input("range-slider", "value")],
     )
     def update_range(value):
         return f"Range: {sigfigs(value[0])} to {sigfigs(value[1])}"
@@ -151,19 +161,22 @@ def get_app(config, data):
             Output(component_id="range-slider", component_property="min"),
             Output(component_id="range-slider", component_property="max"),
             Output(component_id="range-slider", component_property="step"),
-            Output(component_id="range-slider", component_property="value")
+            Output(component_id="range-slider", component_property="value"),
         ],
-        [Input(component_id="design-value-id-ctrl", component_property="value"),
-        Input(component_id="cbar-slider", component_property="value")],
+        [
+            Input(
+                component_id="design-value-id-ctrl", component_property="value"
+            ),
+            Input(component_id="cbar-slider", component_property="value"),
+        ],
     )
     def update_slider(value, N):
         field = data[value]["reconstruction"][data[value]["dv"]].values
         minimum = np.round(np.nanmin(field), 3)
         maximum = np.round(np.nanmax(field), 3)
-        step = (maximum-minimum)/(N+1)
+        step = (maximum - minimum) / (N + 1)
         default = [minimum, maximum]
         return minimum, maximum, step, default
-
 
     # TODO: Remove when no longer needed for development
     # @app.callback(
@@ -172,7 +185,6 @@ def get_app(config, data):
     # )
     # def display_hover_data(hover_data):
     #     return json.dumps(hover_data, indent=2)
-
 
     def value_table(*items):
         return dbc.Table(
@@ -193,7 +205,6 @@ def get_app(config, data):
             size="sm",
         )
 
-
     def dv_value(name, interpolation, rlon, rlat):
         var_name = data[name]["dv"]
         dataset = data[name][interpolation]
@@ -201,7 +212,6 @@ def get_app(config, data):
         # print(f"ix={ix}, iy={iy}, var_name={var_name},")
         # print(f"data[name] {data[name]}")
         return dataset[var_name].values[iy, ix]
-
 
     def dv_table(rlon, rlat, selected_dv=None, selected_interp=None):
         """
@@ -228,23 +238,32 @@ def get_app(config, data):
                 html.Tbody(
                     [
                         html.Tr(
-                            [html.Th(name, style={"width": "5em"})] +
-                            [
+                            [html.Th(name, style={"width": "5em"})]
+                            + [
                                 html.Td(
-                                    round(float(dv_value(name, interp, rlon, rlat)), 3),
-                                    style={"color": "red" if name == selected_dv and interp == selected_interp else "inherit"}
+                                    round(
+                                        float(
+                                            dv_value(name, interp, rlon, rlat)
+                                        ),
+                                        3,
+                                    ),
+                                    style={
+                                        "color": "red"
+                                        if name == selected_dv
+                                        and interp == selected_interp
+                                        else "inherit"
+                                    },
                                 )
                                 for interp in ("model", "reconstruction")
                             ]
                         )
                         for name in config["dvs"].keys()
-                    ],
-                )
+                    ]
+                ),
             ],
             bordered=True,
             size="sm",
         )
-
 
     @app.callback(
         Output("hover-info", "children"),
@@ -252,7 +271,7 @@ def get_app(config, data):
             Input("my-graph", "hoverData"),
             Input("design-value-id-ctrl", "value"),
             Input("dataset-ctrl", "value"),
-        ]
+        ],
     )
     def display_hover_info(
         hover_data, design_value_id_ctrl, interpolation_ctrl
@@ -283,10 +302,9 @@ def get_app(config, data):
                 rlon,
                 rlat,
                 selected_dv=design_value_id_ctrl,
-                selected_interp=interpolation_ctrl
+                selected_interp=interpolation_ctrl,
             ),
         ]
-
 
     # TODO: Remove when no longer needed for development
     # @app.callback(
@@ -296,14 +314,13 @@ def get_app(config, data):
     # def display_click_data(click_data):
     #     return json.dumps(click_data, indent=2)
 
-
     @app.callback(
         Output("data-download-header", "children"),
         [
             Input("my-graph", "clickData"),
             Input("design-value-id-ctrl", "value"),
             Input("dataset-ctrl", "value"),
-        ]
+        ],
     )
     def display_download_button(
         click_data, design_value_id_ctrl, interpolation_ctrl
@@ -325,14 +342,13 @@ def get_app(config, data):
         z, source = pointer_value(click_data)
 
         return [
-           html.A(
+            html.A(
                 "Download this data",
                 href=download_filepath(lon, lat),
                 download=download_filename(lon, lat),
-                className="btn btn-primary btn-sm mb-1"
-            ),
+                className="btn btn-primary btn-sm mb-1",
+            )
         ]
-
 
     @app.callback(
         Output("click-info", "children"),
@@ -340,7 +356,7 @@ def get_app(config, data):
             Input("my-graph", "clickData"),
             Input("design-value-id-ctrl", "value"),
             Input("dataset-ctrl", "value"),
-        ]
+        ],
     )
     def display_click_info(
         click_data, design_value_id_ctrl, interpolation_ctrl
@@ -393,10 +409,9 @@ def get_app(config, data):
                 rlon,
                 rlat,
                 selected_dv=design_value_id_ctrl,
-                selected_interp=interpolation_ctrl
+                selected_interp=interpolation_ctrl,
             ),
         ]
-
 
     # TODO: What is this?
     ds = data[list(data.keys())[0]]["reconstruction"]
@@ -432,21 +447,15 @@ def get_app(config, data):
             ticks = np.linspace(
                 np.log10(zmin + z_offset),
                 np.log10(zmax + z_offset),
-                cbar_slider + 1
+                cbar_slider + 1,
             )
-            ticks = np.around(10**(ticks) - z_offset, 2)
+            ticks = np.around(10 ** (ticks) - z_offset, 2)
         else:
             ticks = np.around(np.linspace(zmin, zmax, cbar_slider + 1), 3)
 
-        if colour_map_ctrl is None:
-            colour_map_ctrl = data[design_value_id_ctrl]["cmap"]
-
         cmap = matplotlib.cm.get_cmap(colour_map_ctrl, cbar_slider)
 
-        colours = [
-            matplotlib.colors.rgb2hex(cmap(i))
-            for i in range(cmap.N)
-        ]
+        colours = [matplotlib.colors.rgb2hex(cmap(i)) for i in range(cmap.N)]
 
         discrete_colorscale = plotly_discrete_colorscale(ticks, colours)
 
@@ -461,7 +470,6 @@ def get_app(config, data):
         x2 = max(value for value in X if value is not None)
         y1 = min(value for value in Y if value is not None)
         y2 = max(value for value in Y if value is not None)
-
 
         ixmin = find_nearest_index(ds.rlon.values, np.nanmin(x1))
         ixmax = find_nearest_index(ds.rlon.values, np.nanmax(x2))
@@ -479,49 +487,46 @@ def get_app(config, data):
             ds_arr[~mask] = np.nan
 
         fig_list = [
-                go.Heatmap(
-                    z=ds_arr,
-                    x=ds.rlon.values[ixmin:ixmax],
-                    y=ds.rlat.values[iymin:iymax],
-                    zmin=zmin,
-                    zmax=zmax,
-                    hoverongaps=False,
-                    colorscale = discrete_colorscale,
+            go.Heatmap(
+                z=ds_arr,
+                x=ds.rlon.values[ixmin:ixmax],
+                y=ds.rlat.values[iymin:iymax],
+                zmin=zmin,
+                zmax=zmax,
+                hoverongaps=False,
+                colorscale=discrete_colorscale,
+                colorbar={"tickvals": ticks},
+                # showscale=False,
+                visible=True,
+                hovertemplate=(
+                    f"<b>{design_value_id_ctrl} (Interp.): %{{z}} </b><br>"
+                ),
+                name="",
+            ),
+            go.Scattergl(
+                x=df.rlon,
+                y=df.rlat,
+                text=df[station_dv],
+                mode="markers",
+                marker=dict(
+                    size=10,
+                    symbol="circle",
+                    color=df[station_dv],
+                    cmin=zmin,
+                    cmax=zmax,
+                    line=dict(width=1, color="DarkSlateGrey"),
+                    showscale=False,
+                    colorscale=discrete_colorscale,
                     colorbar={"tickvals": ticks},
-                    # showscale=False,
-                    visible=True,
-                    hovertemplate=(
-                        f"<b>{design_value_id_ctrl} (Interp.): %{{z}} </b><br>"
-                    ),
-                    name=""
                 ),
-                go.Scattergl(
-                    x=df.rlon,
-                    y=df.rlat,
-                    text=df[station_dv],
-                    mode="markers",
-                    marker=dict(
-                        size=10,
-                        symbol="circle",
-                        color=df[station_dv],
-                        cmin=zmin,
-                        cmax=zmax,
-                        line=dict(
-                            width=1,
-                            color="DarkSlateGrey"
-                        ),
-                        showscale=False,
-                        colorscale = discrete_colorscale,
-                        colorbar={"tickvals": ticks},
-                    ),
-                    hovertemplate=(
-                        f"<b>{design_value_id_ctrl} (Station): "
-                        f"%{{text}}</b><br>"
-                    ),
-                    visible=stations_ctrl,
-                    name=""
+                hovertemplate=(
+                    f"<b>{design_value_id_ctrl} (Station): "
+                    f"%{{text}}</b><br>"
                 ),
-            ]
+                visible=stations_ctrl,
+                name="",
+            ),
+        ]
 
         go_list += fig_list
         units = ds[dv].attrs["units"]
@@ -533,25 +538,23 @@ def get_app(config, data):
                     f"[{config['dvs'][design_value_id_ctrl]['description']}] "
                     f"({units})</b>"
                 ),
-                "font": dict(size=13, color='grey'),
+                "font": dict(size=13, color="grey"),
                 "xaxis": dict(
                     zeroline=False,
                     range=[ds.rlon.values[ixmin], ds.rlon.values[ixmax]],
-                    showgrid=False, # thin lines in the background
-                    visible=False  # numbers below
+                    showgrid=False,  # thin lines in the background
+                    visible=False,  # numbers below
                 ),
                 "yaxis": dict(
                     zeroline=False,
                     range=[ds.rlat.values[iymin], ds.rlat.values[iymax]],
-                    showgrid=False, # thin lines in the background
-                    visible=False
+                    showgrid=False,  # thin lines in the background
+                    visible=False,
                 ),
-                'xaxis_showgrid': False,
-                'yaxis_showgrid': False,
+                "xaxis_showgrid": False,
+                "yaxis_showgrid": False,
                 "hoverlabel": dict(
-                    bgcolor="white",
-                    font_size=16,
-                    font_family="Rockwell"
+                    bgcolor="white", font_size=16, font_family="Rockwell"
                 ),
                 "hoverdistance": 5,
                 "hovermode": "closest",
@@ -560,17 +563,16 @@ def get_app(config, data):
                 "showlegend": False,
                 "legend_orientation": "v",
                 "scrollZoom": True,
-                "uirevision": "None"
-            }
+                "uirevision": "None",
+            },
         }
 
         return fig
 
-
     @app.server.route("/downloads/by-location/<filename>")
     def serve_static(filename):
         return flask.send_from_directory(
-            os.path.join('/downloads/by-location'), filename
+            os.path.join("/downloads/by-location"), filename
         )
 
     return app

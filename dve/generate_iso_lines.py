@@ -1,6 +1,11 @@
-from climpyrical.gridding import find_nearest_index, flatten_coords, transform_coords
+from climpyrical.gridding import (
+    find_nearest_index,
+    flatten_coords,
+    transform_coords,
+)
 import numpy as np
 import plotly.graph_objects as go
+
 
 def gen_lines(ds, X, Y):
 
@@ -9,23 +14,23 @@ def gen_lines(ds, X, Y):
     y1 = min(value for value in Y if value is not None)
     y2 = max(value for value in Y if value is not None)
 
-
     ixmin = find_nearest_index(ds.rlon.values, np.nanmin(x1))
     ixmax = find_nearest_index(ds.rlon.values, np.nanmax(x2))
     iymin = find_nearest_index(ds.rlat.values, np.nanmin(y1))
     iymax = find_nearest_index(ds.rlat.values, np.nanmax(y2))
 
-
-    latlines = np.array([45., 60, 70])
+    latlines = np.array([45.0, 60, 70])
     lonlines = np.linspace(225, 305, 6)
 
     plon, plat = flatten_coords(lonlines, latlines)
     prlon, prlat = transform_coords(plon, plat)
 
-    latliney = [np.ones(ds.rlon.values.size)*latline for latline in latlines]
-    latlinex = np.linspace(lonlines.min()-3, lonlines.max()+3, ds.rlon.values.size)
+    latliney = [np.ones(ds.rlon.values.size) * latline for latline in latlines]
+    latlinex = np.linspace(
+        lonlines.min() - 3, lonlines.max() + 3, ds.rlon.values.size
+    )
 
-    lonlinex = [np.ones(ds.rlat.size)*lonline for lonline in lonlines]
+    lonlinex = [np.ones(ds.rlat.size) * lonline for lonline in lonlines]
     lonliney = np.linspace(latlines.min(), lonlines.max(), ds.rlat.size)
 
     lxarr, lyarr = [], []
@@ -37,7 +42,7 @@ def gen_lines(ds, X, Y):
         ly = np.append(ly[::10], None)
         lxarr.append(lx)
         lyarr.append(ly)
-        
+
     for latline in latliney:
         tx, ty = transform_coords(latlinex, latline)
         tx = np.append(tx[::10], None)
@@ -50,46 +55,48 @@ def gen_lines(ds, X, Y):
     txarr = np.array(txarr).flatten()
     tyarr = np.array(tyarr).flatten()
 
-    lattext = [str(int(latval))+"N"+", "+str(int(360-lonval))+'W' for latval, lonval in zip(plat, plon)] 
+    lattext = [
+        str(int(latval)) + "N" + ", " + str(int(360 - lonval)) + "W"
+        for latval, lonval in zip(plat, plon)
+    ]
 
     go_list = [
-                go.Scattergl(
-                    x=lxarr,
-                    y=lyarr,
-                    mode="lines",
-                    hoverinfo="skip",
-                    visible=True,
-                    name="",
-                    line=dict(width=1, color="grey", dash='dash'),
-                ),
-                go.Scattergl(
-                    x=txarr,
-                    y=tyarr,
-                    mode="lines+text",
-                    hoverinfo="skip",
-                    visible=True,
-                    name="",
-                    line=dict(width=1, color="grey", dash='dash'),
-                ),
-                go.Scattergl(
-                    x=prlon,
-                    y=prlat,
-                    mode="text",
-                    text=lattext,
-                    hoverinfo="skip",
-                    visible=True,
-                    name=""
-
-                ),
-                go.Scattergl(
-                    x=X,
-                    y=Y,
-                    mode="lines",
-                    hoverinfo="skip",
-                    visible=True,
-                    name="",
-                    line=dict(width=0.5, color="black"),
-                )
+        go.Scattergl(
+            x=lxarr,
+            y=lyarr,
+            mode="lines",
+            hoverinfo="skip",
+            visible=True,
+            name="",
+            line=dict(width=1, color="grey", dash="dash"),
+        ),
+        go.Scattergl(
+            x=txarr,
+            y=tyarr,
+            mode="lines+text",
+            hoverinfo="skip",
+            visible=True,
+            name="",
+            line=dict(width=1, color="grey", dash="dash"),
+        ),
+        go.Scattergl(
+            x=prlon,
+            y=prlat,
+            mode="text",
+            text=lattext,
+            hoverinfo="skip",
+            visible=True,
+            name="",
+        ),
+        go.Scattergl(
+            x=X,
+            y=Y,
+            mode="lines",
+            hoverinfo="skip",
+            visible=True,
+            name="",
+            line=dict(width=0.5, color="black"),
+        ),
     ]
 
     return go_list

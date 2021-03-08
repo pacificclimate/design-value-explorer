@@ -23,7 +23,7 @@ dvs:
         input_model_path: data/model_inputs/snw_rain_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
         reconstruction_path: data/reconstructions/RL50_reconstruction.nc
         table: data/tables/RL50_TableC2.csv
-        cmap: "terrain_r"
+        colour_map: "terrain_r"
         scale:
             default: logarithmic
 
@@ -35,57 +35,57 @@ dvs:
         input_model_path: data/model_inputs/hurs_CanRCM4-LE_ens15_1951-2016_ensmean.nc
         reconstruction_path: data/reconstructions/RHann_reconstruction.nc
         table: data/tables/RHann_TableC2.csv
-        cmap: "terrain_r"
+        colour_map: "terrain_r"
         scale:
             default: linear
 
-        HDD:
-            description: "Heating degree days (threshold: 18 °C)"
-            units: °C-day
-            station_dv: "HDD (degC-day)"
-            station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
-            input_model_path: data/model_inputs/hdd_CanRCM4-LE_ens35_1951-2016_ann_ensmean.nc
-            reconstruction_path: data/reconstructions/HDD_reconstruction.nc
-            table: data/tables/HDD_TableC2.csv
-            cmap: "RdBu"
-            scale:
-                default: linear
+    HDD:
+        description: "Heating degree days (threshold: 18 °C)"
+        units: °C-day
+        station_dv: "HDD (degC-day)"
+        station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
+        input_model_path: data/model_inputs/hdd_CanRCM4-LE_ens35_1951-2016_ann_ensmean.nc
+        reconstruction_path: data/reconstructions/HDD_reconstruction.nc
+        table: data/tables/HDD_TableC2.csv
+        colour_map: "RdBu"
+        scale:
+            default: linear
 
-        SL50:
-            description: 50-year return level of annual maximum snow load
-            units: kPa
-            station_dv: "SL50 (kPa)"
-            station_path: data/station_inputs/sl50_rl50_for_maps.csv
-            input_model_path: data/model_inputs/snw_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
-            reconstruction_path: data/reconstructions/SL50_reconstruction.nc
-            table: data/tables/SL50_TableC2.csv
-            cmap: "terrain_r"
-            scale:
-                default: linear
+    SL50:
+        description: 50-year return level of annual maximum snow load
+        units: kPa
+        station_dv: "SL50 (kPa)"
+        station_path: data/station_inputs/sl50_rl50_for_maps.csv
+        input_model_path: data/model_inputs/snw_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
+        reconstruction_path: data/reconstructions/SL50_reconstruction.nc
+        table: data/tables/SL50_TableC2.csv
+        colour_map: "terrain_r"
+        scale:
+            default: linear
 
-        WP10:
-            description: 10-year return level of maximum annual wind pressure
-            units: kPa
-            station_dv: "WP10 (kPa)"
-            station_path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
-            input_model_path: data/model_inputs/wpress_CanRCM4-LE_ens35_1951-2016_max_rl10_kpa_ensmean.nc
-            reconstruction_path: data/reconstructions/WP10_reconstruction.nc
-            table: data/tables/WP10_TableC2.csv
-            cmap: "terrain_r"
-            scale:
-                default: linear
+    WP10:
+        description: 10-year return level of maximum annual wind pressure
+        units: kPa
+        station_dv: "WP10 (kPa)"
+        station_path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
+        input_model_path: data/model_inputs/wpress_CanRCM4-LE_ens35_1951-2016_max_rl10_kpa_ensmean.nc
+        reconstruction_path: data/reconstructions/WP10_reconstruction.nc
+        table: data/tables/WP10_TableC2.csv
+        colour_map: "terrain_r"
+        scale:
+            default: linear
 
-        WP50:
-            description: 50-year return level of wind pressure
-            units: kPa
-            station_dv: "WP50 (kPa)"
-            station_path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
-            input_model_path: data/model_inputs/wpress_CanRCM4-LE_ens35_1951-2016_max_rl50_kpa_ensmean.nc
-            reconstruction_path: data/reconstructions/WP50_reconstruction.nc
-            table: data/tables/WP50_TableC2.csv
-            cmap: "terrain_r"
-            scale:
-                default: linear
+    WP50:
+        description: 50-year return level of wind pressure
+        units: kPa
+        station_dv: "WP50 (kPa)"
+        station_path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
+        input_model_path: data/model_inputs/wpress_CanRCM4-LE_ens35_1951-2016_max_rl50_kpa_ensmean.nc
+        reconstruction_path: data/reconstructions/WP50_reconstruction.nc
+        table: data/tables/WP50_TableC2.csv
+        colour_map: "terrain_r"
+        scale:
+            default: linear
 
     TJan2.5:
         description: 2.5th percentile of January temperature
@@ -95,7 +95,7 @@ dvs:
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan2.5p_ensmean.nc
         reconstruction_path: data/reconstructions/TJan2.5_reconstruction.nc
         table: data/tables/TJan2.5_TableC2.csv
-        cmap: "RdBu_r"
+        colour_map: "RdBu_r"
         z_offset: 1000
         scale:
             disable_logarithmic: True
@@ -109,7 +109,7 @@ dvs:
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan1.0p_ensmean.nc
         reconstruction_path: data/reconstructions/TJan1.0_reconstruction.nc
         table: data/tables/TJan1.0_TableC2.csv
-        cmap: "RdBu_r"
+        colour_map: "RdBu_r"
         scale:
             disable_logarithmic: True
             default: linear
@@ -122,7 +122,7 @@ dvs:
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_min_ensmean.nc
         reconstruction_path: data/reconstructions/Tmin_reconstruction.nc
         table: data/tables/Tmin_TableC2.csv
-        cmap: "RdBu_r"
+        colour_map: "RdBu_r"
         scale:
             disable_logarithmic: True
             default: linear
@@ -135,7 +135,7 @@ dvs:
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_max_ensmean.nc
         reconstruction_path: data/reconstructions/Tmax_reconstruction.nc
         table: data/tables/Tmax_TableC2.csv
-        cmap: "RdBu_r"
+        colour_map: "RdBu_r"
         scale:
             disable_logarithmic: True
             default: linear
@@ -148,7 +148,7 @@ dvs:
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
         reconstruction_path: data/reconstructions/TJul97.5_reconstruction.nc
         table: data/tables/TJul97.5_TableC2.csv
-        cmap: "RdBu_r"
+        colour_map: "RdBu_r"
         scale:
             disable_logarithmic: True
             default: linear
@@ -161,7 +161,7 @@ dvs:
         input_model_path: data/model_inputs/twb_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
         reconstruction_path: data/reconstructions/TwJul97.5_reconstruction.nc
         table: data/tables/TwJul97.5_TableC2.csv
-        cmap: "RdBu_r"
+        colour_map: "RdBu_r"
         scale:
             disable_logarithmic: True
             default: linear
@@ -174,7 +174,7 @@ dvs:
         input_model_path: data/model_inputs/drwp_CanRCM4-LE_ens15_1951-2016_rl5_ensmean.nc
         reconstruction_path: data/reconstructions/DRWP5_reconstruction.nc
         table: data/tables/DRWP5_TableC2.csv
-        cmap: "terrain_r"
+        colour_map: "terrain_r"
         scale:
             default: linear
 
@@ -186,9 +186,9 @@ dvs:
         input_model_path: data/model_inputs/pr_CanRCM4-LE_ens35_1951-2016_ann_sum_ensmean.nc
         reconstruction_path: data/reconstructions/PAnn_reconstruction.nc
         table: data/tables/PAnn_TableC2.csv
-        cmap: "terrain_r"
+        colour_map: "PuBuGn"
         scale:
-            default: linear
+            default: logarithmic
 
     RAnn:
         description: Annual total rainfall
@@ -198,7 +198,7 @@ dvs:
         input_model_path: data/model_inputs/rain_CanRCM4-LE_ens35_1951-2016_ann_sum_ensmean.nc
         reconstruction_path: data/reconstructions/RAnn_reconstruction.nc
         table: data/tables/RAnn_TableC2.csv
-        cmap: "terrain_r"
+        colour_map: "PuBuGn"
         scale:
             default: logarithmic
 
@@ -210,7 +210,7 @@ dvs:
         input_model_path: data/model_inputs/rain_CanRCM4-LE_ens35_1951-2016_max1day_rl50_gum_lm_ensmean.nc
         reconstruction_path: data/reconstructions/R1d50_reconstruction.nc
         table: data/tables/R1d50_TableC2.csv
-        cmap: "terrain_r"
+        colour_map: "PuBuGn"
         scale:
             default: logarithmic
 
@@ -222,7 +222,7 @@ dvs:
         input_model_path: data/model_inputs/moisture_index_CanRCM4-LE_ens15_1951-2016_ensmean.nc
         reconstruction_path: data/reconstructions/MI_reconstruction.nc
         table: data/tables/MI_TableC2.csv
-        cmap: "terrain_r"
+        colour_map: "terrain_r"
         scale:
             disable_logarithmic: False  # ??
             default: logarithmic
@@ -235,7 +235,7 @@ dvs:
         input_model_path: data/model_inputs/rain_CanRCM4-LE_ens15_1951-2016_max1hr_rl10_gum_lm_ensmean.nc
         reconstruction_path: data/reconstructions/R15m10_reconstruction.nc
         table: data/tables/R15m10_TableC2.csv
-        cmap: "terrain_r"
+        colour_map: "PuBuGn"
         scale:
             default: logarithmic
 

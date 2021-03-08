@@ -195,7 +195,7 @@ At this prompt you can enter bash commands, including the following:
 From the bash prompt:
 
 ```
-python run_app.py --debug
+python dve_app.py --debug
 ```
 
 The `--debug` option does two things: Runs the server with `debug=True`, and
