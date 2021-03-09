@@ -504,6 +504,10 @@ def get_app(config, data):
         go_list += gen_lines(
             ds,
             viewport=viewport,
+            num_lon_intervals=config["map"]["grid"]["lon"]["num_intervals"],
+            lon_round_to=config["map"]["grid"]["lon"]["round_to"],
+            num_lat_intervals=config["map"]["grid"]["lat"]["num_intervals"],
+            lat_round_to=config["map"]["grid"]["lat"]["round_to"],
         )
         go_list += [
             go.Scattergl(

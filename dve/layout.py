@@ -242,10 +242,10 @@ def map_tab(config, data):
     :param data:
     :return: dbc.Tab
     """
-    colormaps = config["colormaps"]
+    colour_maps = config["map"]["colour_maps"]
     # Add reverse options, too
-    cmap_r = tuple(f"{color}_r" for color in colormaps)
-    colormaps += cmap_r
+    cmap_r = tuple(f"{color}_r" for color in colour_maps)
+    colour_maps += cmap_r
 
     return dbc.Tab(
         label="Map",
@@ -263,7 +263,7 @@ def map_tab(config, data):
                     dbc.Col(
                         [
                             *overlay_options(),
-                            *colourbar_options(data, colormaps),
+                            *colourbar_options(data, colour_maps),
                             *user_graph_interaction(),
                         ],
                         align="center",
