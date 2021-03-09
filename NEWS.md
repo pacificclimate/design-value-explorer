@@ -5,8 +5,8 @@
 **2021-Mar-09**
 
 First production-ready release. 
-Contains some but not all beta release features; those changes are marked with
-an asterisk.
+Contains some but not all beta release features; beta feature changes are 
+marked with an asterisk.
 
 - [Increase no. of lines of lat, long upon zoom](https://github.com/pacificclimate/dash-dv-explorer/pull/65) *
 - [Apply Python Black](https://github.com/pacificclimate/dash-dv-explorer/pull/62)
