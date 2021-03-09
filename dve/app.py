@@ -466,14 +466,12 @@ def get_app(config, data):
         zmax = range_slider[1]
 
         if scale_ctrl == "logarithmic":
-            # TODO: Remove z_offset stuff. Defunct.
-            z_offset = config["dvs"][design_value_id_ctrl].get("z_offset", 0)
             ticks = np.linspace(
-                np.log10(zmin + z_offset),
-                np.log10(zmax + z_offset),
+                np.log10(zmin),
+                np.log10(zmax),
                 cbar_slider + 1,
             )
-            ticks = np.around(10 ** (ticks) - z_offset, 2)
+            ticks = np.around(10 ** (ticks), 2)
         else:
             ticks = np.around(np.linspace(zmin, zmax, cbar_slider + 1), 3)
 
