@@ -6,7 +6,11 @@ def compact(items):
 
 
 def nearest(values, value):
-    """Return the nearest element of `values` to `value`."""
+    """
+    Return the nearest element of `values` to `value`.
+    This could be implemented *much* more efficiently, but since `values`
+    typically contains fewer than 10 items, it is not worth the trouble.
+    """
     diffs = tuple(abs(v - value) for v in values)
     min_diff = min(diffs)
     min_index = diffs.index(min_diff)
@@ -22,14 +26,21 @@ def round_to_multiple(value, multiple, direction="nearest"):
     return f(value/multiple) * multiple
 
 
-def rounded(low, high, num_intervals, round_to):
-    print(f"rounded({low}, {high}, {num_intervals}, {round_to})")
+def nice(low, high, num_intervals, round_to):
+    """
+    Return "nice" low, high, and num_intervals from non-nice values of
+    same, and preferred increment values.
+
+    :param low:
+    :param high:
+    :param num_intervals:
+    :param round_to:
+    :return:
+    """
     delta = nearest(round_to, (high - low) / num_intervals)
-    print(f"delta={delta}")
     low = round_to_multiple(low, delta, direction="down")
     high = round_to_multiple(high, delta, direction="up")
     num_intervals = round((high - low) / delta)
-    print(f"rounded -> ({low}, {high}, {num_intervals})")
     return low, high, num_intervals
 
 

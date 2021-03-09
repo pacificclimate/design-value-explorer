@@ -20,7 +20,7 @@ import dve
 import dve.data
 import dve.layout
 from dve.processing import coord_prep
-from dve.generate_iso_lines import gen_lines
+from dve.generate_iso_lines import lonlat_overlay
 
 import dash
 import dash_table
@@ -445,9 +445,6 @@ def get_app(config, data):
         colour_map_ctrl,
         relayout_data,
     ):
-        print(f"relayoutData={relayout_data}")
-        # relayoutData={'xaxis.range[0]': -5.424675983266743, 'xaxis.range[1]': 19.601897023194965, 'yaxis.range[0]': -4.480259182065892, 'yaxis.range[1]': 16.121494712722193}
-
         # Save viewport bounds when it changes (zoom, pan events)
         nonlocal viewport
         if relayout_data is not None and "xaxis.range[0]" in relayout_data:
@@ -457,7 +454,6 @@ def get_app(config, data):
                 "y_min": relayout_data["yaxis.range[0]"],
                 "y_max": relayout_data["yaxis.range[1]"],
             }
-        print(f"viewport={viewport}")
 
         zmin = range_slider[0]
         zmax = range_slider[1]
@@ -500,8 +496,9 @@ def get_app(config, data):
         iymax = find_nearest_index(ds.rlat.values, np.nanmax(y2))
 
         go_list = []
-        # TODO: Get gen_lines params from config
-        go_list += gen_lines(
+
+        # Lon-lat overlay
+        go_list += lonlat_overlay(
             ds,
             viewport=viewport,
             num_lon_intervals=config["map"]["grid"]["lon"]["num_intervals"],
@@ -509,6 +506,8 @@ def get_app(config, data):
             num_lat_intervals=config["map"]["grid"]["lat"]["num_intervals"],
             lat_round_to=config["map"]["grid"]["lat"]["round_to"],
         )
+
+        # Canada map
         go_list += [
             go.Scattergl(
                 x=X,
@@ -530,6 +529,7 @@ def get_app(config, data):
             ds_arr[~mask] = np.nan
 
         go_list += [
+            # Interploation raster
             go.Heatmap(
                 z=ds_arr,
                 x=ds.rlon.values[ixmin:ixmax],
@@ -546,6 +546,8 @@ def get_app(config, data):
                 ),
                 name="",
             ),
+
+            # Station plot
             go.Scattergl(
                 x=df.rlon,
                 y=df.rlat,

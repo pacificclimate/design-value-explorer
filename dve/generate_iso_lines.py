@@ -5,10 +5,10 @@ from climpyrical.gridding import (
 )
 import numpy as np
 import plotly.graph_objects as go
-from dve.math_utils import nearest, round_to_multiple, rounded
+from dve.math_utils import nearest, round_to_multiple, nice
 
 
-def gen_lines(
+def lonlat_overlay(
     ds,
     viewport=None,
     num_lon_intervals=6,
@@ -26,7 +26,12 @@ def gen_lines(
     This is almost certainly a horrible way to do this, but it suffices for now.
 
     :param ds:
-    :return:
+    :param viewport: (dict) Viewport corners/bounds in rotated pole coordinates.
+    :param num_lon_intervals: (int) Number of intervals of longitude in grid.
+    :param num_lat_intervals: (int) Number of intervals of latitude in grid.
+    :param lon_round_to: (list) Values of longitude increment to use.
+    :param lat_round_to: (list) Values of latitude increment to use.
+    :return: (list) Graphical objects representing lon-lat grid.
     """
     if viewport is None:
         # Default (max zoom; all Canada) lon and lat bounds
@@ -50,42 +55,30 @@ def gen_lines(
             },
             target_crs={"init": "epsg:4326"},
         )
-
-        print(f"vp_x_range={vp_x_range}, vp_y_range={vp_y_range}")
         lon_min, lon_max = 360 + vp_x_range
         lat_min, lat_max = vp_y_range
 
-    # Compute "nice" lines of lon and lat in standard coordinates
-    print(f"rounding lon")
-    lon_min, lon_max, num_lon_intervals = rounded(
+    # Compute "nice" lines of lon and lat in standard coordinates.
+    # "Nice" means an increment between lines of one of the preferred values,
+    # and lines at multiples of the increment.
+    lon_min, lon_max, num_lon_intervals = nice(
         lon_min, lon_max, num_lon_intervals, lon_round_to
     )
-    num_lon_lines = num_lon_intervals + 1
-    print(f"lon: {lon_min}, {lon_max}, {num_lon_intervals}")
-
-    print(f"rounding lat")
-    lat_min, lat_max, num_lat_intervals = rounded(
+    lon_lines = np.linspace(lon_min, lon_max, num_lon_intervals + 1)
+    lat_min, lat_max, num_lat_intervals = nice(
         lat_min, lat_max, num_lat_intervals, lat_round_to
     )
-    num_lat_lines = num_lat_intervals + 1
-    print(f"lat: {lat_min}, {lat_max}, {num_lat_intervals}")
-
-    # Lines of latitude and longitude to draw
-    lat_lines = np.linspace(lat_min, lat_max, num_lat_lines)
-    lon_lines = np.linspace(lon_min, lon_max, num_lon_lines)
+    lat_lines = np.linspace(lat_min, lat_max, num_lat_intervals + 1)
 
     rlon_size = ds.rlon.values.size
     rlat_size = ds.rlat.size
-    print(f"### rlon_size={rlon_size}, rlat_size={rlat_size}, ")
-    # x and y coordinates for lines of latitude.
-    # Why +/- 3?
+
+    # This is where the craziness begins.
+    # Compute x and y coordinates for lines of latitude.
     x_lat_line = np.linspace(lon_lines.min(), lon_lines.max(), rlon_size)
-    # x_lat_line = np.linspace(
-    #     lon_lines.min() - 3, lon_lines.max() + 3, rlon_size
-    # )
     y_lat_line = [np.ones(rlon_size) * latline for latline in lat_lines]
 
-    # x and y coordinates for lines of longitude. Why does this need to be done?
+    # Compute x and y coordinates for lines of longitude.
     x_lon_line = [np.ones(rlat_size) * lonline for lonline in lon_lines]
     y_lon_line = np.linspace(lat_lines.min(), lon_lines.max(), rlat_size)
 
