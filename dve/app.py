@@ -77,7 +77,7 @@ def get_app(config, data):
     canada = gpd.read_file(
         resource_filename("dve", config["paths"]["canada_vector"])
     ).geometry
-    X, Y = stratify_coords(canada)
+    canada_x, canada_y = stratify_coords(canada)
 
     native_mask = (
         read_data(resource_filename("dve", config["paths"]["native_mask"]))[
@@ -418,6 +418,13 @@ def get_app(config, data):
     # TODO: What is this for? Remove?
     ds = data[list(data.keys())[0]]["reconstruction"]
 
+    # Bounds of Canada map
+    cx_min = min(value for value in canada_x if value is not None)
+    cx_max = max(value for value in canada_x if value is not None)
+    cy_min = min(value for value in canada_y if value is not None)
+    cy_max = max(value for value in canada_y if value is not None)
+
+    # Map viewport
     viewport = None
 
     @app.callback(
@@ -445,7 +452,7 @@ def get_app(config, data):
         colour_map_ctrl,
         relayout_data,
     ):
-        # Save viewport bounds when it changes (zoom, pan events)
+        # Save map viewport bounds when it changes (zoom, pan events)
         nonlocal viewport
         if relayout_data is not None and "xaxis.range[0]" in relayout_data:
             viewport = {
@@ -483,17 +490,11 @@ def get_app(config, data):
         ds = data[design_value_id_ctrl][r_or_m]
         df = data[design_value_id_ctrl]["stations"]
 
-        # TODO: This is recalculated for every update, but X and Y don't change
-        #   once set. Factor out.
-        x1 = min(value for value in X if value is not None)
-        x2 = max(value for value in X if value is not None)
-        y1 = min(value for value in Y if value is not None)
-        y2 = max(value for value in Y if value is not None)
-
-        ixmin = find_nearest_index(ds.rlon.values, np.nanmin(x1))
-        ixmax = find_nearest_index(ds.rlon.values, np.nanmax(x2))
-        iymin = find_nearest_index(ds.rlat.values, np.nanmin(y1))
-        iymax = find_nearest_index(ds.rlat.values, np.nanmax(y2))
+        # Index values for clipping data to Canada bounds
+        icxmin = find_nearest_index(ds.rlon.values, cx_min)
+        icxmax = find_nearest_index(ds.rlon.values, cx_max)
+        icymin = find_nearest_index(ds.rlat.values, cy_min)
+        icymax = find_nearest_index(ds.rlat.values, cy_max)
 
         go_list = []
 
@@ -513,8 +514,8 @@ def get_app(config, data):
         # Canada map
         go_list += [
             go.Scattergl(
-                x=X,
-                y=Y,
+                x=canada_x,
+                y=canada_y,
                 mode="lines",
                 hoverinfo="skip",
                 visible=True,
@@ -525,18 +526,18 @@ def get_app(config, data):
 
         # need to process stations
         df = coord_prep(df, station_dv)
-        ds_arr = ds[dv].values[iymin:iymax, ixmin:ixmax].copy()
+        ds_arr = ds[dv].values[icymin:icymax, icxmin:icxmax].copy()
 
         if r_or_m == "model" and mask_ctrl:
-            mask = native_mask[iymin:iymax, ixmin:ixmax]
+            mask = native_mask[icymin:icymax, icxmin:icxmax]
             ds_arr[~mask] = np.nan
 
         go_list += [
             # Interploation raster
             go.Heatmap(
                 z=ds_arr,
-                x=ds.rlon.values[ixmin:ixmax],
-                y=ds.rlat.values[iymin:iymax],
+                x=ds.rlon.values[icxmin:icxmax],
+                y=ds.rlat.values[icymin:icymax],
                 zmin=zmin,
                 zmax=zmax,
                 hoverongaps=False,
@@ -588,13 +589,13 @@ def get_app(config, data):
                 "font": dict(size=13, color="grey"),
                 "xaxis": dict(
                     zeroline=False,
-                    range=[ds.rlon.values[ixmin], ds.rlon.values[ixmax]],
+                    range=[ds.rlon.values[icxmin], ds.rlon.values[icxmax]],
                     showgrid=False,  # thin lines in the background
                     visible=False,  # numbers below
                 ),
                 "yaxis": dict(
                     zeroline=False,
-                    range=[ds.rlat.values[iymin], ds.rlat.values[iymax]],
+                    range=[ds.rlat.values[icymin], ds.rlat.values[icymax]],
                     showgrid=False,  # thin lines in the background
                     visible=False,
                 ),
