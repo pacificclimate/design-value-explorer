@@ -20,7 +20,7 @@ import dve
 import dve.data
 import dve.layout
 from dve.processing import coord_prep
-from dve.generate_iso_lines import gen_lines
+from dve.generate_iso_lines import lonlat_overlay
 
 import dash
 import dash_table
@@ -35,7 +35,7 @@ import matplotlib.cm
 import geopandas as gpd
 from pkg_resources import resource_filename
 
-from .utils import sigfigs
+from .math_utils import sigfigs
 from .map_utils import (
     pointer_rlonlat,
     rlonlat_to_rindices,
@@ -77,7 +77,7 @@ def get_app(config, data):
     canada = gpd.read_file(
         resource_filename("dve", config["paths"]["canada_vector"])
     ).geometry
-    X, Y = stratify_coords(canada)
+    canada_x, canada_y = stratify_coords(canada)
 
     native_mask = (
         read_data(resource_filename("dve", config["paths"]["native_mask"]))[
@@ -314,6 +314,8 @@ def get_app(config, data):
     # def display_click_data(click_data):
     #     return json.dumps(click_data, indent=2)
 
+    # TODO: This can be better done by setting the "href" and "download"
+    #   properties on a static download link established in layout.py.
     @app.callback(
         Output("data-download-header", "children"),
         [
@@ -413,8 +415,17 @@ def get_app(config, data):
             ),
         ]
 
-    # TODO: What is this?
+    # TODO: What is this for? Remove?
     ds = data[list(data.keys())[0]]["reconstruction"]
+
+    # Bounds of Canada map
+    cx_min = min(value for value in canada_x if value is not None)
+    cx_max = max(value for value in canada_x if value is not None)
+    cy_min = min(value for value in canada_y if value is not None)
+    cy_max = max(value for value in canada_y if value is not None)
+
+    # Map viewport
+    viewport = None
 
     @app.callback(
         Output("my-graph", "figure"),
@@ -427,6 +438,7 @@ def get_app(config, data):
             Input("dataset-ctrl", "value"),
             Input("scale-ctrl", "value"),
             Input("colour-map-ctrl", "value"),
+            Input("my-graph", "relayoutData"),
         ],
     )
     def update_ds(
@@ -438,18 +450,28 @@ def get_app(config, data):
         dataset_ctrl,
         scale_ctrl,
         colour_map_ctrl,
+        relayout_data,
     ):
+        # Save map viewport bounds when it changes (zoom, pan events)
+        nonlocal viewport
+        if relayout_data is not None and "xaxis.range[0]" in relayout_data:
+            viewport = {
+                "x_min": relayout_data["xaxis.range[0]"],
+                "x_max": relayout_data["xaxis.range[1]"],
+                "y_min": relayout_data["yaxis.range[0]"],
+                "y_max": relayout_data["yaxis.range[1]"],
+            }
+
         zmin = range_slider[0]
         zmax = range_slider[1]
 
         if scale_ctrl == "logarithmic":
-            z_offset = config["dvs"][design_value_id_ctrl].get("z_offset", 0)
             ticks = np.linspace(
-                np.log10(zmin + z_offset),
-                np.log10(zmax + z_offset),
+                np.log10(zmin),
+                np.log10(zmax),
                 cbar_slider + 1,
             )
-            ticks = np.around(10 ** (ticks) - z_offset, 2)
+            ticks = np.around(10 ** (ticks), 2)
         else:
             ticks = np.around(np.linspace(zmin, zmax, cbar_slider + 1), 3)
 
@@ -466,31 +488,55 @@ def get_app(config, data):
         ds = data[design_value_id_ctrl][r_or_m]
         df = data[design_value_id_ctrl]["stations"]
 
-        x1 = min(value for value in X if value is not None)
-        x2 = max(value for value in X if value is not None)
-        y1 = min(value for value in Y if value is not None)
-        y2 = max(value for value in Y if value is not None)
+        # Index values for clipping data to Canada bounds
+        icxmin = find_nearest_index(ds.rlon.values, cx_min)
+        icxmax = find_nearest_index(ds.rlon.values, cx_max)
+        icymin = find_nearest_index(ds.rlat.values, cy_min)
+        icymax = find_nearest_index(ds.rlat.values, cy_max)
 
-        ixmin = find_nearest_index(ds.rlon.values, np.nanmin(x1))
-        ixmax = find_nearest_index(ds.rlon.values, np.nanmax(x2))
-        iymin = find_nearest_index(ds.rlat.values, np.nanmin(y1))
-        iymax = find_nearest_index(ds.rlat.values, np.nanmax(y2))
+        go_list = []
 
-        go_list = gen_lines(ds, X, Y)
+        # Lon-lat overlay
+        lonlat_overlay_config = config["map"]["lonlat_overlay"]
+        go_list += lonlat_overlay(
+            # It's not clear why the grid sizes should be taken from the
+            # dataset, but that's how the code works. Ick.
+            rlon_grid_size=ds.rlon.size,
+            rlat_grid_size=ds.rlat.size,
+            viewport=viewport,
+            num_lon_intervals=lonlat_overlay_config["lon"]["num_intervals"],
+            lon_round_to=lonlat_overlay_config["lon"]["round_to"],
+            num_lat_intervals=lonlat_overlay_config["lat"]["num_intervals"],
+            lat_round_to=lonlat_overlay_config["lat"]["round_to"],
+        )
+
+        # Canada map
+        go_list += [
+            go.Scattergl(
+                x=canada_x,
+                y=canada_y,
+                mode="lines",
+                hoverinfo="skip",
+                visible=True,
+                name="",
+                line=dict(width=0.5, color="black"),
+            ),
+        ]
 
         # need to process stations
         df = coord_prep(df, station_dv)
-        ds_arr = ds[dv].values[iymin:iymax, ixmin:ixmax].copy()
+        ds_arr = ds[dv].values[icymin:icymax, icxmin:icxmax].copy()
 
         if r_or_m == "model" and mask_ctrl:
-            mask = native_mask[iymin:iymax, ixmin:ixmax]
+            mask = native_mask[icymin:icymax, icxmin:icxmax]
             ds_arr[~mask] = np.nan
 
-        fig_list = [
+        go_list += [
+            # Interploation raster
             go.Heatmap(
                 z=ds_arr,
-                x=ds.rlon.values[ixmin:ixmax],
-                y=ds.rlat.values[iymin:iymax],
+                x=ds.rlon.values[icxmin:icxmax],
+                y=ds.rlat.values[icymin:icymax],
                 zmin=zmin,
                 zmax=zmax,
                 hoverongaps=False,
@@ -503,6 +549,8 @@ def get_app(config, data):
                 ),
                 name="",
             ),
+
+            # Station plot
             go.Scattergl(
                 x=df.rlon,
                 y=df.rlat,
@@ -528,7 +576,6 @@ def get_app(config, data):
             ),
         ]
 
-        go_list += fig_list
         units = ds[dv].attrs["units"]
         fig = {
             "data": go_list,
@@ -541,13 +588,13 @@ def get_app(config, data):
                 "font": dict(size=13, color="grey"),
                 "xaxis": dict(
                     zeroline=False,
-                    range=[ds.rlon.values[ixmin], ds.rlon.values[ixmax]],
+                    range=[ds.rlon.values[icxmin], ds.rlon.values[icxmax]],
                     showgrid=False,  # thin lines in the background
                     visible=False,  # numbers below
                 ),
                 "yaxis": dict(
                     zeroline=False,
-                    range=[ds.rlat.values[iymin], ds.rlat.values[iymax]],
+                    range=[ds.rlat.values[icymin], ds.rlat.values[icymax]],
                     showgrid=False,  # thin lines in the background
                     visible=False,
                 ),
