@@ -5,16 +5,16 @@ from climpyrical.gridding import (
 )
 import numpy as np
 import plotly.graph_objects as go
+from dve.math_utils import nearest, round_to_multiple, rounded
 
 
 def gen_lines(
     ds,
-    lon_min = 225,
-    lon_max = 305,
-    num_lon_lines = 6,
-    lat_min = 45,
-    lat_max = 85,
-    num_lat_lines = 5,
+    viewport=None,
+    num_lon_intervals=6,
+    num_lat_intervals=5,
+    lon_round_to = (1, 2, 3, 5, 10, 15),
+    lat_round_to = (1, 2, 3, 5, 10, 15),
 ):
     """
     Returns a list of graphical objects that render latitude and longitude lines
@@ -28,6 +28,48 @@ def gen_lines(
     :param ds:
     :return:
     """
+    if viewport is None:
+        # Default (max zoom; all Canada) lon and lat bounds
+        lon_min = 360 - 140
+        lon_max = 360 - 50
+        lat_min = 45
+        lat_max = 85
+    else:
+        # Transform rotated pole viewport corners to standard lon-lat
+        vp_x_range, vp_y_range = transform_coords(
+            np.array([viewport["x_min"], viewport["x_max"]]),
+            np.array([viewport["y_min"], viewport["y_max"]]),
+            source_crs={
+                "proj": "ob_tran",
+                "o_proj": "longlat",
+                "lon_0": -97,
+                "o_lat_p": 42.5,
+                "a": 6378137,
+                "to_meter": 0.0174532925199,
+                "no_defs": True,
+            },
+            target_crs={"init": "epsg:4326"},
+        )
+
+        print(f"vp_x_range={vp_x_range}, vp_y_range={vp_y_range}")
+        lon_min, lon_max = 360 + vp_x_range
+        lat_min, lat_max = vp_y_range
+
+    # Compute "nice" lines of lon and lat in standard coordinates
+    print(f"rounding lon")
+    lon_min, lon_max, num_lon_intervals = rounded(
+        lon_min, lon_max, num_lon_intervals, lon_round_to
+    )
+    num_lon_lines = num_lon_intervals + 1
+    print(f"lon: {lon_min}, {lon_max}, {num_lon_intervals}")
+
+    print(f"rounding lat")
+    lat_min, lat_max, num_lat_intervals = rounded(
+        lat_min, lat_max, num_lat_intervals, lat_round_to
+    )
+    num_lat_lines = num_lat_intervals + 1
+    print(f"lat: {lat_min}, {lat_max}, {num_lat_intervals}")
+
     # Lines of latitude and longitude to draw
     lat_lines = np.linspace(lat_min, lat_max, num_lat_lines)
     lon_lines = np.linspace(lon_min, lon_max, num_lon_lines)
@@ -37,9 +79,10 @@ def gen_lines(
     print(f"### rlon_size={rlon_size}, rlat_size={rlat_size}, ")
     # x and y coordinates for lines of latitude.
     # Why +/- 3?
-    x_lat_line = np.linspace(
-        lon_lines.min() - 3, lon_lines.max() + 3, rlon_size
-    )
+    x_lat_line = np.linspace(lon_lines.min(), lon_lines.max(), rlon_size)
+    # x_lat_line = np.linspace(
+    #     lon_lines.min() - 3, lon_lines.max() + 3, rlon_size
+    # )
     y_lat_line = [np.ones(rlon_size) * latline for latline in lat_lines]
 
     # x and y coordinates for lines of longitude. Why does this need to be done?
