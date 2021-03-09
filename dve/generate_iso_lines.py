@@ -9,7 +9,8 @@ from dve.math_utils import nearest, round_to_multiple, nice
 
 
 def lonlat_overlay(
-    ds,
+    rlon_grid_size,
+    rlat_grid_size,
     viewport=None,
     num_lon_intervals=6,
     num_lat_intervals=5,
@@ -25,13 +26,16 @@ def lonlat_overlay(
     you can't just plot a single line rather than "dots" ... style perhaps?
     This is almost certainly a horrible way to do this, but it suffices for now.
 
-    :param ds:
+    :param rlat_grid_size: (int) Size of lon grid in underlying dataset.
+    :param rlon_grid_size: (int) Size of lat grid in underlying dataset.
+            It's not clear why these grid dimensions are used but that's how
+            the code works.
     :param viewport: (dict) Viewport corners/bounds in rotated pole coordinates.
-    :param num_lon_intervals: (int) Number of intervals of longitude in grid.
-    :param num_lat_intervals: (int) Number of intervals of latitude in grid.
+    :param num_lon_intervals: (int) Number of intervals of longitude in overlay.
+    :param num_lat_intervals: (int) Number of intervals of latitude in overlay.
     :param lon_round_to: (list) Values of longitude increment to use.
     :param lat_round_to: (list) Values of latitude increment to use.
-    :return: (list) Graphical objects representing lon-lat grid.
+    :return: (list) Graphical objects representing lon-lat overlay.
     """
     if viewport is None:
         # Default (max zoom; all Canada) lon and lat bounds
@@ -70,17 +74,14 @@ def lonlat_overlay(
     )
     lat_lines = np.linspace(lat_min, lat_max, num_lat_intervals + 1)
 
-    rlon_size = ds.rlon.values.size
-    rlat_size = ds.rlat.size
-
     # This is where the craziness begins.
     # Compute x and y coordinates for lines of latitude.
-    x_lat_line = np.linspace(lon_lines.min(), lon_lines.max(), rlon_size)
-    y_lat_line = [np.ones(rlon_size) * latline for latline in lat_lines]
+    x_lat_line = np.linspace(lon_lines.min(), lon_lines.max(), rlon_grid_size)
+    y_lat_line = [np.ones(rlon_grid_size) * latline for latline in lat_lines]
 
     # Compute x and y coordinates for lines of longitude.
-    x_lon_line = [np.ones(rlat_size) * lonline for lonline in lon_lines]
-    y_lon_line = np.linspace(lat_lines.min(), lon_lines.max(), rlat_size)
+    x_lon_line = [np.ones(rlat_grid_size) * lonline for lonline in lon_lines]
+    y_lon_line = np.linspace(lat_lines.min(), lon_lines.max(), rlat_grid_size)
 
     # "Dotted line" rotated pole coordinates for lines of longitude
     rp_x_lon_line, rp_y_lon_line = [], []

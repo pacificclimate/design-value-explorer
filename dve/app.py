@@ -499,7 +499,10 @@ def get_app(config, data):
 
         # Lon-lat overlay
         go_list += lonlat_overlay(
-            ds,
+            # It's not clear why the grid sizes should be taken from the
+            # dataset, but that's how the code works. Ick.
+            rlon_grid_size=ds.rlon.size,
+            rlat_grid_size=ds.rlat.size,
             viewport=viewport,
             num_lon_intervals=config["map"]["grid"]["lon"]["num_intervals"],
             lon_round_to=config["map"]["grid"]["lon"]["round_to"],
