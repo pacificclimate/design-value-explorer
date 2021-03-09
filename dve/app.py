@@ -415,8 +415,10 @@ def get_app(config, data):
             ),
         ]
 
-    # TODO: What is this?
+    # TODO: What is this for? Remove?
     ds = data[list(data.keys())[0]]["reconstruction"]
+
+    viewport = None
 
     @app.callback(
         Output("my-graph", "figure"),
@@ -444,6 +446,19 @@ def get_app(config, data):
         relayout_data,
     ):
         print(f"relayoutData={relayout_data}")
+        # relayoutData={'xaxis.range[0]': -5.424675983266743, 'xaxis.range[1]': 19.601897023194965, 'yaxis.range[0]': -4.480259182065892, 'yaxis.range[1]': 16.121494712722193}
+
+        # Save viewport bounds when it changes (zoom, pan events)
+        nonlocal viewport
+        if relayout_data is not None and "xaxis.range[0]" in relayout_data:
+            viewport = {
+                "x_min": relayout_data["xaxis.range[0]"],
+                "x_max": relayout_data["xaxis.range[1]"],
+                "y_min": relayout_data["yaxis.range[0]"],
+                "y_max": relayout_data["yaxis.range[1]"],
+            }
+        print(f"viewport={viewport}")
+
         zmin = range_slider[0]
         zmax = range_slider[1]
 
@@ -472,6 +487,8 @@ def get_app(config, data):
         ds = data[design_value_id_ctrl][r_or_m]
         df = data[design_value_id_ctrl]["stations"]
 
+        # TODO: This is recalculated for every update, but X and Y don't change
+        #   once set. Factor out.
         x1 = min(value for value in X if value is not None)
         x2 = max(value for value in X if value is not None)
         y1 = min(value for value in Y if value is not None)
@@ -483,7 +500,11 @@ def get_app(config, data):
         iymax = find_nearest_index(ds.rlat.values, np.nanmax(y2))
 
         go_list = []
-        go_list += gen_lines(ds, lon_min=360-80, lon_max=360-100)
+        # TODO: Get gen_lines params from config
+        go_list += gen_lines(
+            ds,
+            viewport=viewport,
+        )
         go_list += [
             go.Scattergl(
                 x=X,
