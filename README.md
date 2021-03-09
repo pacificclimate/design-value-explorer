@@ -77,8 +77,6 @@ colormaps:
    `docker/production`.
    
 1. Data files are mounted to the docker container. 
-   The `docker-compose.yml` contains mounts for all currently required data 
-   files.
    
 1. A live-updatable configuration file can be mounted to the container.
    The `docker-compose.yml` contains a mount for this already, for a 
@@ -86,9 +84,6 @@ colormaps:
    
 1. The usual `docker-compose` commands can be used to start, stop, and restart
    the container. 
-   - IMPORTANT: The port to which the container is mapped is
-     defined by the *environment variable* `DEV_PORT`, which must be specified
-     in the command line, thus: `DVE_PORT=<port> docker-compose ...` 
    
 Details follow.
 
@@ -103,7 +98,7 @@ Details follow.
 #### Start the container
 
 ```
-DVE_PORT=<port> docker-compose -f docker/production/docker-compose.yml up -d
+docker-compose -f docker/production/docker-compose.yml up -d
 ```
 
 The container name is `dv-explorer-prod`. It immediately starts the application.
@@ -111,7 +106,7 @@ The container name is `dv-explorer-prod`. It immediately starts the application.
 #### Stop the container
 
 ```
-DVE_PORT=<port> docker-compose -f docker/production/docker-compose.yml down
+docker-compose -f docker/production/docker-compose.yml down
 ```
 
 ## Development and debugging
@@ -203,9 +198,12 @@ From the bash prompt:
 python dve_app.py --debug
 ```
 
+The `--debug` option does two things: Runs the server with `debug=True`, and
+defaults the logging level to `DEBUG`.
+
 Aside: Dash apps are based on Flask. 
 Flask documentation 
-[stronly recommends](https://flask.palletsprojects.com/en/1.1.x/server/#command-line)
+[strongly recommends](https://flask.palletsprojects.com/en/1.1.x/server/#command-line)
 running apps for development using the Flask command line `flask run`.
 Unfortunately, that does not work for a Dash app, and we must run it more
 directly from a script as above. 

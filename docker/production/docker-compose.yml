@@ -3,31 +3,15 @@ services:
   dv-explorer-prod:
     image: pcic/dash-dv-explorer
     container_name: dv-explorer-prod
+    env_file:
+      - .env
     ports:
-      # To specify the external port, run `DVE_PORT=<port> docker-compose ...`
-      # Most unfortunately, that value can't be in a .env file, must be on
-      # command line. :(
-      - "${DVE_PORT}:5000"
+      - "30020:5000"
     volumes:
-        # Data files
       - type: bind
-        source: /storage/data/projects/comp_support/dv-explorer/data/model_inputs/
-        target: /app/dve/data/model_inputs/
+        source: /storage/data/projects/comp_support/dv-explorer/data/
+        target: /app/dve/data/
         read_only: true
-      - type: bind
-        source: /storage/data/projects/comp_support/dv-explorer/data/reconstructions/
-        target: /app/dve/data/reconstructions/
-        read_only: true
-      - type: bind
-        source: /storage/data/projects/comp_support/dv-explorer/data/station_inputs/
-        target: /app/dve/data/station_inputs/
-        read_only: true
-      - type: bind
-        source: /storage/data/projects/comp_support/dv-explorer/data/tables/
-        target: /app/dve/data/tables/
-        read_only: true
-
-        # Configuration file: to mount an external one, uncomment these lines
       - type: bind
         source: ./config.yml
         target: /app/config.yml

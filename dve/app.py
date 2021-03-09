@@ -1,4 +1,5 @@
 import json
+import yaml
 
 from climpyrical.data import read_data
 from climpyrical.gridding import (
@@ -14,6 +15,7 @@ from dve.colorbar import (
     plotly_discrete_colorscale,
 )
 
+from dve.data import load_data
 import dve
 import dve.data
 import dve.layout
@@ -48,6 +50,24 @@ import os
 import warnings
 import logging
 import csv
+
+
+logger = logging.getLogger("dve")
+
+
+# TODO: This "app factory" needs to be refactored.
+
+def make_app(config_filepath="config.yml"):
+    logger.debug("Loading configuration")
+    with open(config_filepath, "r") as config_file:
+        config = yaml.load(config_file)
+    logger.debug(f"Configuration loaded. {config}")
+
+    data = load_data(config)
+
+    app = get_app(config, data)
+
+    return app
 
 
 def get_app(config, data):

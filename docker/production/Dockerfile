@@ -1,23 +1,33 @@
 FROM python:3.6-slim
-
-USER root
-
-WORKDIR /app
-#ADD *requirements.txt ./docker/production/entrypoint.sh /app/
-COPY . /app
+MAINTAINER Rod Glover <rglover@uvic.ca>
 
 RUN apt-get update && \
-    apt-get install -y git
+    apt-get install -y git && \
+    pip install --upgrade pip
 
-RUN pip install --trusted-host pypi.python.org -r /app/requirements.txt
-RUN pip install -e git+https://github.com/pacificclimate/climpyrical.git#egg=climpyrical
-# requirements.txt contains a line for clympirical, but it is not installed (???)
-# after the first pip install. The second one fixes that. An ugly mystery.
+ARG RUN_GROUP=dve
+ARG RUN_USER=dve
+ARG RUN_HOME=/app
+
+RUN groupadd -r ${RUN_GROUP} && \
+    useradd -g ${RUN_GROUP} -d ${RUN_HOME} ${RUN_USER} && \
+    mkdir ${RUN_HOME} && \
+    chown ${RUN_GROUP}:${RUN_USER} ${RUN_HOME}
+USER ${RUN_USER}
+
+WORKDIR ${RUN_HOME}
+COPY --chown=${RUN_GROUP}:${RUN_USER} . /app
+
+RUN pip install --trusted-host pypi.python.org -r /app/requirements.txt && \
+    pip install -e git+https://github.com/pacificclimate/climpyrical.git#egg=climpyrical && \
+    pip install /app
 
 # Flask app port
 EXPOSE 5000
 
 ENV NAME Explorer
 
-# On container startup, the entrypoint installs the local codebase
-ENTRYPOINT /app/docker/production/entrypoint.sh
+CMD /app/.local/bin/gunicorn \
+    --config /app/docker/production/gunicorn.conf \
+    --log-config /app/docker/production/logging.conf \
+    dve_app:server
