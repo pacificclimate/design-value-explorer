@@ -259,6 +259,20 @@ flask run
 This enables the development environment, including the interactive debugger 
 and reloader, and then starts the server on `http://localhost:5000/`.
 
+## Releasing
+
+To create a versioned release:
+
+1. Increment `__version__` in `setup.py`
+2. Summarize the changes from the last release in `NEWS.md`
+3. Commit these changes, tag the release, then push it all:
+
+  ```bash
+git add setup.py NEWS.md
+git commit -m"Bump to version x.x.x"
+git tag -a -m"x.x.x" x.x.x
+git push --follow-tags
+  ```
 ## Authors
 
 - Nic Annau, nannau@uvic.ca, Pacific Climate Impacts Consortium

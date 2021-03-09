@@ -1,12 +1,13 @@
-import sys
 from setuptools import setup, find_packages
+
+__version__ = (1, 0, 0)
 
 setup(
     name="dve",
     description="A climate model hybrid reconstruction tool using station data",
+    version=".".join(str(x) for x in __version__),
     keywords="geography fields regression climate meteorology",
     packages=find_packages(),
-    version="0.1dev",
     url="http://www.pacificclimate.org/",
     author="Nic Annau",
     author_email="nannau@uvic.ca",
