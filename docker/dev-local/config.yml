@@ -255,7 +255,7 @@ map:
         'gist_earth', 'terrain', 'gist_stern', 'gnuplot', 'gnuplot2',
         'CMRmap', 'cubehelix', 'brg', 'gist_rainbow', 'rainbow',
         'jet', 'nipy_spectral', 'gist_ncar']
-    grid:
+    lonlat_overlay:
         lon:
             num_intervals: 6
             round_to: [1, 2, 3, 5, 10, 15]
