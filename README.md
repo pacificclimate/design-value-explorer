@@ -85,15 +85,27 @@ colormaps:
 1. The usual `docker-compose` commands can be used to start, stop, and restart
    the container. 
    
+1. Proxying:
+   - Dash applications apparently know the domain they are proxied from. 
+   (Guessing this is via an HTTP header.) 
+   - They do not know the base URL path used by the proxy, so this must be
+   specified using the environment variable `DASH_URL_BASE_PATHNAME` as
+   noted below.
+   - The proxy *must not* strip the base path from the URLs forwarded to the
+   Dash app.
+   
 Details follow.
 
 #### Prepare
 
 1. Pull the desired version of `pcic/dash-dv-explorer` from Dockerhub.
-1. Update (your copy of) the docker-compose.yml file to reflect the version
+1. Update (your copy of) `docker-compose.yml` to reflect the version
    of the image you want to run.
-1. Update the configuration file mount and/or the configuration file proper
-   as required.
+1. Update (your copy of) `.env`:
+   1. IMPORTANT: Set `DASH_URL_BASE_PATHNAME` to the base path of the proxied 
+      URL. It must begin and end with `/`, e.g., `/design-value-explorer/`.
+   1. Set the `GUNICORN_*` parameters as desired.
+1. Update (your copy of) the configuration file if necessary.
 
 #### Start the container
 
