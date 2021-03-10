@@ -24,7 +24,7 @@ from dve.generate_iso_lines import lonlat_overlay
 
 import dash
 import dash_table
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
@@ -178,14 +178,6 @@ def get_app(config, data):
         default = [minimum, maximum]
         return minimum, maximum, step, default
 
-    # TODO: Remove when no longer needed for development
-    # @app.callback(
-    #     Output("hover-data", "children"),
-    #     [Input("my-graph", "hoverData")]
-    # )
-    # def display_hover_data(hover_data):
-    #     return json.dumps(hover_data, indent=2)
-
     def value_table(*items):
         return dbc.Table(
             [
@@ -306,14 +298,6 @@ def get_app(config, data):
             ),
         ]
 
-    # TODO: Remove when no longer needed for development
-    # @app.callback(
-    #     Output("click-data", "children"),
-    #     [Input("my-graph", "clickData")]
-    # )
-    # def display_click_data(click_data):
-    #     return json.dumps(click_data, indent=2)
-
     # TODO: This can be better done by setting the "href" and "download"
     #   properties on a static download link established in layout.py.
     @app.callback(
@@ -415,17 +399,29 @@ def get_app(config, data):
             ),
         ]
 
-    # TODO: What is this for? Remove?
-    ds = data[list(data.keys())[0]]["reconstruction"]
-
     # Bounds of Canada map
     cx_min = min(value for value in canada_x if value is not None)
     cx_max = max(value for value in canada_x if value is not None)
     cy_min = min(value for value in canada_y if value is not None)
     cy_max = max(value for value in canada_y if value is not None)
 
-    # Map viewport
-    viewport = None
+    @app.callback(
+        Output("viewport-ds", "children"),
+        [Input("my-graph", "relayoutData")],
+        [State("viewport-ds", "children")],
+    )
+    def update_viewport(relayout_data, prev_viewport):
+        # Save map viewport bounds when and only when they change
+        # (zoom, pan events)
+        if relayout_data is not None and "xaxis.range[0]" in relayout_data:
+            viewport = {
+                "x_min": relayout_data["xaxis.range[0]"],
+                "x_max": relayout_data["xaxis.range[1]"],
+                "y_min": relayout_data["yaxis.range[0]"],
+                "y_max": relayout_data["yaxis.range[1]"],
+            }
+            return json.dumps(viewport)
+        return prev_viewport
 
     @app.callback(
         Output("my-graph", "figure"),
@@ -438,7 +434,7 @@ def get_app(config, data):
             Input("dataset-ctrl", "value"),
             Input("scale-ctrl", "value"),
             Input("colour-map-ctrl", "value"),
-            Input("my-graph", "relayoutData"),
+            Input("viewport-ds", "children"),
         ],
     )
     def update_ds(
@@ -450,17 +446,9 @@ def get_app(config, data):
         dataset_ctrl,
         scale_ctrl,
         colour_map_ctrl,
-        relayout_data,
+        viewport_ds,
     ):
-        # Save map viewport bounds when it changes (zoom, pan events)
-        nonlocal viewport
-        if relayout_data is not None and "xaxis.range[0]" in relayout_data:
-            viewport = {
-                "x_min": relayout_data["xaxis.range[0]"],
-                "x_max": relayout_data["xaxis.range[1]"],
-                "y_min": relayout_data["yaxis.range[0]"],
-                "y_max": relayout_data["yaxis.range[1]"],
-            }
+        viewport = viewport_ds and json.loads(viewport_ds)
 
         zmin = range_slider[0]
         zmax = range_slider[1]

@@ -288,6 +288,19 @@ def table_C2_tab():
     )
 
 
+def internal_data():
+    """
+    Layout components for storing/sharing data between callbacks (and callback
+    invocations) on the client side, using a hidden div (ick!). See
+    https://dash.plotly.com/sharing-data-between-callbacks.
+
+    :return: List of components.
+    """
+    return [
+        html.Div(id="viewport-ds", style={'display': 'none'}),
+    ]
+
+
 def main(config, data):
     """
     Top-level layout component. `app.layout` should be set to the this value.
@@ -306,5 +319,6 @@ def main(config, data):
                 dbc.Col(dbc.Tabs([map_tab(config, data), table_C2_tab()])),
                 style={"margin-top": "1em"},
             ),
+            *internal_data(),
         ],
     )
