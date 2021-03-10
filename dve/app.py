@@ -178,14 +178,6 @@ def get_app(config, data):
         default = [minimum, maximum]
         return minimum, maximum, step, default
 
-    # TODO: Remove when no longer needed for development
-    # @app.callback(
-    #     Output("hover-data", "children"),
-    #     [Input("my-graph", "hoverData")]
-    # )
-    # def display_hover_data(hover_data):
-    #     return json.dumps(hover_data, indent=2)
-
     def value_table(*items):
         return dbc.Table(
             [
@@ -306,14 +298,6 @@ def get_app(config, data):
             ),
         ]
 
-    # TODO: Remove when no longer needed for development
-    # @app.callback(
-    #     Output("click-data", "children"),
-    #     [Input("my-graph", "clickData")]
-    # )
-    # def display_click_data(click_data):
-    #     return json.dumps(click_data, indent=2)
-
     # TODO: This can be better done by setting the "href" and "download"
     #   properties on a static download link established in layout.py.
     @app.callback(
@@ -414,9 +398,6 @@ def get_app(config, data):
                 selected_interp=interpolation_ctrl,
             ),
         ]
-
-    # TODO: What is this for? Remove?
-    ds = data[list(data.keys())[0]]["reconstruction"]
 
     # Bounds of Canada map
     cx_min = min(value for value in canada_x if value is not None)
