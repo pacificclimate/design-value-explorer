@@ -150,33 +150,40 @@ def get_app(config, data):
         return options
 
     @app.callback(
-        Output("range-slider-output-container", "children"),
-        [Input("range-slider", "value")],
+        Output("colourbar-range-ctrl-output-container", "children"),
+        [Input("colourbar-range-ctrl", "value")],
     )
-    def update_range(value):
+    def update_colourbar_range_label(value):
         return f"Range: {sigfigs(value[0])} to {sigfigs(value[1])}"
 
     @app.callback(
         [
-            Output(component_id="range-slider", component_property="min"),
-            Output(component_id="range-slider", component_property="max"),
-            Output(component_id="range-slider", component_property="step"),
-            Output(component_id="range-slider", component_property="value"),
+            Output("colourbar-range-ctrl", "min"),
+            Output("colourbar-range-ctrl", "max"),
+            Output("colourbar-range-ctrl", "step"),
+            Output("colourbar-range-ctrl", "marks"),
+            Output("colourbar-range-ctrl", "value"),
         ],
         [
-            Input(
-                component_id="design-value-id-ctrl", component_property="value"
-            ),
-            Input(component_id="cbar-slider", component_property="value"),
+            Input("design-value-id-ctrl", "value"),
+            Input("cbar-slider", "value"),
         ],
     )
-    def update_slider(value, N):
-        field = data[value]["reconstruction"][data[value]["dv"]].values
+    def update_slider(design_value_id, num_colours):
+        # TODO: I don't think num_colours is the right value for determining
+        #  step
+        dv_var_name = data[design_value_id]["dv"]
+        # TODO: Why "reconstruction" and not dataset?
+        field = data[design_value_id]["reconstruction"][dv_var_name].values
         minimum = np.round(np.nanmin(field), 3)
         maximum = np.round(np.nanmax(field), 3)
-        step = (maximum - minimum) / (N + 1)
-        default = [minimum, maximum]
-        return minimum, maximum, step, default
+        step = (maximum - minimum) / (num_colours + 1)
+        marks={
+            x: str(sigfigs(x, 2))
+            for x in (minimum * 1.008, (minimum + maximum) / 2, maximum)
+        }
+        default_value = [minimum, maximum]
+        return minimum, maximum, step, marks, default_value
 
     def value_table(*items):
         return dbc.Table(
@@ -430,7 +437,7 @@ def get_app(config, data):
             Input("stations-ctrl", "on"),
             Input("design-value-id-ctrl", "value"),
             Input("cbar-slider", "value"),
-            Input("range-slider", "value"),
+            Input("colourbar-range-ctrl", "value"),
             Input("dataset-ctrl", "value"),
             Input("scale-ctrl", "value"),
             Input("colour-map-ctrl", "value"),

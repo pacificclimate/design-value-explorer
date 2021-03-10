@@ -127,7 +127,7 @@ def colourbar_options(data, colormaps):
                 dbc.Col(html.Label("Colour Map")),
                 dbc.Col(html.Label("Scale")),
                 dbc.Col(html.Label("Num. Colours")),
-                dbc.Col(html.Label(id="range-slider-output-container")),
+                dbc.Col(html.Label(id="colourbar-range-ctrl-output-container")),
             ]
         ),
         # Controls
@@ -167,19 +167,7 @@ def colourbar_options(data, colormaps):
                 ),
                 dbc.Col(
                     html.Div(
-                        dcc.RangeSlider(
-                            # TODO: Rename
-                            id="range-slider",
-                            min=dmin,
-                            max=dmax,
-                            step=(dmax - dmin) / num_range_slider_steps,
-                            vertical=False,
-                            value=[dmin, dmax],
-                            marks={
-                                x: str(sigfigs(x))
-                                for x in (dmin * 1.008, (dmin + dmax) / 2, dmax)
-                            },
-                        ),
+                        dcc.RangeSlider(id="colourbar-range-ctrl"),
                         # RangeSlider has unwanted horiz padding of 25px.
                         style={"margin": "2em -25px"},
                     )
