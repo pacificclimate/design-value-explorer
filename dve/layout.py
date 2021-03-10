@@ -54,7 +54,10 @@ def overlay_options():
 
     return [
         # Section title
-        dbc.Row(dbc.Col(html.H4("Overlay Options"))),
+        dbc.Row(
+            dbc.Col(html.H5("Overlay Options")),
+            className="mt-2"
+        ),
         # Control titles
         dbc.Row(
             [
@@ -115,11 +118,10 @@ def colourbar_options(data, colormaps):
 
     return [
         # Section title
-        # TODO: Improve title -- something like Colour Scale Options
         dbc.Row(
-            dbc.Col(html.H4("Colourbar Options")),
+            dbc.Col(html.H5("Colour Scale Options")),
             # TODO: Replace with class
-            style={"margin-top": "2.5em"},
+            className="mt-5"
         ),
         # Control titles
         dbc.Row(
@@ -183,11 +185,14 @@ def user_graph_interaction():
     :return: list of dbc.Row
     """
     return [
-        dbc.Row(dbc.Col(dcc.Markdown("#### Data from map pointer"))),
+        dbc.Row(dbc.Col(html.H5("Data from map pointer"))),
         dbc.Row(
             [
                 dbc.Col(
-                    dcc.Markdown("*Click to hold values for download.*"),
+                    dcc.Markdown(
+                        "*Hover over map to show values under cursor. "
+                        "Click to hold values for download.*"
+                    ),
                     style={"font-size": "0.8em"},
                 ),
                 dbc.Col(id="data-download-header"),
