@@ -130,6 +130,8 @@ def get_app(config, data):
             ],
             style_as_list_view=True,
             style_header={"backgroundColor": "white", "fontWeight": "bold"},
+            page_action="none",
+            filter_action="native",
             data=df.to_dict("records"),
         )
 
