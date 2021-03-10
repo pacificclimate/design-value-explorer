@@ -166,12 +166,12 @@ def get_app(config, data):
         ],
         [
             Input("design-value-id-ctrl", "value"),
+            Input("dataset-ctrl", "value"),
         ],
     )
-    def update_slider(design_value_id):
+    def update_slider(design_value_id, dataset_id):
         dv_var_name = data[design_value_id]["dv"]
-        # TODO: Why "reconstruction" and not dataset?
-        field = data[design_value_id]["reconstruction"][dv_var_name].values
+        field = data[design_value_id][dataset_id][dv_var_name].values
         minimum = np.round(np.nanmin(field), 3)
         maximum = np.round(np.nanmax(field), 3)
         num_steps = 20
