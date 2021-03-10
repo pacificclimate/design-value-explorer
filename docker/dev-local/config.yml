@@ -1,6 +1,7 @@
 ui:
     defaults:
         dv: RL50
+        tab:
 
 # Parameterize the pipeline
 # The pipeline will iterate through each parent tree
@@ -142,7 +143,7 @@ dvs:
 #    TJul97.5:
 #        description: 97.5th percentile of July temperature
 #        units: °C
-#        station_dv:  "TJul2.5 (degC)"
+#        station_dv:  "TJul2.5 (degC)"  # Erroneous label
 #        station_path: data/station_inputs/julT97.5p_allstations_v3_min8yr_for_maps.csv
 #        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
 #        reconstruction_path: data/reconstructions/TJul97.5_reconstruction.nc
@@ -155,7 +156,7 @@ dvs:
 #    TwJul97.5:
 #        description: 97.5th percentile of July wet-bulb  temperature
 #        units: °C
-#        station_dv:  "TwJul2.5 (degC)"
+#        station_dv:  "TwJul2.5 (degC)"  # Erroneous label
 #        station_path: data/station_inputs/julTwb97.5p_allstations_v3_for_maps.csv
 #        input_model_path: data/model_inputs/twb_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
 #        reconstruction_path: data/reconstructions/TwJul97.5_reconstruction.nc
