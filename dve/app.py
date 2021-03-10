@@ -172,8 +172,8 @@ def get_app(config, data):
     def update_slider(design_value_id, dataset_id):
         dv_var_name = data[design_value_id]["dv"]
         field = data[design_value_id][dataset_id][dv_var_name].values
-        minimum = np.round(np.nanmin(field), 3)
-        maximum = np.round(np.nanmax(field), 3)
+        minimum = float(np.round(np.nanmin(field), 3))
+        maximum = float(np.round(np.nanmax(field), 3))
         num_steps = 20
         step = (maximum - minimum) / (num_steps + 1)
         marks={
@@ -181,7 +181,7 @@ def get_app(config, data):
             for x in (minimum * 1.008, (minimum + maximum) / 2, maximum)
         }
         default_value = [minimum, maximum]
-        return minimum, maximum, step, marks, default_value
+        return [minimum, maximum, step, marks, default_value]
 
     def value_table(*items):
         return dbc.Table(
