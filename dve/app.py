@@ -102,16 +102,32 @@ def get_app(config, data):
     )
     def update_tablec2(value):
         df = data[value]["table"]
-        df = df[["Location", "lon", "lat", data[value]["station_dv"]]].round(3)
+        df = df[["Location", "Prov", "lon", "lat", "PCIC", "NBCC 2015"]].round(3)
 
         return dash_table.DataTable(
             columns=[{"name": i, "id": i} for i in df.columns],
+            style_table={
+                # "width": "100%",
+                # 'overflowX': 'auto',
+            },
             style_cell={
                 "textAlign": "center",
                 "whiteSpace": "normal",
                 "height": "auto",
                 "padding": "5px",
+                "width": "2em",
+                "minWidth": "2em",
+                "maxWidth": "2em",
+                'overflow': 'hidden',
+                'textOverflow': 'ellipsis',
             },
+            style_cell_conditional=[
+                {
+                    "if": {"column_id": "Location"},
+                    "width": "5em",
+                    "textAlign": "left",
+                },
+            ],
             style_as_list_view=True,
             style_header={"backgroundColor": "white", "fontWeight": "bold"},
             data=df.to_dict("records"),
