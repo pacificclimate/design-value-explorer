@@ -166,18 +166,16 @@ def get_app(config, data):
         ],
         [
             Input("design-value-id-ctrl", "value"),
-            Input("cbar-slider", "value"),
         ],
     )
-    def update_slider(design_value_id, num_colours):
-        # TODO: I don't think num_colours is the right value for determining
-        #  step
+    def update_slider(design_value_id):
         dv_var_name = data[design_value_id]["dv"]
         # TODO: Why "reconstruction" and not dataset?
         field = data[design_value_id]["reconstruction"][dv_var_name].values
         minimum = np.round(np.nanmin(field), 3)
         maximum = np.round(np.nanmax(field), 3)
-        step = (maximum - minimum) / (num_colours + 1)
+        num_steps = 20
+        step = (maximum - minimum) / (num_steps + 1)
         marks={
             x: str(sigfigs(x, 2))
             for x in (minimum * 1.008, (minimum + maximum) / 2, maximum)
