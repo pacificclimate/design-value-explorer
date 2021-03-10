@@ -54,7 +54,10 @@ def overlay_options():
 
     return [
         # Section title
-        dbc.Row(dbc.Col(html.H4("Overlay Options"))),
+        dbc.Row(
+            dbc.Col(html.H5("Overlay Options")),
+            className="mt-2"
+        ),
         # Control titles
         dbc.Row(
             [
@@ -115,11 +118,10 @@ def colourbar_options(data, colormaps):
 
     return [
         # Section title
-        # TODO: Improve title -- something like Colour Scale Options
         dbc.Row(
-            dbc.Col(html.H4("Colourbar Options")),
+            dbc.Col(html.H5("Colour Scale Options")),
             # TODO: Replace with class
-            style={"margin-top": "2.5em"},
+            className="mt-5"
         ),
         # Control titles
         dbc.Row(
@@ -127,7 +129,7 @@ def colourbar_options(data, colormaps):
                 dbc.Col(html.Label("Colour Map")),
                 dbc.Col(html.Label("Scale")),
                 dbc.Col(html.Label("Num. Colours")),
-                dbc.Col(html.Label(id="range-slider-output-container")),
+                dbc.Col(html.Label(id="colourbar-range-ctrl-output-container")),
             ]
         ),
         # Controls
@@ -167,19 +169,7 @@ def colourbar_options(data, colormaps):
                 ),
                 dbc.Col(
                     html.Div(
-                        dcc.RangeSlider(
-                            # TODO: Rename
-                            id="range-slider",
-                            min=dmin,
-                            max=dmax,
-                            step=(dmax - dmin) / num_range_slider_steps,
-                            vertical=False,
-                            value=[dmin, dmax],
-                            marks={
-                                x: str(sigfigs(x))
-                                for x in (dmin * 1.008, (dmin + dmax) / 2, dmax)
-                            },
-                        ),
+                        dcc.RangeSlider(id="colourbar-range-ctrl"),
                         # RangeSlider has unwanted horiz padding of 25px.
                         style={"margin": "2em -25px"},
                     )
@@ -195,11 +185,14 @@ def user_graph_interaction():
     :return: list of dbc.Row
     """
     return [
-        dbc.Row(dbc.Col(dcc.Markdown("#### Data from map pointer"))),
+        dbc.Row(dbc.Col(html.H5("Data from map pointer"))),
         dbc.Row(
             [
                 dbc.Col(
-                    dcc.Markdown("*Click to hold values for download.*"),
+                    dcc.Markdown(
+                        "*Hover over map to show values under cursor. "
+                        "Click to hold values for download.*"
+                    ),
                     style={"font-size": "0.8em"},
                 ),
                 dbc.Col(id="data-download-header"),
@@ -254,7 +247,6 @@ def map_tab(config, data):
                 [
                     dbc.Col(
                         [dcc.Graph(id="my-graph")],
-                        align="center",
                         lg=7,
                         md=12,
                         sm=12,
@@ -266,13 +258,13 @@ def map_tab(config, data):
                             *colourbar_options(data, colour_maps),
                             *user_graph_interaction(),
                         ],
-                        align="center",
                         lg=5,
                         md=12,
                         sm=12,
                         xs=12,
                     ),
-                ]
+                ],
+                align="start",
             )
         ],
     )
