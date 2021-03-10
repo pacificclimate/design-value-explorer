@@ -24,7 +24,7 @@ from dve.generate_iso_lines import lonlat_overlay
 
 import dash
 import dash_table
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
@@ -408,9 +408,11 @@ def get_app(config, data):
     @app.callback(
         Output("viewport-ds", "children"),
         [Input("my-graph", "relayoutData")],
+        [State("viewport-ds", "children")],
     )
-    def update_viewport(relayout_data):
-        # Save map viewport bounds when they change (zoom, pan events)
+    def update_viewport(relayout_data, prev_viewport):
+        # Save map viewport bounds when and only when they change
+        # (zoom, pan events)
         if relayout_data is not None and "xaxis.range[0]" in relayout_data:
             viewport = {
                 "x_min": relayout_data["xaxis.range[0]"],
@@ -419,7 +421,7 @@ def get_app(config, data):
                 "y_max": relayout_data["yaxis.range[1]"],
             }
             return json.dumps(viewport)
-
+        return prev_viewport
 
     @app.callback(
         Output("my-graph", "figure"),
