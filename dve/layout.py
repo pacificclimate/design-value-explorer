@@ -242,7 +242,6 @@ def map_tab(config, data):
                 [
                     dbc.Col(
                         [dcc.Graph(id="my-graph")],
-                        align="center",
                         lg=7,
                         md=12,
                         sm=12,
@@ -254,13 +253,13 @@ def map_tab(config, data):
                             *colourbar_options(data, colour_maps),
                             *user_graph_interaction(),
                         ],
-                        align="center",
                         lg=5,
                         md=12,
                         sm=12,
                         xs=12,
                     ),
-                ]
+                ],
+                align="start",
             )
         ],
     )
