@@ -36,7 +36,7 @@ packaging==19.2
 pandas
 plotly==4.7.1
 pluggy==0.13.0
-py==1.8.0
+py==1.10.0
 pyparsing==2.4.0
 pyproj==2.4.1
 pyshp==2.1.0
