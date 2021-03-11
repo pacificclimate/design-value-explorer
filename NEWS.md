@@ -1,5 +1,17 @@
 # News / Release Notes
 
+## 1.1.0
+
+**2021-Mar-11**
+
+Main new feature: Add NBCC 2015 values to table C2.
+
+- [Add NBCC 2015 values to table C2](https://github.com/pacificclimate/dash-dv-explorer/pull/73)
+- [Fix various UI annonyances](https://github.com/pacificclimate/dash-dv-explorer/pull/72)
+- [Add info re DASH_URL_BASE_PATHNAME (production deployment update)](https://github.com/pacificclimate/dash-dv-explorer/pull/71)
+- [Don't use modifiable global variables in callbacks](https://github.com/pacificclimate/dash-dv-explorer/pull/70)
+
+
 ## 1.0.0
 
 **2021-Mar-09**
