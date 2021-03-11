@@ -274,7 +274,14 @@ def table_C2_tab():
     return dbc.Tab(
         label="Table C-2",
         children=[
-            html.H4("Reconstruction Values at Table C2 Locations"),
+            html.H5(
+                [
+                    "Reconstruction Values of ",
+                    html.Span(id="table-C2-dv", children="DV"),
+                    " at Table C2 Locations"
+                ],
+                className="mt-3",
+            ),
             html.Div(id="table"),
         ],
     )
