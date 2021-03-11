@@ -41,7 +41,7 @@ services:
         target: /codebase/dve/data/station_inputs/
         read_only: true
       - type: bind
-        source: /storage/data/projects/comp_support/dv-explorer/data/tables/
+        source: ../../local-data/tables/
         target: /codebase/dve/data/tables/
         read_only: true
 
