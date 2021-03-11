@@ -15,6 +15,27 @@ paths:
     native_mask: data/masks/land_mask_CanRCM4_sftlf.nc
     total_table_c2: data/tables/combined_dv_tablec2.csv
 
+# annual_rain/D0.5C/RAnn_CanRCM4_ensmean_CF_DT0.5.nc
+#annual_relative_humidity/D0.5C/RHann_CanRCM4_ensmean_CF_DT0.5.nc
+#annual_temperature/D0.5C/TAnn_CanRCM4_ensmean_CF_DT0.5.nc
+#annual_total_precipitation/D0.5C/PAnn_CanRCM4_ensmean_CF_DT0.5.nc
+#degree_days_below_18/D0.5C/HDD_CanRCM4_ensmean_CF_DT0.5.nc
+#degree_days_below_18/D0.5C/temp1.nc
+#degree_days_below_18/D0.5C/temp.nc
+#driving_rain_wind_pressures_q5yr/D0.5C/DRWP5_CanRCM4_ensmean_CF_DT0.5.nc
+#hourly_wind_pressures_q100wp/D0.5C/WP100_CanRCM4_ensmean_CF_DT0.5.nc
+#hourly_wind_pressures_q10wp/D0.5C/WP10_CanRCM4_ensmean_CF_DT0.5.nc
+#hourly_wind_pressures_q25wp/D0.5C/WP25_CanRCM4_ensmean_CF_DT0.5.nc
+#hourly_wind_pressures_q50wp/D0.5C/WP50_CanRCM4_ensmean_CF_DT0.5.nc
+#ice_thickness_q20yr/D0.5C/IT20_CanRCM4_ensmean_CF_DT0.5.nc
+#january_1%_dry/D0.5C/TJan1.0_CanRCM4_ensmean_CF_DT0.5.nc
+#january_2.5%_dry/D0.5C/TJan2.5_CanRCM4_ensmean_CF_DT0.5.nc
+#july_2.5%_dry/D0.5C/TJul2.5_CanRCM4_ensmean_CF_DT0.5.nc
+#july_2.5%_wet/D0.5C/TwJul2.5_CanRCM4_ensmean_CF_DT0.5.nc
+#maximum_mean_daily_temperature/D0.5C/Tmax_CanRCM4_ensmean_CF_DT0.5.nc
+#minimum_mean_daily_temperature/D0.5C/Tmin_CanRCM4_ensmean_CF_DT0.5.nc
+#rain_q50yr/D0.5C/RL50_CanRCM4_ensmean_CF_DT0.5.nc
+#snow_q50yr/D0.5C/SL50_CanRCM4_ensmean_CF_DT0.5.nc
 dvs:
     RL50:
         description: 50-year return level of annual maximum rain-on-snow load
@@ -24,6 +45,11 @@ dvs:
         input_model_path: data/model_inputs/snw_rain_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
         reconstruction_path: data/reconstructions/RL50_reconstruction.nc
         table: data/tables/RL50_TableC2.csv
+        future_change_factor_paths:
+            0.5C: data/change_factors/D0.5C/RL50_CanRCM4_ensmean_CF_DT0.5.nc
+            1.0C: data/change_factors/D1.0C/RL50_CanRCM4_ensmean_CF_DT1.0.nc
+            1.5C: data/change_factors/D1.5C/RL50_CanRCM4_ensmean_CF_DT1.5.nc
+            # etc.
         colour_map: "terrain_r"
         scale:
             default: logarithmic
@@ -238,6 +264,17 @@ dvs:
 #        colour_map: "PuBuGn"
 #        scale:
 #            default: logarithmic
+
+future_change_factors:
+    ids:
+        - "0.5C"
+        - "1.0C"
+        - "1.5C"
+        - "2.0C"
+        - "2.5C"
+        - "3.0C"
+        - "3.5C"
+    label: "Future: {} above pre-industrial"
 
 map:
     colour_maps:
