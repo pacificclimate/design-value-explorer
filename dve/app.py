@@ -15,7 +15,7 @@ from dve.colorbar import (
     plotly_discrete_colorscale,
 )
 
-from dve.data import load_data
+from dve.data import load_data, load_file
 import dve
 import dve.data
 import dve.layout
@@ -50,6 +50,7 @@ import os
 import warnings
 import logging
 import csv
+import functools
 
 
 logger = logging.getLogger("dve")
@@ -63,14 +64,37 @@ def make_app(config_filepath="config.yml"):
         config = yaml.load(config_file)
     logger.debug(f"Configuration loaded. {config}")
 
-    data = load_data(config)
+    # data = load_data(config)
 
-    app = get_app(config, data)
+    app = get_app(config)
 
     return app
 
 
-def get_app(config, data):
+@functools.lru_cache(maxsize=20)
+def load_file_cached(filepath):
+    """Caches the results of a load_file operation. This is the basis of
+    all on-demand data retrieval.
+    TODO: Replace this by applying caching directly to `load_file`.
+    """
+    logger.debug(f"### load_file_cached {(filepath)}")
+    return load_file(filepath)
+
+
+def get_data(config, design_value_id, dataset_id):
+    """Get a specific data object. This function knows the structure
+    of `config` so that clients don't have to."""
+    logger.debug(f"### get_data {(design_value_id, dataset_id)}")
+    path_key = {
+        "stations": "station_path",
+        "table": "table",
+        "model": "input_model_path",
+        "reconstruction": "reconstruction_path",
+    }[dataset_id]
+    return load_file_cached(config["dvs"][design_value_id][path_key])
+
+
+def get_app(config):
     warnings.filterwarnings("ignore")
 
     # load polygon data
@@ -99,11 +123,13 @@ def get_app(config, data):
         [Input("design-value-id-ctrl", "value")]
     )
     def update_tablec2(design_value_id):
+        logger.debug(f"### update_tablec2 {design_value_id}")
         name_and_units = (
             f"{design_value_id} ({config['dvs'][design_value_id]['units']})"
         )
         # TODO: Use get_data here
-        df = data[design_value_id]["table"]
+        # df = data[design_value_id]["table"]
+        df = get_data(config, design_value_id, "table")
         df = (
             df[["Location", "Prov", "lon", "lat", "PCIC", "NBCC 2015"]]
                 .round(3)
@@ -208,8 +234,22 @@ def get_app(config, data):
         ],
     )
     def update_slider(design_value_id, dataset_id):
-        dv_var_name = data[design_value_id]["dv"]
-        field = data[design_value_id][dataset_id][dv_var_name].values
+        # dv_var_name = data[design_value_id]["dv"]
+        # field = data[design_value_id][dataset_id][dv_var_name].values
+
+        logger.debug(f"### update_slider: {(design_value_id, dataset_id)}")
+        # TODO: Use config here. It will have to add a property that specifies
+        #   The value is ultimately retrieved from the "model" dataset, but
+        #   it must be the same for both "reconstruction" and "model" datasets
+        #   for the same `design_value_id`. Maybe not.
+        data = get_data(config, design_value_id, dataset_id)
+        logger.debug("### update_slider: got data")
+        # TODO: Factor this out as get_data_values(data)?
+        logger.debug(f"### update_slider: data.data_vars {type(data.data_vars)}")
+        (dv_var_name,) = data.data_vars
+        field = data[dv_var_name].values
+        logger.debug("### update_slider: got values")
+
         minimum = float(np.round(np.nanmin(field), 3))
         maximum = float(np.round(np.nanmax(field), 3))
         num_steps = 20
@@ -219,6 +259,7 @@ def get_app(config, data):
             for x in (minimum * 1.008, (minimum + maximum) / 2, maximum)
         }
         default_value = [minimum, maximum]
+        logger.debug(f"### update_slider: return {[minimum, maximum, step, marks, default_value]}")
         return [minimum, maximum, step, marks, default_value]
 
     def value_table(*items):
@@ -241,12 +282,16 @@ def get_app(config, data):
         )
 
     def dv_value(name, interpolation, rlon, rlat):
-        var_name = data[name]["dv"]
-        dataset = data[name][interpolation]
-        ix, iy = rlonlat_to_rindices(dataset, rlon, rlat)
-        # print(f"ix={ix}, iy={iy}, var_name={var_name},")
-        # print(f"data[name] {data[name]}")
-        return dataset[var_name].values[iy, ix]
+        # var_name = data[name]["dv"]
+        # dataset = data[name][interpolation]
+        # ix, iy = rlonlat_to_rindices(dataset, rlon, rlat)
+        # # print(f"ix={ix}, iy={iy}, var_name={var_name},")
+        # # print(f"data[name] {data[name]}")
+        # return dataset[var_name].values[iy, ix]
+        data = get_data(config, name, interpolation)
+        (dv_var_name,) = data.data_vars
+        ix, iy = rlonlat_to_rindices(data, rlon, rlat)
+        return data[dv_var_name].values[iy, ix]
 
     def dv_table(rlon, rlat, selected_dv=None, selected_interp=None):
         """
@@ -321,7 +366,7 @@ def get_app(config, data):
         if hover_data is None:
             return None
 
-        dataset = data[design_value_id_ctrl][interpolation_ctrl]
+        dataset = get_data(config, design_value_id_ctrl, interpolation_ctrl)
         rlon, rlat = pointer_rlonlat(hover_data)
         ix, iy = pointer_rindices(hover_data, dataset)
         lon, lat = rindices_to_lonlat(dataset, ix, iy)
@@ -362,7 +407,7 @@ def get_app(config, data):
         if click_data is None:
             return None
 
-        dataset = data[design_value_id_ctrl][interpolation_ctrl]
+        dataset = get_data(config, design_value_id_ctrl, interpolation_ctrl)
         rlon, rlat = pointer_rlonlat(click_data)
         ix, iy = pointer_rindices(click_data, dataset)
         # Note that lon, lat is derived from selected dataset, which may have
@@ -402,7 +447,7 @@ def get_app(config, data):
         if click_data is None:
             return None
 
-        dataset = data[design_value_id_ctrl][interpolation_ctrl]
+        dataset = get_data(config, design_value_id_ctrl, interpolation_ctrl)
         rlon, rlat = pointer_rlonlat(click_data)
         ix, iy = pointer_rindices(click_data, dataset)
         # Note that lon, lat is derived from selected dataset, which may have
@@ -491,6 +536,44 @@ def get_app(config, data):
         colour_map_ctrl,
         viewport_ds,
     ):
+        empty_fig = {
+            # "data": go_list,
+            "layout": {
+                "title": "Loading...",
+                "font": dict(size=13, color="grey"),
+                # "xaxis": dict(
+                #     zeroline=False,
+                #     range=[ds.rlon.values[icxmin], ds.rlon.values[icxmax]],
+                #     showgrid=False,  # thin lines in the background
+                #     visible=False,  # numbers below
+                # ),
+                # "yaxis": dict(
+                #     zeroline=False,
+                #     range=[ds.rlat.values[icymin], ds.rlat.values[icymax]],
+                #     showgrid=False,  # thin lines in the background
+                #     visible=False,
+                # ),
+                # "xaxis_showgrid": False,
+                # "yaxis_showgrid": False,
+                # "hoverlabel": dict(
+                #     bgcolor="white", font_size=16, font_family="Rockwell"
+                # ),
+                # "hoverdistance": 5,
+                # "hovermode": "closest",
+                # # "width": 1000,
+                "height": 750,
+                # "showlegend": False,
+                # "legend_orientation": "v",
+                # "scrollZoom": True,
+                "uirevision": "None",
+            },
+        }
+
+        if range_slider is None:
+            logger.debug("### update_ds: range_slider is None")
+            return empty_fig
+
+        logger.debug("### update_ds")
         viewport = viewport_ds and json.loads(viewport_ds)
 
         zmin = range_slider[0]
@@ -512,12 +595,23 @@ def get_app(config, data):
 
         discrete_colorscale = plotly_discrete_colorscale(ticks, colours)
 
+        # TODO: Inline this unnecessary variable
         r_or_m = dataset_ctrl
 
-        dv = data[design_value_id_ctrl]["dv"]
-        station_dv = data[design_value_id_ctrl]["station_dv"]
-        ds = data[design_value_id_ctrl][r_or_m]
-        df = data[design_value_id_ctrl]["stations"]
+        # # TODO: Use get_data here
+        # dv = data[design_value_id_ctrl]["dv"]
+        # # TODO: Use config here
+        # station_dv = data[design_value_id_ctrl]["station_dv"]
+        # # TODO: Use get_data here
+        # ds = data[design_value_id_ctrl][r_or_m]
+        # # TODO: Use get_data here
+        # df = data[design_value_id_ctrl]["stations"]
+
+        # TODO: Rename all this shit
+        ds = get_data(config, design_value_id_ctrl, r_or_m)
+        (dv,) = ds.data_vars  # TODO: Rename dv_var_name
+        df = get_data(config, design_value_id_ctrl, "stations")
+        station_dv = config["dvs"][design_value_id_ctrl]["station_dv"]
 
         # Index values for clipping data to Canada bounds
         icxmin = find_nearest_index(ds.rlon.values, cx_min)
