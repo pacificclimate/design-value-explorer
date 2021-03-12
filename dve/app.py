@@ -378,12 +378,12 @@ def get_app(config):
                 ("Lon", round(lon, 6)),
                 # (f"Z ({design_value_id_ctrl}) ({source})", round(z, 6)),
             ),
-            dv_table(
-                rlon,
-                rlat,
-                selected_dv=design_value_id_ctrl,
-                selected_interp=interpolation_ctrl,
-            ),
+            # dv_table(
+            #     rlon,
+            #     rlat,
+            #     selected_dv=design_value_id_ctrl,
+            #     selected_interp=interpolation_ctrl,
+            # ),
         ]
 
     # TODO: This can be better done by setting the "href" and "download"
