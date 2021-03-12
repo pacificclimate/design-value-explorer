@@ -104,17 +104,11 @@ def overlay_options():
     ]
 
 
-def colourbar_options(data, colormaps):
+def colourbar_options(colormaps):
     """
     Layout for Colourbar Options section.
     This function returns a list of rows.
     """
-
-    (first_dv,) = data[list(data.keys())[0]]["reconstruction"].data_vars
-    first_rfield = data[list(data.keys())[0]]["reconstruction"][first_dv]
-    dmin = np.nanmin(first_rfield)
-    dmax = np.nanmax(first_rfield)
-    num_range_slider_steps = 10
 
     return [
         # Section title
