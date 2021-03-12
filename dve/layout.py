@@ -46,11 +46,21 @@ def header(config):
     ]
 
 
-def overlay_options():
+def overlay_options(config):
     """
     Layout for Overlay Options section.
     This function returns a list of rows.
     """
+    climate_ctrl_options = (
+        [{"label": "Historical", "value": "historical"}] +
+        [
+            {
+                "label": config["future_change_factors"]["label"].format(id),
+                "value": id,
+            }
+            for id in config["future_change_factors"]["ids"]
+        ]
+    )
 
     return [
         # Section title
@@ -61,7 +71,8 @@ def overlay_options():
         # Control titles
         dbc.Row(
             [
-                dbc.Col(html.Label("Dataset"), width=6),
+                dbc.Col(html.Label("Climate"), width=4),
+                dbc.Col(html.Label("Dataset"), width=4),
                 dbc.Col(html.Label("Mask"), width=2),
                 dbc.Col(html.Label("Stations"), width=2),
             ]
@@ -69,6 +80,15 @@ def overlay_options():
         # Controls
         dbc.Row(
             [
+                dbc.Col(
+                    dcc.Dropdown(
+                        id="climate-ctrl",
+                        options=climate_ctrl_options,
+                        value=climate_ctrl_options[0]["value"],
+                        clearable=False,
+                    ),
+                    width=4,
+                ),
                 dbc.Col(
                     dcc.Dropdown(
                         id="dataset-ctrl",
@@ -85,7 +105,7 @@ def overlay_options():
                         value="reconstruction",
                         clearable=False,
                     ),
-                    width=6,
+                    width=4,
                 ),
                 dbc.Col(
                     daq.BooleanSwitch(
@@ -99,7 +119,8 @@ def overlay_options():
                     ),
                     width=2,
                 ),
-            ]
+            ],
+            style={"font-size": "0.8em"}
         ),
     ]
 
@@ -168,7 +189,8 @@ def colourbar_options(colormaps):
                         style={"margin": "2em -25px"},
                     )
                 ),
-            ]
+            ],
+            style={"font-size": "0.8em"}
         ),
     ]
 
@@ -247,7 +269,7 @@ def map_tab(config):
                     ),
                     dbc.Col(
                         [
-                            *overlay_options(),
+                            *overlay_options(config),
                             *colourbar_options(colour_maps),
                             *user_graph_interaction(),
                         ],

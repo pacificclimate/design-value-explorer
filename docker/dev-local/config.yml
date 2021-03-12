@@ -46,9 +46,9 @@ dvs:
         reconstruction_path: data/reconstructions/RL50_reconstruction.nc
         table: data/tables/RL50_TableC2.csv
         future_change_factor_paths:
-            0.5C: data/change_factors/D0.5C/RL50_CanRCM4_ensmean_CF_DT0.5.nc
-            1.0C: data/change_factors/D1.0C/RL50_CanRCM4_ensmean_CF_DT1.0.nc
-            1.5C: data/change_factors/D1.5C/RL50_CanRCM4_ensmean_CF_DT1.5.nc
+            "0.5": data/change_factors/D0.5C/RL50_CanRCM4_ensmean_CF_DT0.5.nc
+            "1.0": data/change_factors/D1.0C/RL50_CanRCM4_ensmean_CF_DT1.0.nc
+            "1.5": data/change_factors/D1.5C/RL50_CanRCM4_ensmean_CF_DT1.5.nc
             # etc.
         colour_map: "terrain_r"
         scale:
@@ -267,14 +267,14 @@ dvs:
 
 future_change_factors:
     ids:
-        - "0.5C"
-        - "1.0C"
-        - "1.5C"
-        - "2.0C"
-        - "2.5C"
-        - "3.0C"
-        - "3.5C"
-    label: "Future: {} above pre-industrial"
+        - "0.5"
+        - "1.0"
+        - "1.5"
+        - "2.0"
+        - "2.5"
+        - "3.0"
+        - "3.5"
+    label: "Future: {}°C above pre-industrial"
 
 map:
     colour_maps:
