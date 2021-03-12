@@ -95,7 +95,7 @@ def get_app(config, data):
     app.title = "Pacific Climate Impacts Consortium Design Value Explorer"
     app.config.suppress_callback_exceptions = True
 
-    app.layout = dve.layout.main(config, data)
+    app.layout = dve.layout.main(config)
 
     @app.callback(
         [Output("table-C2-dv", "children"), Output("table", "children")],
