@@ -87,9 +87,6 @@ def get_app(config, data):
     )
 
     # initialize app
-    TIMEOUT = 60
-    server = flask.Flask("app")
-    app = dash.Dash("app", server=server)
     external_stylesheets = [dbc.themes.BOOTSTRAP]
     app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
     app.title = "Pacific Climate Impacts Consortium Design Value Explorer"
@@ -105,6 +102,7 @@ def get_app(config, data):
         name_and_units = (
             f"{design_value_id} ({config['dvs'][design_value_id]['units']})"
         )
+        # TODO: Use get_data here
         df = data[design_value_id]["table"]
         df = (
             df[["Location", "Prov", "lon", "lat", "PCIC", "NBCC 2015"]]
