@@ -8,19 +8,19 @@ Plotly/Dash for interactive visualization of design value fields.
 
 ## Cloning the project
 
-Clone this repository
+Clone this repository:
 ```
 git clone https://github.com/pacificclimate/dash-dv-explorer/
 ```
 
 Because we primarily use a Docker image to run the code for testing and
-development, there is (normally) no need to install and run the project 
+development, there is (normally) no need to install and run the project
 directly on a development machine.
 
 ## App configuration
 
-Configuration paths go into `config.yml`. An example is provided by default. 
-Note that the paths are not absolute, and use `resource_pkgs.resource_filename` 
+Configuration paths go into `config.yml`. An example is provided by default.
+Note that the paths are not absolute, and use `resource_pkgs.resource_filename`
 set within `dve/` as a reference.
 
 The generic recipe is:
@@ -63,7 +63,7 @@ dvs:
 
 colormaps:
     # list of colormaps as found in matplotlib.cm
-    ['viridis', 'plasma', 'inferno', ...] 
+    ['viridis', 'plasma', 'inferno', ...]
 ```
 
 ## Deploying to production
@@ -72,28 +72,28 @@ colormaps:
 
 1. A production Docker image, `pcic/dash-dv-explorer` is automatically built
    on Dockerhub.
- 
-1. All production-related Docker infrastructure is in the repo under 
+
+1. All production-related Docker infrastructure is in the repo under
    `docker/production`.
-   
-1. Data files are mounted to the docker container. 
-   
+
+1. Data files are mounted to the docker container.
+
 1. A live-updatable configuration file can be mounted to the container.
-   The `docker-compose.yml` contains a mount for this already, for a 
+   The `docker-compose.yml` contains a mount for this already, for a
    file at  `docker/production/config.yml`. You may wish to change this.
-   
+
 1. The usual `docker-compose` commands can be used to start, stop, and restart
-   the container. 
-   
+   the container.
+
 1. Proxying:
-   - Dash applications apparently know the domain they are proxied from. 
-   (Guessing this is via an HTTP header.) 
+   - Dash applications apparently know the domain they are proxied from.
+   (Guessing this is via an HTTP header.)
    - They do not know the base URL path used by the proxy, so this must be
    specified using the environment variable `DASH_URL_BASE_PATHNAME` as
    noted below.
    - The proxy *must not* strip the base path from the URLs forwarded to the
    Dash app.
-   
+
 Details follow.
 
 #### Prepare
@@ -102,7 +102,7 @@ Details follow.
 1. Update (your copy of) `docker-compose.yml` to reflect the version
    of the image you want to run.
 1. Update (your copy of) `.env`:
-   1. IMPORTANT: Set `DASH_URL_BASE_PATHNAME` to the base path of the proxied 
+   1. IMPORTANT: Set `DASH_URL_BASE_PATHNAME` to the base path of the proxied
       URL. It must begin and end with `/`, e.g., `/design-value-explorer/`.
    1. Set the `GUNICORN_*` parameters as desired.
 1. Update (your copy of) the configuration file if necessary.
@@ -142,13 +142,13 @@ building and running this image is in `docker/dev-local`.
 The image is normally built locally. (Because of this, there is no automated
 build for the dev-local image as there is for the production image.) The image
 installs the dependencies listed in `requirements.txt`, but does not install
-`dash-dev-explorer`. The image need only be rebuilt when project dependencies 
+`dash-dev-explorer`. The image need only be rebuilt when project dependencies
 (`requirements.txt`) change.
 
 After building, the image is run locally, and the
 local codebase for `dash-dv-explorer` is mounted to it.
-The container's first step (via the ENTRYPOINT) is to install that 
-local codebase. 
+The container's first step (via the ENTRYPOINT) is to install that
+local codebase.
 With this arrangement, changes to the local codebase are available
 directly inside the container. The container does not need to be restarted,
 nor does the image need to be rebuilt in order to test code changes.
@@ -168,7 +168,7 @@ commands can be run, including running tests and running the app.
 
 #### Build the image
 
-The image need only be (re)built when the project is first cloned and when 
+The image need only be (re)built when the project is first cloned and when
 `requirements.txt` changes. To build the image:
 
 ```
@@ -197,7 +197,7 @@ docker exec -it dve-dev-local bash
 You will see a prompt like
 
 ```
-root@f4bcdc72b9f2:/codebase# 
+root@f4bcdc72b9f2:/codebase#
 ```
 
 At this prompt you can enter bash commands, including the following:
@@ -213,14 +213,14 @@ python dve_app.py --debug
 The `--debug` option does two things: Runs the server with `debug=True`, and
 defaults the logging level to `DEBUG`.
 
-Aside: Dash apps are based on Flask. 
-Flask documentation 
+Aside: Dash apps are based on Flask.
+Flask documentation
 [strongly recommends](https://flask.palletsprojects.com/en/1.1.x/server/#command-line)
 running apps for development using the Flask command line `flask run`.
 Unfortunately, that does not work for a Dash app, and we must run it more
-directly from a script as above. 
+directly from a script as above.
 
-This enables the development environment, including the interactive debugger 
+This enables the development environment, including the interactive debugger
 and reloader, and then starts the server on `http://localhost:5000/`.
 
 For more details, see the link above.
@@ -238,7 +238,7 @@ docker-compose -f docker/dev-local/docker-compose.yml down
 ## Installing and running directly (no Docker)
 
 Installing and running directly in the local environment is not recommended,
-mainly because it requires data files to be copied (or linked) into the project 
+mainly because it requires data files to be copied (or linked) into the project
 directories. This is better accomplished by mounting them to a Docker image
 that runs the app.
 
@@ -268,7 +268,7 @@ export FLASK_ENV=development
 flask run
 ```
 
-This enables the development environment, including the interactive debugger 
+This enables the development environment, including the interactive debugger
 and reloader, and then starts the server on `http://localhost:5000/`.
 
 ## Releasing
