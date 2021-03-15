@@ -1,5 +1,11 @@
 # News / Release Notes
 
+## 1.1.2
+
+**2021-Mar-15**
+
+- [Fix download button](https://github.com/pacificclimate/dash-dv-explorer/pull/80)
+
 ## 1.1.1
 
 **2021-Mar-15**
