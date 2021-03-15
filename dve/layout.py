@@ -104,17 +104,11 @@ def overlay_options():
     ]
 
 
-def colourbar_options(data, colormaps):
+def colourbar_options(colormaps):
     """
     Layout for Colourbar Options section.
     This function returns a list of rows.
     """
-
-    (first_dv,) = data[list(data.keys())[0]]["reconstruction"].data_vars
-    first_rfield = data[list(data.keys())[0]]["reconstruction"][first_dv]
-    dmin = np.nanmin(first_rfield)
-    dmax = np.nanmax(first_rfield)
-    num_range_slider_steps = 10
 
     return [
         # Section title
@@ -227,12 +221,11 @@ def user_graph_interaction():
     ]
 
 
-def map_tab(config, data):
+def map_tab(config):
     """
     Top-level layout of map tab.
 
     :param config:
-    :param data:
     :return: dbc.Tab
     """
     colour_maps = config["map"]["colour_maps"]
@@ -255,7 +248,7 @@ def map_tab(config, data):
                     dbc.Col(
                         [
                             *overlay_options(),
-                            *colourbar_options(data, colour_maps),
+                            *colourbar_options(colour_maps),
                             *user_graph_interaction(),
                         ],
                         lg=5,
@@ -300,14 +293,10 @@ def internal_data():
     ]
 
 
-def main(config, data):
+def main(config):
     """
     Top-level layout component. `app.layout` should be set to the this value.
     """
-
-    # TODO: Replace the use of preloaded data with on-demand requests
-    #   for the data to be loaded.
-
     return dbc.Container(
         id="big-app-container",
         fluid=True,
@@ -315,7 +304,7 @@ def main(config, data):
         children=[
             *header(config),
             dbc.Row(
-                dbc.Col(dbc.Tabs([map_tab(config, data), table_C2_tab()])),
+                dbc.Col(dbc.Tabs([map_tab(config), table_C2_tab()])),
                 style={"margin-top": "1em"},
             ),
             *internal_data(),

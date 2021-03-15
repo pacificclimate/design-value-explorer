@@ -15,7 +15,7 @@ from dve.colorbar import (
     plotly_discrete_colorscale,
 )
 
-from dve.data import load_data
+from dve.data import load_data, load_file
 import dve
 import dve.data
 import dve.layout
@@ -50,6 +50,7 @@ import os
 import warnings
 import logging
 import csv
+import functools
 
 
 logger = logging.getLogger("dve")
@@ -63,14 +64,34 @@ def make_app(config_filepath="config.yml"):
         config = yaml.load(config_file)
     logger.debug(f"Configuration loaded. {config}")
 
-    data = load_data(config)
-
-    app = get_app(config, data)
+    app = get_app(config)
 
     return app
 
 
-def get_app(config, data):
+@functools.lru_cache(maxsize=20)
+def load_file_cached(filepath):
+    """Caches the results of a load_file operation. This is the basis of
+    all on-demand data retrieval.
+    TODO: Replace this by applying caching directly to `load_file`.
+    """
+    return load_file(filepath)
+
+
+def get_data(config, design_value_id, dataset_id):
+    """Get a specific data object. This function knows the structure
+    of `config` so that clients don't have to."""
+    # logger.debug(f"### get_data {(design_value_id, dataset_id)}")
+    path_key = {
+        "stations": "station_path",
+        "table": "table",
+        "model": "input_model_path",
+        "reconstruction": "reconstruction_path",
+    }[dataset_id]
+    return load_file_cached(config["dvs"][design_value_id][path_key])
+
+
+def get_app(config):
     warnings.filterwarnings("ignore")
 
     # load polygon data
@@ -87,15 +108,12 @@ def get_app(config, data):
     )
 
     # initialize app
-    TIMEOUT = 60
-    server = flask.Flask("app")
-    app = dash.Dash("app", server=server)
     external_stylesheets = [dbc.themes.BOOTSTRAP]
     app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
     app.title = "Pacific Climate Impacts Consortium Design Value Explorer"
     app.config.suppress_callback_exceptions = True
 
-    app.layout = dve.layout.main(config, data)
+    app.layout = dve.layout.main(config)
 
     @app.callback(
         [Output("table-C2-dv", "children"), Output("table", "children")],
@@ -105,7 +123,7 @@ def get_app(config, data):
         name_and_units = (
             f"{design_value_id} ({config['dvs'][design_value_id]['units']})"
         )
-        df = data[design_value_id]["table"]
+        df = get_data(config, design_value_id, "table")
         df = (
             df[["Location", "Prov", "lon", "lat", "PCIC", "NBCC 2015"]]
                 .round(3)
@@ -210,8 +228,10 @@ def get_app(config, data):
         ],
     )
     def update_slider(design_value_id, dataset_id):
-        dv_var_name = data[design_value_id]["dv"]
-        field = data[design_value_id][dataset_id][dv_var_name].values
+        data = get_data(config, design_value_id, dataset_id)
+        (dv_var_name,) = data.data_vars
+        field = data[dv_var_name].values
+
         minimum = float(np.round(np.nanmin(field), 3))
         maximum = float(np.round(np.nanmax(field), 3))
         num_steps = 20
@@ -243,12 +263,10 @@ def get_app(config, data):
         )
 
     def dv_value(name, interpolation, rlon, rlat):
-        var_name = data[name]["dv"]
-        dataset = data[name][interpolation]
-        ix, iy = rlonlat_to_rindices(dataset, rlon, rlat)
-        # print(f"ix={ix}, iy={iy}, var_name={var_name},")
-        # print(f"data[name] {data[name]}")
-        return dataset[var_name].values[iy, ix]
+        data = get_data(config, name, interpolation)
+        (dv_var_name,) = data.data_vars
+        ix, iy = rlonlat_to_rindices(data, rlon, rlat)
+        return data[dv_var_name].values[iy, ix]
 
     def dv_table(rlon, rlat, selected_dv=None, selected_interp=None):
         """
@@ -323,7 +341,7 @@ def get_app(config, data):
         if hover_data is None:
             return None
 
-        dataset = data[design_value_id_ctrl][interpolation_ctrl]
+        dataset = get_data(config, design_value_id_ctrl, interpolation_ctrl)
         rlon, rlat = pointer_rlonlat(hover_data)
         ix, iy = pointer_rindices(hover_data, dataset)
         lon, lat = rindices_to_lonlat(dataset, ix, iy)
@@ -335,12 +353,12 @@ def get_app(config, data):
                 ("Lon", round(lon, 6)),
                 # (f"Z ({design_value_id_ctrl}) ({source})", round(z, 6)),
             ),
-            dv_table(
-                rlon,
-                rlat,
-                selected_dv=design_value_id_ctrl,
-                selected_interp=interpolation_ctrl,
-            ),
+            # dv_table(
+            #     rlon,
+            #     rlat,
+            #     selected_dv=design_value_id_ctrl,
+            #     selected_interp=interpolation_ctrl,
+            # ),
         ]
 
     # TODO: This can be better done by setting the "href" and "download"
@@ -364,7 +382,7 @@ def get_app(config, data):
         if click_data is None:
             return None
 
-        dataset = data[design_value_id_ctrl][interpolation_ctrl]
+        dataset = get_data(config, design_value_id_ctrl, interpolation_ctrl)
         rlon, rlat = pointer_rlonlat(click_data)
         ix, iy = pointer_rindices(click_data, dataset)
         # Note that lon, lat is derived from selected dataset, which may have
@@ -404,7 +422,7 @@ def get_app(config, data):
         if click_data is None:
             return None
 
-        dataset = data[design_value_id_ctrl][interpolation_ctrl]
+        dataset = get_data(config, design_value_id_ctrl, interpolation_ctrl)
         rlon, rlat = pointer_rlonlat(click_data)
         ix, iy = pointer_rindices(click_data, dataset)
         # Note that lon, lat is derived from selected dataset, which may have
@@ -493,6 +511,20 @@ def get_app(config, data):
         colour_map_ctrl,
         viewport_ds,
     ):
+        empty_fig = {
+            "layout": {
+                "title": "Loading...",
+                "font": dict(size=13, color="grey"),
+                "height": 750,
+                "uirevision": "None",
+            },
+        }
+
+        # TODO: This appears not to happen any more. Remove if so.
+        if range_slider is None:
+            logger.debug("### update_ds: range_slider is None")
+            return empty_fig
+
         viewport = viewport_ds and json.loads(viewport_ds)
 
         zmin = range_slider[0]
@@ -514,12 +546,14 @@ def get_app(config, data):
 
         discrete_colorscale = plotly_discrete_colorscale(ticks, colours)
 
+        # TODO: Inline this unnecessary variable
         r_or_m = dataset_ctrl
 
-        dv = data[design_value_id_ctrl]["dv"]
-        station_dv = data[design_value_id_ctrl]["station_dv"]
-        ds = data[design_value_id_ctrl][r_or_m]
-        df = data[design_value_id_ctrl]["stations"]
+        # TODO: Rename all this shit
+        ds = get_data(config, design_value_id_ctrl, r_or_m)
+        (dv,) = ds.data_vars  # TODO: Rename dv_var_name
+        df = get_data(config, design_value_id_ctrl, "stations")
+        station_dv = config["dvs"][design_value_id_ctrl]["station_dv"]
 
         # Index values for clipping data to Canada bounds
         icxmin = find_nearest_index(ds.rlon.values, cx_min)
