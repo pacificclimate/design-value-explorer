@@ -43,7 +43,12 @@ from .map_utils import (
     rindices_to_lonlat,
     pointer_value,
 )
-from .download_utils import download_filename, download_filepath
+from .download_utils import (
+    download_filename,
+    download_filepath,
+    download_base_url,
+    download_url,
+)
 
 import flask
 import os
@@ -393,7 +398,7 @@ def get_app(config):
         return [
             html.A(
                 "Download this data",
-                href=download_filepath(lon, lat),
+                href=download_url(lon, lat),
                 download=download_filename(lon, lat),
                 className="btn btn-primary btn-sm mb-1",
             )
@@ -431,7 +436,10 @@ def get_app(config):
         z, source = pointer_value(click_data)
 
         # Create data table for download
-        with open(download_filepath(lon, lat), "w") as file:
+        with open(
+            os.path.join("/", download_filepath(lon, lat)),
+            "w"
+        ) as file:
             writer = csv.writer(file, delimiter=",")
             writer.writerow(("Latitude", lat))
             writer.writerow(("Longitude", lon))
@@ -683,7 +691,7 @@ def get_app(config):
 
         return fig
 
-    @app.server.route("/downloads/by-location/<filename>")
+    @app.server.route(f"{str(download_base_url())}/<filename>")
     def serve_static(filename):
         return flask.send_from_directory(
             os.path.join("/downloads/by-location"), filename
