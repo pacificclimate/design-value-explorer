@@ -1,3 +1,4 @@
+import functools
 import logging
 from pkg_resources import resource_filename
 from climpyrical.data import read_data
@@ -19,6 +20,30 @@ def load_file(path):
         logger.debug(f"Loaded data from '{path}'")
         return rv
     raise ValueError(f"Unrecognized file type in path '{path}'")
+
+
+@functools.lru_cache(maxsize=20)
+def load_file_cached(filepath):
+    """Caches the results of a load_file operation. This is the basis of
+    all on-demand data retrieval.
+    TODO: Replace this by applying caching directly to `load_file`.
+    """
+    return load_file(filepath)
+
+
+def get_data(config, design_value_id, dataset_id):
+    """Get a specific data object. This function knows the structure
+    of `config` so that clients don't have to."""
+    # logger.debug(f"### get_data {(design_value_id, dataset_id)}")
+    path_key = {
+        "stations": "station_path",
+        "table": "table",
+        "model": "input_model_path",
+        "reconstruction": "reconstruction_path",
+    }[dataset_id]
+    return load_file_cached(config["dvs"][design_value_id][path_key])
+
+
 
 
 def load_data(config):
