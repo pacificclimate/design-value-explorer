@@ -9,7 +9,6 @@ from dve.data import get_data
 from dve.download_utils import (
     download_filename,
     download_filepath,
-    download_base_url,
     download_url,
 )
 from dve.map_utils import (
