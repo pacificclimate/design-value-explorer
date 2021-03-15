@@ -233,3 +233,21 @@ def add_callbacks(app, config):
         }
 
         return fig
+
+    @app.callback(
+        Output("viewport-ds", "children"),
+        [Input("my-graph", "relayoutData")],
+        [State("viewport-ds", "children")],
+    )
+    def update_viewport(relayout_data, prev_viewport):
+        # Save map viewport bounds when and only when they change
+        # (zoom, pan events)
+        if relayout_data is not None and "xaxis.range[0]" in relayout_data:
+            viewport = {
+                "x_min": relayout_data["xaxis.range[0]"],
+                "x_max": relayout_data["xaxis.range[1]"],
+                "y_min": relayout_data["yaxis.range[0]"],
+                "y_max": relayout_data["yaxis.range[1]"],
+            }
+            return json.dumps(viewport)
+        return prev_viewport
