@@ -8,6 +8,8 @@ services:
     container_name: dve-dev-local
     stdin_open: true
     tty: true
+    env_file:
+      - .env
     ports:
       - "30023:5000"
     volumes:
