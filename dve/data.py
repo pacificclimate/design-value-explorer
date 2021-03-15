@@ -12,11 +12,11 @@ def load_file(path):
     filename = resource_filename("dve", path)
     if path.endswith(".csv"):
         rv = pd.read_csv(filename)
-        logger.debug(f"   Loaded data from '{path}'")
+        logger.debug(f"Loaded data from '{path}'")
         return rv
     if path.endswith(".nc"):
         rv = read_data(filename)
-        logger.debug(f"   Loaded data from '{path}'")
+        logger.debug(f"Loaded data from '{path}'")
         return rv
     raise ValueError(f"Unrecognized file type in path '{path}'")
 
