@@ -3,11 +3,11 @@ import yaml
 
 import dve
 import dve.app_.map_figure
+import dve.app_.table_c2
 import dve.data
 import dve.layout
 
 import dash
-import dash_table
 from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
 import dash_html_components as html
@@ -65,65 +65,7 @@ def get_app(config):
 
     app.layout = dve.layout.main(config)
 
-    @app.callback(
-        [Output("table-C2-dv", "children"), Output("table", "children")],
-        [Input("design-value-id-ctrl", "value")]
-    )
-    def update_tablec2(design_value_id):
-        name_and_units = (
-            f"{design_value_id} ({config['dvs'][design_value_id]['units']})"
-        )
-        df = get_data(config, design_value_id, "table")
-        df = (
-            df[["Location", "Prov", "lon", "lat", "PCIC", "NBCC 2015"]]
-                .round(3)
-        )
-
-        column_info = {
-            "Location": {"name": ["", "Location"], "type": "text"},
-            "Prov": {"name": ["", "Province"], "type": "text"},
-            "lon": {"name": ["", "Longitude"], "type": "numeric"},
-            "lat": {"name": ["", "Latitude"], "type": "numeric"},
-            "PCIC": {"name": [name_and_units, "PCIC"], "type": "numeric"},
-            "NBCC 2015": {
-                "name": [name_and_units, "NBCC 2015"],
-                "type": "numeric"
-            },
-        }
-
-        return [
-            name_and_units,
-            dash_table.DataTable(
-                columns=[{"id": id, **column_info[id]} for id in df.columns],
-                style_table={
-                    # "width": "100%",
-                    # 'overflowX': 'auto',
-                },
-                style_cell={
-                    "textAlign": "center",
-                    "whiteSpace": "normal",
-                    "height": "auto",
-                    "padding": "5px",
-                    "width": "2em",
-                    "minWidth": "2em",
-                    "maxWidth": "2em",
-                    'overflow': 'hidden',
-                    'textOverflow': 'ellipsis',
-                },
-                style_cell_conditional=[
-                    {
-                        "if": {"column_id": "Location"},
-                        "width": "5em",
-                        "textAlign": "left",
-                    },
-                ],
-                style_as_list_view=True,
-                style_header={"backgroundColor": "white", "fontWeight": "bold"},
-                page_action="none",
-                filter_action="native",
-                data=df.to_dict("records"),
-            )
-        ]
+    dve.app_.table_c2.add_callbacks(app, config)
 
     @app.callback(
         Output("colour-map-ctrl", "value"),
