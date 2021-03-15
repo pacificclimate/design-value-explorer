@@ -1,5 +1,15 @@
 # News / Release Notes
 
+## 1.1.1
+
+**2021-Mar-15**
+
+Main change: Load data only on demand.
+
+- [Load data only on demand](https://github.com/pacificclimate/dash-dv-explorer/pull/78)
+- [Partial fix for security vulnerabilities](https://github.com/pacificclimate/dash-dv-explorer/pull/75)
+
+
 ## 1.1.0
 
 **2021-Mar-11**
