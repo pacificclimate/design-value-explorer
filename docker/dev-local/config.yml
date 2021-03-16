@@ -46,10 +46,8 @@ dvs:
         reconstruction_path: data/reconstructions/RL50_reconstruction.nc
         table: data/tables/RL50_TableC2.csv
         future_change_factor_paths:
-            "0.5": data/change_factors/D0.5C/RL50_CanRCM4_ensmean_CF_DT0.5.nc
-            "1.0": data/change_factors/D1.0C/RL50_CanRCM4_ensmean_CF_DT1.0.nc
-            "1.5": data/change_factors/D1.5C/RL50_CanRCM4_ensmean_CF_DT1.5.nc
-            # etc.
+            "0.5": data/change_factors/rain_q50yr/D0.5C/RL50_CanRCM4_ensmean_CF_DT0.5.nc
+            "1.0": data/change_factors/rain_q50yr/D1.0C/RL50_CanRCM4_ensmean_CF_DT1.0.nc
         colour_map: "terrain_r"
         scale:
             default: logarithmic
@@ -62,6 +60,9 @@ dvs:
         input_model_path: data/model_inputs/hurs_CanRCM4-LE_ens15_1951-2016_ensmean.nc
         reconstruction_path: data/reconstructions/RHann_reconstruction.nc
         table: data/tables/RHann_TableC2.csv
+        future_change_factor_paths:
+            "0.5": data/change_factors/annual_relative_humidity/D0.5C/RHann_CanRCM4_ensmean_CF_DT0.5.nc
+            "1.0": data/change_factors/annual_relative_humidity/D1.0C/RHann_CanRCM4_ensmean_CF_DT1.0.nc
         colour_map: "terrain_r"
         scale:
             default: linear
@@ -122,6 +123,9 @@ dvs:
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan2.5p_ensmean.nc
         reconstruction_path: data/reconstructions/TJan2.5_reconstruction.nc
         table: data/tables/TJan2.5_TableC2.csv
+        future_change_factor_paths:
+            "0.5": data/change_factors/january_2.5%_dry/D0.5C/TJan2.5_CanRCM4_ensmean_CF_DT0.5.nc
+            "1.0": data/change_factors/january_2.5%_dry/D1.0C/TJan2.5_CanRCM4_ensmean_CF_DT1.0.nc
         colour_map: "RdBu_r"
         scale:
             disable_logarithmic: True
@@ -269,12 +273,12 @@ future_change_factors:
     ids:
         - "0.5"
         - "1.0"
-        - "1.5"
-        - "2.0"
-        - "2.5"
-        - "3.0"
-        - "3.5"
-    label: "Future: {}°C above pre-industrial"
+#        - "1.5"
+#        - "2.0"
+#        - "2.5"
+#        - "3.0"
+#        - "3.5"
+    label: "{}°C above pre-industrial"
 
 map:
     colour_maps:
