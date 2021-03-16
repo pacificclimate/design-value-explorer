@@ -59,10 +59,11 @@ def add(app, config):
             Input("design-value-id-ctrl", "value"),
             Input("climate-regime-ctrl", "value"),
             Input("historical-dataset-ctrl", "value"),
+            Input("future-dataset-ctrl", "value"),
         ],
     )
-    def update_slider(design_value_id, climate_regime, dataset_id):
-        data = get_data(config, design_value_id, climate_regime, dataset_id)
+    def update_slider(design_value_id, climate_regime, historical_dataset_id, future_dataset_id):
+        data = get_data(config, design_value_id, climate_regime, historical_dataset_id, future_dataset_id)
         (dv_var_name,) = data.data_vars
         field = data[dv_var_name].values
 

@@ -50,6 +50,7 @@ def add(app, config):
             # Overlay options
             Input("climate-regime-ctrl", "value"),
             Input("historical-dataset-ctrl", "value"),
+            Input("future-dataset-ctrl", "value"),
             Input("mask-ctrl", "on"),
             Input("stations-ctrl", "on"),
             # Colour scale options
@@ -66,7 +67,8 @@ def add(app, config):
         design_value_id,
         # Overlay options
         climate_regime,
-        dataset_id,
+        historical_dataset_id,
+        future_dataset_id,
         mask_on,
         show_stations,
         # Colour scale options
@@ -108,14 +110,12 @@ def add(app, config):
 
         discrete_colorscale = plotly_discrete_colorscale(ticks, colours)
 
-        # TODO: Inline this unnecessary variable
-        r_or_m = dataset_id
-
         # TODO: Rename all this shit
-        ds = get_data(config, design_value_id, climate_regime, r_or_m)
+        ds = get_data(config, design_value_id, climate_regime,
+                      historical_dataset_id, future_dataset_id)
         (dv,) = ds.data_vars  # TODO: Rename dv_var_name
         # TODO: Don't display stations when climate_regime != "historical"?
-        df = get_data(config, design_value_id, "historical", "stations")
+        df = get_data(config, design_value_id, "historical", historical_dataset_id="stations")
         station_dv = config["dvs"][design_value_id]["station_dv"]
 
         # Index values for clipping data to Canada bounds
@@ -157,7 +157,7 @@ def add(app, config):
         df = coord_prep(df, station_dv)
         ds_arr = ds[dv].values[icymin:icymax, icxmin:icxmax].copy()
 
-        if r_or_m == "model" and mask_on:
+        if historical_dataset_id == "model" and mask_on:
             mask = native_mask[icymin:icymax, icxmin:icxmax]
             ds_arr[~mask] = np.nan
 

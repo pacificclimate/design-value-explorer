@@ -42,8 +42,8 @@ def add(app, config):
             size="sm",
         )
 
-    def dv_value(design_value_id, climate_regime, dataset_id, rlon, rlat):
-        data = get_data(config, design_value_id, climate_regime, dataset_id)
+    def dv_value(design_value_id, climate_regime, historical_dataset_id, future_dataset_id, rlon, rlat):
+        data = get_data(config, design_value_id, climate_regime, historical_dataset_id, future_dataset_id)
         (dv_var_name,) = data.data_vars
         ix, iy = rlonlat_to_rindices(data, rlon, rlat)
         return data[dv_var_name].values[iy, ix]
@@ -114,10 +114,11 @@ def add(app, config):
             Input("design-value-id-ctrl", "value"),
             Input("climate-regime-ctrl", "value"),
             Input("historical-dataset-ctrl", "value"),
+            Input("future-dataset-ctrl", "value"),
         ],
     )
     def display_hover_info(
-        hover_data, design_value_id_ctrl, climate_regime, interpolation_ctrl
+        hover_data, design_value_id_ctrl, climate_regime, historical_dataset_id, future_dataset_id
     ):
         # TODO: Can we use a fixed value ("model" or "reconstruction") instead
         #  of interpolation_ctrl? Note: Each type of dataset has a different
@@ -130,7 +131,7 @@ def add(app, config):
             return None
 
         dataset = get_data(
-            config, design_value_id_ctrl, climate_regime, interpolation_ctrl
+            config, design_value_id_ctrl, climate_regime, historical_dataset_id, future_dataset_id
         )
         rlon, rlat = pointer_rlonlat(hover_data)
         ix, iy = pointer_rindices(hover_data, dataset)
@@ -160,10 +161,11 @@ def add(app, config):
             Input("design-value-id-ctrl", "value"),
             Input("climate-regime-ctrl", "value"),
             Input("historical-dataset-ctrl", "value"),
+            Input("future-dataset-ctrl", "value"),
         ],
     )
     def display_download_button(
-        click_data, design_value_id_ctrl, climate_regime, interpolation_ctrl
+        click_data, design_value_id_ctrl, climate_regime, historical_dataset_id, future_dataset_id
     ):
         """
         To get the layout we want, we have to break the map-click callback into
@@ -174,7 +176,7 @@ def add(app, config):
             return None
 
         dataset = get_data(
-            config, design_value_id_ctrl, climate_regime, interpolation_ctrl
+            config, design_value_id_ctrl, climate_regime, historical_dataset_id, future_dataset_id
         )
         rlon, rlat = pointer_rlonlat(click_data)
         ix, iy = pointer_rindices(click_data, dataset)
@@ -199,10 +201,11 @@ def add(app, config):
             Input("design-value-id-ctrl", "value"),
             Input("climate-regime-ctrl", "value"),
             Input("historical-dataset-ctrl", "value"),
+            Input("future-dataset-ctrl", "value"),
         ],
     )
     def display_click_info(
-        click_data, design_value_id_ctrl, climate_regime, interpolation_ctrl
+        click_data, design_value_id_ctrl, climate_regime, historical_dataset_id, future_dataset_id
     ):
         """
         To get the layout we want, we have to break the map-click callback into
@@ -217,7 +220,7 @@ def add(app, config):
             return None
 
         dataset = get_data(
-            config, design_value_id_ctrl, climate_regime, interpolation_ctrl
+            config, design_value_id_ctrl, climate_regime, historical_dataset_id, future_dataset_id
         )
         rlon, rlat = pointer_rlonlat(click_data)
         ix, iy = pointer_rindices(click_data, dataset)
@@ -257,6 +260,6 @@ def add(app, config):
                 rlon,
                 rlat,
                 selected_dv=design_value_id_ctrl,
-                selected_interp=interpolation_ctrl,
+                selected_interp=historical_dataset_id,
             ),
         ]
