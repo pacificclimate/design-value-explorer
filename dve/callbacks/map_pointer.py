@@ -1,15 +1,13 @@
-import csv
-import os.path
-
 from dash.dependencies import Input, Output, State
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 
-from dve.data import get_data
+from dve.data import (get_data, dv_value)
 from dve.download_utils import (
     download_filename,
     download_filepath,
     download_url,
+    create_download_file,
 )
 from dve.map_utils import (
     pointer_rlonlat,
@@ -42,26 +40,8 @@ def add(app, config):
             size="sm",
         )
 
-    def dv_value(
-        design_value_id,
-        climate_regime,
-        historical_dataset_id,
-        future_dataset_id,
-        rlon,
-        rlat,
-    ):
-        data = get_data(
-            config,
-            design_value_id,
-            climate_regime,
-            historical_dataset_id,
-            future_dataset_id,
-        )
-        (dv_var_name,) = data.data_vars
-        ix, iy = rlonlat_to_rindices(data, rlon, rlat)
-        return data[dv_var_name].values[iy, ix]
-
-    def dv_table(rlon, rlat, selected_dv=None, selected_interp=None):
+    # TODO: Unify dv_table and cf_table
+    def dv_table(rlon, rlat, selected_dv=None, selected_dataset_id=None):
         """
         Return a table listing values of design values at a location specified
         by rotated coordinates rlon, rlat
@@ -92,11 +72,12 @@ def add(app, config):
                                     round(
                                         float(
                                             dv_value(
-                                                design_value_id,
-                                                "historical",
-                                                dataset_id,
                                                 rlon,
                                                 rlat,
+                                                config,
+                                                design_value_id,
+                                                "historical",
+                                                historical_dataset_id=dataset_id,
                                             )
                                         ),
                                         3,
@@ -104,11 +85,70 @@ def add(app, config):
                                     style={
                                         "color": "red"
                                         if design_value_id == selected_dv
-                                        and dataset_id == selected_interp
+                                           and dataset_id == selected_dataset_id
                                         else "inherit"
                                     },
                                 )
                                 for dataset_id in ("model", "reconstruction")
+                            ]
+                        )
+                        for design_value_id in config["dvs"].keys()
+                    ]
+                ),
+            ],
+            bordered=True,
+            size="sm",
+        )
+
+    def cf_table(rlon, rlat, selected_dv=None, selected_dataset_id=None):
+        """
+        Return a table listing change factors for each design value at a
+        location specified by rotated coordinates rlon, rlat
+
+        :param rlon:
+        :param rlat:
+        :return:
+        """
+        return dbc.Table(
+            [
+                html.Thead(
+                    [
+                        html.Tr(
+                            [html.Th("DV")] + [
+                                html.Th(dataset_id)
+                                for dataset_id in config["future_change_factors"]["ids"]
+
+                            ]
+                        )
+                    ]
+                ),
+                html.Tbody(
+                    [
+                        html.Tr(
+                            [html.Th(design_value_id, style={"width": "5em"})]
+                            + [
+                                html.Td(
+                                    round(
+                                        float(
+                                            dv_value(
+                                                rlon,
+                                                rlat,
+                                                config,
+                                                design_value_id,
+                                                "future",
+                                                future_dataset_id=dataset_id,
+                                            )
+                                        ),
+                                        3,
+                                    ),
+                                    style={
+                                        "color": "red"
+                                        if design_value_id == selected_dv
+                                           and dataset_id == selected_dataset_id
+                                        else "inherit"
+                                    },
+                                )
+                                for dataset_id in config["future_change_factors"]["ids"]
                             ]
                         )
                         for design_value_id in config["dvs"].keys()
@@ -216,8 +256,8 @@ def add(app, config):
         return [
             html.A(
                 "Download this data",
-                href=download_url(lon, lat),
-                download=download_filename(lon, lat),
+                href=download_url(lon, lat, climate_regime),
+                download=download_filename(lon, lat, climate_regime),
                 className="btn btn-primary btn-sm mb-1",
             )
         ]
@@ -265,33 +305,8 @@ def add(app, config):
         lon, lat = rindices_to_lonlat(dataset, ix, iy)
         z, source = pointer_value(click_data)
 
-        # Create data table for download
-        with open(os.path.join("/", download_filepath(lon, lat)), "w") as file:
-            writer = csv.writer(file, delimiter=",")
-            writer.writerow(("Latitude", lat))
-            writer.writerow(("Longitude", lon))
-            writer.writerow(tuple())
-            writer.writerow(
-                ("Design Value ID", "Model Value", "Reconstruction Value")
-            )
-            for dv_id in config["dvs"].keys():
-                writer.writerow(
-                    (
-                        dv_id,
-                        float(
-                            dv_value(dv_id, "historical", "model", rlon, rlat)
-                        ),
-                        float(
-                            dv_value(
-                                dv_id,
-                                "historical",
-                                "reconstruction",
-                                rlon,
-                                rlat,
-                            )
-                        ),
-                    )
-                )
+        # Create data file for download
+        create_download_file(lon, lat, rlon, rlat, config, climate_regime)
 
         return [
             value_table(
@@ -303,6 +318,12 @@ def add(app, config):
                 rlon,
                 rlat,
                 selected_dv=design_value_id_ctrl,
-                selected_interp=historical_dataset_id,
+                selected_dataset_id=historical_dataset_id,
+            ) if climate_regime == "historical" else
+            cf_table(
+                rlon,
+                rlat,
+                selected_dv=design_value_id_ctrl,
+                selected_dataset_id=future_dataset_id,
             ),
         ]

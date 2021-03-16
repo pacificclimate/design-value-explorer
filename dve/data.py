@@ -3,7 +3,7 @@ import logging
 from pkg_resources import resource_filename
 from climpyrical.data import read_data
 import pandas as pd
-
+from dve.map_utils import rlonlat_to_rindices
 
 logger = logging.getLogger("dve")
 
@@ -105,3 +105,29 @@ def load_data(config):
         value["dv"] = dv
 
     return data
+
+
+def dv_value(
+    rlon,
+    rlat,
+    config,
+    design_value_id,
+    climate_regime,
+    historical_dataset_id=None,
+    future_dataset_id=None,
+):
+    """
+    Get a design variable value for a specified lonlat in rotated pole
+    coordinates.
+    """
+    data = get_data(
+        config,
+        design_value_id,
+        climate_regime,
+        historical_dataset_id,
+        future_dataset_id,
+    )
+    (dv_var_name,) = data.data_vars
+    ix, iy = rlonlat_to_rindices(data, rlon, rlat)
+    return data[dv_var_name].values[iy, ix]
+
