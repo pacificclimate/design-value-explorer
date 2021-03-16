@@ -1,10 +1,10 @@
 import yaml
 
 import dve
-import dve.app_.map_figure
-import dve.app_.table_c2
-import dve.app_.colour_scale
-import dve.app_.map_pointer
+import dve.callbacks.map_figure
+import dve.callbacks.table_c2
+import dve.callbacks.colour_scale
+import dve.callbacks.map_pointer
 import dve.data
 import dve.layout
 
@@ -48,10 +48,10 @@ def get_app(config):
     app.layout = dve.layout.main(config)
 
     # Add callbacks
-    dve.app_.table_c2.add_callbacks(app, config)
-    dve.app_.colour_scale.add_callbacks(app, config)
-    dve.app_.map_pointer.add_callbacks(app, config)
-    dve.app_.map_figure.add_callbacks(app, config)
+    dve.callbacks.table_c2.add_callbacks(app, config)
+    dve.callbacks.colour_scale.add_callbacks(app, config)
+    dve.callbacks.map_pointer.add_callbacks(app, config)
+    dve.callbacks.map_figure.add_callbacks(app, config)
 
     # Add routes
     @app.server.route(f"{str(download_base_url())}/<filename>")
