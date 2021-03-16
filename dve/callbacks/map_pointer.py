@@ -1,3 +1,5 @@
+import logging
+
 from dash.dependencies import Input, Output, State
 import dash_html_components as html
 import dash_bootstrap_components as dbc
@@ -14,6 +16,9 @@ from dve.map_utils import (
     rindices_to_lonlat,
     pointer_value,
 )
+
+
+logger = logging.getLogger("dve")
 
 
 # TODO: Place somewhere else (layout.components)?
@@ -39,6 +44,18 @@ def map_pointer_table(
     else:
         header_row = list(config["future_change_factors"]["ids"])
         dataset_ids = tuple(config["future_change_factors"]["ids"])
+        
+    logger.debug(
+        f"""map_pointer_table (
+            rlon={rlon},
+            rlat={rlat},
+            config={'config'},
+            climate_regime={climate_regime},
+            selected_dv={selected_dv},
+            selected_dataset_id={selected_dataset_id},
+        )
+        """
+    )
 
     return dbc.Table(
         [

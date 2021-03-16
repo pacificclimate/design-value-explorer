@@ -79,6 +79,20 @@ def add(app, config):
         # Client-side state
         viewport_ds,
     ):
+        logger.debug(
+            f"""update_ds (
+                design_value_id={design_value_id},
+                climate_regime={climate_regime},
+                historical_dataset_id={historical_dataset_id},
+                future_dataset_id={future_dataset_id},
+                mask_on={mask_on},
+                show_stations={show_stations},
+                colour_map_name={colour_map_name},
+                scale={scale},
+                num_colours={num_colours},
+                data_range={data_range},
+            )"""
+        )
         empty_fig = {
             "layout": {
                 "title": "Loading...",
@@ -111,11 +125,21 @@ def add(app, config):
         discrete_colorscale = plotly_discrete_colorscale(ticks, colours)
 
         # TODO: Rename all this shit
-        ds = get_data(config, design_value_id, climate_regime,
-                      historical_dataset_id, future_dataset_id)
+        ds = get_data(
+            config,
+            design_value_id,
+            climate_regime,
+            historical_dataset_id,
+            future_dataset_id,
+        )
         (dv,) = ds.data_vars  # TODO: Rename dv_var_name
         # TODO: Don't display stations when climate_regime != "historical"?
-        df = get_data(config, design_value_id, "historical", historical_dataset_id="stations")
+        df = get_data(
+            config,
+            design_value_id,
+            "historical",
+            historical_dataset_id="stations",
+        )
         station_dv = config["dvs"][design_value_id]["station_dv"]
 
         # Index values for clipping data to Canada bounds
@@ -197,8 +221,7 @@ def add(app, config):
                     colorbar={"tickvals": ticks},
                 ),
                 hovertemplate=(
-                    f"<b>{design_value_id} (Station): "
-                    f"%{{text}}</b><br>"
+                    f"<b>{design_value_id} (Station): " f"%{{text}}</b><br>"
                 ),
                 visible=show_stations,
                 name="",
