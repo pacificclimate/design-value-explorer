@@ -45,26 +45,34 @@ def add(app, config):
     @app.callback(
         Output("my-graph", "figure"),
         [
+            # DV selection
+            Input("design-value-id-ctrl", "value"),
+            # Overlay options
+            Input("dataset-ctrl", "value"),
             Input("mask-ctrl", "on"),
             Input("stations-ctrl", "on"),
-            Input("design-value-id-ctrl", "value"),
+            # Colour scale options
+            Input("colour-map-ctrl", "value"),
+            Input("scale-ctrl", "value"),
             Input("cbar-slider", "value"),
             Input("colourbar-range-ctrl", "value"),
-            Input("dataset-ctrl", "value"),
-            Input("scale-ctrl", "value"),
-            Input("colour-map-ctrl", "value"),
+            # Client-side state
             Input("viewport-ds", "children"),
         ],
     )
     def update_ds(
-        mask_ctrl,
-        stations_ctrl,
-        design_value_id_ctrl,
-        cbar_slider,
-        range_slider,
-        dataset_ctrl,
-        scale_ctrl,
-        colour_map_ctrl,
+        # DV selection
+        design_value_id,
+        # Overlay options
+        dataset_id,
+        mask_on,
+        show_stations,
+        # Colour scale options
+        colour_map_name,
+        scale,
+        num_colours,
+        data_range,
+        # Client-side state
         viewport_ds,
     ):
         empty_fig = {
@@ -77,35 +85,35 @@ def add(app, config):
         }
 
         # TODO: This appears not to happen any more. Remove if so.
-        if range_slider is None:
+        if data_range is None:
             logger.debug("### update_ds: range_slider is None")
             return empty_fig
 
         viewport = viewport_ds and json.loads(viewport_ds)
 
-        zmin = range_slider[0]
-        zmax = range_slider[1]
+        zmin = data_range[0]
+        zmax = data_range[1]
 
-        if scale_ctrl == "logarithmic":
-            ticks = np.linspace(np.log10(zmin), np.log10(zmax), cbar_slider + 1)
+        if scale == "logarithmic":
+            ticks = np.linspace(np.log10(zmin), np.log10(zmax), num_colours + 1)
             ticks = np.around(10 ** (ticks), 2)
         else:
-            ticks = np.around(np.linspace(zmin, zmax, cbar_slider + 1), 3)
+            ticks = np.around(np.linspace(zmin, zmax, num_colours + 1), 3)
 
-        cmap = matplotlib.cm.get_cmap(colour_map_ctrl, cbar_slider)
+        cmap = matplotlib.cm.get_cmap(colour_map_name, num_colours)
 
         colours = [matplotlib.colors.rgb2hex(cmap(i)) for i in range(cmap.N)]
 
         discrete_colorscale = plotly_discrete_colorscale(ticks, colours)
 
         # TODO: Inline this unnecessary variable
-        r_or_m = dataset_ctrl
+        r_or_m = dataset_id
 
         # TODO: Rename all this shit
-        ds = get_data(config, design_value_id_ctrl, r_or_m)
+        ds = get_data(config, design_value_id, r_or_m)
         (dv,) = ds.data_vars  # TODO: Rename dv_var_name
-        df = get_data(config, design_value_id_ctrl, "stations")
-        station_dv = config["dvs"][design_value_id_ctrl]["station_dv"]
+        df = get_data(config, design_value_id, "stations")
+        station_dv = config["dvs"][design_value_id]["station_dv"]
 
         # Index values for clipping data to Canada bounds
         icxmin = find_nearest_index(ds.rlon.values, cx_min)
@@ -146,7 +154,7 @@ def add(app, config):
         df = coord_prep(df, station_dv)
         ds_arr = ds[dv].values[icymin:icymax, icxmin:icxmax].copy()
 
-        if r_or_m == "model" and mask_ctrl:
+        if r_or_m == "model" and mask_on:
             mask = native_mask[icymin:icymax, icxmin:icxmax]
             ds_arr[~mask] = np.nan
 
@@ -164,7 +172,7 @@ def add(app, config):
                 # showscale=False,
                 visible=True,
                 hovertemplate=(
-                    f"<b>{design_value_id_ctrl} (Interp.): %{{z}} </b><br>"
+                    f"<b>{design_value_id} (Interp.): %{{z}} </b><br>"
                 ),
                 name="",
             ),
@@ -186,10 +194,10 @@ def add(app, config):
                     colorbar={"tickvals": ticks},
                 ),
                 hovertemplate=(
-                    f"<b>{design_value_id_ctrl} (Station): "
+                    f"<b>{design_value_id} (Station): "
                     f"%{{text}}</b><br>"
                 ),
-                visible=stations_ctrl,
+                visible=show_stations,
                 name="",
             ),
         ]
@@ -199,8 +207,8 @@ def add(app, config):
             "data": go_list,
             "layout": {
                 "title": (
-                    f"<b>{design_value_id_ctrl} "
-                    f"[{config['dvs'][design_value_id_ctrl]['description']}] "
+                    f"<b>{design_value_id} "
+                    f"[{config['dvs'][design_value_id]['description']}] "
                     f"({units})</b>"
                 ),
                 "font": dict(size=13, color="grey"),
