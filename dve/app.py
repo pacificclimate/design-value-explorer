@@ -48,10 +48,10 @@ def get_app(config):
     app.layout = dve.layout.main(config)
 
     # Add callbacks
-    dve.callbacks.table_c2.add_callbacks(app, config)
-    dve.callbacks.colour_scale.add_callbacks(app, config)
-    dve.callbacks.map_pointer.add_callbacks(app, config)
-    dve.callbacks.map_figure.add_callbacks(app, config)
+    dve.callbacks.table_c2.add(app, config)
+    dve.callbacks.colour_scale.add(app, config)
+    dve.callbacks.map_pointer.add(app, config)
+    dve.callbacks.map_figure.add(app, config)
 
     # Add routes
     @app.server.route(f"{str(download_base_url())}/<filename>")

@@ -22,7 +22,7 @@ from climpyrical.mask import stratify_coords
 logger = logging.getLogger("dve")
 
 
-def add_callbacks(app, config):
+def add(app, config):
     # Load Canada map polygons
     canada = gpd.read_file(
         resource_filename("dve", config["paths"]["canada_vector"])

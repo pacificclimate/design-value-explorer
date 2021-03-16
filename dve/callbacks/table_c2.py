@@ -4,7 +4,7 @@ import dash_table
 from dve.data import get_data
 
 
-def add_callbacks(app, config):
+def add(app, config):
     @app.callback(
         [Output("table-C2-dv", "children"), Output("table", "children")],
         [Input("design-value-id-ctrl", "value")]

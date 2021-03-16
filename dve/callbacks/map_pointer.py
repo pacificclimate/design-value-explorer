@@ -20,7 +20,7 @@ from dve.map_utils import (
 )
 
 
-def add_callbacks(app, config):
+def add(app, config):
 
     # TODO: Extract these?
     def value_table(*items):

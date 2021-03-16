@@ -7,7 +7,7 @@ import dve.layout
 from dve.math_utils import sigfigs
 
 
-def add_callbacks(app, config):
+def add(app, config):
     @app.callback(
         Output("colour-map-ctrl", "value"),
         [Input("design-value-id-ctrl", "value")],
