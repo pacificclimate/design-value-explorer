@@ -51,16 +51,18 @@ def overlay_options(config):
     Layout for Overlay Options section.
     This function returns a list of rows.
     """
-    climate_ctrl_options = (
-        [{"label": "Historical", "value": "historical"}] +
-        [
-            {
-                "label": config["future_change_factors"]["label"].format(id),
-                "value": id,
-            }
-            for id in config["future_change_factors"]["ids"]
-        ]
-    )
+    climate_regime_ctrl_options = [
+        {"label": "Historical", "value": "historical"},
+        {"label": "Future", "value": "future"},
+    ]
+
+    future_dataset_ctrl_options = [
+        {
+            "label": config["future_change_factors"]["label"].format(id),
+            "value": id,
+        }
+        for id in config["future_change_factors"]["ids"]
+    ]
 
     return [
         # Section title
@@ -71,7 +73,7 @@ def overlay_options(config):
         # Control titles
         dbc.Row(
             [
-                dbc.Col(html.Label("Climate"), width=4),
+                dbc.Col(html.Label("Climate"), width=2),
                 dbc.Col(html.Label("Dataset"), width=4),
                 dbc.Col(html.Label("Mask"), width=2),
                 dbc.Col(html.Label("Stations"), width=2),
@@ -81,30 +83,38 @@ def overlay_options(config):
         dbc.Row(
             [
                 dbc.Col(
-                    dcc.Dropdown(
-                        id="climate-ctrl",
-                        options=climate_ctrl_options,
-                        value=climate_ctrl_options[0]["value"],
-                        clearable=False,
+                    dcc.RadioItems(
+                        id="climate-regime-ctrl",
+                        options=climate_regime_ctrl_options,
+                        value=climate_regime_ctrl_options[0]["value"],
+                        labelStyle={"display": "block", "margin-top": "1em"},
                     ),
-                    width=4,
+                    width=2,
                 ),
                 dbc.Col(
-                    dcc.Dropdown(
-                        id="dataset-ctrl",
-                        options=[
-                            {
-                                "label": "HSM Reconstruction",
-                                "value": "reconstruction",
-                            },
-                            {
-                                "label": "CanRCM4 Ensemble Mean",
-                                "value": "model",
-                            },
-                        ],
-                        value="reconstruction",
-                        clearable=False,
-                    ),
+                    [
+                        dcc.Dropdown(
+                            id="historical-dataset-ctrl",
+                            options=[
+                                {
+                                    "label": "HSM Reconstruction",
+                                    "value": "reconstruction",
+                                },
+                                {
+                                    "label": "CanRCM4 Ensemble Mean",
+                                    "value": "model",
+                                },
+                            ],
+                            value="reconstruction",
+                            clearable=False,
+                        ),
+                        dcc.Dropdown(
+                            id="future-dataset-ctrl",
+                            options=future_dataset_ctrl_options,
+                            value=future_dataset_ctrl_options[0]["value"],
+                            clearable=False,
+                        ),
+                    ],
                     width=4,
                 ),
                 dbc.Col(

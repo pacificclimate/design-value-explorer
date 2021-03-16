@@ -48,8 +48,8 @@ def add(app, config):
             # DV selection
             Input("design-value-id-ctrl", "value"),
             # Overlay options
-            Input("climate-ctrl", "value"),
-            Input("dataset-ctrl", "value"),
+            Input("climate-regime-ctrl", "value"),
+            Input("historical-dataset-ctrl", "value"),
             Input("mask-ctrl", "on"),
             Input("stations-ctrl", "on"),
             # Colour scale options

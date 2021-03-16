@@ -57,8 +57,8 @@ def add(app, config):
         ],
         [
             Input("design-value-id-ctrl", "value"),
-            Input("climate-ctrl", "value"),
-            Input("dataset-ctrl", "value"),
+            Input("climate-regime-ctrl", "value"),
+            Input("historical-dataset-ctrl", "value"),
         ],
     )
     def update_slider(design_value_id, climate_regime, dataset_id):
