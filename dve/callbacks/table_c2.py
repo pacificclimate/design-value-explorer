@@ -13,7 +13,9 @@ def add(app, config):
         name_and_units = (
             f"{design_value_id} ({config['dvs'][design_value_id]['units']})"
         )
-        df = get_data(config, design_value_id, "table")
+        # TODO: Shoud we display this table when climate selector is not
+        #  "historical"?
+        df = get_data(config, design_value_id, "historical", "table")
         df = (
             df[["Location", "Prov", "lon", "lat", "PCIC", "NBCC 2015"]]
                 .round(3)

@@ -42,8 +42,8 @@ def add(app, config):
             size="sm",
         )
 
-    def dv_value(name, interpolation, rlon, rlat):
-        data = get_data(config, name, interpolation)
+    def dv_value(design_value_id, climate_regime, dataset_id, rlon, rlat):
+        data = get_data(config, design_value_id, climate_regime, dataset_id)
         (dv_var_name,) = data.data_vars
         ix, iy = rlonlat_to_rindices(data, rlon, rlat)
         return data[dv_var_name].values[iy, ix]
@@ -73,26 +73,32 @@ def add(app, config):
                 html.Tbody(
                     [
                         html.Tr(
-                            [html.Th(name, style={"width": "5em"})]
+                            [html.Th(design_value_id, style={"width": "5em"})]
                             + [
                                 html.Td(
                                     round(
                                         float(
-                                            dv_value(name, interp, rlon, rlat)
+                                            dv_value(
+                                                design_value_id,
+                                                "historical",
+                                                dataset_id,
+                                                rlon,
+                                                rlat
+                                            )
                                         ),
                                         3,
                                     ),
                                     style={
                                         "color": "red"
-                                        if name == selected_dv
-                                           and interp == selected_interp
+                                        if design_value_id == selected_dv
+                                           and dataset_id == selected_interp
                                         else "inherit"
                                     },
                                 )
-                                for interp in ("model", "reconstruction")
+                                for dataset_id in ("model", "reconstruction")
                             ]
                         )
-                        for name in config["dvs"].keys()
+                        for design_value_id in config["dvs"].keys()
                     ]
                 ),
             ],
@@ -106,11 +112,12 @@ def add(app, config):
         [
             Input("my-graph", "hoverData"),
             Input("design-value-id-ctrl", "value"),
+            Input("climate-ctrl", "value"),
             Input("dataset-ctrl", "value"),
         ],
     )
     def display_hover_info(
-        hover_data, design_value_id_ctrl, interpolation_ctrl
+        hover_data, design_value_id_ctrl, climate_regime, interpolation_ctrl
     ):
         # TODO: Can we use a fixed value ("model" or "reconstruction") instead
         #  of interpolation_ctrl? Note: Each type of dataset has a different
@@ -122,7 +129,9 @@ def add(app, config):
         if hover_data is None:
             return None
 
-        dataset = get_data(config, design_value_id_ctrl, interpolation_ctrl)
+        dataset = get_data(
+            config, design_value_id_ctrl, climate_regime, interpolation_ctrl
+        )
         rlon, rlat = pointer_rlonlat(hover_data)
         ix, iy = pointer_rindices(hover_data, dataset)
         lon, lat = rindices_to_lonlat(dataset, ix, iy)
@@ -149,11 +158,12 @@ def add(app, config):
         [
             Input("my-graph", "clickData"),
             Input("design-value-id-ctrl", "value"),
+            Input("climate-ctrl", "value"),
             Input("dataset-ctrl", "value"),
         ],
     )
     def display_download_button(
-        click_data, design_value_id_ctrl, interpolation_ctrl
+        click_data, design_value_id_ctrl, climate_regime, interpolation_ctrl
     ):
         """
         To get the layout we want, we have to break the map-click callback into
@@ -163,7 +173,9 @@ def add(app, config):
         if click_data is None:
             return None
 
-        dataset = get_data(config, design_value_id_ctrl, interpolation_ctrl)
+        dataset = get_data(
+            config, design_value_id_ctrl, climate_regime, interpolation_ctrl
+        )
         rlon, rlat = pointer_rlonlat(click_data)
         ix, iy = pointer_rindices(click_data, dataset)
         # Note that lon, lat is derived from selected dataset, which may have
@@ -185,11 +197,12 @@ def add(app, config):
         [
             Input("my-graph", "clickData"),
             Input("design-value-id-ctrl", "value"),
+            Input("climate-ctrl", "value"),
             Input("dataset-ctrl", "value"),
         ],
     )
     def display_click_info(
-        click_data, design_value_id_ctrl, interpolation_ctrl
+        click_data, design_value_id_ctrl, climate_regime, interpolation_ctrl
     ):
         """
         To get the layout we want, we have to break the map-click callback into
@@ -203,7 +216,9 @@ def add(app, config):
         if click_data is None:
             return None
 
-        dataset = get_data(config, design_value_id_ctrl, interpolation_ctrl)
+        dataset = get_data(
+            config, design_value_id_ctrl, climate_regime, interpolation_ctrl
+        )
         rlon, rlat = pointer_rlonlat(click_data)
         ix, iy = pointer_rindices(click_data, dataset)
         # Note that lon, lat is derived from selected dataset, which may have
@@ -227,8 +242,8 @@ def add(app, config):
                 writer.writerow(
                     (
                         dv_id,
-                        float(dv_value(dv_id, "model", rlon, rlat)),
-                        float(dv_value(dv_id, "reconstruction", rlon, rlat)),
+                        float(dv_value(dv_id, "historical", "model", rlon, rlat)),
+                        float(dv_value(dv_id, "historical", "reconstruction", rlon, rlat)),
                     )
                 )
 

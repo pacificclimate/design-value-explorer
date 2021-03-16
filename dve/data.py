@@ -31,19 +31,25 @@ def load_file_cached(filepath):
     return load_file(filepath)
 
 
-def get_data(config, design_value_id, dataset_id):
+def get_data(config, design_value_id, climate_regime, dataset_id):
     """Get a specific data object. This function knows the structure
     of `config` so that clients don't have to."""
-    # logger.debug(f"### get_data {(design_value_id, dataset_id)}")
-    path_key = {
-        "stations": "station_path",
-        "table": "table",
-        "model": "input_model_path",
-        "reconstruction": "reconstruction_path",
-    }[dataset_id]
-    return load_file_cached(config["dvs"][design_value_id][path_key])
-
-
+    logger.debug(
+        f"### get_data {(design_value_id, climate_regime, dataset_id)}"
+    )
+    if climate_regime == "historical":
+        path_key = {
+            "stations": "station_path",
+            "table": "table",
+            "model": "input_model_path",
+            "reconstruction": "reconstruction_path",
+        }[dataset_id]
+        return load_file_cached(config["dvs"][design_value_id][path_key])
+    return load_file_cached(
+        config["dvs"][design_value_id]["future_change_factor_paths"][
+            climate_regime
+        ]
+    )
 
 
 def load_data(config):

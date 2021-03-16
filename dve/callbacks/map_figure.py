@@ -48,6 +48,7 @@ def add(app, config):
             # DV selection
             Input("design-value-id-ctrl", "value"),
             # Overlay options
+            Input("climate-ctrl", "value"),
             Input("dataset-ctrl", "value"),
             Input("mask-ctrl", "on"),
             Input("stations-ctrl", "on"),
@@ -64,6 +65,7 @@ def add(app, config):
         # DV selection
         design_value_id,
         # Overlay options
+        climate_regime,
         dataset_id,
         mask_on,
         show_stations,
@@ -110,9 +112,10 @@ def add(app, config):
         r_or_m = dataset_id
 
         # TODO: Rename all this shit
-        ds = get_data(config, design_value_id, r_or_m)
+        ds = get_data(config, design_value_id, climate_regime, r_or_m)
         (dv,) = ds.data_vars  # TODO: Rename dv_var_name
-        df = get_data(config, design_value_id, "stations")
+        # TODO: Don't display stations when climate_regime != "historical"?
+        df = get_data(config, design_value_id, "historical", "stations")
         station_dv = config["dvs"][design_value_id]["station_dv"]
 
         # Index values for clipping data to Canada bounds

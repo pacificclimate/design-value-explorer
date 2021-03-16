@@ -5,6 +5,7 @@ import dve.callbacks.map_figure
 import dve.callbacks.table_c2
 import dve.callbacks.colour_scale
 import dve.callbacks.map_pointer
+import dve.callbacks.overlay
 import dve.data
 import dve.layout
 
@@ -49,6 +50,7 @@ def get_app(config):
 
     # Add callbacks
     dve.callbacks.table_c2.add(app, config)
+    dve.callbacks.overlay.add(app, config)
     dve.callbacks.colour_scale.add(app, config)
     dve.callbacks.map_pointer.add(app, config)
     dve.callbacks.map_figure.add(app, config)
