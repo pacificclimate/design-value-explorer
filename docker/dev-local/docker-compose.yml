@@ -36,6 +36,10 @@ services:
         target: /codebase/dve/data/reconstructions/
         read_only: true
       - type: bind
+        source: ../../local-data/change_factors/
+        target: /codebase/dve/data/change_factors/
+        read_only: true
+      - type: bind
         source: ./downloads
         target: /downloads
       - type: bind
