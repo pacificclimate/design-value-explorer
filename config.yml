@@ -3,10 +3,10 @@ ui:
         dv: RL50
         tab:
 
-labels:
-    climate_regime:
-        historical: Historical design values
-        future: Future change factors
+    labels:
+        climate_regime:
+            historical: Historical design values
+            future: Future change factors
 
 # Parameterize the pipeline
 # The pipeline will iterate through each parent tree
@@ -31,13 +31,13 @@ dvs:
         reconstruction_path: data/reconstructions/RL50_reconstruction.nc
         table: data/tables/RL50_TableC2.csv
         future_change_factor_paths:
-            "0.5": data/change_factors/january_1%_dry/D0.5C/RL50_CanRCM4_ensmean_CF_DT0.5.nc
-            "1.0": data/change_factors/january_1%_dry/D1.0C/RL50_CanRCM4_ensmean_CF_DT1.0.nc
-            "1.5": data/change_factors/january_1%_dry/D1.5C/RL50_CanRCM4_ensmean_CF_DT1.5.nc
-            "2.0": data/change_factors/january_1%_dry/D2.0C/RL50_CanRCM4_ensmean_CF_DT2.0.nc
-            "2.5": data/change_factors/january_1%_dry/D2.0C/RL50_CanRCM4_ensmean_CF_DT2.0.nc
-            "3.0": data/change_factors/january_1%_dry/D3.0C/RL50_CanRCM4_ensmean_CF_DT3.0.nc
-            "3.5": data/change_factors/january_1%_dry/D3.0C/RL50_CanRCM4_ensmean_CF_DT3.0.nc
+            "0.5": data/change_factors/rain_q50yr/D0.5C/RL50_CanRCM4_ensmean_CF_DT0.5.nc
+            "1.0": data/change_factors/rain_q50yr/D1.0C/RL50_CanRCM4_ensmean_CF_DT1.0.nc
+            "1.5": data/change_factors/rain_q50yr/D1.5C/RL50_CanRCM4_ensmean_CF_DT1.5.nc
+            "2.0": data/change_factors/rain_q50yr/D2.0C/RL50_CanRCM4_ensmean_CF_DT2.0.nc
+            "2.5": data/change_factors/rain_q50yr/D2.0C/RL50_CanRCM4_ensmean_CF_DT2.0.nc
+            "3.0": data/change_factors/rain_q50yr/D3.0C/RL50_CanRCM4_ensmean_CF_DT3.0.nc
+            "3.5": data/change_factors/rain_q50yr/D3.0C/RL50_CanRCM4_ensmean_CF_DT3.0.nc
         colour_map: "terrain_r"
         scale:
             default: logarithmic
@@ -87,6 +87,7 @@ dvs:
     SL50:
         description: 50-year return level of annual maximum snow load
         abs_units: kPa
+        cf_units: ratio
         station_dv: "SL50 (kPa)"
         station_path: data/station_inputs/sl50_rl50_for_maps.csv
         input_model_path: data/model_inputs/snw_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
@@ -193,7 +194,7 @@ dvs:
     Tmin:
         description: Annual minimum of mean daily temperature
         abs_units: °C
-        cf_units °C
+        cf_units: °C
         station_dv: "Tmin (degC)"
         station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_min_ensmean.nc
@@ -215,7 +216,7 @@ dvs:
     Tmax:
         description: Annual maximum of mean daily temperature
         abs_units: °C
-        cf_units °C
+        cf_units: °C
         station_dv: "Tmax (degC)"
         station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_max_ensmean.nc

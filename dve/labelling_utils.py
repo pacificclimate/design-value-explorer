@@ -46,4 +46,4 @@ def dv_label(
 
 
 def climate_regime_label(config, climate_regime):
-    return config["labels"]["climate_regime"][climate_regime]
+    return config["ui"]["labels"]["climate_regime"][climate_regime]
