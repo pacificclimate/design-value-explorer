@@ -2,10 +2,7 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_daq as daq
-import plotly.express as px
-import numpy as np
-from dve.math_utils import sigfigs
-
+from dve.labelling_utils import dv_label
 
 scale_ctrl_options = [
     {"label": "Linear", "value": "linear"},
@@ -22,20 +19,27 @@ def header(config):
     Returns a list of rows.
     """
     dd_options = [
-        {"label": f'{name} [{defn["description"]}]', "value": name}
-        for name, defn in config["dvs"].items()
+        {
+            "label": dv_label(
+                config,
+                design_value_id,
+                with_units=False,
+                with_description=True,
+            ),
+            "value": design_value_id
+        }
+        for design_value_id in config["dvs"].keys()
     ]
     return [
         dbc.Row(dbc.Col(html.H1("Design Value Explorer"))),
         dbc.Row(
             [
-                dbc.Col(html.Label("Design Value"), width=1),
+                dbc.Col(html.Label("Design Variable"), width=1),
                 dbc.Col(
                     dcc.Dropdown(
                         id="design-value-id-ctrl",
                         options=dd_options,
                         value=config["ui"]["defaults"]["dv"],
-                        placeholder="Select a design value to display...",
                         searchable=True,
                         clearable=False,
                     ),

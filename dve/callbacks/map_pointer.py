@@ -10,6 +10,7 @@ from dve.download_utils import (
     download_url,
     create_download_file,
 )
+from dve.labelling_utils import dv_name, dv_units, dv_label
 from dve.map_utils import (
     pointer_rlonlat,
     pointer_rindices,
@@ -60,13 +61,20 @@ def map_pointer_table(
     return dbc.Table(
         [
             html.Thead(
-                html.Tr([html.Th("DV")] + [html.Th(hdg) for hdg in header_row])
+                html.Tr([html.Th("DV"), html.Th("Units")] + [html.Th(hdg) for hdg in header_row])
             ),
             html.Tbody(
                 [
                     html.Tr(
-                        [html.Th(design_value_id, style={"width": "5em"})]
-                        + [
+                        [
+                            html.Th(dv_name(config, design_value_id)),
+                            html.Th(
+                                dv_units(
+                                    config, design_value_id, climate_regime
+                                ),
+                                style={"width": "5em"}
+                            )
+                        ] + [
                             html.Td(
                                 round(
                                     float(

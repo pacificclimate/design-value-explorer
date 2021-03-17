@@ -2,6 +2,7 @@ from dash.dependencies import Input, Output, State
 import dash_table
 
 from dve.data import get_data
+from dve.labelling_utils import dv_label
 
 
 def add(app, config):
@@ -10,11 +11,9 @@ def add(app, config):
         [Input("design-value-id-ctrl", "value")]
     )
     def update_tablec2(design_value_id):
-        name_and_units = (
-            f"{design_value_id} ({config['dvs'][design_value_id]['units']})"
+        name_and_units = dv_label(
+            config, design_value_id, climate_regime="historical"
         )
-        # TODO: Shoud we display this table when climate selector is not
-        #  "historical"?
         df = get_data(config, design_value_id, "historical", historical_dataset_id="table")
         df = (
             df[["Location", "Prov", "lon", "lat", "PCIC", "NBCC 2015"]]

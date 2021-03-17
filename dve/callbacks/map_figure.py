@@ -12,6 +12,7 @@ import numpy as np
 from dve.data import get_data
 from dve.colorbar import plotly_discrete_colorscale
 from dve.generate_iso_lines import lonlat_overlay
+from dve.labelling_utils import dv_label
 from dve.processing import coord_prep
 
 from climpyrical.data import read_data
@@ -228,14 +229,14 @@ def add(app, config):
             ),
         ]
 
-        units = ds[dv].attrs["units"]
         fig = {
             "data": go_list,
             "layout": {
-                "title": (
-                    f"<b>{design_value_id} "
-                    f"[{config['dvs'][design_value_id]['description']}] "
-                    f"({units})</b>"
+                "title": dv_label(
+                    config,
+                    design_value_id,
+                    climate_regime,
+                    with_description=True,
                 ),
                 "font": dict(size=13, color="grey"),
                 "xaxis": dict(
@@ -257,7 +258,7 @@ def add(app, config):
                 ),
                 "hoverdistance": 5,
                 "hovermode": "closest",
-                # "width": 1000,
+                # width is unspecified; it is therefore adaptive to window
                 "height": 750,
                 "showlegend": False,
                 "legend_orientation": "v",
