@@ -48,6 +48,11 @@ dvs:
         future_change_factor_paths:
             "0.5": data/change_factors/rain_q50yr/D0.5C/RL50_CanRCM4_ensmean_CF_DT0.5.nc
             "1.0": data/change_factors/rain_q50yr/D1.0C/RL50_CanRCM4_ensmean_CF_DT1.0.nc
+            "1.5": data/change_factors/rain_q50yr/D1.5C/RL50_CanRCM4_ensmean_CF_DT1.5.nc
+            "2.0": data/change_factors/rain_q50yr/D2.0C/RL50_CanRCM4_ensmean_CF_DT2.0.nc
+            "2.5": data/change_factors/rain_q50yr/D2.0C/RL50_CanRCM4_ensmean_CF_DT2.0.nc
+            "3.0": data/change_factors/rain_q50yr/D3.0C/RL50_CanRCM4_ensmean_CF_DT3.0.nc
+            "3.5": data/change_factors/rain_q50yr/D3.0C/RL50_CanRCM4_ensmean_CF_DT3.0.nc
         colour_map: "terrain_r"
         scale:
             default: logarithmic
@@ -63,6 +68,11 @@ dvs:
         future_change_factor_paths:
             "0.5": data/change_factors/annual_relative_humidity/D0.5C/RHann_CanRCM4_ensmean_CF_DT0.5.nc
             "1.0": data/change_factors/annual_relative_humidity/D1.0C/RHann_CanRCM4_ensmean_CF_DT1.0.nc
+            "1.5": data/change_factors/annual_relative_humidity/D1.5C/RHann_CanRCM4_ensmean_CF_DT1.5.nc
+            "2.0": data/change_factors/annual_relative_humidity/D2.0C/RHann_CanRCM4_ensmean_CF_DT2.0.nc
+            "2.5": data/change_factors/annual_relative_humidity/D2.0C/RHann_CanRCM4_ensmean_CF_DT2.0.nc
+            "3.0": data/change_factors/annual_relative_humidity/D3.0C/RHann_CanRCM4_ensmean_CF_DT3.0.nc
+            "3.5": data/change_factors/annual_relative_humidity/D3.0C/RHann_CanRCM4_ensmean_CF_DT3.0.nc
         colour_map: "terrain_r"
         scale:
             default: linear
@@ -126,6 +136,11 @@ dvs:
         future_change_factor_paths:
             "0.5": data/change_factors/january_2.5%_dry/D0.5C/TJan2.5_CanRCM4_ensmean_CF_DT0.5.nc
             "1.0": data/change_factors/january_2.5%_dry/D1.0C/TJan2.5_CanRCM4_ensmean_CF_DT1.0.nc
+            "1.5": data/change_factors/january_2.5%_dry/D1.5C/TJan2.5_CanRCM4_ensmean_CF_DT1.5.nc
+            "2.0": data/change_factors/january_2.5%_dry/D2.0C/TJan2.5_CanRCM4_ensmean_CF_DT2.0.nc
+            "2.5": data/change_factors/january_2.5%_dry/D2.0C/TJan2.5_CanRCM4_ensmean_CF_DT2.0.nc
+            "3.0": data/change_factors/january_2.5%_dry/D3.0C/TJan2.5_CanRCM4_ensmean_CF_DT3.0.nc
+            "3.5": data/change_factors/january_2.5%_dry/D3.0C/TJan2.5_CanRCM4_ensmean_CF_DT3.0.nc
         colour_map: "RdBu_r"
         scale:
             disable_logarithmic: True
@@ -273,11 +288,11 @@ future_change_factors:
     ids:
         - "0.5"
         - "1.0"
-#        - "1.5"
-#        - "2.0"
-#        - "2.5"
-#        - "3.0"
-#        - "3.5"
+        - "1.5"
+        - "2.0"
+        - "2.5"
+        - "3.0"
+        - "3.5"
     label: "{}°C above pre-industrial"
 
 map:
