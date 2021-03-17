@@ -43,3 +43,7 @@ def dv_label(
         else ""
     )
     return f"{dv_name(config, design_value_id)}{description}{units}"
+
+
+def climate_regime_label(config, climate_regime):
+    return config["labels"]["climate_regime"][climate_regime]

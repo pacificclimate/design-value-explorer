@@ -3,6 +3,11 @@ ui:
         dv: RL50
         tab:
 
+labels:
+    climate_regime:
+        historical: Historical design values
+        future: Future change factors
+
 # Parameterize the pipeline
 # The pipeline will iterate through each parent tree
 # in dvs and provide the associated parameters

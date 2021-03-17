@@ -10,7 +10,12 @@ from dve.download_utils import (
     download_url,
     create_download_file,
 )
-from dve.labelling_utils import dv_name, dv_units, dv_label
+from dve.labelling_utils import (
+    dv_name,
+    dv_units,
+    dv_label,
+    climate_regime_label,
+)
 from dve.map_utils import (
     pointer_rlonlat,
     pointer_rindices,
@@ -45,7 +50,7 @@ def map_pointer_table(
     else:
         header_row = list(config["future_change_factors"]["ids"])
         dataset_ids = tuple(config["future_change_factors"]["ids"])
-        
+
     logger.debug(
         f"""map_pointer_table (
             rlon={rlon},
@@ -61,7 +66,10 @@ def map_pointer_table(
     return dbc.Table(
         [
             html.Thead(
-                html.Tr([html.Th("DV"), html.Th("Units")] + [html.Th(hdg) for hdg in header_row])
+                html.Tr(
+                    [html.Th("DV"), html.Th("Units")]
+                    + [html.Th(hdg) for hdg in header_row]
+                )
             ),
             html.Tbody(
                 [
@@ -72,9 +80,10 @@ def map_pointer_table(
                                 dv_units(
                                     config, design_value_id, climate_regime
                                 ),
-                                style={"width": "5em"}
-                            )
-                        ] + [
+                                style={"width": "5em"},
+                            ),
+                        ]
+                        + [
                             html.Td(
                                 round(
                                     float(
@@ -265,6 +274,7 @@ def add(app, config):
                 ("Lon", round(lon, 6)),
                 # (f"Z ({design_value_id_ctrl}) ({source})", round(z, 6)),
             ),
+            html.H6(climate_regime_label(config, climate_regime)),
             map_pointer_table(
                 rlon,
                 rlat,
