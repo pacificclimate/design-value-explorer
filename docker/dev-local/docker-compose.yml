@@ -22,6 +22,9 @@ services:
         source: ./config.yml
         target: /codebase/config.yml
         read_only: true
+      - type: bind
+        source: ./downloads
+        target: /downloads
 
         # Data files
         # Reconstructions are large (54M) files, and take a long time to load
@@ -39,9 +42,6 @@ services:
         source: ../../local-data/change_factors/
         target: /codebase/dve/data/change_factors/
         read_only: true
-      - type: bind
-        source: ./downloads
-        target: /downloads
       - type: bind
         source: /storage/data/projects/comp_support/dv-explorer/data/station_inputs/
         target: /codebase/dve/data/station_inputs/
