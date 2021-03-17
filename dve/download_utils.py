@@ -2,6 +2,7 @@ import os
 import os.path
 import csv
 from dve.data import dv_value
+from dve.labelling_utils import dv_units
 
 
 dash_url_base_path = os.environ.get("DASH_URL_BASE_PATHNAME", "/")
@@ -52,16 +53,19 @@ def create_download_file(lon, lat, rlon, rlat, config, climate_regime):
         writer.writerow(tuple())
 
         if climate_regime == "historical":
-            header_row = ("Model Value", "Reconstruction Value")
+            value_headers = ("Model Value", "Reconstruction Value")
             dataset_ids = ("model", "reconstruction")
         else:
-            header_row = tuple(config["future_change_factors"]["ids"])
+            value_headers = tuple(config["future_change_factors"]["ids"])
             dataset_ids = tuple(config["future_change_factors"]["ids"])
 
-        writer.writerow(("Design Value ID",) + header_row)
+        writer.writerow(("Design Value ID", "Units") + value_headers)
         for dv_id in config["dvs"].keys():
             writer.writerow(
-                (dv_id,) +
+                (
+                    dv_id,
+                    dv_units(config, dv_id, climate_regime)
+                ) +
                 tuple(
                     float(
                         dv_value(
