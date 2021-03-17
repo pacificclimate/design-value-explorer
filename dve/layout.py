@@ -219,17 +219,16 @@ def user_graph_interaction():
             html.H5("Data from map pointer"),
             dcc.Markdown(
                 "*Hover over map to show position of cursor. "
-                "Click to hold design values for download.*"
+                "Click to hold design values for download.*",
+                style={"font-size": "0.8em"},
             ),
         ])),
         dbc.Row(
             [
                 dbc.Col(
-                    "",
-                    style={"font-size": "0.8em"},
-                    width=3,
+                    id="data-download-header",
+                    width={"size": 9, "offset": 3}
                 ),
-                dbc.Col(id="data-download-header", width=9),
             ]
         ),
         dbc.Row(
@@ -311,9 +310,9 @@ def table_C2_tab():
         children=[
             html.H5(
                 [
-                    "Reconstruction Values of ",
+                    "Reconstruction values of ",
                     html.Span(id="table-C2-dv", children="DV"),
-                    " at Table C2 Locations"
+                    " at Table C2 locations"
                 ],
                 className="mt-3",
             ),

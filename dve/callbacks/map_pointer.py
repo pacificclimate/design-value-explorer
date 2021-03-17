@@ -65,6 +65,10 @@ def map_pointer_table(
 
     return dbc.Table(
         [
+            html.Caption(
+                climate_regime_label(config, climate_regime),
+                style={"caption-side": "top", "padding": "0 0 0.5em 0"}
+            ),
             html.Thead(
                 html.Tr(
                     [html.Th("DV"), html.Th("Units")]
@@ -274,7 +278,6 @@ def add(app, config):
                 ("Lon", round(lon, 6)),
                 # (f"Z ({design_value_id_ctrl}) ({source})", round(z, 6)),
             ),
-            html.H6(climate_regime_label(config, climate_regime)),
             map_pointer_table(
                 rlon,
                 rlat,
