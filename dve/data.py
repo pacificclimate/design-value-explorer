@@ -1,3 +1,4 @@
+import os
 import functools
 import logging
 from pkg_resources import resource_filename
@@ -22,7 +23,7 @@ def load_file(path):
     raise ValueError(f"Unrecognized file type in path '{path}'")
 
 
-@functools.lru_cache(maxsize=20)
+@functools.lru_cache(maxsize=int(os.environ.get("FILE_CACHE_SIZE", 50)))
 def load_file_cached(filepath):
     """Caches the results of a load_file operation. This is the basis of
     all on-demand data retrieval.
