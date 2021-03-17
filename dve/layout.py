@@ -211,17 +211,21 @@ def user_graph_interaction():
     :return: list of dbc.Row
     """
     return [
-        dbc.Row(dbc.Col(html.H5("Data from map pointer"))),
+        dbc.Row(dbc.Col([
+            html.H5("Data from map pointer"),
+            dcc.Markdown(
+                "*Hover over map to show position of cursor. "
+                "Click to hold design values for download.*"
+            ),
+        ])),
         dbc.Row(
             [
                 dbc.Col(
-                    dcc.Markdown(
-                        "*Hover over map to show values under cursor. "
-                        "Click to hold values for download.*"
-                    ),
+                    "",
                     style={"font-size": "0.8em"},
+                    width=3,
                 ),
-                dbc.Col(id="data-download-header"),
+                dbc.Col(id="data-download-header", width=9),
             ]
         ),
         dbc.Row(
@@ -235,7 +239,8 @@ def user_graph_interaction():
                             ),
                             html.Pre(id="hover-data"),
                         ],
-                    )
+                    ),
+                    width=3,
                 ),
                 dbc.Col(
                     html.Div(
@@ -246,7 +251,8 @@ def user_graph_interaction():
                             ),
                             html.Pre(id="click-data"),
                         ],
-                    )
+                    ),
+                    width=9,
                 ),
             ]
         ),
