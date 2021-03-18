@@ -8,6 +8,13 @@ ui:
             historical: Historical design values
             future: Future change factors
 
+    # This property is provided as keyword args to dcc.Loading and controls
+    # the appearance of the loading spinners.
+    loading:
+        type: dot
+        color: gray
+#        debug: true
+
 # Parameterize the pipeline
 # The pipeline will iterate through each parent tree
 # in dvs and provide the associated parameters

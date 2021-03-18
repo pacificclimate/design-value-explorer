@@ -21,12 +21,9 @@ def header(config):
     dd_options = [
         {
             "label": dv_label(
-                config,
-                design_value_id,
-                with_units=False,
-                with_description=True,
+                config, design_value_id, with_units=False, with_description=True
             ),
-            "value": design_value_id
+            "value": design_value_id,
         }
         for design_value_id in config["dvs"].keys()
     ]
@@ -70,10 +67,7 @@ def overlay_options(config):
 
     return [
         # Section title
-        dbc.Row(
-            dbc.Col(html.H5("Overlay Options")),
-            className="mt-2"
-        ),
+        dbc.Row(dbc.Col(html.H5("Overlay Options")), className="mt-2"),
         # Control titles
         dbc.Row(
             [
@@ -134,23 +128,27 @@ def overlay_options(config):
                     width=2,
                 ),
             ],
-            style={"font-size": "0.8em"}
+            style={"font-size": "0.8em"},
         ),
     ]
 
 
-def colourbar_options(colormaps):
+def colourbar_options(config):
     """
     Layout for Colourbar Options section.
     This function returns a list of rows.
     """
+    colour_maps = config["map"]["colour_maps"]
+    # Add reverse options, too
+    cmap_r = tuple(f"{color}_r" for color in colour_maps)
+    colour_maps += cmap_r
 
     return [
         # Section title
         dbc.Row(
             dbc.Col(html.H5("Colour Scale Options")),
             # TODO: Replace with class
-            className="mt-5"
+            className="mt-5",
         ),
         # Control titles
         dbc.Row(
@@ -158,7 +156,12 @@ def colourbar_options(colormaps):
                 dbc.Col(html.Label("Colour Map")),
                 dbc.Col(html.Label("Scale")),
                 dbc.Col(html.Label("Num. Colours")),
-                dbc.Col(html.Label(id="colourbar-range-ctrl-output-container")),
+                dcc.Loading(
+                    dbc.Col(
+                        html.Label(id="colourbar-range-ctrl-output-container"),
+                    ),
+                    **config["ui"]["loading"],
+                ),
             ]
         ),
         # Controls
@@ -167,7 +170,7 @@ def colourbar_options(colormaps):
                 dbc.Col(
                     dcc.Dropdown(
                         id="colour-map-ctrl",
-                        options=[{"value": x, "label": x} for x in colormaps],
+                        options=[{"value": x, "label": x} for x in colour_maps],
                         value=None,
                     )
                 ),
@@ -197,39 +200,41 @@ def colourbar_options(colormaps):
                     style={"padding-top": "2em"},
                 ),
                 dbc.Col(
-                    html.Div(
-                        dcc.RangeSlider(id="colourbar-range-ctrl"),
-                        # RangeSlider has unwanted horiz padding of 25px.
-                        style={"margin": "2em -25px"},
+                    dcc.Loading(
+                        html.Div(
+                            dcc.RangeSlider(id="colourbar-range-ctrl"),
+                            # RangeSlider has unwanted horiz padding of 25px.
+                            style={"margin": "2em -25px"},
+                        ),
+                        **config["ui"]["loading"],
                     )
                 ),
             ],
-            style={"font-size": "0.8em"}
+            style={"font-size": "0.8em"},
         ),
     ]
 
 
-def user_graph_interaction():
+def user_graph_interaction(config):
     """
     Layout for user graph interaction elements.
     :return: list of dbc.Row
     """
     return [
-        dbc.Row(dbc.Col([
-            html.H5("Data from map pointer"),
-            dcc.Markdown(
-                "*Hover over map to show position of cursor. "
-                "Click to hold design values for download.*",
-                style={"font-size": "0.8em"},
-            ),
-        ])),
         dbc.Row(
-            [
-                dbc.Col(
-                    id="data-download-header",
-                    width={"size": 9, "offset": 3}
-                ),
-            ]
+            dbc.Col(
+                [
+                    html.H5("Data from map pointer"),
+                    dcc.Markdown(
+                        "*Hover over map to show position of cursor. "
+                        "Click to hold design values for download.*",
+                        style={"font-size": "0.8em"},
+                    ),
+                ]
+            )
+        ),
+        dbc.Row(
+            [dbc.Col(id="data-download-header", width={"size": 9, "offset": 3})]
         ),
         dbc.Row(
             [
@@ -246,14 +251,18 @@ def user_graph_interaction():
                     width=3,
                 ),
                 dbc.Col(
-                    html.Div(
-                        id="click-output",
-                        children=[
-                            html.Div(
-                                id="click-info", style={"font-size": "0.8em"}
-                            ),
-                            html.Pre(id="click-data"),
-                        ],
+                    dcc.Loading(
+                        html.Div(
+                            id="click-output",
+                            children=[
+                                html.Div(
+                                    id="click-info",
+                                    style={"font-size": "0.8em"},
+                                ),
+                                html.Pre(id="click-data"),
+                            ],
+                        ),
+                        **config["ui"]["loading"],
                     ),
                     width=9,
                 ),
@@ -269,18 +278,16 @@ def map_tab(config):
     :param config:
     :return: dbc.Tab
     """
-    colour_maps = config["map"]["colour_maps"]
-    # Add reverse options, too
-    cmap_r = tuple(f"{color}_r" for color in colour_maps)
-    colour_maps += cmap_r
-
     return dbc.Tab(
         label="Map",
         children=[
             dbc.Row(
                 [
                     dbc.Col(
-                        [dcc.Graph(id="my-graph")],
+                        dcc.Loading(
+                            dcc.Graph(id="my-graph"),
+                            **config["ui"]["loading"],
+                        ),
                         lg=7,
                         md=12,
                         sm=12,
@@ -289,8 +296,8 @@ def map_tab(config):
                     dbc.Col(
                         [
                             *overlay_options(config),
-                            *colourbar_options(colour_maps),
-                            *user_graph_interaction(),
+                            *colourbar_options(config),
+                            *user_graph_interaction(config),
                         ],
                         lg=5,
                         md=12,
@@ -304,20 +311,23 @@ def map_tab(config):
     )
 
 
-def table_C2_tab():
+def table_C2_tab(config):
     return dbc.Tab(
         label="Table C-2",
-        children=[
-            html.H5(
-                [
-                    "Reconstruction values of ",
-                    html.Span(id="table-C2-dv", children="DV"),
-                    " at Table C2 locations"
-                ],
-                className="mt-3",
-            ),
-            html.Div(id="table"),
-        ],
+        children=dcc.Loading(
+            [
+                html.H5(
+                    [
+                        "Reconstruction values of ",
+                        html.Span(id="table-C2-dv", children="DV"),
+                        " at Table C2 locations",
+                    ],
+                    className="mt-3",
+                ),
+                html.Div(id="table"),
+            ],
+            **config["ui"]["loading"],
+        ),
     )
 
 
@@ -329,9 +339,7 @@ def internal_data():
 
     :return: List of components.
     """
-    return [
-        html.Div(id="viewport-ds", style={'display': 'none'}),
-    ]
+    return [html.Div(id="viewport-ds", style={"display": "none"})]
 
 
 def main(config):
@@ -345,7 +353,7 @@ def main(config):
         children=[
             *header(config),
             dbc.Row(
-                dbc.Col(dbc.Tabs([map_tab(config), table_C2_tab()])),
+                dbc.Col(dbc.Tabs([map_tab(config), table_C2_tab(config)])),
                 style={"margin-top": "1em"},
             ),
             *internal_data(),
