@@ -52,8 +52,8 @@ def map_pointer_table(
         header_row = ["Model Value" if historical_dataset_id == "model" else "Reconstruction Value"]
         dataset_ids = (historical_dataset_id,)
     else:
-        # header_row = list(config["future_change_factors"]["ids"])
-        # dataset_ids = tuple(config["future_change_factors"]["ids"])
+        # header_row = list(config["ui"]["future_change_factors"])
+        # dataset_ids = tuple(config["ui"]["future_change_factors"])
         header_row = [future_dataset_id]
         dataset_ids = (future_dataset_id,)
 

@@ -29,5 +29,5 @@ def validate(config):
         ):
             validate_filepath(dv_defn[key])
 
-        for fcf_id in config["future_change_factors"]["ids"]:
+        for fcf_id in config["ui"]["future_change_factors"]:
             validate_filepath(dv_defn["future_change_factor_paths"][fcf_id])
