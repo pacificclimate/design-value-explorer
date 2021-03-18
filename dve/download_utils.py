@@ -20,7 +20,9 @@ def download_filename(lon, lat, climate_regime):
     return f"dvs_{climate_regime}_{lon}_{lat}.csv"
 
 
-def download_filepath(lon, lat, climate_regime, directory=download_by_location_dir):
+def download_filepath(
+    lon, lat, climate_regime, directory=download_by_location_dir
+):
     """
     Return a unique filepath for the download data for position lon, lat.
     :param lon:
@@ -33,40 +35,61 @@ def download_filepath(lon, lat, climate_regime, directory=download_by_location_d
 
 
 def download_base_url(
-    base_path=dash_url_base_path,
-    directory=download_by_location_dir,
+    base_path=dash_url_base_path, directory=download_by_location_dir
 ):
     return os.path.join(base_path, directory)
 
 
 def download_url(
-    lon, lat, climate_regime, base_path=dash_url_base_path, directory=download_by_location_dir
+    lon,
+    lat,
+    climate_regime,
+    base_path=dash_url_base_path,
+    directory=download_by_location_dir,
 ):
-    return os.path.join(base_path, download_filepath(lon, lat, climate_regime, directory))
+    return os.path.join(
+        base_path, download_filepath(lon, lat, climate_regime, directory)
+    )
 
 
-def create_download_file(lon, lat, rlon, rlat, config, climate_regime):
-    with open(os.path.join("/", download_filepath(lon, lat, climate_regime)), "w") as file:
+def create_download_file(
+    lon,
+    lat,
+    rlon,
+    rlat,
+    config,
+    climate_regime,
+    historical_dataset_id,
+    future_dataset_id,
+):
+    with open(
+        os.path.join("/", download_filepath(lon, lat, climate_regime)), "w"
+    ) as file:
         writer = csv.writer(file, delimiter=",")
         writer.writerow(("Latitude", lat))
         writer.writerow(("Longitude", lon))
         writer.writerow(tuple())
 
         if climate_regime == "historical":
-            value_headers = ("Model Value", "Reconstruction Value")
-            dataset_ids = ("model", "reconstruction")
+            # value_headers = ("Model Value", "Reconstruction Value")
+            # dataset_ids = ("model", "reconstruction")
+            value_headers = (
+                "Model Value"
+                if historical_dataset_id == "model"
+                else "Reconstruction Value",
+            )
+            dataset_ids = (historical_dataset_id,)
         else:
-            value_headers = tuple(config["future_change_factors"]["ids"])
-            dataset_ids = tuple(config["future_change_factors"]["ids"])
+            # value_headers = tuple(config["future_change_factors"]["ids"])
+            # dataset_ids = tuple(config["future_change_factors"]["ids"])
+            value_headers = (future_dataset_id,)
+            dataset_ids = (future_dataset_id,)
 
         writer.writerow(("Design Value ID", "Units") + value_headers)
         for dv_id in config["dvs"].keys():
             writer.writerow(
-                (
-                    dv_id,
-                    dv_units(config, dv_id, climate_regime)
-                ) +
-                tuple(
+                (dv_id, dv_units(config, dv_id, climate_regime))
+                + tuple(
                     float(
                         dv_value(
                             rlon,

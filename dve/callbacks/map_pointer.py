@@ -33,6 +33,8 @@ def map_pointer_table(
     rlat,
     config,
     climate_regime,
+    historical_dataset_id,
+    future_dataset_id,
     selected_dv=None,
     selected_dataset_id=None,
 ):
@@ -45,11 +47,15 @@ def map_pointer_table(
     :return:
     """
     if climate_regime == "historical":
-        header_row = ["Model Value", "Reconstruction Value"]
-        dataset_ids = ("model", "reconstruction")
+        # header_row = ["Model Value", "Reconstruction Value"]
+        # dataset_ids = ("model", "reconstruction")
+        header_row = ["Model Value" if historical_dataset_id == "model" else "Reconstruction Value"]
+        dataset_ids = (historical_dataset_id,)
     else:
-        header_row = list(config["future_change_factors"]["ids"])
-        dataset_ids = tuple(config["future_change_factors"]["ids"])
+        # header_row = list(config["future_change_factors"]["ids"])
+        # dataset_ids = tuple(config["future_change_factors"]["ids"])
+        header_row = [future_dataset_id]
+        dataset_ids = (future_dataset_id,)
 
     logger.debug(
         f"""map_pointer_table (
@@ -270,7 +276,16 @@ def add(app, config):
         z, source = pointer_value(click_data)
 
         # Create data file for download
-        create_download_file(lon, lat, rlon, rlat, config, climate_regime)
+        create_download_file(
+            lon,
+            lat,
+            rlon,
+            rlat,
+            config,
+            climate_regime,
+            historical_dataset_id,
+            future_dataset_id,
+        )
 
         return [
             value_table(
@@ -283,6 +298,8 @@ def add(app, config):
                 rlat,
                 config,
                 climate_regime,
+                historical_dataset_id,
+                future_dataset_id,
                 selected_dv=design_value_id_ctrl,
                 selected_dataset_id=historical_dataset_id,
             ),
