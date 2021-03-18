@@ -1,5 +1,18 @@
 # News / Release Notes
 
+## 1.2.0
+
+Major new feature: Show and download future change factor values.
+
+Minor, but important, new feature: Show loading spinners.
+
+- [Validate config](https://github.com/pacificclimate/dash-dv-explorer/pull/89)
+- [Control DVs available more simply in config](https://github.com/pacificclimate/dash-dv-explorer/pull/88)
+- [Add loading spinners](https://github.com/pacificclimate/dash-dv-explorer/pull/85)
+- [Add change factors](https://github.com/pacificclimate/dash-dv-explorer/pull/81)
+
+**2021-Mar-15**
+
 ## 1.1.2
 
 **2021-Mar-15**
