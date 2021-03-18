@@ -158,9 +158,9 @@ def colourbar_options(config):
                 dbc.Col(html.Label("Num. Colours")),
                 dcc.Loading(
                     dbc.Col(
-                        html.Label(id="colourbar-range-ctrl-output-container")
+                        html.Label(id="colourbar-range-ctrl-output-container"),
                     ),
-                    debug=config["ui"]["debug"],
+                    **config["ui"]["loading"],
                 ),
             ]
         ),
@@ -206,7 +206,7 @@ def colourbar_options(config):
                             # RangeSlider has unwanted horiz padding of 25px.
                             style={"margin": "2em -25px"},
                         ),
-                        debug=config["ui"]["debug"],
+                        **config["ui"]["loading"],
                     )
                 ),
             ],
@@ -262,7 +262,7 @@ def user_graph_interaction(config):
                                 html.Pre(id="click-data"),
                             ],
                         ),
-                        debug=config["ui"]["debug"],
+                        **config["ui"]["loading"],
                     ),
                     width=9,
                 ),
@@ -286,7 +286,7 @@ def map_tab(config):
                     dbc.Col(
                         dcc.Loading(
                             dcc.Graph(id="my-graph"),
-                            debug=config["ui"]["debug"],
+                            **config["ui"]["loading"],
                         ),
                         lg=7,
                         md=12,
@@ -326,7 +326,7 @@ def table_C2_tab(config):
                 ),
                 html.Div(id="table"),
             ],
-            debug=config["ui"]["debug"],
+            **config["ui"]["loading"],
         ),
     )
 

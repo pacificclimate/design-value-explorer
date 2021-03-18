@@ -8,10 +8,13 @@ ui:
             historical: Historical design values
             future: Future change factors
 
-    # This property controls various debugging features in the UI.
-    # TODO: This is a *horrible* way to do this; refactor so it is controlled
-    #   by `--debug` flag in `dve_app.py`.
-    debug: False
+    # This property is provided as keyword args to dcc.Loading and controls
+    # the appearance of the loading spinners.
+    loading:
+        type: dot
+        color: gray
+#        debug: true
+
 
 # Parameterize the pipeline
 # The pipeline will iterate through each parent tree
