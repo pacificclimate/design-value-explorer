@@ -2,10 +2,7 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_daq as daq
-import plotly.express as px
-import numpy as np
-from dve.math_utils import sigfigs
-
+from dve.labelling_utils import dv_label
 
 scale_ctrl_options = [
     {"label": "Linear", "value": "linear"},
@@ -22,20 +19,27 @@ def header(config):
     Returns a list of rows.
     """
     dd_options = [
-        {"label": f'{name} [{defn["description"]}]', "value": name}
-        for name, defn in config["dvs"].items()
+        {
+            "label": dv_label(
+                config,
+                design_value_id,
+                with_units=False,
+                with_description=True,
+            ),
+            "value": design_value_id
+        }
+        for design_value_id in config["dvs"].keys()
     ]
     return [
         dbc.Row(dbc.Col(html.H1("Design Value Explorer"))),
         dbc.Row(
             [
-                dbc.Col(html.Label("Design Value"), width=1),
+                dbc.Col(html.Label("Design Variable"), width=1),
                 dbc.Col(
                     dcc.Dropdown(
                         id="design-value-id-ctrl",
                         options=dd_options,
                         value=config["ui"]["defaults"]["dv"],
-                        placeholder="Select a design value to display...",
                         searchable=True,
                         clearable=False,
                     ),
@@ -46,11 +50,23 @@ def header(config):
     ]
 
 
-def overlay_options():
+def overlay_options(config):
     """
     Layout for Overlay Options section.
     This function returns a list of rows.
     """
+    climate_regime_ctrl_options = [
+        {"label": "Historical", "value": "historical"},
+        {"label": "Future", "value": "future"},
+    ]
+
+    future_dataset_ctrl_options = [
+        {
+            "label": config["future_change_factors"]["label"].format(id),
+            "value": id,
+        }
+        for id in config["future_change_factors"]["ids"]
+    ]
 
     return [
         # Section title
@@ -61,7 +77,8 @@ def overlay_options():
         # Control titles
         dbc.Row(
             [
-                dbc.Col(html.Label("Dataset"), width=6),
+                dbc.Col(html.Label("Climate"), width=2),
+                dbc.Col(html.Label("Dataset"), width=4),
                 dbc.Col(html.Label("Mask"), width=2),
                 dbc.Col(html.Label("Stations"), width=2),
             ]
@@ -70,22 +87,39 @@ def overlay_options():
         dbc.Row(
             [
                 dbc.Col(
-                    dcc.Dropdown(
-                        id="dataset-ctrl",
-                        options=[
-                            {
-                                "label": "HSM Reconstruction",
-                                "value": "reconstruction",
-                            },
-                            {
-                                "label": "CanRCM4 Ensemble Mean",
-                                "value": "model",
-                            },
-                        ],
-                        value="reconstruction",
-                        clearable=False,
+                    dcc.RadioItems(
+                        id="climate-regime-ctrl",
+                        options=climate_regime_ctrl_options,
+                        value=climate_regime_ctrl_options[0]["value"],
+                        labelStyle={"display": "block", "margin-top": "1em"},
                     ),
-                    width=6,
+                    width=2,
+                ),
+                dbc.Col(
+                    [
+                        dcc.Dropdown(
+                            id="historical-dataset-ctrl",
+                            options=[
+                                {
+                                    "label": "HSM Reconstruction",
+                                    "value": "reconstruction",
+                                },
+                                {
+                                    "label": "CanRCM4 Ensemble Mean",
+                                    "value": "model",
+                                },
+                            ],
+                            value="reconstruction",
+                            clearable=False,
+                        ),
+                        dcc.Dropdown(
+                            id="future-dataset-ctrl",
+                            options=future_dataset_ctrl_options,
+                            value=future_dataset_ctrl_options[0]["value"],
+                            clearable=False,
+                        ),
+                    ],
+                    width=4,
                 ),
                 dbc.Col(
                     daq.BooleanSwitch(
@@ -99,7 +133,8 @@ def overlay_options():
                     ),
                     width=2,
                 ),
-            ]
+            ],
+            style={"font-size": "0.8em"}
         ),
     ]
 
@@ -168,7 +203,8 @@ def colourbar_options(colormaps):
                         style={"margin": "2em -25px"},
                     )
                 ),
-            ]
+            ],
+            style={"font-size": "0.8em"}
         ),
     ]
 
@@ -179,17 +215,20 @@ def user_graph_interaction():
     :return: list of dbc.Row
     """
     return [
-        dbc.Row(dbc.Col(html.H5("Data from map pointer"))),
+        dbc.Row(dbc.Col([
+            html.H5("Data from map pointer"),
+            dcc.Markdown(
+                "*Hover over map to show position of cursor. "
+                "Click to hold design values for download.*",
+                style={"font-size": "0.8em"},
+            ),
+        ])),
         dbc.Row(
             [
                 dbc.Col(
-                    dcc.Markdown(
-                        "*Hover over map to show values under cursor. "
-                        "Click to hold values for download.*"
-                    ),
-                    style={"font-size": "0.8em"},
+                    id="data-download-header",
+                    width={"size": 9, "offset": 3}
                 ),
-                dbc.Col(id="data-download-header"),
             ]
         ),
         dbc.Row(
@@ -203,7 +242,8 @@ def user_graph_interaction():
                             ),
                             html.Pre(id="hover-data"),
                         ],
-                    )
+                    ),
+                    width=3,
                 ),
                 dbc.Col(
                     html.Div(
@@ -214,7 +254,8 @@ def user_graph_interaction():
                             ),
                             html.Pre(id="click-data"),
                         ],
-                    )
+                    ),
+                    width=9,
                 ),
             ]
         ),
@@ -247,7 +288,7 @@ def map_tab(config):
                     ),
                     dbc.Col(
                         [
-                            *overlay_options(),
+                            *overlay_options(config),
                             *colourbar_options(colour_maps),
                             *user_graph_interaction(),
                         ],
@@ -269,9 +310,9 @@ def table_C2_tab():
         children=[
             html.H5(
                 [
-                    "Reconstruction Values of ",
+                    "Reconstruction values of ",
                     html.Span(id="table-C2-dv", children="DV"),
-                    " at Table C2 Locations"
+                    " at Table C2 locations"
                 ],
                 className="mt-3",
             ),
