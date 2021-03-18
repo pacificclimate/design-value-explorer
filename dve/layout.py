@@ -25,7 +25,7 @@ def header(config):
             ),
             "value": design_value_id,
         }
-        for design_value_id in config["dvs"].keys()
+        for design_value_id in config["ui"]["dvs"]
     ]
     return [
         dbc.Row(dbc.Col(html.H1("Design Value Explorer"))),

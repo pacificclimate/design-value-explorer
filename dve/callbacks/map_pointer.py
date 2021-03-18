@@ -119,7 +119,7 @@ def map_pointer_table(
                             for dataset_id in dataset_ids
                         ]
                     )
-                    for design_value_id in config["dvs"].keys()
+                    for design_value_id in config["ui"]["dvs"]
                 ]
             ),
         ],
