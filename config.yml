@@ -6,24 +6,20 @@ ui:
     dvs:
         # Design variables to actually offer in the UI.
         # Simplifies commenting them in and out of service.
+        - DRWP5
+        - HDD
+#        - MI  # No change factor files
+        - PAnn
+        - R1d50
+        - R15m10
+        - RAnn
         - RL50
         - RHann
-        - HDD
         - SL50
-        - WP10
-        - WP50
         - TJan2.5
         - TJan1.0
-        - Tmin
-        - Tmax
-#        - TJul97.5     # No change factor files
-#        - TwJul97.5    # No change factor files
-        - DRWP5
-        - PAnn
-        - RAnn
-#        - R1d50        # No change factor files
-#        - MI           # No change factor files
-#        - R15m10       # No change factor files
+        - TJul97.5
+        - TwJul97.5
 
     future_change_factors:
         - "0.5"
@@ -287,13 +283,13 @@ dvs:
         reconstruction_path: data/reconstructions/TJul97.5_reconstruction.nc
         table: data/tables/TJul97.5_TableC2.csv
         future_change_factor_paths:
-            "0.5": data/change_factors/foo/D0.5C/TJul97.5_CanRCM4_ensmean_CF_DT0.5.nc
-            "1.0": data/change_factors/foo/D1.0C/TJul97.5_CanRCM4_ensmean_CF_DT1.0.nc
-            "1.5": data/change_factors/foo/D1.5C/TJul97.5_CanRCM4_ensmean_CF_DT1.5.nc
-            "2.0": data/change_factors/foo/D2.0C/TJul97.5_CanRCM4_ensmean_CF_DT2.0.nc
-            "2.5": data/change_factors/foo/D2.0C/TJul97.5_CanRCM4_ensmean_CF_DT2.0.nc
-            "3.0": data/change_factors/foo/D3.0C/TJul97.5_CanRCM4_ensmean_CF_DT3.0.nc
-            "3.5": data/change_factors/foo/D3.0C/TJul97.5_CanRCM4_ensmean_CF_DT3.0.nc
+            "0.5": data/change_factors/july_2.5%_dry/D0.5C/TJul2.5_CanRCM4_ensmean_CF_DT0.5.nc
+            "1.0": data/change_factors/july_2.5%_dry/D1.0C/TJul2.5_CanRCM4_ensmean_CF_DT1.0.nc
+            "1.5": data/change_factors/july_2.5%_dry/D1.5C/TJul2.5_CanRCM4_ensmean_CF_DT1.5.nc
+            "2.0": data/change_factors/july_2.5%_dry/D2.0C/TJul2.5_CanRCM4_ensmean_CF_DT2.0.nc
+            "2.5": data/change_factors/july_2.5%_dry/D2.0C/TJul2.5_CanRCM4_ensmean_CF_DT2.0.nc
+            "3.0": data/change_factors/july_2.5%_dry/D3.0C/TJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
+            "3.5": data/change_factors/july_2.5%_dry/D3.0C/TJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
         colour_map: "RdBu_r"
         scale:
             disable_logarithmic: True
@@ -309,13 +305,13 @@ dvs:
         reconstruction_path: data/reconstructions/TwJul97.5_reconstruction.nc
         table: data/tables/TwJul97.5_TableC2.csv
         future_change_factor_paths:
-            "0.5": data/change_factors/foo/D0.5C/TwJul97.5_CanRCM4_ensmean_CF_DT0.5.nc
-            "1.0": data/change_factors/foo/D1.0C/TwJul97.5_CanRCM4_ensmean_CF_DT1.0.nc
-            "1.5": data/change_factors/foo/D1.5C/TwJul97.5_CanRCM4_ensmean_CF_DT1.5.nc
-            "2.0": data/change_factors/foo/D2.0C/TwJul97.5_CanRCM4_ensmean_CF_DT2.0.nc
-            "2.5": data/change_factors/foo/D2.0C/TwJul97.5_CanRCM4_ensmean_CF_DT2.0.nc
-            "3.0": data/change_factors/foo/D3.0C/TwJul97.5_CanRCM4_ensmean_CF_DT3.0.nc
-            "3.5": data/change_factors/foo/D3.0C/TwJul97.5_CanRCM4_ensmean_CF_DT3.0.nc
+            "0.5": data/change_factors/july_2.5%_wet/D0.5C/TwJul2.5_CanRCM4_ensmean_CF_DT0.5.nc
+            "1.0": data/change_factors/july_2.5%_wet/D1.0C/TwJul2.5_CanRCM4_ensmean_CF_DT1.0.nc
+            "1.5": data/change_factors/july_2.5%_wet/D1.5C/TwJul2.5_CanRCM4_ensmean_CF_DT1.5.nc
+            "2.0": data/change_factors/july_2.5%_wet/D2.0C/TwJul2.5_CanRCM4_ensmean_CF_DT2.0.nc
+            "2.5": data/change_factors/july_2.5%_wet/D2.0C/TwJul2.5_CanRCM4_ensmean_CF_DT2.0.nc
+            "3.0": data/change_factors/july_2.5%_wet/D3.0C/TwJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
+            "3.5": data/change_factors/july_2.5%_wet/D3.0C/TwJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
         colour_map: "RdBu_r"
         scale:
             disable_logarithmic: True
@@ -394,13 +390,13 @@ dvs:
         reconstruction_path: data/reconstructions/R1d50_reconstruction.nc
         table: data/tables/R1d50_TableC2.csv
         future_change_factor_paths:
-            "0.5": data/change_factors/foo/D0.5C/R1d50_CanRCM4_ensmean_CF_DT0.5.nc
-            "1.0": data/change_factors/foo/D1.0C/R1d50_CanRCM4_ensmean_CF_DT1.0.nc
-            "1.5": data/change_factors/foo/D1.5C/R1d50_CanRCM4_ensmean_CF_DT1.5.nc
-            "2.0": data/change_factors/foo/D2.0C/R1d50_CanRCM4_ensmean_CF_DT2.0.nc
-            "2.5": data/change_factors/foo/D2.0C/R1d50_CanRCM4_ensmean_CF_DT2.0.nc
-            "3.0": data/change_factors/foo/D3.0C/R1d50_CanRCM4_ensmean_CF_DT3.0.nc
-            "3.5": data/change_factors/foo/D3.0C/R1d50_CanRCM4_ensmean_CF_DT3.0.nc
+            "0.5": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2016_DT0.5_Reconstruction.nc
+            "1.0": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2028_DT1.0_Reconstruction.nc
+            "1.5": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2039_DT1.5_Reconstruction.nc
+            "2.0": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2049_DT2.0_Reconstruction.nc
+            "2.5": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2059_DT2.5_Reconstruction.nc
+            "3.0": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2068_DT3.0_Reconstruction.nc
+            "3.5": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2077_DT3.5_Reconstruction.nc
         colour_map: "PuBuGn"
         scale:
             default: logarithmic
@@ -437,13 +433,13 @@ dvs:
         reconstruction_path: data/reconstructions/R15m10_reconstruction.nc
         table: data/tables/R15m10_TableC2.csv
         future_change_factor_paths:
-            "0.5": data/change_factors/foo/D0.5C/R15m10_CanRCM4_ensmean_CF_DT0.5.nc
-            "1.0": data/change_factors/foo/D1.0C/R15m10_CanRCM4_ensmean_CF_DT1.0.nc
-            "1.5": data/change_factors/foo/D1.5C/R15m10_CanRCM4_ensmean_CF_DT1.5.nc
-            "2.0": data/change_factors/foo/D2.0C/R15m10_CanRCM4_ensmean_CF_DT2.0.nc
-            "2.5": data/change_factors/foo/D2.0C/R15m10_CanRCM4_ensmean_CF_DT2.0.nc
-            "3.0": data/change_factors/foo/D3.0C/R15m10_CanRCM4_ensmean_CF_DT3.0.nc
-            "3.5": data/change_factors/foo/D3.0C/R15m10_CanRCM4_ensmean_CF_DT3.0.nc
+            "0.5": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2016_DT0.5_Reconstruction.nc
+            "1.0": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2028_DT1.0_Reconstruction.nc
+            "1.5": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2039_DT1.5_Reconstruction.nc
+            "2.0": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2049_DT2.0_Reconstruction.nc
+            "2.5": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2059_DT2.5_Reconstruction.nc
+            "3.0": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2068_DT3.0_Reconstruction.nc
+            "3.5": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2077_DT3.5_Reconstruction.nc
         colour_map: "PuBuGn"
         scale:
             default: logarithmic
