@@ -6,24 +6,24 @@ ui:
     dvs:
         # Design variables to actually offer in the UI.
         # Simplifies commenting them in and out of service.
+#        - DRWP5
+#        - HDD
+#        - MI
+#        - PAnn
         - R1d50
         - R15m10
+#        - RAnn
         - RL50
         - RHann
-#        - HDD
 #        - SL50
-#        - WP10
-#        - WP50
         - TJan2.5
 #        - TJan1.0
-#        - Tmin
-#        - Tmax
         - TJul97.5
         - TwJul97.5
-#        - DRWP5
-#        - PAnn
-#        - RAnn
-#        - MI
+#        - Tmin
+#        - Tmax
+#        - WP10
+#        - WP50
 
     future_change_factors:
         - "0.5"
