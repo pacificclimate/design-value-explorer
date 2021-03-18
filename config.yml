@@ -8,6 +8,11 @@ ui:
             historical: Historical design values
             future: Future change factors
 
+    # This property controls various debugging features in the UI.
+    # TODO: This is a *horrible* way to do this; refactor so it is controlled
+    #   by `--debug` flag in `dve_app.py`.
+    debug: True
+
 # Parameterize the pipeline
 # The pipeline will iterate through each parent tree
 # in dvs and provide the associated parameters
