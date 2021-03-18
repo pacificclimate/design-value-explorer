@@ -86,7 +86,7 @@ def create_download_file(
             dataset_ids = (future_dataset_id,)
 
         writer.writerow(("Design Value ID", "Units") + value_headers)
-        for dv_id in config["dvs"].keys():
+        for dv_id in config["ui"]["dvs"]:
             writer.writerow(
                 (dv_id, dv_units(config, dv_id, climate_regime))
                 + tuple(

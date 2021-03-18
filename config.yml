@@ -1,16 +1,39 @@
 ui:
     defaults:
-        dv: RL50
-        tab:
+        # Default settings for UI
+        dv: HDD
+
+    dvs:
+        # Design variables to actually offer in the UI.
+        # Simplifies commenting them in and out of service.
+        - RL50
+        - RHann
+        - HDD
+        - SL50
+        - WP10
+        - WP50
+        - TJan2.5
+        - TJan1.0
+        - Tmin
+        - Tmax
+#        - TJul97.5     # No change factor files
+#        - TwJul97.5    # No change factor files
+        - DRWP5
+        - PAnn
+        - RAnn
+#        - R1d50        # No change factor files
+#        - MI           # No change factor files
+#        - R15m10       # No change factor files
 
     labels:
         climate_regime:
+            # Labels for the two climate regime selections
             historical: Historical design values
             future: Future change factors
 
-    # This property is provided as keyword args to dcc.Loading and controls
-    # the appearance of the loading spinners.
     loading:
+        # This property is provided as keyword args to dcc.Loading and controls
+        # the appearance of the loading spinners.
         type: dot
         color: gray
 #        debug: true
@@ -242,51 +265,49 @@ dvs:
             disable_logarithmic: True
             default: linear
 
-# No change factor files
-#    TJul97.5:
-#        description: 97.5th percentile of July temperature
-#        abs_units: °C
-#        cf_units: °C
-#        station_dv:  "TJul2.5 (degC)"  # Erroneous label
-#        station_path: data/station_inputs/julT97.5p_allstations_v3_min8yr_for_maps.csv
-#        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
-#        reconstruction_path: data/reconstructions/TJul97.5_reconstruction.nc
-#        table: data/tables/TJul97.5_TableC2.csv
-#        future_change_factor_paths:
-#            "0.5": data/change_factors/foo/D0.5C/TJul97.5_CanRCM4_ensmean_CF_DT0.5.nc
-#            "1.0": data/change_factors/foo/D1.0C/TJul97.5_CanRCM4_ensmean_CF_DT1.0.nc
-#            "1.5": data/change_factors/foo/D1.5C/TJul97.5_CanRCM4_ensmean_CF_DT1.5.nc
-#            "2.0": data/change_factors/foo/D2.0C/TJul97.5_CanRCM4_ensmean_CF_DT2.0.nc
-#            "2.5": data/change_factors/foo/D2.0C/TJul97.5_CanRCM4_ensmean_CF_DT2.0.nc
-#            "3.0": data/change_factors/foo/D3.0C/TJul97.5_CanRCM4_ensmean_CF_DT3.0.nc
-#            "3.5": data/change_factors/foo/D3.0C/TJul97.5_CanRCM4_ensmean_CF_DT3.0.nc
-#        colour_map: "RdBu_r"
-#        scale:
-#            disable_logarithmic: True
-#            default: linear
+    TJul97.5:
+        description: 97.5th percentile of July temperature
+        abs_units: °C
+        cf_units: °C
+        station_dv:  "TJul2.5 (degC)"  # Erroneous label
+        station_path: data/station_inputs/julT97.5p_allstations_v3_min8yr_for_maps.csv
+        input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
+        reconstruction_path: data/reconstructions/TJul97.5_reconstruction.nc
+        table: data/tables/TJul97.5_TableC2.csv
+        future_change_factor_paths:
+            "0.5": data/change_factors/foo/D0.5C/TJul97.5_CanRCM4_ensmean_CF_DT0.5.nc
+            "1.0": data/change_factors/foo/D1.0C/TJul97.5_CanRCM4_ensmean_CF_DT1.0.nc
+            "1.5": data/change_factors/foo/D1.5C/TJul97.5_CanRCM4_ensmean_CF_DT1.5.nc
+            "2.0": data/change_factors/foo/D2.0C/TJul97.5_CanRCM4_ensmean_CF_DT2.0.nc
+            "2.5": data/change_factors/foo/D2.0C/TJul97.5_CanRCM4_ensmean_CF_DT2.0.nc
+            "3.0": data/change_factors/foo/D3.0C/TJul97.5_CanRCM4_ensmean_CF_DT3.0.nc
+            "3.5": data/change_factors/foo/D3.0C/TJul97.5_CanRCM4_ensmean_CF_DT3.0.nc
+        colour_map: "RdBu_r"
+        scale:
+            disable_logarithmic: True
+            default: linear
 
-# No change factor files
-#    TwJul97.5:
-#        description: 97.5th percentile of July wet-bulb  temperature
-#        abs_units: °C
-#        cf_units: °C
-#        station_dv:  "TwJul2.5 (degC)"  # Erroneous label
-#        station_path: data/station_inputs/julTwb97.5p_allstations_v3_for_maps.csv
-#        input_model_path: data/model_inputs/twb_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
-#        reconstruction_path: data/reconstructions/TwJul97.5_reconstruction.nc
-#        table: data/tables/TwJul97.5_TableC2.csv
-#        future_change_factor_paths:
-#            "0.5": data/change_factors/foo/D0.5C/TwJul97.5_CanRCM4_ensmean_CF_DT0.5.nc
-#            "1.0": data/change_factors/foo/D1.0C/TwJul97.5_CanRCM4_ensmean_CF_DT1.0.nc
-#            "1.5": data/change_factors/foo/D1.5C/TwJul97.5_CanRCM4_ensmean_CF_DT1.5.nc
-#            "2.0": data/change_factors/foo/D2.0C/TwJul97.5_CanRCM4_ensmean_CF_DT2.0.nc
-#            "2.5": data/change_factors/foo/D2.0C/TwJul97.5_CanRCM4_ensmean_CF_DT2.0.nc
-#            "3.0": data/change_factors/foo/D3.0C/TwJul97.5_CanRCM4_ensmean_CF_DT3.0.nc
-#            "3.5": data/change_factors/foo/D3.0C/TwJul97.5_CanRCM4_ensmean_CF_DT3.0.nc
-#        colour_map: "RdBu_r"
-#        scale:
-#            disable_logarithmic: True
-#            default: linear
+    TwJul97.5:
+        description: 97.5th percentile of July wet-bulb  temperature
+        abs_units: °C
+        cf_units: °C
+        station_dv:  "TwJul2.5 (degC)"  # Erroneous label
+        station_path: data/station_inputs/julTwb97.5p_allstations_v3_for_maps.csv
+        input_model_path: data/model_inputs/twb_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
+        reconstruction_path: data/reconstructions/TwJul97.5_reconstruction.nc
+        table: data/tables/TwJul97.5_TableC2.csv
+        future_change_factor_paths:
+            "0.5": data/change_factors/foo/D0.5C/TwJul97.5_CanRCM4_ensmean_CF_DT0.5.nc
+            "1.0": data/change_factors/foo/D1.0C/TwJul97.5_CanRCM4_ensmean_CF_DT1.0.nc
+            "1.5": data/change_factors/foo/D1.5C/TwJul97.5_CanRCM4_ensmean_CF_DT1.5.nc
+            "2.0": data/change_factors/foo/D2.0C/TwJul97.5_CanRCM4_ensmean_CF_DT2.0.nc
+            "2.5": data/change_factors/foo/D2.0C/TwJul97.5_CanRCM4_ensmean_CF_DT2.0.nc
+            "3.0": data/change_factors/foo/D3.0C/TwJul97.5_CanRCM4_ensmean_CF_DT3.0.nc
+            "3.5": data/change_factors/foo/D3.0C/TwJul97.5_CanRCM4_ensmean_CF_DT3.0.nc
+        colour_map: "RdBu_r"
+        scale:
+            disable_logarithmic: True
+            default: linear
 
     DRWP5:
         description: 5-year return level of driving rain wind pressure
@@ -351,69 +372,69 @@ dvs:
         scale:
             default: logarithmic
 
-#    R1d50:
-#        description: 50-year return level of 1-day rainfall
-#        abs_units: mm
-#        cf_units: ratio
-#        station_dv: "1day rain RL50 (mm)"
-#        station_path: data/station_inputs/1day_rain_rl50_for_maps.csv
-#        input_model_path: data/model_inputs/rain_CanRCM4-LE_ens35_1951-2016_max1day_rl50_gum_lm_ensmean.nc
-#        reconstruction_path: data/reconstructions/R1d50_reconstruction.nc
-#        table: data/tables/R1d50_TableC2.csv
-#        future_change_factor_paths:
-#            "0.5": data/change_factors/foo/D0.5C/R1d50_CanRCM4_ensmean_CF_DT0.5.nc
-#            "1.0": data/change_factors/foo/D1.0C/R1d50_CanRCM4_ensmean_CF_DT1.0.nc
-#            "1.5": data/change_factors/foo/D1.5C/R1d50_CanRCM4_ensmean_CF_DT1.5.nc
-#            "2.0": data/change_factors/foo/D2.0C/R1d50_CanRCM4_ensmean_CF_DT2.0.nc
-#            "2.5": data/change_factors/foo/D2.0C/R1d50_CanRCM4_ensmean_CF_DT2.0.nc
-#            "3.0": data/change_factors/foo/D3.0C/R1d50_CanRCM4_ensmean_CF_DT3.0.nc
-#            "3.5": data/change_factors/foo/D3.0C/R1d50_CanRCM4_ensmean_CF_DT3.0.nc
-#        colour_map: "PuBuGn"
-#        scale:
-#            default: logarithmic
+    R1d50:
+        description: 50-year return level of 1-day rainfall
+        abs_units: mm
+        cf_units: ratio
+        station_dv: "1day rain RL50 (mm)"
+        station_path: data/station_inputs/1day_rain_rl50_for_maps.csv
+        input_model_path: data/model_inputs/rain_CanRCM4-LE_ens35_1951-2016_max1day_rl50_gum_lm_ensmean.nc
+        reconstruction_path: data/reconstructions/R1d50_reconstruction.nc
+        table: data/tables/R1d50_TableC2.csv
+        future_change_factor_paths:
+            "0.5": data/change_factors/foo/D0.5C/R1d50_CanRCM4_ensmean_CF_DT0.5.nc
+            "1.0": data/change_factors/foo/D1.0C/R1d50_CanRCM4_ensmean_CF_DT1.0.nc
+            "1.5": data/change_factors/foo/D1.5C/R1d50_CanRCM4_ensmean_CF_DT1.5.nc
+            "2.0": data/change_factors/foo/D2.0C/R1d50_CanRCM4_ensmean_CF_DT2.0.nc
+            "2.5": data/change_factors/foo/D2.0C/R1d50_CanRCM4_ensmean_CF_DT2.0.nc
+            "3.0": data/change_factors/foo/D3.0C/R1d50_CanRCM4_ensmean_CF_DT3.0.nc
+            "3.5": data/change_factors/foo/D3.0C/R1d50_CanRCM4_ensmean_CF_DT3.0.nc
+        colour_map: "PuBuGn"
+        scale:
+            default: logarithmic
 
-#    MI:
-#        description: Moisture index
-#        abs_units: ""
-#        cf_units: ratio
-#        station_dv: "moisture_index"
-#        station_path: data/station_inputs/moisture_index_for_maps.csv
-#        input_model_path: data/model_inputs/moisture_index_CanRCM4-LE_ens15_1951-2016_ensmean.nc
-#        reconstruction_path: data/reconstructions/MI_reconstruction.nc
-#        table: data/tables/MI_TableC2.csv
-#        future_change_factor_paths:
-#            "0.5": data/change_factors/foo/D0.5C/MI_CanRCM4_ensmean_CF_DT0.5.nc
-#            "1.0": data/change_factors/foo/D1.0C/MI_CanRCM4_ensmean_CF_DT1.0.nc
-#            "1.5": data/change_factors/foo/D1.5C/MI_CanRCM4_ensmean_CF_DT1.5.nc
-#            "2.0": data/change_factors/foo/D2.0C/MI_CanRCM4_ensmean_CF_DT2.0.nc
-#            "2.5": data/change_factors/foo/D2.0C/MI_CanRCM4_ensmean_CF_DT2.0.nc
-#            "3.0": data/change_factors/foo/D3.0C/MI_CanRCM4_ensmean_CF_DT3.0.nc
-#            "3.5": data/change_factors/foo/D3.0C/MI_CanRCM4_ensmean_CF_DT3.0.nc
-#        colour_map: "terrain_r"
-#        scale:
-#            disable_logarithmic: False  # ??
-#            default: logarithmic
+    MI:
+        description: Moisture index
+        abs_units: ""
+        cf_units: ratio
+        station_dv: "moisture_index"
+        station_path: data/station_inputs/moisture_index_for_maps.csv
+        input_model_path: data/model_inputs/moisture_index_CanRCM4-LE_ens15_1951-2016_ensmean.nc
+        reconstruction_path: data/reconstructions/MI_reconstruction.nc
+        table: data/tables/MI_TableC2.csv
+        future_change_factor_paths:
+            "0.5": data/change_factors/foo/D0.5C/MI_CanRCM4_ensmean_CF_DT0.5.nc
+            "1.0": data/change_factors/foo/D1.0C/MI_CanRCM4_ensmean_CF_DT1.0.nc
+            "1.5": data/change_factors/foo/D1.5C/MI_CanRCM4_ensmean_CF_DT1.5.nc
+            "2.0": data/change_factors/foo/D2.0C/MI_CanRCM4_ensmean_CF_DT2.0.nc
+            "2.5": data/change_factors/foo/D2.0C/MI_CanRCM4_ensmean_CF_DT2.0.nc
+            "3.0": data/change_factors/foo/D3.0C/MI_CanRCM4_ensmean_CF_DT3.0.nc
+            "3.5": data/change_factors/foo/D3.0C/MI_CanRCM4_ensmean_CF_DT3.0.nc
+        colour_map: "terrain_r"
+        scale:
+            disable_logarithmic: False  # ??
+            default: logarithmic
 
-#    R15m10:
-#        description: 10-year return level of 15-minute rainfall
-#        abs_units: mm
-#        cf_units: ratio
-#        station_dv: "Gum-LM RL10 (mm)"
-#        station_path: data/station_inputs/15min_rain_rl10_for_maps.csv
-#        input_model_path: data/model_inputs/rain_CanRCM4-LE_ens15_1951-2016_max1hr_rl10_gum_lm_ensmean.nc
-#        reconstruction_path: data/reconstructions/R15m10_reconstruction.nc
-#        table: data/tables/R15m10_TableC2.csv
-#        future_change_factor_paths:
-#            "0.5": data/change_factors/foo/D0.5C/R15m10_CanRCM4_ensmean_CF_DT0.5.nc
-#            "1.0": data/change_factors/foo/D1.0C/R15m10_CanRCM4_ensmean_CF_DT1.0.nc
-#            "1.5": data/change_factors/foo/D1.5C/R15m10_CanRCM4_ensmean_CF_DT1.5.nc
-#            "2.0": data/change_factors/foo/D2.0C/R15m10_CanRCM4_ensmean_CF_DT2.0.nc
-#            "2.5": data/change_factors/foo/D2.0C/R15m10_CanRCM4_ensmean_CF_DT2.0.nc
-#            "3.0": data/change_factors/foo/D3.0C/R15m10_CanRCM4_ensmean_CF_DT3.0.nc
-#            "3.5": data/change_factors/foo/D3.0C/R15m10_CanRCM4_ensmean_CF_DT3.0.nc
-#        colour_map: "PuBuGn"
-#        scale:
-#            default: logarithmic
+    R15m10:
+        description: 10-year return level of 15-minute rainfall
+        abs_units: mm
+        cf_units: ratio
+        station_dv: "Gum-LM RL10 (mm)"
+        station_path: data/station_inputs/15min_rain_rl10_for_maps.csv
+        input_model_path: data/model_inputs/rain_CanRCM4-LE_ens15_1951-2016_max1hr_rl10_gum_lm_ensmean.nc
+        reconstruction_path: data/reconstructions/R15m10_reconstruction.nc
+        table: data/tables/R15m10_TableC2.csv
+        future_change_factor_paths:
+            "0.5": data/change_factors/foo/D0.5C/R15m10_CanRCM4_ensmean_CF_DT0.5.nc
+            "1.0": data/change_factors/foo/D1.0C/R15m10_CanRCM4_ensmean_CF_DT1.0.nc
+            "1.5": data/change_factors/foo/D1.5C/R15m10_CanRCM4_ensmean_CF_DT1.5.nc
+            "2.0": data/change_factors/foo/D2.0C/R15m10_CanRCM4_ensmean_CF_DT2.0.nc
+            "2.5": data/change_factors/foo/D2.0C/R15m10_CanRCM4_ensmean_CF_DT2.0.nc
+            "3.0": data/change_factors/foo/D3.0C/R15m10_CanRCM4_ensmean_CF_DT3.0.nc
+            "3.5": data/change_factors/foo/D3.0C/R15m10_CanRCM4_ensmean_CF_DT3.0.nc
+        colour_map: "PuBuGn"
+        scale:
+            default: logarithmic
 
 future_change_factors:
     ids:
