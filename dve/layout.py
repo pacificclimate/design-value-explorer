@@ -59,10 +59,13 @@ def overlay_options(config):
 
     future_dataset_ctrl_options = [
         {
-            "label": config["future_change_factors"]["label"].format(id),
+            "label": (
+                config["ui"]["labels"]["future_change_factors"]["long"]
+                    .format(id)
+            ),
             "value": id,
         }
-        for id in config["future_change_factors"]["ids"]
+        for id in config["ui"]["future_change_factors"]
     ]
 
     return [

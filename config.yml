@@ -25,11 +25,23 @@ ui:
 #        - MI           # No change factor files
 #        - R15m10       # No change factor files
 
+    future_change_factors:
+        - "0.5"
+        - "1.0"
+        - "1.5"
+        - "2.0"
+        - "2.5"
+        - "3.0"
+        - "3.5"
+
     labels:
         climate_regime:
             # Labels for the two climate regime selections
             historical: Historical design values
             future: Future change factors
+        future_change_factors:
+            short: "{}°C GW"
+            long: "{}°C above pre-industrial"
 
     loading:
         # This property is provided as keyword args to dcc.Loading and controls
@@ -435,17 +447,6 @@ dvs:
         colour_map: "PuBuGn"
         scale:
             default: logarithmic
-
-future_change_factors:
-    ids:
-        - "0.5"
-        - "1.0"
-        - "1.5"
-        - "2.0"
-        - "2.5"
-        - "3.0"
-        - "3.5"
-    label: "{}°C above pre-industrial"
 
 map:
     colour_maps:

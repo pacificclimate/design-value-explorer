@@ -80,8 +80,8 @@ def create_download_file(
             )
             dataset_ids = (historical_dataset_id,)
         else:
-            # value_headers = tuple(config["future_change_factors"]["ids"])
-            # dataset_ids = tuple(config["future_change_factors"]["ids"])
+            # value_headers = tuple(config["ui"]["future_change_factors"])
+            # dataset_ids = tuple(config["ui"]["future_change_factors"])
             value_headers = (future_dataset_id,)
             dataset_ids = (future_dataset_id,)
 

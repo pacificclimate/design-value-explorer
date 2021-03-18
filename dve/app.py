@@ -1,6 +1,7 @@
 import yaml
 
 import dve
+import dve.config
 import dve.callbacks.map_figure
 import dve.callbacks.table_c2
 import dve.callbacks.colour_scale
@@ -30,6 +31,8 @@ def make_app(config_filepath="config.yml"):
     with open(config_filepath, "r") as config_file:
         config = yaml.load(config_file)
     logger.debug(f"Configuration loaded. {config}")
+
+    dve.config.validate(config)
 
     app = get_app(config)
 
