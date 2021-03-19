@@ -7,6 +7,9 @@ from climpyrical.gridding import (
 import logging
 import numpy as np
 
+
+logger = logging.getLogger("dve")
+
 source_crs = {"init": "epsg:4326"}
 target_crs = {
     "proj": "ob_tran",
@@ -50,7 +53,7 @@ def coord_prep(df, station_dv):
     rkeys = ["rlat", "rlon"]
     contains_rkeys = [key not in df.columns for key in rkeys]
     if np.any(contains_rkeys):
-        logging.info(
+        logger.info(
             "rlat or rlon not detected in input file."
             "converting assumes WGS84 coords to rotated pole"
         )
