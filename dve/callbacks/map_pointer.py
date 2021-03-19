@@ -194,6 +194,11 @@ def add(app, config):
         if click_data is None:
             return None
 
+        if not dv_has_climate_regime(
+            config, design_value_id, climate_regime
+        ):
+            raise PreventUpdate
+
         logger.debug("display_download_button: get_data")
         dataset = get_data(
             config,
