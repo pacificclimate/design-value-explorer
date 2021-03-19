@@ -47,16 +47,16 @@ def header(config):
     ]
 
 
+climate_regime_ctrl_options = [
+    {"label": "Historical", "value": "historical"},
+    {"label": "Future", "value": "future"},
+]
+
 def overlay_options(config):
     """
     Layout for Overlay Options section.
     This function returns a list of rows.
     """
-    climate_regime_ctrl_options = [
-        {"label": "Historical", "value": "historical"},
-        {"label": "Future", "value": "future"},
-    ]
-
     future_dataset_ctrl_options = [
         {
             "label": (

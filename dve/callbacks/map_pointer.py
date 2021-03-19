@@ -1,9 +1,11 @@
 import logging
 
 from dash.dependencies import Input, Output, State
+from dash.exceptions import PreventUpdate
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 
+from dve.config import dv_has_climate_regime
 from dve.data import get_data, dv_value
 from dve.download_utils import (
     download_filename,
@@ -158,7 +160,7 @@ def add(app, config):
     )
     def display_hover_info(
         hover_data,
-        design_value_id_ctrl,
+        design_value_id,
         climate_regime,
         historical_dataset_id,
         future_dataset_id,
@@ -166,9 +168,14 @@ def add(app, config):
         if hover_data is None:
             return None
 
+        if not dv_has_climate_regime(
+            config, design_value_id, climate_regime
+        ):
+            raise PreventUpdate
+
         dataset = get_data(
             config,
-            design_value_id_ctrl,
+            design_value_id,
             climate_regime,
             historical_dataset_id,
             future_dataset_id,

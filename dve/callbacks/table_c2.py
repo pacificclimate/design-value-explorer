@@ -1,6 +1,8 @@
 from dash.dependencies import Input, Output, State
+from dash.exceptions import PreventUpdate
 import dash_table
 
+from dve.config import dv_has_climate_regime
 from dve.data import get_data
 from dve.labelling_utils import dv_label
 
@@ -11,6 +13,9 @@ def add(app, config):
         [Input("design-value-id-ctrl", "value")]
     )
     def update_tablec2(design_value_id):
+        if not dv_has_climate_regime(config, design_value_id, "historical"):
+            raise PreventUpdate
+
         name_and_units = dv_label(
             config, design_value_id, climate_regime="historical"
         )
