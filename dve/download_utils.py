@@ -1,6 +1,7 @@
 import os
 import os.path
 import csv
+from dve.config import dv_has_climate_regime
 from dve.data import dv_value
 from dve.labelling_utils import dv_units
 
@@ -87,20 +88,21 @@ def create_download_file(
 
         writer.writerow(("Design Value ID", "Units") + value_headers)
         for dv_id in config["ui"]["dvs"]:
-            writer.writerow(
-                (dv_id, dv_units(config, dv_id, climate_regime))
-                + tuple(
-                    float(
-                        dv_value(
-                            rlon,
-                            rlat,
-                            config,
-                            dv_id,
-                            climate_regime,
-                            historical_dataset_id=dataset_id,
-                            future_dataset_id=dataset_id,
+            if dv_has_climate_regime(config, dv_id, climate_regime):
+                writer.writerow(
+                    (dv_id, dv_units(config, dv_id, climate_regime))
+                    + tuple(
+                        float(
+                            dv_value(
+                                rlon,
+                                rlat,
+                                config,
+                                dv_id,
+                                climate_regime,
+                                historical_dataset_id=dataset_id,
+                                future_dataset_id=dataset_id,
+                            )
                         )
+                        for dataset_id in dataset_ids
                     )
-                    for dataset_id in dataset_ids
-                )
             )

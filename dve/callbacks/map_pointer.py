@@ -122,6 +122,7 @@ def map_pointer_table(
                         ]
                     )
                     for design_value_id in config["ui"]["dvs"]
+                    if dv_has_climate_regime(config, design_value_id, climate_regime)
                 ]
             ),
         ],
