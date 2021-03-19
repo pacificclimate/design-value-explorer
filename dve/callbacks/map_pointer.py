@@ -10,6 +10,7 @@ from dve.data import get_data, dv_value
 from dve.download_utils import (
     download_filename,
     download_url,
+    get_download_data,
     create_download_file,
 )
 from dve.labelling_utils import (
@@ -31,39 +32,25 @@ logger = logging.getLogger("dve")
 
 # TODO: Place somewhere else (layout.components)?
 def map_pointer_table(
-    rlon,
-    rlat,
     config,
     climate_regime,
-    historical_dataset_id,
-    future_dataset_id,
+    design_value_ids, dataset_ids, data_values,
     selected_dv=None,
     selected_dataset_id=None,
 ):
     """
     Return a table listing values of design values at a location specified
     by rotated coordinates rlon, rlat
-
-    :param rlon:
-    :param rlat:
-    :return:
     """
     if climate_regime == "historical":
-        # header_row = ["Model Value", "Reconstruction Value"]
-        # dataset_ids = ("model", "reconstruction")
-        header_row = ["Model Value" if historical_dataset_id == "model" else "Reconstruction Value"]
-        dataset_ids = (historical_dataset_id,)
+        value_headers = tuple(
+            f"{dataset_id.capitalize()} value" for dataset_id in dataset_ids
+        )
     else:
-        # header_row = list(config["ui"]["future_change_factors"])
-        # dataset_ids = tuple(config["ui"]["future_change_factors"])
-        header_row = [future_dataset_id]
-        dataset_ids = (future_dataset_id,)
+        value_headers = dataset_ids
 
     logger.debug(
         f"""map_pointer_table (
-            rlon={rlon},
-            rlat={rlat},
-            config={'config'},
             climate_regime={climate_regime},
             selected_dv={selected_dv},
             selected_dataset_id={selected_dataset_id},
@@ -79,8 +66,7 @@ def map_pointer_table(
             ),
             html.Thead(
                 html.Tr(
-                    [html.Th("DV"), html.Th("Units")]
-                    + [html.Th(hdg) for hdg in header_row]
+                    [html.Th(hdg) for hdg in ("DV", "Units") + value_headers]
                 )
             ),
             html.Tbody(
@@ -97,20 +83,7 @@ def map_pointer_table(
                         ]
                         + [
                             html.Td(
-                                round(
-                                    float(
-                                        dv_value(
-                                            rlon,
-                                            rlat,
-                                            config,
-                                            design_value_id,
-                                            climate_regime,
-                                            historical_dataset_id=dataset_id,
-                                            future_dataset_id=dataset_id,
-                                        )
-                                    ),
-                                    3,
-                                ),
+                                round(data_value, 3),
                                 style={
                                     "color": "red"
                                     if design_value_id == selected_dv
@@ -118,11 +91,10 @@ def map_pointer_table(
                                     else "inherit"
                                 },
                             )
-                            for dataset_id in dataset_ids
+                            for dataset_id, data_value in zip(dataset_ids, data_row)
                         ]
                     )
-                    for design_value_id in config["ui"]["dvs"]
-                    if dv_has_climate_regime(config, design_value_id, climate_regime)
+                    for design_value_id, data_row in zip(design_value_ids, data_values)
                 ]
             ),
         ],
@@ -283,10 +255,7 @@ def add(app, config):
         lon, lat = rindices_to_lonlat(dataset, ix, iy)
         z, source = pointer_value(click_data)
 
-        # Create data file for download
-        create_download_file(
-            lon,
-            lat,
+        download_data = get_download_data(
             rlon,
             rlat,
             config,
@@ -295,6 +264,9 @@ def add(app, config):
             future_dataset_id,
         )
 
+        # Create data file for download
+        create_download_file(lon, lat, config, climate_regime, *download_data)
+
         return [
             value_table(
                 ("Lat", round(lat, 6)),
@@ -302,12 +274,9 @@ def add(app, config):
                 # (f"Z ({design_value_id_ctrl}) ({source})", round(z, 6)),
             ),
             map_pointer_table(
-                rlon,
-                rlat,
                 config,
                 climate_regime,
-                historical_dataset_id,
-                future_dataset_id,
+                *download_data,
                 selected_dv=design_value_id_ctrl,
                 selected_dataset_id=historical_dataset_id,
             ),
