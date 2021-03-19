@@ -1,7 +1,7 @@
 import dash
 from dash.dependencies import Input, Output
 
-from dve.config import dv_has_historical
+from dve.config import dv_has_climate_regime
 from dve.layout import climate_regime_ctrl_options
 
 
@@ -18,7 +18,7 @@ def add(app, config):
         If this DV does not have historical data, set climate regime
         to future and disable historical option. Otherwise leave things alone.
         """
-        if dv_has_historical(config, design_value_id):
+        if dv_has_climate_regime(config, design_value_id, "historical"):
             return climate_regime_ctrl_options, dash.no_update
         options = [
             {**option, "disabled": option["value"] == "historical"}
