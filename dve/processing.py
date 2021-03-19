@@ -54,8 +54,9 @@ def coord_prep(df, station_dv):
     contains_rkeys = [key not in df.columns for key in rkeys]
     if np.any(contains_rkeys):
         logger.info(
-            "rlat or rlon not detected in input file."
-            "converting assumes WGS84 coords to rotated pole"
+            f"processing.coord_prep: '{station_dv}' "
+            f"rlat or rlon not detected in input file. "
+            f"Converting assuming WGS84 coords to rotated pole"
         )
         nx, ny = transform_coords(df.lon.values, df.lat.values)
         df = df.assign(rlat=ny, rlon=nx)

@@ -137,6 +137,7 @@ def add(app, config):
 
         discrete_colorscale = plotly_discrete_colorscale(ticks, colours)
 
+        logger.debug("update_ds: get raster dataset")
         raster_dataset = get_data(
             config,
             design_value_id,
@@ -208,6 +209,7 @@ def add(app, config):
 
         # Figure: Stations
         if dv_has_climate_regime(config, design_value_id, "historical"):
+            logger.debug("update_ds: get station dataset")
             df = get_data(
                 config,
                 design_value_id,

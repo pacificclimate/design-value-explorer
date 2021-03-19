@@ -42,7 +42,7 @@ def get_data(
     """Get a specific data object. This function knows the structure
     of `config` so that clients don't have to."""
     logger.debug(
-        f"### get_data {(design_value_id, climate_regime, historical_dataset_id, future_dataset_id)}"
+        f"get_data {(design_value_id, climate_regime, historical_dataset_id, future_dataset_id)}"
     )
     if climate_regime == "historical":
         path_key = {
@@ -72,6 +72,7 @@ def dv_value(
     Get a design variable value for a specified lonlat in rotated pole
     coordinates.
     """
+    logger.debug("dv_value: get_data")
     data = get_data(
         config,
         design_value_id,

@@ -1,3 +1,5 @@
+import logging
+
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 
@@ -7,6 +9,9 @@ from dve.config import dv_has_climate_regime
 from dve.data import get_data
 import dve.layout
 from dve.math_utils import sigfigs
+
+
+logger = logging.getLogger("dve")
 
 
 def add(app, config):
@@ -70,6 +75,7 @@ def add(app, config):
         ):
             raise PreventUpdate
 
+        logger.debug("update_slider: get_data")
         data = get_data(config, design_value_id, climate_regime, historical_dataset_id, future_dataset_id)
         (dv_var_name,) = data.data_vars
         field = data[dv_var_name].values

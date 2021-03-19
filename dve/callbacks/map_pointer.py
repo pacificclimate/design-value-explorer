@@ -146,6 +146,7 @@ def add(app, config):
         ):
             raise PreventUpdate
 
+        logger.debug("display_hover_info: get_data")
         dataset = get_data(
             config,
             design_value_id,
@@ -180,7 +181,7 @@ def add(app, config):
     )
     def display_download_button(
         click_data,
-        design_value_id_ctrl,
+        design_value_id,
         climate_regime,
         historical_dataset_id,
         future_dataset_id,
@@ -193,9 +194,10 @@ def add(app, config):
         if click_data is None:
             return None
 
+        logger.debug("display_download_button: get_data")
         dataset = get_data(
             config,
-            design_value_id_ctrl,
+            design_value_id,
             climate_regime,
             historical_dataset_id,
             future_dataset_id,
@@ -241,6 +243,7 @@ def add(app, config):
         if click_data is None:
             return None
 
+        logger.debug("display_click_info: get_data")
         dataset = get_data(
             config,
             design_value_id_ctrl,
