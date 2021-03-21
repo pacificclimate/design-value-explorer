@@ -7,7 +7,7 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 
 from dve.config import dv_has_climate_regime
-from dve.data import get_data, dv_value
+from dve.data2 import get_data, dv_value
 from dve.download_utils import (
     download_filename,
     download_url,

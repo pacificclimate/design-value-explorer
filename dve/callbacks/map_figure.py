@@ -11,7 +11,7 @@ import geopandas as gpd
 import matplotlib.cm
 import numpy as np
 
-from dve.data import get_data
+from dve.data2 import get_data
 from dve.colorbar import plotly_discrete_colorscale
 from dve.generate_iso_lines import lonlat_overlay
 from dve.labelling_utils import dv_label
@@ -145,7 +145,6 @@ def add(app, config):
             historical_dataset_id,
             future_dataset_id,
         )
-        (dv_var_name,) = raster_dataset.data_vars
 
         # Figure: Lon-lat overlay
         lonlat_overlay_config = config["map"]["lonlat_overlay"]
@@ -182,7 +181,8 @@ def add(app, config):
         icymin = find_nearest_index(raster_dataset.rlat.values, cy_min)
         icymax = find_nearest_index(raster_dataset.rlat.values, cy_max)
 
-        ds_arr = raster_dataset[dv_var_name].values[icymin:icymax, icxmin:icxmax].copy()
+        # TODO: Why copy?
+        ds_arr = raster_dataset.dv.values[icymin:icymax, icxmin:icxmax].copy()
 
         if historical_dataset_id == "model" and mask_on:
             mask = native_mask[icymin:icymax, icxmin:icxmax]
