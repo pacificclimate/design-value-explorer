@@ -191,6 +191,16 @@ def add(app, config):
         two parts: Download button and data display. Unfortunately this is
         repetitive but no other solution is known.
         """
+        logger.debug(
+            f"""display_download_button(
+                click_data={click_data},
+                design_value_id={design_value_id},
+                climate_regime={climate_regime},
+                historical_dataset_id={historical_dataset_id},
+                future_dataset_id={future_dataset_id},
+            )"""
+        )
+
         if click_data is None:
             return None
 
@@ -235,7 +245,7 @@ def add(app, config):
     )
     def display_click_info(
         click_data,
-        design_value_id_ctrl,
+        design_value_id,
         climate_regime,
         historical_dataset_id,
         future_dataset_id,
@@ -248,10 +258,15 @@ def add(app, config):
         if click_data is None:
             return None
 
+        if not dv_has_climate_regime(
+            config, design_value_id, climate_regime
+        ):
+            raise PreventUpdate
+
         logger.debug("display_click_info: get_data")
         dataset = get_data(
             config,
-            design_value_id_ctrl,
+            design_value_id,
             climate_regime,
             historical_dataset_id,
             future_dataset_id,
@@ -285,7 +300,7 @@ def add(app, config):
                 config,
                 climate_regime,
                 *download_data,
-                selected_dv=design_value_id_ctrl,
+                selected_dv=design_value_id,
                 selected_dataset_id=historical_dataset_id,
             ),
         ]
