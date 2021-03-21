@@ -51,12 +51,15 @@ def get_data(
             "model": "input_model_path",
             "reconstruction": "reconstruction_path",
         }[historical_dataset_id]
-        return load_file_cached(config["dvs"][design_value_id][path_key])
-    return load_file_cached(
-        config["dvs"][design_value_id]["future_change_factor_paths"][
-            future_dataset_id
-        ]
-    )
+        file = load_file_cached(config["dvs"][design_value_id][path_key])
+    else:
+        file = load_file_cached(
+            config["dvs"][design_value_id]["future_change_factor_paths"][
+                future_dataset_id
+            ]
+        )
+    logger.debug(f"get_data: cache info: {load_file_cached.cache_info()}")
+    return file
 
 
 def dv_value(
