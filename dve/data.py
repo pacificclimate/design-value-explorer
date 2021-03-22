@@ -81,7 +81,7 @@ def lonlat_at_rlonlat(dvds, ds, rlon, rlat):
 def data_at_rlonlat(dvds, ds, rlon, rlat):
     ix, iy = rlonlat_to_rindices(ds, rlon, rlat)
     lon, lat = rindices_to_lonlat(ds, ix, iy)
-    value = ds[dvds.dv_name].values[ix, iy]
+    value = ds[dvds.dv_name].values[iy, ix]
     return lon, lat, value
 
 
