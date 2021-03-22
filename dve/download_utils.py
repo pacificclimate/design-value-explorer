@@ -2,7 +2,7 @@ import os
 import os.path
 import csv
 from dve.config import dv_has_climate_regime
-from dve.data3 import dv_value
+from dve.data import dv_value
 from dve.labelling_utils import dv_units
 
 

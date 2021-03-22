@@ -67,7 +67,7 @@ class DvXrDataset:
     #   One reason: Easier to manage cache size.
     _cache_lock = threading.RLock()
     _cache = {}
-    _cache_size = int(os.environ.get("FILE_CACHE_SIZE", 10))
+    _cache_size = int(os.environ.get("FILE_CACHE_SIZE", 20))
     CacheItem = namedtuple("CacheItem", "dataset lock")
 
     @classmethod
@@ -85,12 +85,12 @@ class DvXrDataset:
                 access = cls.CacheItem(dataset, lock)
                 cls._cache[filepath] = access
 
-            if len(cls._cache) >= cls._cache_size:
+            if len(cls._cache) > cls._cache_maxsize:
                 # Cache bound exceeded.
                 # Kick a random item out of cache. This is simpler than LRU and
                 # sufficient for testing.
                 # Note: Essential to close dataset before kicking out.
-                rand_key = cls._cache.keys()[randrange(0, cls._cache_size)]
+                rand_key = tuple(cls._cache.keys())[randrange(0, cls._cache_maxsize)]
                 logger.debug(f"cache eviction: {rand_key}")
                 cls._cache[rand_key].dataset.close()
                 del cls._cache[rand_key]

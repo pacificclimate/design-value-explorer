@@ -6,7 +6,7 @@ from dash.exceptions import PreventUpdate
 import numpy as np
 
 from dve.config import dv_has_climate_regime
-from dve.data3 import get_data
+from dve.data import get_data
 import dve.layout
 from dve.math_utils import sigfigs
 

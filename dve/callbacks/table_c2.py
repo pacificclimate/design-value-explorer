@@ -5,7 +5,7 @@ from dash.exceptions import PreventUpdate
 import dash_table
 
 from dve.config import dv_has_climate_regime
-from dve.data3 import get_data
+from dve.data import get_data
 from dve.labelling_utils import dv_label
 
 

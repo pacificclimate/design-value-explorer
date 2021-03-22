@@ -11,7 +11,7 @@ import geopandas as gpd
 import matplotlib.cm
 import numpy as np
 
-from dve.data3 import get_data
+from dve.data import get_data
 from dve.colorbar import plotly_discrete_colorscale
 from dve.generate_iso_lines import lonlat_overlay
 from dve.labelling_utils import dv_label
