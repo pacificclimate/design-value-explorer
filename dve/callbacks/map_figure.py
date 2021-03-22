@@ -222,7 +222,7 @@ def add(app, config):
                 design_value_id,
                 "historical",
                 historical_dataset_id="stations",
-            )
+            ).data_frame()
             station_dv = config["dvs"][design_value_id]["station_dv"]
             df = coord_prep(df, station_dv)
             figures.append(

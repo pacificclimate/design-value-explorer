@@ -29,7 +29,8 @@ class ThreadSafeCache:
       finalization on the cached item before it is evicted (e.g., close a file).
     """
 
-    def __init__(self, on_miss, on_evict=None, maxsize=None):
+    def __init__(self, name, on_miss, on_evict=None, maxsize=None):
+        self.name = name
         self.on_miss = on_miss
         self.on_evict = on_evict
         self.maxsize = maxsize
@@ -37,10 +38,10 @@ class ThreadSafeCache:
         self._cache = {}
 
     def get(self, key):
-        logger.debug(f"cache size: {len(self._cache)}")
+        logger.debug(f"{self.name} cache size: {len(self._cache)}")
         with self._lock:
             if key in self._cache:
-                logger.debug(f"cache hit: {key}")
+                logger.debug(f"{self.name} cache hit: {key}")
                 return self._cache[key]
 
             if len(self._cache) > self.maxsize - 1:
@@ -54,13 +55,11 @@ class ThreadSafeCache:
                 del self._cache[rand_key]
 
             # Create a new item and add it to the cache
-            logger.debug(f"cache miss: {key}")
+            logger.debug(f"{self.name} cache miss: {key}")
             item = self.on_miss(key)
             self._cache[key] = item
 
             return item
-
-
 
 
 # Operations for use with DvXrDataset.apply
@@ -86,7 +85,7 @@ def data_at_rlonlat(dvds, ds, rlon, rlat):
     return lon, lat, value
 
 
-# Manage design value datasets
+# Manage large DV datasets opened as `xarray.Dataset`s
 
 def open_xr_dataset(filepath):
     lock = threading.RLock()
@@ -121,9 +120,10 @@ class DvXrDataset:
     CacheItem = namedtuple("CacheItem", "dataset lock")
 
     _cache = ThreadSafeCache(
+        "DvXrDataset",
         on_miss=open_xr_dataset,
         on_evict=close_xr_dataset,
-        maxsize = int(os.environ.get("FILE_CACHE_SIZE", 20)),
+        maxsize = int(os.environ.get("LARGE_FILE_CACHE_SIZE", 20)),
     )
 
     @classmethod
@@ -219,11 +219,64 @@ class DvXrDataset:
         return dv
 
 
+# Manage small CSV datasets opened as `pandas.csv`s
+
+def open_pd_dataset(filepath):
+    lock = threading.RLock()
+    with lock:
+        data_frame = pd.read_csv(filepath)
+        return DvXrDataset.CacheItem(data_frame, lock)
+
+
+# TODO: This may not be necessary.
+def close_pd_dataset(filepath, access):
+    # Free the data frame.
+    access.data_frame = None
+
+
+class PdCsvDataset:
+    CacheItem = namedtuple("CacheItem", "data_frame lock")
+
+    _cache = ThreadSafeCache(
+        "PdCsvDataset",
+        on_miss=open_pd_dataset,
+        on_evict=close_pd_dataset,
+        maxsize = int(os.environ.get("SMALL_FILE_CACHE_SIZE", 200)),
+    )
+
+    @classmethod
+    def get_access(cls, filepath):
+        return cls._cache.get(filepath)
+
+    def __init__(self, filepath):
+        self.filepath = filepath
+
+    def apply(self, operation, *args, **kwargs):
+        """
+        Returns the result of an arbitrary operation performed on a dataset.
+        Access to the dataset is managed via the thread lock; dataset is
+        cached.
+
+        :param operation: Operation to apply. Called with the following
+          arguments: this object, the dataset, and any additional positional
+          and keyword args provided.
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        access = PdCsvDataset.get_access(self.filepath)
+        with access.lock:
+            return operation(self, access.dataset, *args, **kwargs)
+
+    def data_frame(self):
+        return self.apply(lambda _, data_frame: data_frame)
+
+
 def load_file(path):
     logger.info(f"Loading data from '{path}'")
     filename = resource_filename("dve", path)
     if path.endswith(".csv"):
-        rv = pd.read_csv(filename)
+        rv = PdCsvDataset(filename)
         logger.debug(f"Loaded data from '{path}'")
         return rv
     if path.endswith(".nc"):
@@ -231,15 +284,6 @@ def load_file(path):
         logger.debug(f"Loaded data from '{path}'")
         return rv
     raise ValueError(f"Unrecognized file type in path '{path}'")
-
-
-# @functools.lru_cache(maxsize=int(os.environ.get("FILE_CACHE_SIZE", 50)))
-def load_file_cached(filepath):
-    """Caches the results of a load_file operation. This is the basis of
-    all on-demand data retrieval.
-    TODO: Replace this by applying caching directly to `load_file`.
-    """
-    return load_file(filepath)
 
 
 def get_data(
@@ -261,14 +305,13 @@ def get_data(
             "model": "input_model_path",
             "reconstruction": "reconstruction_path",
         }[historical_dataset_id]
-        file = load_file_cached(config["dvs"][design_value_id][path_key])
+        file = load_file(config["dvs"][design_value_id][path_key])
     else:
-        file = load_file_cached(
+        file = load_file(
             config["dvs"][design_value_id]["future_change_factor_paths"][
                 future_dataset_id
             ]
         )
-    # logger.debug(f"get_data: cache info: {load_file_cached.cache_info()}")
     return file
 
 

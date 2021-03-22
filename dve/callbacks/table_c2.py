@@ -30,7 +30,7 @@ def add(app, config):
             design_value_id,
             "historical",
             historical_dataset_id="table"
-        )
+        ).data_frame()
         df = (
             df[["Location", "Prov", "lon", "lat", "PCIC", "NBCC 2015"]]
                 .round(3)
