@@ -17,6 +17,52 @@ from dve.map_utils import rlonlat_to_rindices, rindices_to_lonlat
 logger = logging.getLogger("dve")
 
 
+class ThreadSafeCache:
+    """
+    A cache which:
+    - Is thread-safe. Access to cache is managed by a thread lock.
+    - Is limited in size. When cache is full, a cache miss also causes an item
+      to be evicted. At present, the algorithm is: evict a random item.
+    - Invokes a user-supplied function when there is a cache miss to create
+      the missing cached item (e.g., open a file).
+    - Invokes a user-supplied function when there is cache eviction to perform
+      finalization on the cached item before it is evicted (e.g., close a file).
+    """
+
+    def __init__(self, on_miss, on_evict=None, maxsize=None):
+        self.on_miss = on_miss
+        self.on_evict = on_evict
+        self.maxsize = maxsize
+        self._lock = threading.RLock()
+        self._cache = {}
+
+    def get(self, key):
+        logger.debug(f"cache size: {len(self._cache)}")
+        with self._lock:
+            if key in self._cache:
+                logger.debug(f"cache hit: {key}")
+                return self._cache[key]
+
+            if len(self._cache) > self.maxsize - 1:
+                # Cache bound exceeded.
+                # Kick a random item out of cache. This is simpler than LRU and
+                # sufficient for testing, and even probably for production.
+                rand_key = tuple(self._cache.keys())[randrange(0, self.maxsize)]
+                logger.debug(f"cache eviction: {rand_key}")
+                if self.on_evict is not None:
+                    self.on_evict(key, self._cache[rand_key])
+                del self._cache[rand_key]
+
+            # Create a new item and add it to the cache
+            logger.debug(f"cache miss: {key}")
+            item = self.on_miss(key)
+            self._cache[key] = item
+
+            return item
+
+
+
+
 # Operations for use with DvXrDataset.apply
 
 def grid_size(dvds, ds):
@@ -34,12 +80,24 @@ def lonlat_at_rlonlat(dvds, ds, rlon, rlat):
 
 
 def data_at_rlonlat(dvds, ds, rlon, rlat):
-    logger.debug(f"data_at_rlonlat{(dvds, ds, rlon, rlat)}")
     ix, iy = rlonlat_to_rindices(ds, rlon, rlat)
     lon, lat = rindices_to_lonlat(ds, ix, iy)
     value = ds[dvds.dv_name].values[ix, iy]
-    logger.debug(f"data_at_rlonlat: return {(lon, lat, value)}")
     return lon, lat, value
+
+
+# Manage design value datasets
+
+def open_xr_dataset(filepath):
+    lock = threading.RLock()
+    with lock:
+        dataset = xarray.open_dataset(filepath)
+        return DvXrDataset.CacheItem(dataset, lock)
+
+
+def close_xr_dataset(filepath, access):
+    with access.lock:
+        access.dataset.close()
 
 
 class DvXrDataset:
@@ -60,42 +118,17 @@ class DvXrDataset:
     4. Provides a generic method for arbitrary operations that need to use
        a dataset.
     """
-
-    # Cache of xarray.Dataset and corresponding lock for file access,
-    # keyed by filepath
-    # TODO: Abstract this as a separate class? But why? It's a singleton.
-    #   One reason: Easier to manage cache size.
-    _cache_lock = threading.RLock()
-    _cache = {}
-    _cache_size = int(os.environ.get("FILE_CACHE_SIZE", 20))
     CacheItem = namedtuple("CacheItem", "dataset lock")
+
+    _cache = ThreadSafeCache(
+        on_miss=open_xr_dataset,
+        on_evict=close_xr_dataset,
+        maxsize = int(os.environ.get("FILE_CACHE_SIZE", 20)),
+    )
 
     @classmethod
     def get_access(cls, filepath):
-        with cls._cache_lock:
-            if filepath in cls._cache:
-                logger.debug(f"cache hit: {filepath}")
-                return cls._cache[filepath]
-
-            # Create a new item and add it to the cache
-            logger.debug(f"cache miss: {filepath}")
-            lock = threading.RLock()
-            with lock:
-                dataset = xarray.open_dataset(filepath)
-                access = cls.CacheItem(dataset, lock)
-                cls._cache[filepath] = access
-
-            if len(cls._cache) > cls._cache_maxsize:
-                # Cache bound exceeded.
-                # Kick a random item out of cache. This is simpler than LRU and
-                # sufficient for testing.
-                # Note: Essential to close dataset before kicking out.
-                rand_key = tuple(cls._cache.keys())[randrange(0, cls._cache_maxsize)]
-                logger.debug(f"cache eviction: {rand_key}")
-                cls._cache[rand_key].dataset.close()
-                del cls._cache[rand_key]
-
-            return access
+        return cls._cache.get(filepath)
 
     def __init__(
         self,
