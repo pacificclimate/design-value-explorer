@@ -11,7 +11,7 @@ import geopandas as gpd
 import matplotlib.cm
 import numpy as np
 
-from dve.data2 import get_data
+from dve.data3 import get_data
 from dve.colorbar import plotly_discrete_colorscale
 from dve.generate_iso_lines import lonlat_overlay
 from dve.labelling_utils import dv_label
@@ -145,14 +145,21 @@ def add(app, config):
             historical_dataset_id,
             future_dataset_id,
         )
+        rlon, rlat, dv = raster_dataset.apply(
+            lambda dvds, ds: (
+                ds.rlon,
+                ds.rlat,
+                ds[dvds.dv_name],
+            )
+        )
 
         # Figure: Lon-lat overlay
         lonlat_overlay_config = config["map"]["lonlat_overlay"]
         figures += lonlat_overlay(
             # It's not clear why the grid sizes should be taken from the
             # dataset, but that's how the code works. Ick.
-            rlon_grid_size=raster_dataset.rlon.size,
-            rlat_grid_size=raster_dataset.rlat.size,
+            rlon_grid_size=rlon.size,
+            rlat_grid_size=rlat.size,
             viewport=viewport,
             num_lon_intervals=lonlat_overlay_config["lon"]["num_intervals"],
             lon_round_to=lonlat_overlay_config["lon"]["round_to"],
@@ -176,13 +183,13 @@ def add(app, config):
         # Figure: Heatmap (raster)
 
         # Index values for clipping data to Canada bounds
-        icxmin = find_nearest_index(raster_dataset.rlon.values, cx_min)
-        icxmax = find_nearest_index(raster_dataset.rlon.values, cx_max)
-        icymin = find_nearest_index(raster_dataset.rlat.values, cy_min)
-        icymax = find_nearest_index(raster_dataset.rlat.values, cy_max)
+        icxmin = find_nearest_index(rlon.values, cx_min)
+        icxmax = find_nearest_index(rlon.values, cx_max)
+        icymin = find_nearest_index(rlat.values, cy_min)
+        icymax = find_nearest_index(rlat.values, cy_max)
 
         # TODO: Why copy?
-        ds_arr = raster_dataset.dv.values[icymin:icymax, icxmin:icxmax].copy()
+        ds_arr = dv.values[icymin:icymax, icxmin:icxmax].copy()
 
         if historical_dataset_id == "model" and mask_on:
             mask = native_mask[icymin:icymax, icxmin:icxmax]
@@ -191,8 +198,8 @@ def add(app, config):
         figures.append(
             go.Heatmap(
                 z=ds_arr,
-                x=raster_dataset.rlon.values[icxmin:icxmax],
-                y=raster_dataset.rlat.values[icymin:icymax],
+                x=rlon.values[icxmin:icxmax],
+                y=rlat.values[icymin:icymax],
                 zmin=zmin,
                 zmax=zmax,
                 hoverongaps=False,
@@ -255,13 +262,13 @@ def add(app, config):
                 "font": dict(size=13, color="grey"),
                 "xaxis": dict(
                     zeroline=False,
-                    range=[raster_dataset.rlon.values[icxmin], raster_dataset.rlon.values[icxmax]],
+                    range=[rlon.values[icxmin], rlon.values[icxmax]],
                     showgrid=False,  # thin lines in the background
                     visible=False,  # numbers below
                 ),
                 "yaxis": dict(
                     zeroline=False,
-                    range=[raster_dataset.rlat.values[icymin], raster_dataset.rlat.values[icymax]],
+                    range=[rlat.values[icymin], rlat.values[icymax]],
                     showgrid=False,  # thin lines in the background
                     visible=False,
                 ),

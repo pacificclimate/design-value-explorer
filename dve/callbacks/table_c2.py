@@ -5,7 +5,7 @@ from dash.exceptions import PreventUpdate
 import dash_table
 
 from dve.config import dv_has_climate_regime
-from dve.data2 import get_data
+from dve.data3 import get_data
 from dve.labelling_utils import dv_label
 
 
@@ -25,7 +25,12 @@ def add(app, config):
             config, design_value_id, climate_regime="historical"
         )
         logger.debug("update_tablec2: get_data")
-        df = get_data(config, design_value_id, "historical", historical_dataset_id="table")
+        df = get_data(
+            config,
+            design_value_id,
+            "historical",
+            historical_dataset_id="table"
+        )
         df = (
             df[["Location", "Prov", "lon", "lat", "PCIC", "NBCC 2015"]]
                 .round(3)

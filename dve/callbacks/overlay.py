@@ -1,8 +1,13 @@
+import logging
+
 import dash
 from dash.dependencies import Input, Output
 
 from dve.config import dv_has_climate_regime
 from dve.layout import climate_regime_ctrl_options
+
+
+logger = logging.getLogger("dve")
 
 
 def add(app, config):
@@ -34,4 +39,5 @@ def add(app, config):
         [Input("climate-regime-ctrl", "value")],
     )
     def update_dataset_ctrl_disable(climate_regime):
+        logger.debug("update_dataset_ctrl_disable")
         return [climate_regime != x for x in ("historical", "future")]

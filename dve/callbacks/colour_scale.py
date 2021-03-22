@@ -6,7 +6,7 @@ from dash.exceptions import PreventUpdate
 import numpy as np
 
 from dve.config import dv_has_climate_regime
-from dve.data2 import get_data
+from dve.data3 import get_data
 import dve.layout
 from dve.math_utils import sigfigs
 
@@ -77,7 +77,7 @@ def add(app, config):
 
         logger.debug("update_slider: get_data")
         data = get_data(config, design_value_id, climate_regime, historical_dataset_id, future_dataset_id)
-        field = data.dv.values
+        field = data.dv_values()
 
         minimum = float(np.round(np.nanmin(field), 3))
         maximum = float(np.round(np.nanmax(field), 3))

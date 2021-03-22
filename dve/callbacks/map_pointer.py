@@ -7,7 +7,7 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 
 from dve.config import dv_has_climate_regime
-from dve.data2 import get_data, dv_value
+from dve.data3 import get_data
 from dve.download_utils import (
     download_filename,
     download_url,
@@ -140,8 +140,7 @@ def add(app, config):
             historical_dataset_id,
             future_dataset_id,
         )
-        ix, iy = rlonlat_to_rindices(dataset, rlon, rlat)
-        lon, lat = rindices_to_lonlat(dataset, ix, iy)
+        lon, lat = dataset.lonlat_at_rlonlat(rlon, rlat)
         url = download_url(lon, lat, climate_regime)
         filename = download_filename(lon, lat, climate_regime)
         return lon, lat, url, filename
@@ -227,6 +226,7 @@ def add(app, config):
         two parts: Download button and data display. Unfortunately this is
         repetitive but no other solution is known.
         """
+        return "No download button"
         logger.debug(
             f"""display_download_button(
                 click_data={click_data},
