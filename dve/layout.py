@@ -306,7 +306,10 @@ def map_tab(config):
                 [
                     dbc.Col(
                         dcc.Loading(
-                            dcc.Graph(id="my-graph"),
+                            dcc.Graph(
+                                id="my-graph",
+                                config=config["ui"]["graph"],
+                            ),
                             **config["ui"]["loading"],
                         ),
                         lg=7,

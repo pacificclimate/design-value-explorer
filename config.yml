@@ -57,6 +57,11 @@ ui:
         color: gray
 #        debug: true
 
+    graph:
+        # This prop is provided to the dcc.Graph component and controls quite
+        # a bit of its behaviour.
+        displayModeBar: true
+
 # Parameterize the pipeline
 # The pipeline will iterate through each parent tree
 # in dvs and provide the associated parameters
