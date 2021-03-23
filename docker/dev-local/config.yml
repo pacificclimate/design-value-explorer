@@ -42,7 +42,7 @@ ui:
             future: Future change relative to 1986-2016
         future_change_factors:
             short: "{}°C GW"
-            long: "{}°C above pre-industrial"
+            long: "{}°C above 1986-2016"
 
     loading:
         # This property is provided as keyword args to dcc.Loading and controls
