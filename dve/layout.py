@@ -321,14 +321,10 @@ def table_C2_tab(config):
         children=dcc.Loading(
             [
                 html.H5(
-                    [
-                        "Reconstruction values of ",
-                        html.Span(id="table-C2-dv", children="DV"),
-                        " at Table C2 locations",
-                    ],
+                    id="table-C2-title",
                     className="mt-3",
                 ),
-                html.Div(id="table"),
+                html.Div(id="table-C2"),
             ],
             **config["ui"]["loading"],
         ),
