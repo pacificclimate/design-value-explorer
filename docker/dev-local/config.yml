@@ -41,8 +41,12 @@ ui:
             historical: Historical design values
             future: Future change relative to 1986-2016
         future_change_factors:
-            short: "{}°C GW"
+            short_nice: "{}°C"
+            short_ascii: "{} degC"
             long: "{}°C above 1986-2016"
+        download_table:
+            dv: Design value
+            units: Units
 
     loading:
         # This property is provided as keyword args to dcc.Loading and controls
