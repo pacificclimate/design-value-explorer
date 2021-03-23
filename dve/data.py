@@ -81,7 +81,10 @@ def lonlat_at_rlonlat(dvds, ds, rlon, rlat):
 def data_at_rlonlat(dvds, ds, rlon, rlat):
     ix, iy = rlonlat_to_rindices(ds, rlon, rlat)
     lon, lat = rindices_to_lonlat(ds, ix, iy)
-    value = ds[dvds.dv_name].values[iy, ix]
+    # logger.debug(f"{ds[dvds.dv_name]}")
+    # `squeeze` drops any superfluous dimensions (i.e., dimensions of length 1,
+    # e.g., time in the model dataset) from the data array.
+    value = ds[dvds.dv_name].squeeze(drop=True).values[iy, ix]
     return lon, lat, value
 
 
@@ -328,7 +331,6 @@ def dv_value(
     Get a design variable value for a specified lonlat in rotated pole
     coordinates.
     """
-    logger.debug("dv_value: get_data")
     dataset = get_data(
         config,
         design_value_id,
@@ -337,7 +339,6 @@ def dv_value(
         future_dataset_id,
     )
     data = dataset.data_at_rlonlat(rlon, rlat)
-    logger.debug(f"dv_value: data = {data}")
     return data[2]
     # ix, iy = rlonlat_to_rindices(data, rlon, rlat)
     # return data.dv.values[iy, ix]
