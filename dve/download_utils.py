@@ -78,11 +78,11 @@ def get_download_data(
 
     # Column ids
     if climate_regime == "historical":
-        # dataset_ids = ("model", "reconstruction")
-        dataset_ids = (historical_dataset_id,)
+        dataset_ids = ("model", "reconstruction")
+        # dataset_ids = (historical_dataset_id,)
     else:
-        # dataset_ids = tuple(config["ui"]["future_change_factors"])
-        dataset_ids = (future_dataset_id,)
+        dataset_ids = tuple(config["ui"]["future_change_factors"])
+        # dataset_ids = (future_dataset_id,)
 
     # Data
     data_values = tuple(
