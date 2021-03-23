@@ -39,7 +39,7 @@ ui:
         climate_regime:
             # Labels for the two climate regime selections
             historical: Historical design values
-            future: Future change factors
+            future: Future change relative to 1986-2016
         future_change_factors:
             short: "{}°C GW"
             long: "{}°C above pre-industrial"
