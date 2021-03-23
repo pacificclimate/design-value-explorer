@@ -111,11 +111,6 @@ def add(app, config):
             }
         }
 
-        # TODO: This appears not to happen any more. Remove if so.
-        if data_range is None:
-            logger.debug("!!! update_ds: range_slider is None")
-            return empty_fig
-
         # This list of figures is returned by this function. It is built up
         # incrementally depending on the values of the inputs.
         figures = []
