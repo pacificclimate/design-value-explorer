@@ -113,6 +113,7 @@ def overlay_options(config):
                             id="future-dataset-ctrl",
                             options=future_dataset_ctrl_options,
                             value=future_dataset_ctrl_options[0]["value"],
+                            disabled=True,
                             clearable=False,
                         ),
                     ],
