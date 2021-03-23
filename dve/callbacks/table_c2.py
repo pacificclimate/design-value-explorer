@@ -1,20 +1,42 @@
+import logging
+
 from dash.dependencies import Input, Output, State
+from dash.exceptions import PreventUpdate
 import dash_table
 
+from dve.config import dv_has_climate_regime
 from dve.data import get_data
 from dve.labelling_utils import dv_label
 
 
+logger = logging.getLogger("dve")
+
+
 def add(app, config):
     @app.callback(
-        [Output("table-C2-dv", "children"), Output("table", "children")],
+        [Output("table-C2-title", "children"), Output("table-C2", "children")],
         [Input("design-value-id-ctrl", "value")]
     )
     def update_tablec2(design_value_id):
+        if not dv_has_climate_regime(config, design_value_id, "historical"):
+            return (
+                f"Variable {design_value_id} does not have station data",
+                None
+            )
+
         name_and_units = dv_label(
             config, design_value_id, climate_regime="historical"
         )
-        df = get_data(config, design_value_id, "historical", historical_dataset_id="table")
+        title = (
+            f"Reconstruction values of {name_and_units} at Table C2 locations"
+        )
+
+        df = get_data(
+            config,
+            design_value_id,
+            "historical",
+            historical_dataset_id="table"
+        ).data_frame()
         df = (
             df[["Location", "Prov", "lon", "lat", "PCIC", "NBCC 2015"]]
                 .round(3)
@@ -33,7 +55,7 @@ def add(app, config):
         }
 
         return [
-            name_and_units,
+            title,
             dash_table.DataTable(
                 columns=[{"id": id, **column_info[id]} for id in df.columns],
                 style_table={

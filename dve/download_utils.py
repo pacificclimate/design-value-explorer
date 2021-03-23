@@ -1,6 +1,7 @@
 import os
 import os.path
 import csv
+from dve.config import dv_has_climate_regime
 from dve.data import dv_value
 from dve.labelling_utils import dv_units
 
@@ -52,15 +53,61 @@ def download_url(
     )
 
 
+def get_download_data(
+    rlon, rlat, config, climate_regime, historical_dataset_id, future_dataset_id
+):
+    """
+    Return the data used to populate a download table. This data is used to
+    populate two different items (the UI display and the download file), and
+    this function makes it possible to marshal that data only once.
+    Reason: Repeated marshalling of the same data may be causing a difficult to
+    diagnose crash. This is an attempt to test that hypothesis and prevent the
+    crash.
+
+    :return: sequence of
+        (row ids) seq of design_value_ids
+        (column ids) seq of dataset_ids
+        (data) seq of data rows, matched to row ids;
+            each data row is a sequence of data values, matched to column ids.
+    """
+    # Row ids
+    design_value_ids = tuple(
+        dv_id for dv_id in config["ui"]["dvs"]
+        if dv_has_climate_regime(config, dv_id, climate_regime)
+    )
+
+    # Column ids
+    if climate_regime == "historical":
+        dataset_ids = ("model", "reconstruction")
+        # dataset_ids = (historical_dataset_id,)
+    else:
+        dataset_ids = tuple(config["ui"]["future_change_factors"])
+        # dataset_ids = (future_dataset_id,)
+
+    # Data
+    data_values = tuple(
+        tuple(
+            float(
+                dv_value(
+                    rlon,
+                    rlat,
+                    config,
+                    design_value_id,
+                    climate_regime,
+                    historical_dataset_id=dataset_id,
+                    future_dataset_id=dataset_id,
+                )
+            )
+            for dataset_id in dataset_ids
+        )
+        for design_value_id in design_value_ids
+    )
+
+    return design_value_ids, dataset_ids, data_values
+
+
 def create_download_file(
-    lon,
-    lat,
-    rlon,
-    rlat,
-    config,
-    climate_regime,
-    historical_dataset_id,
-    future_dataset_id,
+    lon, lat, config, climate_regime, design_value_ids, dataset_ids, data_values
 ):
     with open(
         os.path.join("/", download_filepath(lon, lat, climate_regime)), "w"
@@ -71,36 +118,14 @@ def create_download_file(
         writer.writerow(tuple())
 
         if climate_regime == "historical":
-            # value_headers = ("Model Value", "Reconstruction Value")
-            # dataset_ids = ("model", "reconstruction")
-            value_headers = (
-                "Model Value"
-                if historical_dataset_id == "model"
-                else "Reconstruction Value",
+            value_headers = tuple(
+                f"{dataset_id.capitalize()}" for dataset_id in dataset_ids
             )
-            dataset_ids = (historical_dataset_id,)
         else:
-            # value_headers = tuple(config["ui"]["future_change_factors"])
-            # dataset_ids = tuple(config["ui"]["future_change_factors"])
-            value_headers = (future_dataset_id,)
-            dataset_ids = (future_dataset_id,)
+            value_headers = dataset_ids
 
         writer.writerow(("Design Value ID", "Units") + value_headers)
-        for dv_id in config["ui"]["dvs"]:
+        for dv_id, data_row in zip(design_value_ids, data_values):
             writer.writerow(
-                (dv_id, dv_units(config, dv_id, climate_regime))
-                + tuple(
-                    float(
-                        dv_value(
-                            rlon,
-                            rlat,
-                            config,
-                            dv_id,
-                            climate_regime,
-                            historical_dataset_id=dataset_id,
-                            future_dataset_id=dataset_id,
-                        )
-                    )
-                    for dataset_id in dataset_ids
-                )
+                (dv_id, dv_units(config, dv_id, climate_regime)) + data_row
             )

@@ -47,16 +47,16 @@ def header(config):
     ]
 
 
+climate_regime_ctrl_options = [
+    {"label": "Historical", "value": "historical"},
+    {"label": "Future", "value": "future"},
+]
+
 def overlay_options(config):
     """
     Layout for Overlay Options section.
     This function returns a list of rows.
     """
-    climate_regime_ctrl_options = [
-        {"label": "Historical", "value": "historical"},
-        {"label": "Future", "value": "future"},
-    ]
-
     future_dataset_ctrl_options = [
         {
             "label": (
@@ -113,6 +113,7 @@ def overlay_options(config):
                             id="future-dataset-ctrl",
                             options=future_dataset_ctrl_options,
                             value=future_dataset_ctrl_options[0]["value"],
+                            disabled=True,
                             clearable=False,
                         ),
                     ],
@@ -320,14 +321,10 @@ def table_C2_tab(config):
         children=dcc.Loading(
             [
                 html.H5(
-                    [
-                        "Reconstruction values of ",
-                        html.Span(id="table-C2-dv", children="DV"),
-                        " at Table C2 locations",
-                    ],
+                    id="table-C2-title",
                     className="mt-3",
                 ),
-                html.Div(id="table"),
+                html.Div(id="table-C2"),
             ],
             **config["ui"]["loading"],
         ),

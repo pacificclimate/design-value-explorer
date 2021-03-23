@@ -1,10 +1,17 @@
+import logging
+
 from dash.dependencies import Input, Output, State
+from dash.exceptions import PreventUpdate
 
 import numpy as np
 
+from dve.config import dv_has_climate_regime
 from dve.data import get_data
 import dve.layout
 from dve.math_utils import sigfigs
+
+
+logger = logging.getLogger("dve")
 
 
 def add(app, config):
@@ -63,9 +70,13 @@ def add(app, config):
         ],
     )
     def update_slider(design_value_id, climate_regime, historical_dataset_id, future_dataset_id):
+        if not dv_has_climate_regime(
+            config, design_value_id, climate_regime
+        ):
+            raise PreventUpdate
+
         data = get_data(config, design_value_id, climate_regime, historical_dataset_id, future_dataset_id)
-        (dv_var_name,) = data.data_vars
-        field = data[dv_var_name].values
+        field = data.dv_values()
 
         minimum = float(np.round(np.nanmin(field), 3))
         maximum = float(np.round(np.nanmax(field), 3))

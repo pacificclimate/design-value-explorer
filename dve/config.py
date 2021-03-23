@@ -18,16 +18,27 @@ def validate(config):
     for filepath in config["paths"].values():
         validate_filepath(filepath)
 
-    for dv_id in config["ui"]["dvs"]:
-        dv_defn = config["dvs"][dv_id]
+    for design_value_id in config["ui"]["dvs"]:
+        dv_defn = config["dvs"][design_value_id]
 
-        for key in (
-            "station_path",
-            "input_model_path",
-            "reconstruction_path",
-            "table",
-        ):
-            validate_filepath(dv_defn[key])
+        if dv_has_climate_regime(config, design_value_id, "historical"):
+            for key in (
+                "station_path",
+                "input_model_path",
+                "reconstruction_path",
+                "table",
+            ):
+                validate_filepath(dv_defn[key])
 
         for fcf_id in config["ui"]["future_change_factors"]:
             validate_filepath(dv_defn["future_change_factor_paths"][fcf_id])
+
+
+def dv_has_climate_regime(config, design_value_id, climate_regime):
+    """
+    Return a boolean indicating whether a DV has definitions for specific
+    climate regime (historical or future) datasets.
+    """
+    return (
+        "abs_units" if climate_regime == "historical" else "cf_units"
+    ) in config["dvs"][design_value_id]

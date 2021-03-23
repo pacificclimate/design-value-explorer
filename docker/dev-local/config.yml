@@ -8,6 +8,7 @@ ui:
         # Simplifies commenting them in and out of service.
 #        - DRWP5
 #        - HDD
+        - IDFCF
 #        - MI
 #        - PAnn
         - R1d50
@@ -63,28 +64,22 @@ paths:
     native_mask: data/masks/land_mask_CanRCM4_sftlf.nc
     total_table_c2: data/tables/combined_dv_tablec2.csv
 
-# annual_rain/D0.5C/RAnn_CanRCM4_ensmean_CF_DT0.5.nc
-#annual_relative_humidity/D0.5C/RHann_CanRCM4_ensmean_CF_DT0.5.nc
-#annual_temperature/D0.5C/TAnn_CanRCM4_ensmean_CF_DT0.5.nc
-#annual_total_precipitation/D0.5C/PAnn_CanRCM4_ensmean_CF_DT0.5.nc
-#degree_days_below_18/D0.5C/HDD_CanRCM4_ensmean_CF_DT0.5.nc
-#degree_days_below_18/D0.5C/temp1.nc
-#degree_days_below_18/D0.5C/temp.nc
-#driving_rain_wind_pressures_q5yr/D0.5C/DRWP5_CanRCM4_ensmean_CF_DT0.5.nc
-#hourly_wind_pressures_q100wp/D0.5C/WP100_CanRCM4_ensmean_CF_DT0.5.nc
-#hourly_wind_pressures_q10wp/D0.5C/WP10_CanRCM4_ensmean_CF_DT0.5.nc
-#hourly_wind_pressures_q25wp/D0.5C/WP25_CanRCM4_ensmean_CF_DT0.5.nc
-#hourly_wind_pressures_q50wp/D0.5C/WP50_CanRCM4_ensmean_CF_DT0.5.nc
-#ice_thickness_q20yr/D0.5C/IT20_CanRCM4_ensmean_CF_DT0.5.nc
-#january_1%_dry/D0.5C/TJan1.0_CanRCM4_ensmean_CF_DT0.5.nc
-#january_2.5%_dry/D0.5C/TJan2.5_CanRCM4_ensmean_CF_DT0.5.nc
-#july_2.5%_dry/D0.5C/TJul2.5_CanRCM4_ensmean_CF_DT0.5.nc
-#july_2.5%_wet/D0.5C/TwJul2.5_CanRCM4_ensmean_CF_DT0.5.nc
-#maximum_mean_daily_temperature/D0.5C/Tmax_CanRCM4_ensmean_CF_DT0.5.nc
-#minimum_mean_daily_temperature/D0.5C/Tmin_CanRCM4_ensmean_CF_DT0.5.nc
-#rain_q50yr/D0.5C/RL50_CanRCM4_ensmean_CF_DT0.5.nc
-#snow_q50yr/D0.5C/SL50_CanRCM4_ensmean_CF_DT0.5.nc
 dvs:
+    IDFCF:
+        description: IDF future change factors
+        cf_units: ratio
+        future_change_factor_paths:
+            "0.5": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2016_DT0.5_Reconstruction.nc
+            "1.0": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2028_DT1.0_Reconstruction.nc
+            "1.5": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2039_DT1.5_Reconstruction.nc
+            "2.0": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2049_DT2.0_Reconstruction.nc
+            "2.5": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2059_DT2.5_Reconstruction.nc
+            "3.0": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2068_DT3.0_Reconstruction.nc
+            "3.5": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2077_DT3.5_Reconstruction.nc
+        colour_map: "terrain_r"
+        scale:
+            default: linear
+
     RL50:
         description: 50-year return level of annual maximum rain-on-snow load
         abs_units: kPa

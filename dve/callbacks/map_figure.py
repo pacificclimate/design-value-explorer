@@ -3,6 +3,8 @@ import logging
 from pkg_resources import resource_filename
 
 from dash.dependencies import Input, Output, State
+from dve.config import dv_has_climate_regime
+from dash.exceptions import PreventUpdate
 import plotly.graph_objects as go
 
 import geopandas as gpd
@@ -80,20 +82,11 @@ def add(app, config):
         # Client-side state
         viewport_ds,
     ):
-        logger.debug(
-            f"""update_ds (
-                design_value_id={design_value_id},
-                climate_regime={climate_regime},
-                historical_dataset_id={historical_dataset_id},
-                future_dataset_id={future_dataset_id},
-                mask_on={mask_on},
-                show_stations={show_stations},
-                colour_map_name={colour_map_name},
-                scale={scale},
-                num_colours={num_colours},
-                data_range={data_range},
-            )"""
-        )
+        if not dv_has_climate_regime(
+            config, design_value_id, climate_regime
+        ):
+            raise PreventUpdate
+
         empty_fig = {
             "layout": {
                 "title": "Loading...",
@@ -103,10 +96,9 @@ def add(app, config):
             }
         }
 
-        # TODO: This appears not to happen any more. Remove if so.
-        if data_range is None:
-            logger.debug("### update_ds: range_slider is None")
-            return empty_fig
+        # This list of figures is returned by this function. It is built up
+        # incrementally depending on the values of the inputs.
+        figures = []
 
         viewport = viewport_ds and json.loads(viewport_ds)
 
@@ -125,39 +117,29 @@ def add(app, config):
 
         discrete_colorscale = plotly_discrete_colorscale(ticks, colours)
 
-        # TODO: Rename all this shit
-        ds = get_data(
+        logger.debug("update_ds: get raster dataset")
+        raster_dataset = get_data(
             config,
             design_value_id,
             climate_regime,
             historical_dataset_id,
             future_dataset_id,
         )
-        (dv,) = ds.data_vars  # TODO: Rename dv_var_name
-        # TODO: Don't display stations when climate_regime != "historical"?
-        df = get_data(
-            config,
-            design_value_id,
-            "historical",
-            historical_dataset_id="stations",
+        rlon, rlat, dv = raster_dataset.apply(
+            lambda dvds, ds: (
+                ds.rlon,
+                ds.rlat,
+                ds[dvds.dv_name],
+            )
         )
-        station_dv = config["dvs"][design_value_id]["station_dv"]
 
-        # Index values for clipping data to Canada bounds
-        icxmin = find_nearest_index(ds.rlon.values, cx_min)
-        icxmax = find_nearest_index(ds.rlon.values, cx_max)
-        icymin = find_nearest_index(ds.rlat.values, cy_min)
-        icymax = find_nearest_index(ds.rlat.values, cy_max)
-
-        go_list = []
-
-        # Lon-lat overlay
+        # Figure: Lon-lat overlay
         lonlat_overlay_config = config["map"]["lonlat_overlay"]
-        go_list += lonlat_overlay(
+        figures += lonlat_overlay(
             # It's not clear why the grid sizes should be taken from the
             # dataset, but that's how the code works. Ick.
-            rlon_grid_size=ds.rlon.size,
-            rlat_grid_size=ds.rlat.size,
+            rlon_grid_size=rlon.size,
+            rlat_grid_size=rlat.size,
             viewport=viewport,
             num_lon_intervals=lonlat_overlay_config["lon"]["num_intervals"],
             lon_round_to=lonlat_overlay_config["lon"]["round_to"],
@@ -165,8 +147,8 @@ def add(app, config):
             lat_round_to=lonlat_overlay_config["lat"]["round_to"],
         )
 
-        # Canada map
-        go_list += [
+        # Figure: Canada map
+        figures += [
             go.Scattergl(
                 x=canada_x,
                 y=canada_y,
@@ -178,20 +160,26 @@ def add(app, config):
             )
         ]
 
-        # need to process stations
-        df = coord_prep(df, station_dv)
-        ds_arr = ds[dv].values[icymin:icymax, icxmin:icxmax].copy()
+        # Figure: Heatmap (raster)
+
+        # Index values for clipping data to Canada bounds
+        icxmin = find_nearest_index(rlon.values, cx_min)
+        icxmax = find_nearest_index(rlon.values, cx_max)
+        icymin = find_nearest_index(rlat.values, cy_min)
+        icymax = find_nearest_index(rlat.values, cy_max)
+
+        # TODO: Why copy?
+        ds_arr = dv.values[icymin:icymax, icxmin:icxmax].copy()
 
         if historical_dataset_id == "model" and mask_on:
             mask = native_mask[icymin:icymax, icxmin:icxmax]
             ds_arr[~mask] = np.nan
 
-        go_list += [
-            # Interploation raster
+        figures.append(
             go.Heatmap(
                 z=ds_arr,
-                x=ds.rlon.values[icxmin:icxmax],
-                y=ds.rlat.values[icymin:icymax],
+                x=rlon.values[icxmin:icxmax],
+                y=rlat.values[icymin:icymax],
                 zmin=zmin,
                 zmax=zmax,
                 hoverongaps=False,
@@ -203,34 +191,47 @@ def add(app, config):
                     f"<b>{design_value_id} (Interp.): %{{z}} </b><br>"
                 ),
                 name="",
-            ),
-            # Station plot
-            go.Scattergl(
-                x=df.rlon,
-                y=df.rlat,
-                text=df[station_dv],
-                mode="markers",
-                marker=dict(
-                    size=10,
-                    symbol="circle",
-                    color=df[station_dv],
-                    cmin=zmin,
-                    cmax=zmax,
-                    line=dict(width=1, color="DarkSlateGrey"),
-                    showscale=False,
-                    colorscale=discrete_colorscale,
-                    colorbar={"tickvals": ticks},
-                ),
-                hovertemplate=(
-                    f"<b>{design_value_id} (Station): " f"%{{text}}</b><br>"
-                ),
-                visible=show_stations,
-                name="",
-            ),
-        ]
+            )
+        )
 
-        fig = {
-            "data": go_list,
+        # Figure: Stations
+        if dv_has_climate_regime(config, design_value_id, "historical"):
+            logger.debug("update_ds: get station dataset")
+            df = get_data(
+                config,
+                design_value_id,
+                "historical",
+                historical_dataset_id="stations",
+            ).data_frame()
+            station_dv = config["dvs"][design_value_id]["station_dv"]
+            df = coord_prep(df, station_dv)
+            figures.append(
+                go.Scattergl(
+                    x=df.rlon,
+                    y=df.rlat,
+                    text=df[station_dv],
+                    mode="markers",
+                    marker=dict(
+                        size=10,
+                        symbol="circle",
+                        color=df[station_dv],
+                        cmin=zmin,
+                        cmax=zmax,
+                        line=dict(width=1, color="DarkSlateGrey"),
+                        showscale=False,
+                        colorscale=discrete_colorscale,
+                        colorbar={"tickvals": ticks},
+                    ),
+                    hovertemplate=(
+                        f"<b>{design_value_id} (Station): " f"%{{text}}</b><br>"
+                    ),
+                    visible=show_stations,
+                    name="",
+                )
+            )
+
+        return {
+            "data": figures,
             "layout": {
                 "title": dv_label(
                     config,
@@ -241,13 +242,13 @@ def add(app, config):
                 "font": dict(size=13, color="grey"),
                 "xaxis": dict(
                     zeroline=False,
-                    range=[ds.rlon.values[icxmin], ds.rlon.values[icxmax]],
+                    range=[rlon.values[icxmin], rlon.values[icxmax]],
                     showgrid=False,  # thin lines in the background
                     visible=False,  # numbers below
                 ),
                 "yaxis": dict(
                     zeroline=False,
-                    range=[ds.rlat.values[icymin], ds.rlat.values[icymax]],
+                    range=[rlat.values[icymin], rlat.values[icymax]],
                     showgrid=False,  # thin lines in the background
                     visible=False,
                 ),
@@ -266,8 +267,6 @@ def add(app, config):
                 "uirevision": "None",
             },
         }
-
-        return fig
 
     @app.callback(
         Output("viewport-ds", "children"),

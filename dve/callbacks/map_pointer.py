@@ -1,13 +1,17 @@
 import logging
+import functools
 
 from dash.dependencies import Input, Output, State
+from dash.exceptions import PreventUpdate
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 
-from dve.data import get_data, dv_value
+from dve.config import dv_has_climate_regime
+from dve.data import get_data
 from dve.download_utils import (
     download_filename,
     download_url,
+    get_download_data,
     create_download_file,
 )
 from dve.labelling_utils import (
@@ -19,6 +23,7 @@ from dve.labelling_utils import (
 from dve.map_utils import (
     pointer_rlonlat,
     pointer_rindices,
+    rlonlat_to_rindices,
     rindices_to_lonlat,
     pointer_value,
 )
@@ -29,45 +34,22 @@ logger = logging.getLogger("dve")
 
 # TODO: Place somewhere else (layout.components)?
 def map_pointer_table(
-    rlon,
-    rlat,
     config,
     climate_regime,
-    historical_dataset_id,
-    future_dataset_id,
+    design_value_ids, dataset_ids, data_values,
     selected_dv=None,
     selected_dataset_id=None,
 ):
     """
     Return a table listing values of design values at a location specified
     by rotated coordinates rlon, rlat
-
-    :param rlon:
-    :param rlat:
-    :return:
     """
     if climate_regime == "historical":
-        # header_row = ["Model Value", "Reconstruction Value"]
-        # dataset_ids = ("model", "reconstruction")
-        header_row = ["Model Value" if historical_dataset_id == "model" else "Reconstruction Value"]
-        dataset_ids = (historical_dataset_id,)
-    else:
-        # header_row = list(config["ui"]["future_change_factors"])
-        # dataset_ids = tuple(config["ui"]["future_change_factors"])
-        header_row = [future_dataset_id]
-        dataset_ids = (future_dataset_id,)
-
-    logger.debug(
-        f"""map_pointer_table (
-            rlon={rlon},
-            rlat={rlat},
-            config={'config'},
-            climate_regime={climate_regime},
-            selected_dv={selected_dv},
-            selected_dataset_id={selected_dataset_id},
+        value_headers = tuple(
+            f"{dataset_id.capitalize()} value" for dataset_id in dataset_ids
         )
-        """
-    )
+    else:
+        value_headers = dataset_ids
 
     return dbc.Table(
         [
@@ -77,8 +59,7 @@ def map_pointer_table(
             ),
             html.Thead(
                 html.Tr(
-                    [html.Th("DV"), html.Th("Units")]
-                    + [html.Th(hdg) for hdg in header_row]
+                    [html.Th(hdg) for hdg in ("DV", "Units") + value_headers]
                 )
             ),
             html.Tbody(
@@ -95,20 +76,7 @@ def map_pointer_table(
                         ]
                         + [
                             html.Td(
-                                round(
-                                    float(
-                                        dv_value(
-                                            rlon,
-                                            rlat,
-                                            config,
-                                            design_value_id,
-                                            climate_regime,
-                                            historical_dataset_id=dataset_id,
-                                            future_dataset_id=dataset_id,
-                                        )
-                                    ),
-                                    3,
-                                ),
+                                round(data_value, 3),
                                 style={
                                     "color": "red"
                                     if design_value_id == selected_dv
@@ -116,10 +84,10 @@ def map_pointer_table(
                                     else "inherit"
                                 },
                             )
-                            for dataset_id in dataset_ids
+                            for dataset_id, data_value in zip(dataset_ids, data_row)
                         ]
                     )
-                    for design_value_id in config["ui"]["dvs"]
+                    for design_value_id, data_row in zip(design_value_ids, data_values)
                 ]
             ),
         ],
@@ -146,6 +114,28 @@ def value_table(*items):
 
 
 def add(app, config):
+    @functools.lru_cache(maxsize=10)
+    def download_info(
+        rlon,
+        rlat,
+        design_value_id,
+        climate_regime,
+        historical_dataset_id,
+        future_dataset_id,
+    ):
+        dataset = get_data(
+            config,
+            design_value_id,
+            climate_regime,
+            historical_dataset_id,
+            future_dataset_id,
+        )
+        lon, lat = dataset.lonlat_at_rlonlat(rlon, rlat)
+        url = download_url(lon, lat, climate_regime)
+        filename = download_filename(lon, lat, climate_regime)
+        return lon, lat, url, filename
+
+
     @app.callback(
         Output("hover-info", "children"),
         [
@@ -158,7 +148,7 @@ def add(app, config):
     )
     def display_hover_info(
         hover_data,
-        design_value_id_ctrl,
+        design_value_id,
         climate_regime,
         historical_dataset_id,
         future_dataset_id,
@@ -166,17 +156,33 @@ def add(app, config):
         if hover_data is None:
             return None
 
-        dataset = get_data(
-            config,
-            design_value_id_ctrl,
+        if not dv_has_climate_regime(
+            config, design_value_id, climate_regime
+        ):
+            raise PreventUpdate
+
+        rlon, rlat = pointer_rlonlat(hover_data)
+
+        # logger.debug("display_hover_info: get_data")
+        # dataset = get_data(
+        #     config,
+        #     design_value_id,
+        #     climate_regime,
+        #     historical_dataset_id,
+        #     future_dataset_id,
+        # )
+        # ix, iy = pointer_rindices(hover_data, dataset)
+        # lon, lat = rindices_to_lonlat(dataset, ix, iy)
+        # z, source = pointer_value(hover_data)
+
+        lon, lat, *unused = download_info(
+            rlon,
+            rlat,
+            design_value_id,
             climate_regime,
             historical_dataset_id,
             future_dataset_id,
         )
-        rlon, rlat = pointer_rlonlat(hover_data)
-        ix, iy = pointer_rindices(hover_data, dataset)
-        lon, lat = rindices_to_lonlat(dataset, ix, iy)
-        z, source = pointer_value(hover_data)
 
         return [
             value_table(
@@ -200,7 +206,7 @@ def add(app, config):
     )
     def display_download_button(
         click_data,
-        design_value_id_ctrl,
+        design_value_id,
         climate_regime,
         historical_dataset_id,
         future_dataset_id,
@@ -213,25 +219,26 @@ def add(app, config):
         if click_data is None:
             return None
 
-        dataset = get_data(
-            config,
-            design_value_id_ctrl,
+        if not dv_has_climate_regime(
+            config, design_value_id, climate_regime
+        ):
+            raise PreventUpdate
+
+        rlon, rlat = pointer_rlonlat(click_data)
+        lon, lat, url, filename = download_info(
+            rlon,
+            rlat,
+            design_value_id,
             climate_regime,
             historical_dataset_id,
             future_dataset_id,
         )
-        rlon, rlat = pointer_rlonlat(click_data)
-        ix, iy = pointer_rindices(click_data, dataset)
-        # Note that lon, lat is derived from selected dataset, which may have
-        # a different (coarser, finer) grid than the other datasets.
-        lon, lat = rindices_to_lonlat(dataset, ix, iy)
-        z, source = pointer_value(click_data)
-
+        
         return [
             html.A(
                 "Download this data",
-                href=download_url(lon, lat, climate_regime),
-                download=download_filename(lon, lat, climate_regime),
+                href=url,
+                download=filename,
                 className="btn btn-primary btn-sm mb-1",
             )
         ]
@@ -248,7 +255,7 @@ def add(app, config):
     )
     def display_click_info(
         click_data,
-        design_value_id_ctrl,
+        design_value_id,
         climate_regime,
         historical_dataset_id,
         future_dataset_id,
@@ -261,24 +268,21 @@ def add(app, config):
         if click_data is None:
             return None
 
-        dataset = get_data(
-            config,
-            design_value_id_ctrl,
+        if not dv_has_climate_regime(
+            config, design_value_id, climate_regime
+        ):
+            raise PreventUpdate
+
+        rlon, rlat = pointer_rlonlat(click_data)
+        lon, lat, url, filename = download_info(
+            rlon,
+            rlat,
+            design_value_id,
             climate_regime,
             historical_dataset_id,
             future_dataset_id,
         )
-        rlon, rlat = pointer_rlonlat(click_data)
-        ix, iy = pointer_rindices(click_data, dataset)
-        # Note that lon, lat is derived from selected dataset, which may have
-        # a different (coarser, finer) grid than the other datasets.
-        lon, lat = rindices_to_lonlat(dataset, ix, iy)
-        z, source = pointer_value(click_data)
-
-        # Create data file for download
-        create_download_file(
-            lon,
-            lat,
+        download_data = get_download_data(
             rlon,
             rlat,
             config,
@@ -287,6 +291,9 @@ def add(app, config):
             future_dataset_id,
         )
 
+        # Create data file for download
+        create_download_file(lon, lat, config, climate_regime, *download_data)
+
         return [
             value_table(
                 ("Lat", round(lat, 6)),
@@ -294,13 +301,10 @@ def add(app, config):
                 # (f"Z ({design_value_id_ctrl}) ({source})", round(z, 6)),
             ),
             map_pointer_table(
-                rlon,
-                rlat,
                 config,
                 climate_regime,
-                historical_dataset_id,
-                future_dataset_id,
-                selected_dv=design_value_id_ctrl,
+                *download_data,
+                selected_dv=design_value_id,
                 selected_dataset_id=historical_dataset_id,
             ),
         ]
