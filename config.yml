@@ -46,6 +46,9 @@ ui:
         download_table:
             dv: Design value
             units: Units
+        table_C2:
+            title: "Reconstruction values of {} at Table C2 locations (HISTORICAL ONLY)"
+            no_station_data: "Variable {} does not have station data"
 
     loading:
         # This property is provided as keyword args to dcc.Loading and controls
