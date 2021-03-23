@@ -20,6 +20,10 @@ ui:
         - TJan1.0
         - TJul97.5
         - TwJul97.5
+        - Tmax
+        - Tmin
+        - WP10
+        - WP50
 
     future_change_factors:
         - "0.5"
