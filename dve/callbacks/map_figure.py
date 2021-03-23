@@ -87,15 +87,6 @@ def add(app, config):
         ):
             raise PreventUpdate
 
-        empty_fig = {
-            "layout": {
-                "title": "Loading...",
-                "font": dict(size=13, color="grey"),
-                "height": 750,
-                "uirevision": "None",
-            }
-        }
-
         # This list of figures is returned by this function. It is built up
         # incrementally depending on the values of the inputs.
         figures = []
@@ -233,11 +224,9 @@ def add(app, config):
         return {
             "data": figures,
             "layout": {
-                "title": dv_label(
-                    config,
-                    design_value_id,
-                    climate_regime,
-                    with_description=True,
+                "title": (
+                    f"{dv_label(config, design_value_id, climate_regime, with_description=True, )} "
+                    f"     {config['ui']['labels']['climate_regime'][climate_regime]}"
                 ),
                 "font": dict(size=13, color="grey"),
                 "xaxis": dict(
