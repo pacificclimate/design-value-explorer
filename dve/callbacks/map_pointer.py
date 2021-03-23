@@ -226,7 +226,6 @@ def add(app, config):
         two parts: Download button and data display. Unfortunately this is
         repetitive but no other solution is known.
         """
-        return "No download button"
         logger.debug(
             f"""display_download_button(
                 click_data={click_data},
