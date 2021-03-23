@@ -134,7 +134,17 @@ def overlay_options(config):
                 ),
                 dbc.Col(
                     daq.BooleanSwitch(
-                        id="stations-ctrl", on=False, style={"width": "50px"}
+                        id="stations-ctrl",
+                        on=False,
+                        style={"width": "100px"},
+                        label={
+                            "label": "(HISTORICAL ONLY)",
+                            "style": {
+                                "font-size": "0.8em",
+                                "font-style": "italic",
+                            }
+                        },
+                        labelPosition="bottom",
                     ),
                     width=2,
                 ),

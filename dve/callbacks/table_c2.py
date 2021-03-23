@@ -20,15 +20,16 @@ def add(app, config):
     def update_tablec2(design_value_id):
         if not dv_has_climate_regime(config, design_value_id, "historical"):
             return (
-                f"Variable {design_value_id} does not have station data",
+                config["ui"]["labels"]["table_C2"]["no_station_data"].format(design_value_id),
                 None
             )
 
         name_and_units = dv_label(
             config, design_value_id, climate_regime="historical"
         )
+
         title = (
-            f"Reconstruction values of {name_and_units} at Table C2 locations"
+            config["ui"]["labels"]["table_C2"]["title"].format(name_and_units)
         )
 
         df = get_data(
