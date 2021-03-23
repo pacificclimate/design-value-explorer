@@ -72,7 +72,8 @@ def get_download_data(
     """
     # Row ids
     design_value_ids = tuple(
-        dv_id for dv_id in config["ui"]["dvs"]
+        dv_id
+        for dv_id in config["ui"]["dvs"]
         if dv_has_climate_regime(config, dv_id, climate_regime)
     )
 
@@ -122,9 +123,20 @@ def create_download_file(
                 f"{dataset_id.capitalize()}" for dataset_id in dataset_ids
             )
         else:
-            value_headers = dataset_ids
+            value_headers = tuple(
+                config["ui"]["labels"]["future_change_factors"][
+                    "short_ascii"
+                ].format(dataset_id)
+                for dataset_id in dataset_ids
+            )
 
-        writer.writerow(("Design Value ID", "Units") + value_headers)
+        writer.writerow(
+            tuple(
+                config["ui"]["labels"]["download_table"][k]
+                for k in ("dv", "units")
+            )
+            + value_headers
+        )
         for dv_id, data_row in zip(design_value_ids, data_values):
             writer.writerow(
                 (dv_id, dv_units(config, dv_id, climate_regime)) + data_row

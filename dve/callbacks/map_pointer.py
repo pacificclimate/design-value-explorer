@@ -68,7 +68,8 @@ def map_pointer_table(
                             tuple(
                                 config["ui"]["labels"]["download_table"][k]
                                 for k in ("dv", "units")
-                            ) + value_headers
+                            )
+                            + value_headers
                         )
                     ]
                 )
