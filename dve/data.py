@@ -1,3 +1,28 @@
+"""
+This module contains all the infrastructure for managing access to the data
+(files) used by DVE.
+
+The core of this module is the thread-safe caching of file objects. Because
+Dash is multi-threaded, there can be concurrent requests for the same file,
+and this can cause errors. The cache provides thread-safe mediation of file
+access (and thread-safe access to itself, too, which is essential).
+
+Two classes provide convenient thread-safe access to the two types
+of file-data objects. They are structured very similarly and both use
+(separate) thread safe caches to manage them. These classes also provide
+thread-safe access to the data itself, which may or many not be necessary.
+
+Finally, the perhaps too-generic `get_data` function uses the configuration
+to turn convenient requests for data into actual file accesses, and  dispatches
+these requests to the cached file objects.
+
+TODO: Break this big file up into submodules: `Caching`, `DvXrDataset`,
+  `PdCsvDataset`, and `get_data`.
+TODO: Determine whether data access, which is read-only, needs thread locking.
+TODO: `DvXrDataset`, `PdCsvDataset` have a very common structure. Factor this
+  out into a base class factory.
+"""
+
 import os
 import functools
 from collections import namedtuple
@@ -20,7 +45,7 @@ logger = logging.getLogger("dve")
 class ThreadSafeCache:
     """
     A cache which:
-    - Is thread-safe. Access to cache is managed by a thread lock.
+    - Is thread-safe. Access to cache itself is managed by a thread lock.
     - Is limited in size. When cache is full, a cache miss also causes an item
       to be evicted. At present, the algorithm is: evict a random item.
     - Invokes a user-supplied function when there is a cache miss to create
@@ -62,6 +87,8 @@ class ThreadSafeCache:
             return item
 
 
+# Manage large DV datasets opened as `xarray.Dataset`s
+
 # Operations for use with DvXrDataset.apply
 
 def grid_size(dvds, ds):
@@ -88,7 +115,7 @@ def data_at_rlonlat(dvds, ds, rlon, rlat):
     return lon, lat, value
 
 
-# Manage large DV datasets opened as `xarray.Dataset`s
+# Cache event callbacks.
 
 def open_xr_dataset(filepath):
     lock = threading.RLock()
@@ -104,21 +131,17 @@ def close_xr_dataset(filepath, access):
 
 class DvXrDataset:
     """
-    Class that represents a design value dataset, more specifically a NetCDF
-    file full of design value rasters loaded as an xarray.Dataset.
+    Manager for design value datasets, more specifically NetCDF
+    files full of design value rasters loaded as an xarray.Dataset.
 
     This class provides several services:
     1. Caches xarray.Datasets, opening and closing on cache miss and cache
-       invalidation, respectively
-    2a. Manages access to the cache by a thread lock. This is essential to
-        prevent simultaneous attempts to open the same uncached file, which
-        causes crashes.
-    2b. Manages access to the datasets by a thread lock. Is this necessary?
-        All access to datasets at present is read only.
-    3. Provides common operations (e.g., translation of rlonlat to lonlat
-       coords) via methods.
-    4. Provides a generic method for arbitrary operations that need to use
+       invalidation, respectively. Cache itself is thread-safe.
+    2. Manages access to the datasets by a thread lock. Is this necessary?
+    3. Provides a generic method for arbitrary operations that need to use
        a dataset.
+    4. Provides methods for common operations (e.g., translation of rlonlat
+       to lonlat coords).
     """
     CacheItem = namedtuple("CacheItem", "dataset lock")
 
@@ -153,9 +176,9 @@ class DvXrDataset:
         :param operation: Operation to apply. Called with the following
           arguments: this object, the dataset, and any additional positional
           and keyword args provided.
-        :param args:
-        :param kwargs:
-        :return:
+        :param args: Positional args to pass to `operation`.
+        :param kwargs: Keyword args to pass to `operation`.
+        :return: Value returned by `operation`.
         """
         access = DvXrDataset.get_access(self.filepath)
         with access.lock:
@@ -163,11 +186,8 @@ class DvXrDataset:
 
     def dv_values(self, x=None, y=None):
         """
-        Get values accessed by x and y. If x or y is None, return all values.
-
-        :param x:
-        :param y:
-        :return:
+        Get values accessed by index objects x and y.
+        If x or y is None, return all values.
         """
         values = self.apply(dv_values)
         if x is None or y is None:
@@ -177,20 +197,12 @@ class DvXrDataset:
     def lonlat_at_rlonlat(self, rlon, rlat):
         """
         Return lon, lat nearest specified rlon, rlat in dataset.
-
-        :param rlon:
-        :param rlat:
-        :return:
         """
         return self.apply(lonlat_at_rlonlat, rlon, rlat)
 
     def data_at_rlonlat(self, rlon, rlat):
         """
         Return data value nearest specified rlon, rlat in dataset.
-
-        :param rlon:
-        :param rlat:
-        :return:
         """
         return self.apply(data_at_rlonlat, rlon, rlat)
 
@@ -238,6 +250,14 @@ def close_pd_dataset(filepath, access):
 
 
 class PdCsvDataset:
+    """
+    Manager for data files loaded using `pandas.csv`, which returns a
+    `pandas.DataFrame`.
+
+    This class is very similar to, but somewhat simpler than, `DvXrDataset`.
+    It uses a separate cache.
+    """
+
     CacheItem = namedtuple("CacheItem", "data_frame lock")
 
     _cache = ThreadSafeCache(
@@ -263,19 +283,21 @@ class PdCsvDataset:
         :param operation: Operation to apply. Called with the following
           arguments: this object, the dataset, and any additional positional
           and keyword args provided.
-        :param args:
-        :param kwargs:
-        :return:
+        :param args: Positional args to pass to `operation`.
+        :param kwargs: Keyword args to pass to `operation`.
+        :return: Value returned by `operation`.
         """
         access = PdCsvDataset.get_access(self.filepath)
         with access.lock:
             return operation(self, access.dataset, *args, **kwargs)
 
     def data_frame(self):
+        """Return the data frame loaded from the file."""
         return self.apply(lambda _, data_frame: data_frame)
 
 
 def load_file(path):
+    """Load files with appropriate class according to their type."""
     logger.info(f"Loading data from '{path}'")
     filename = resource_filename("dve", path)
     if path.endswith(".csv"):
@@ -296,8 +318,10 @@ def get_data(
     historical_dataset_id=None,
     future_dataset_id=None,
 ):
-    """Get a specific data object. This function knows the structure
-    of `config` so that clients don't have to."""
+    """
+    Get a specific data object. This function knows the structure
+    of `config` so that clients don't have to.
+    """
     logger.debug(
         f"get_data {(design_value_id, climate_regime, historical_dataset_id, future_dataset_id)}"
     )
@@ -340,5 +364,3 @@ def dv_value(
     )
     data = dataset.data_at_rlonlat(rlon, rlat)
     return data[2]
-    # ix, iy = rlonlat_to_rindices(data, rlon, rlat)
-    # return data.dv.values[iy, ix]
