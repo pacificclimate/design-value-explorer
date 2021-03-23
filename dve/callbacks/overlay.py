@@ -39,5 +39,4 @@ def add(app, config):
         [Input("climate-regime-ctrl", "value")],
     )
     def update_dataset_ctrl_disable(climate_regime):
-        logger.debug("update_dataset_ctrl_disable")
         return [climate_regime != x for x in ("historical", "future")]

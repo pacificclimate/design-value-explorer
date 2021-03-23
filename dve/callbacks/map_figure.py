@@ -82,21 +82,6 @@ def add(app, config):
         # Client-side state
         viewport_ds,
     ):
-        logger.debug(
-            f"""update_ds (
-                design_value_id={design_value_id},
-                climate_regime={climate_regime},
-                historical_dataset_id={historical_dataset_id},
-                future_dataset_id={future_dataset_id},
-                mask_on={mask_on},
-                show_stations={show_stations},
-                colour_map_name={colour_map_name},
-                scale={scale},
-                num_colours={num_colours},
-                data_range={data_range},
-            )"""
-        )
-
         if not dv_has_climate_regime(
             config, design_value_id, climate_regime
         ):

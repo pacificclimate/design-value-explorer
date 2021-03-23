@@ -75,7 +75,6 @@ def add(app, config):
         ):
             raise PreventUpdate
 
-        logger.debug("update_slider: get_data")
         data = get_data(config, design_value_id, climate_regime, historical_dataset_id, future_dataset_id)
         field = data.dv_values()
 

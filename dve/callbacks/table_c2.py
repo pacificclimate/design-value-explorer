@@ -24,7 +24,6 @@ def add(app, config):
         name_and_units = dv_label(
             config, design_value_id, climate_regime="historical"
         )
-        logger.debug("update_tablec2: get_data")
         df = get_data(
             config,
             design_value_id,

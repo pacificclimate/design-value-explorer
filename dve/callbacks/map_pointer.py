@@ -51,15 +51,6 @@ def map_pointer_table(
     else:
         value_headers = dataset_ids
 
-    logger.debug(
-        f"""map_pointer_table (
-            climate_regime={climate_regime},
-            selected_dv={selected_dv},
-            selected_dataset_id={selected_dataset_id},
-        )
-        """
-    )
-
     return dbc.Table(
         [
             html.Caption(
@@ -132,7 +123,6 @@ def add(app, config):
         historical_dataset_id,
         future_dataset_id,
     ):
-        logger.debug("download_info: get_data")
         dataset = get_data(
             config,
             design_value_id,
@@ -226,16 +216,6 @@ def add(app, config):
         two parts: Download button and data display. Unfortunately this is
         repetitive but no other solution is known.
         """
-        logger.debug(
-            f"""display_download_button(
-                click_data={click_data},
-                design_value_id={design_value_id},
-                climate_regime={climate_regime},
-                historical_dataset_id={historical_dataset_id},
-                future_dataset_id={future_dataset_id},
-            )"""
-        )
-
         if click_data is None:
             return None
 
