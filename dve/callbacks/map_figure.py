@@ -56,6 +56,7 @@ def add(app, config):
             Input("future-dataset-ctrl", "value"),
             Input("mask-ctrl", "on"),
             Input("stations-ctrl", "on"),
+            Input("grid-ctrl", "on"),
             # Colour scale options
             Input("colour-map-ctrl", "value"),
             Input("scale-ctrl", "value"),
@@ -74,6 +75,7 @@ def add(app, config):
         future_dataset_id,
         mask_on,
         show_stations,
+        show_grid,
         # Colour scale options
         colour_map_name,
         scale,
@@ -125,18 +127,19 @@ def add(app, config):
         )
 
         # Figure: Lon-lat overlay
-        lonlat_overlay_config = config["map"]["lonlat_overlay"]
-        figures += lonlat_overlay(
-            # It's not clear why the grid sizes should be taken from the
-            # dataset, but that's how the code works. Ick.
-            rlon_grid_size=rlon.size,
-            rlat_grid_size=rlat.size,
-            viewport=viewport,
-            num_lon_intervals=lonlat_overlay_config["lon"]["num_intervals"],
-            lon_round_to=lonlat_overlay_config["lon"]["round_to"],
-            num_lat_intervals=lonlat_overlay_config["lat"]["num_intervals"],
-            lat_round_to=lonlat_overlay_config["lat"]["round_to"],
-        )
+        if show_grid:
+            lonlat_overlay_config = config["map"]["lonlat_overlay"]
+            figures += lonlat_overlay(
+                # It's not clear why the grid sizes should be taken from the
+                # dataset, but that's how the code works. Ick.
+                rlon_grid_size=rlon.size,
+                rlat_grid_size=rlat.size,
+                viewport=viewport,
+                num_lon_intervals=lonlat_overlay_config["lon"]["num_intervals"],
+                lon_round_to=lonlat_overlay_config["lon"]["round_to"],
+                num_lat_intervals=lonlat_overlay_config["lat"]["num_intervals"],
+                lat_round_to=lonlat_overlay_config["lat"]["round_to"],
+            )
 
         # Figure: Canada map
         figures += [

@@ -74,6 +74,8 @@ def overlay_options(config):
     ]
 
     climate_regime_ctrl_opts = climate_regime_ctrl_options(config)
+    
+    col_widths = (3, 3, 2, 2, 2)
 
     return [
         # Section title
@@ -81,73 +83,73 @@ def overlay_options(config):
         # Control titles
         dbc.Row(
             [
-                dbc.Col(html.Label("Climate"), width=3),
-                dbc.Col(html.Label("Dataset"), width=4),
-                dbc.Col(html.Label("Mask"), width=2),
-                dbc.Col(html.Label("Stations"), width=2),
-            ]
+                dbc.Col(html.Label(label), width=width) 
+                for label, width in zip(
+                    ("Climate", "Dataset", "Mask", "Stations", "Grid"), 
+                    col_widths,
+                )
+            ],
         ),
         # Controls
         dbc.Row(
             [
-                dbc.Col(
-                    dcc.RadioItems(
-                        id="climate-regime-ctrl",
-                        options=climate_regime_ctrl_opts,
-                        value=climate_regime_ctrl_opts[0]["value"],
-                        labelStyle={"display": "block", "margin-top": "1em"},
-                    ),
-                    width=3,
-                ),
-                dbc.Col(
-                    [
-                        dcc.Dropdown(
-                            id="historical-dataset-ctrl",
-                            options=[
-                                {
-                                    "label": "HSM Reconstruction",
-                                    "value": "reconstruction",
-                                },
-                                {
-                                    "label": "CanRCM4 Ensemble Mean",
-                                    "value": "model",
-                                },
-                            ],
-                            value="reconstruction",
-                            clearable=False,
+                dbc.Col(control, width=width)
+                for control, width in zip(
+                    (
+                        dcc.RadioItems(
+                            id="climate-regime-ctrl",
+                            options=climate_regime_ctrl_opts,
+                            value=climate_regime_ctrl_opts[0]["value"],
+                            labelStyle={"display": "block", "margin-top": "1em"},
                         ),
-                        dcc.Dropdown(
-                            id="future-dataset-ctrl",
-                            options=future_dataset_ctrl_options,
-                            value=future_dataset_ctrl_options[0]["value"],
-                            disabled=True,
-                            clearable=False,
+                        [
+                            dcc.Dropdown(
+                                id="historical-dataset-ctrl",
+                                options=[
+                                    {
+                                        "label": "HSM Reconstruction",
+                                        "value": "reconstruction",
+                                    },
+                                    {
+                                        "label": "CanRCM4 Ensemble Mean",
+                                        "value": "model",
+                                    },
+                                ],
+                                value="reconstruction",
+                                clearable=False,
+                            ),
+                            dcc.Dropdown(
+                                id="future-dataset-ctrl",
+                                options=future_dataset_ctrl_options,
+                                value=future_dataset_ctrl_options[0]["value"],
+                                disabled=True,
+                                clearable=False,
+                            ),
+                        ],
+                        daq.BooleanSwitch(
+                            id="mask-ctrl", on=True, style={"width": "50px"}
                         ),
-                    ],
-                    width=4,
-                ),
-                dbc.Col(
-                    daq.BooleanSwitch(
-                        id="mask-ctrl", on=True, style={"width": "50px"}
+                        daq.BooleanSwitch(
+                            id="stations-ctrl",
+                            on=False,
+                            style={"width": "100px"},
+                            label={
+                                "label": "(HISTORICAL ONLY)",
+                                "style": {
+                                    "font-size": "0.8em",
+                                    "font-style": "italic",
+                                }
+                            },
+                            labelPosition="bottom",
+                        ),
+                        daq.BooleanSwitch(
+                            id="grid-ctrl",
+                            on=True,
+                            style={"width": "50px"},
+                        ),
                     ),
-                    width=2,
-                ),
-                dbc.Col(
-                    daq.BooleanSwitch(
-                        id="stations-ctrl",
-                        on=False,
-                        style={"width": "100px"},
-                        label={
-                            "label": "(HISTORICAL ONLY)",
-                            "style": {
-                                "font-size": "0.8em",
-                                "font-style": "italic",
-                            }
-                        },
-                        labelPosition="bottom",
-                    ),
-                    width=2,
-                ),
+                    col_widths,
+                )
             ],
             style={"font-size": "0.8em"},
         ),
