@@ -245,21 +245,6 @@ def add(app, config):
             raise PreventUpdate
 
         rlon, rlat = pointer_rlonlat(click_data)
-
-        # logger.debug("display_download_button: get_data")
-        # dataset = get_data(
-        #     config,
-        #     design_value_id,
-        #     climate_regime,
-        #     historical_dataset_id,
-        #     future_dataset_id,
-        # )
-        # ix, iy = pointer_rindices(click_data, dataset)
-        # Note that lon, lat is derived from selected dataset, which may have
-        # a different (coarser, finer) grid than the other datasets.
-        # lon, lat = rindices_to_lonlat(dataset, ix, iy)
-        # z, source = pointer_value(click_data)
-
         lon, lat, url, filename = download_info(
             rlon,
             rlat,
@@ -309,21 +294,6 @@ def add(app, config):
             raise PreventUpdate
 
         rlon, rlat = pointer_rlonlat(click_data)
-
-        # logger.debug("display_click_info: get_data")
-        # dataset = get_data(
-        #     config,
-        #     design_value_id,
-        #     climate_regime,
-        #     historical_dataset_id,
-        #     future_dataset_id,
-        # )
-        # ix, iy = pointer_rindices(click_data, dataset)
-        # Note that lon, lat is derived from selected dataset, which may have
-        # a different (coarser, finer) grid than the other datasets.
-        # lon, lat = rindices_to_lonlat(dataset, ix, iy)
-        # z, source = pointer_value(click_data)
-
         lon, lat, url, filename = download_info(
             rlon,
             rlat,

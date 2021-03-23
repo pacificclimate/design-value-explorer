@@ -64,27 +64,6 @@ paths:
     native_mask: data/masks/land_mask_CanRCM4_sftlf.nc
     total_table_c2: data/tables/combined_dv_tablec2.csv
 
-# annual_rain/D0.5C/RAnn_CanRCM4_ensmean_CF_DT0.5.nc
-#annual_relative_humidity/D0.5C/RHann_CanRCM4_ensmean_CF_DT0.5.nc
-#annual_temperature/D0.5C/TAnn_CanRCM4_ensmean_CF_DT0.5.nc
-#annual_total_precipitation/D0.5C/PAnn_CanRCM4_ensmean_CF_DT0.5.nc
-#degree_days_below_18/D0.5C/HDD_CanRCM4_ensmean_CF_DT0.5.nc
-#degree_days_below_18/D0.5C/temp1.nc
-#degree_days_below_18/D0.5C/temp.nc
-#driving_rain_wind_pressures_q5yr/D0.5C/DRWP5_CanRCM4_ensmean_CF_DT0.5.nc
-#hourly_wind_pressures_q100wp/D0.5C/WP100_CanRCM4_ensmean_CF_DT0.5.nc
-#hourly_wind_pressures_q10wp/D0.5C/WP10_CanRCM4_ensmean_CF_DT0.5.nc
-#hourly_wind_pressures_q25wp/D0.5C/WP25_CanRCM4_ensmean_CF_DT0.5.nc
-#hourly_wind_pressures_q50wp/D0.5C/WP50_CanRCM4_ensmean_CF_DT0.5.nc
-#ice_thickness_q20yr/D0.5C/IT20_CanRCM4_ensmean_CF_DT0.5.nc
-#january_1%_dry/D0.5C/TJan1.0_CanRCM4_ensmean_CF_DT0.5.nc
-#january_2.5%_dry/D0.5C/TJan2.5_CanRCM4_ensmean_CF_DT0.5.nc
-#july_2.5%_dry/D0.5C/TJul2.5_CanRCM4_ensmean_CF_DT0.5.nc
-#july_2.5%_wet/D0.5C/TwJul2.5_CanRCM4_ensmean_CF_DT0.5.nc
-#maximum_mean_daily_temperature/D0.5C/Tmax_CanRCM4_ensmean_CF_DT0.5.nc
-#minimum_mean_daily_temperature/D0.5C/Tmin_CanRCM4_ensmean_CF_DT0.5.nc
-#rain_q50yr/D0.5C/RL50_CanRCM4_ensmean_CF_DT0.5.nc
-#snow_q50yr/D0.5C/SL50_CanRCM4_ensmean_CF_DT0.5.nc
 dvs:
     IDFCF:
         description: IDF future change factors
@@ -100,31 +79,6 @@ dvs:
         colour_map: "terrain_r"
         scale:
             default: linear
-
-    #    refactored:
-    #        description: xxx
-    #        historical:
-    #            units: xxx
-    #            datasets:
-    #                stations:
-    #                    path: xxx
-    #                    column: xxx
-    #                model: xxx
-    #                reconstruction: xxx
-    #                table_C2: xxx
-    #            colour_map: xxx
-    #            scale:
-    #                default: xxx
-    #        future:
-    #            units: xxx
-    #            datasets:
-    #                "0.5": xxx
-    #                "1.0": xxx
-    #                "1.5": xxx
-    #                # etc.
-    #            colour_map: xxx
-    #            scale:
-    #                default: xxx
 
     RL50:
         description: 50-year return level of annual maximum rain-on-snow load
