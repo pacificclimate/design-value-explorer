@@ -49,7 +49,10 @@ def map_pointer_table(
             f"{dataset_id.capitalize()} value" for dataset_id in dataset_ids
         )
     else:
-        value_headers = dataset_ids
+        value_headers = tuple(
+            config["ui"]["labels"]["future_change_factors"]["short_nice"].format(dataset_id)
+            for dataset_id in dataset_ids
+        )
 
     return dbc.Table(
         [
@@ -59,7 +62,16 @@ def map_pointer_table(
             ),
             html.Thead(
                 html.Tr(
-                    [html.Th(hdg) for hdg in ("DV", "Units") + value_headers]
+                    [
+                        html.Th(hdg)
+                        for hdg in (
+                            tuple(
+                                config["ui"]["labels"]["download_table"][k]
+                                for k in ("dv", "units")
+                            )
+                            + value_headers
+                        )
+                    ]
                 )
             ),
             html.Tbody(

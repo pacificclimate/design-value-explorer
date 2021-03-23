@@ -47,10 +47,15 @@ def header(config):
     ]
 
 
-climate_regime_ctrl_options = [
-    {"label": "Historical", "value": "historical"},
-    {"label": "Future", "value": "future"},
-]
+def climate_regime_ctrl_options(config):
+    return [
+        {
+            "label": config["ui"]["labels"]["climate_regime"][cr],
+            "value": cr,
+        }
+        for cr in ("historical", "future")
+    ]
+
 
 def overlay_options(config):
     """
@@ -68,13 +73,15 @@ def overlay_options(config):
         for id in config["ui"]["future_change_factors"]
     ]
 
+    climate_regime_ctrl_opts = climate_regime_ctrl_options(config)
+
     return [
         # Section title
         dbc.Row(dbc.Col(html.H5("Overlay Options")), className="mt-2"),
         # Control titles
         dbc.Row(
             [
-                dbc.Col(html.Label("Climate"), width=2),
+                dbc.Col(html.Label("Climate"), width=3),
                 dbc.Col(html.Label("Dataset"), width=4),
                 dbc.Col(html.Label("Mask"), width=2),
                 dbc.Col(html.Label("Stations"), width=2),
@@ -86,11 +93,11 @@ def overlay_options(config):
                 dbc.Col(
                     dcc.RadioItems(
                         id="climate-regime-ctrl",
-                        options=climate_regime_ctrl_options,
-                        value=climate_regime_ctrl_options[0]["value"],
+                        options=climate_regime_ctrl_opts,
+                        value=climate_regime_ctrl_opts[0]["value"],
                         labelStyle={"display": "block", "margin-top": "1em"},
                     ),
-                    width=2,
+                    width=3,
                 ),
                 dbc.Col(
                     [

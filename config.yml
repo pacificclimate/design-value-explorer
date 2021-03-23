@@ -38,10 +38,14 @@ ui:
         climate_regime:
             # Labels for the two climate regime selections
             historical: Historical design values
-            future: Future change factors
+            future: Future change relative to 1986-2016
         future_change_factors:
-            short: "{}°C GW"
-            long: "{}°C above pre-industrial"
+            short_nice: "{}°C"
+            short_ascii: "{} degC"
+            long: "{}°C above 1986-2016"
+        download_table:
+            dv: Design value
+            units: Units
 
     loading:
         # This property is provided as keyword args to dcc.Loading and controls

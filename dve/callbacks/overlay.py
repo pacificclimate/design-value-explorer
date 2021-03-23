@@ -24,10 +24,10 @@ def add(app, config):
         to future and disable historical option. Otherwise leave things alone.
         """
         if dv_has_climate_regime(config, design_value_id, "historical"):
-            return climate_regime_ctrl_options, dash.no_update
+            return climate_regime_ctrl_options(config), dash.no_update
         options = [
             {**option, "disabled": option["value"] == "historical"}
-            for option in climate_regime_ctrl_options
+            for option in climate_regime_ctrl_options(config)
         ]
         return options, "future"
 
