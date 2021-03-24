@@ -23,7 +23,12 @@ def round_to_multiple(value, multiple, direction="nearest"):
         f = {"down": math.floor, "nearest": round, "up": math.ceil}[direction]
     except KeyError:
         f = round
-    return f(value/multiple) * multiple
+    value = f(value / multiple) * multiple
+    # In decimal notation, `value` may differ slightly from the exact multiple
+    # (e.g., 0.700...01 for 0.7 when rounding to 0.1). Using `round` to the
+    # appropriate number of figures fixes that. A bit magic. Icky.
+    figs = math.ceil(max(-math.log10(multiple), 0))
+    return round(value, figs)
 
 
 def nice(low, high, num_intervals, round_to):
