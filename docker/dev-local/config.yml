@@ -99,7 +99,7 @@ ui:
             historical: Historical design values
             future: Future change relative to 1986-2016
         future_change_factors:
-            short: "{}{}"
+            short: "{value}{separator}{units}"
             short_nice: "{}°C"      # deprecated
             short_ascii: "{} degC"  # deprecated
             long: "{}°C above 1986-2016"
@@ -599,6 +599,7 @@ map:
 
 units:
     degC:
+        separator: false
         nice: °C
     degC-day:
         nice: °C-day

@@ -61,10 +61,14 @@ def dv_name(config, design_value_id):
 def nice_units(config, units):
     print(f"units='{units}'")
     try:
-        return config["units"][units]["nice"]
+        definition = config["units"][units]
+        return (
+            definition["nice"],
+            (" " if definition.get("separator", True) else "")
+        )
     except KeyError:
         print("- no nice")
-        return units
+        return units, " "
 
 
 def dv_units(config, design_value_id, climate_regime, nice=True):
@@ -77,7 +81,7 @@ def dv_units(config, design_value_id, climate_regime, nice=True):
     ]
     if not nice:
         return units
-    return nice_units(config, units)
+    return nice_units(config, units)[0]
 
 
 def dv_label(
@@ -120,7 +124,7 @@ def climate_regime_label(config, climate_regime):
 
 
 def future_change_factor_label(config, dataset_id, nice=True):
-    units = nice_units(config, "degC") if nice else "degC"
+    units, separator = nice_units(config, "degC") if nice else ("degC", " ")
     return config["ui"]["labels"]["future_change_factors"]["short"].format(
-        dataset_id, units
+        value=dataset_id, separator=separator, units=units
     )
