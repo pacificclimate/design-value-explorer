@@ -36,9 +36,7 @@ def header(config):
                     dcc.Dropdown(
                         id="design-value-id-ctrl",
                         options=dd_options,
-                        value=config["ui"]["defaults"]["dv"],
-                        searchable=True,
-                        clearable=False,
+                        **config["ui"]["controls"]["design-value-id"],
                     ),
                     width=4,
                 ),
@@ -74,6 +72,10 @@ def overlay_options(config):
     ]
 
     climate_regime_ctrl_opts = climate_regime_ctrl_options(config)
+    
+    col_widths = (3, 3, 2, 2, 2)
+
+    print("config", config["ui"]["controls"]["mask"])
 
     return [
         # Section title
@@ -81,73 +83,60 @@ def overlay_options(config):
         # Control titles
         dbc.Row(
             [
-                dbc.Col(html.Label("Climate"), width=3),
-                dbc.Col(html.Label("Dataset"), width=4),
-                dbc.Col(html.Label("Mask"), width=2),
-                dbc.Col(html.Label("Stations"), width=2),
-            ]
+                dbc.Col(html.Label(label), width=width) 
+                for label, width in zip(
+                    ("Climate", "Dataset", "Mask", "Stations", "Grid"), 
+                    col_widths,
+                )
+            ],
         ),
         # Controls
         dbc.Row(
             [
-                dbc.Col(
-                    dcc.RadioItems(
-                        id="climate-regime-ctrl",
-                        options=climate_regime_ctrl_opts,
-                        value=climate_regime_ctrl_opts[0]["value"],
-                        labelStyle={"display": "block", "margin-top": "1em"},
-                    ),
-                    width=3,
-                ),
-                dbc.Col(
-                    [
-                        dcc.Dropdown(
-                            id="historical-dataset-ctrl",
-                            options=[
-                                {
-                                    "label": "HSM Reconstruction",
-                                    "value": "reconstruction",
-                                },
-                                {
-                                    "label": "CanRCM4 Ensemble Mean",
-                                    "value": "model",
-                                },
-                            ],
-                            value="reconstruction",
-                            clearable=False,
+                dbc.Col(control, width=width)
+                for control, width in zip(
+                    (
+                        dcc.RadioItems(
+                            id="climate-regime-ctrl",
+                            options=climate_regime_ctrl_opts,
+                            **config["ui"]["controls"]["climate-regime"],
                         ),
-                        dcc.Dropdown(
-                            id="future-dataset-ctrl",
-                            options=future_dataset_ctrl_options,
-                            value=future_dataset_ctrl_options[0]["value"],
-                            disabled=True,
-                            clearable=False,
+                        [
+                            dcc.Dropdown(
+                                id="historical-dataset-ctrl",
+                                options=[
+                                    {
+                                        "label": "HSM Reconstruction",
+                                        "value": "reconstruction",
+                                    },
+                                    {
+                                        "label": "CanRCM4 Ensemble Mean",
+                                        "value": "model",
+                                    },
+                                ],
+                                **config["ui"]["controls"]["historical-dataset"],
+                            ),
+                            dcc.Dropdown(
+                                id="future-dataset-ctrl",
+                                options=future_dataset_ctrl_options,
+                                **config["ui"]["controls"]["future-dataset"],
+                            ),
+                        ],
+                        daq.BooleanSwitch(
+                            id="mask-ctrl",
+                            **config["ui"]["controls"]["mask"],
                         ),
-                    ],
-                    width=4,
-                ),
-                dbc.Col(
-                    daq.BooleanSwitch(
-                        id="mask-ctrl", on=True, style={"width": "50px"}
+                        daq.BooleanSwitch(
+                            id="stations-ctrl",
+                            **config["ui"]["controls"]["stations"],
+                        ),
+                        daq.BooleanSwitch(
+                            id="grid-ctrl",
+                            **config["ui"]["controls"]["grid"],
+                        ),
                     ),
-                    width=2,
-                ),
-                dbc.Col(
-                    daq.BooleanSwitch(
-                        id="stations-ctrl",
-                        on=False,
-                        style={"width": "100px"},
-                        label={
-                            "label": "(HISTORICAL ONLY)",
-                            "style": {
-                                "font-size": "0.8em",
-                                "font-style": "italic",
-                            }
-                        },
-                        labelPosition="bottom",
-                    ),
-                    width=2,
-                ),
+                    col_widths,
+                )
             ],
             style={"font-size": "0.8em"},
         ),
@@ -168,7 +157,6 @@ def colourbar_options(config):
         # Section title
         dbc.Row(
             dbc.Col(html.H5("Colour Scale Options")),
-            # TODO: Replace with class
             className="mt-5",
         ),
         # Control titles
@@ -192,38 +180,30 @@ def colourbar_options(config):
                     dcc.Dropdown(
                         id="colour-map-ctrl",
                         options=[{"value": x, "label": x} for x in colour_maps],
-                        value=None,
+                        **config["ui"]["controls"]["colour-map"],
                     )
                 ),
                 dbc.Col(
                     dcc.Dropdown(
                         id="scale-ctrl",
                         options=scale_ctrl_options,
-                        value="logarithmic",
-                        clearable=False,
+                        **config["ui"]["controls"]["scale"],
                     )
                 ),
                 dbc.Col(
                     daq.Slider(
                         id="cbar-slider",
-                        min=2,
-                        max=30,
-                        step=1,
-                        value=10,
-                        size=150,
-                        handleLabel={
-                            "showCurrentValue": True,
-                            "label": " ",
-                            "style": {"font-size": "0.8em", "color": "black"},
-                        },
-                        marks={x: str(x) for x in (2, 30)},
+                        **config["ui"]["controls"]["num-colours"],
                     ),
                     style={"padding-top": "2em"},
                 ),
                 dbc.Col(
                     dcc.Loading(
                         html.Div(
-                            dcc.RangeSlider(id="colourbar-range-ctrl"),
+                            dcc.RangeSlider(
+                                id="colourbar-range-ctrl",
+                                **config["ui"]["controls"]["colourbar-range"],
+                            ),
                             # RangeSlider has unwanted horiz padding of 25px.
                             style={"margin": "2em -25px"},
                         ),

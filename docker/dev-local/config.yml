@@ -1,7 +1,65 @@
 ui:
-    defaults:
-        # Default settings for UI
-        dv: RL50
+    controls:
+        # Args controlling initial settings and other features of controls.
+        # These are dependent on the type of control, e.g., climate-regime is a
+        # dcc.RadioItems, and that determines the argument names, values, and
+        # effects. This is not quite as abstract as would be nice, but it does
+        # move the details of formatting from code to config.
+        design-value-id:
+            value: RL50
+            searchable: true
+            clearable: false
+        climate-regime:
+            value: historical   # Initial setting
+            labelStyle:
+                display: block
+                margin-top: "1em"
+        historical-dataset:
+            value: reconstruction   # Initial setting
+            clearable: false
+        future-dataset:
+            value: "0.5"    # Initial setting
+            disabled: true
+            clearable: false
+        mask:
+            "on": true    # Initial setting
+            style:
+                width: "50px"
+        stations:
+            "on": false   # Initial setting
+            label:
+                label: "(HISTORICAL ONLY)"
+                style:
+                    font-size: "0.8em"
+                    font-style: italic
+            labelPosition: bottom
+            style:
+                width: "100px"
+        grid:
+            "on": false   # Initial setting
+            style:
+                width: "50px"
+        colour-map:
+            value: None   # Immediately overridden
+        scale:
+            value: logarithmic
+            clearable: false
+        num-colours:
+            min: 2
+            max: 30
+            step: 1
+            value: 10
+            size: 150
+            handleLabel:
+                showCurrentValue: true
+                label: " "
+                style:
+                    font-size: "0.8em"
+                    color: black
+            marks:
+                2: "2"
+                30: "30"
+        colourbar-range: {}
 
     dvs:
         # Design variables to actually offer in the UI.
