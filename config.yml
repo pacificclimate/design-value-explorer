@@ -537,8 +537,8 @@ map:
         'jet', 'nipy_spectral', 'gist_ncar']
     lonlat_overlay:
         lon:
-            num_intervals: 6
+            num_intervals: 4
             round_to: [1, 2, 3, 5, 10, 15]
         lat:
-            num_intervals: 6
+            num_intervals: 4
             round_to: [1, 2, 3, 5, 10, 15]
