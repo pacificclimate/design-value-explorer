@@ -10,7 +10,11 @@ access (and thread-safe access to itself, too, which is essential).
 Two classes provide convenient thread-safe access to the two types
 of file-data objects. They are structured very similarly and both use
 (separate) thread safe caches to manage them. These classes also provide
-thread-safe access to the data itself, which may or many not be necessary.
+thread-safe access to the data itself, which is probably unnecessary, since
+all file access is conducted under the cache thread lock, forcing
+serialization of access to *all* files. A more sophisticated approach to
+cache invalidation (e.g., managing an "in-use" flag per cached item) would
+provide for greater concurrency.
 
 Finally, the perhaps too-generic `get_data` function uses the configuration
 to turn convenient requests for data into actual file accesses, and  dispatches
@@ -52,6 +56,9 @@ class ThreadSafeCache:
       the missing cached item (e.g., open a file).
     - Invokes a user-supplied function when there is cache eviction to perform
       finalization on the cached item before it is evicted (e.g., close a file).
+    - *Yields* its result from within the cache thread lock to ensure that the
+      cached item cannot be evicted by another cache request (and thus become
+      unusable) while something is being done with it.
     """
 
     def __init__(self, name, on_miss, on_evict=None, maxsize=None):
@@ -63,14 +70,24 @@ class ThreadSafeCache:
         self._cache = {}
 
     def get(self, key):
+        """
+        A *generator* that yields the requested cache item.
+
+        If the item is present in cache already, good. If the item is not,
+        call `on_miss` to create it. If cache is full, Kick out a different
+        cache item, calling `on_evict` on it.
+
+        :param key: Cache key.
+        :yield: Cached item.
+        """
         logger.debug(f"{self.name} cache size: {len(self._cache)}")
         with self._lock:
             if key in self._cache:
                 logger.debug(f"{self.name} cache hit: {key}")
-                return self._cache[key]
+                yield self._cache[key]
 
             if len(self._cache) > self.maxsize - 1:
-                # Cache bound exceeded.
+                # Cache full.
                 # Kick a random item out of cache. This is simpler than LRU and
                 # sufficient for testing, and even probably for production.
                 rand_key = tuple(self._cache.keys())[randrange(0, self.maxsize)]
@@ -84,7 +101,7 @@ class ThreadSafeCache:
             item = self.on_miss(key)
             self._cache[key] = item
 
-            return item
+            yield item
 
 
 # Manage large DV datasets opened as `xarray.Dataset`s
@@ -108,7 +125,6 @@ def lonlat_at_rlonlat(dvds, ds, rlon, rlat):
 def data_at_rlonlat(dvds, ds, rlon, rlat):
     ix, iy = rlonlat_to_rindices(ds, rlon, rlat)
     lon, lat = rindices_to_lonlat(ds, ix, iy)
-    # logger.debug(f"{ds[dvds.dv_name]}")
     # `squeeze` drops any superfluous dimensions (i.e., dimensions of length 1,
     # e.g., time in the model dataset) from the data array.
     value = ds[dvds.dv_name].squeeze(drop=True).values[iy, ix]
@@ -152,10 +168,6 @@ class DvXrDataset:
         maxsize = int(os.environ.get("LARGE_FILE_CACHE_SIZE", 20)),
     )
 
-    @classmethod
-    def get_access(cls, filepath):
-        return cls._cache.get(filepath)
-
     def __init__(
         self,
         filepath,
@@ -163,9 +175,9 @@ class DvXrDataset:
     ):
         self.filepath = filepath
         self.required_keys = required_keys
-        access = DvXrDataset.get_access(filepath)
-        with access.lock:
-            self.dv_name = DvXrDataset.dv_name(access.dataset, required_keys)
+        self.dv_name = self.apply(
+            lambda dvds, ds: DvXrDataset.dv_name(ds, required_keys)
+        )
 
     def apply(self, operation, *args, **kwargs):
         """
@@ -180,9 +192,9 @@ class DvXrDataset:
         :param kwargs: Keyword args to pass to `operation`.
         :return: Value returned by `operation`.
         """
-        access = DvXrDataset.get_access(self.filepath)
-        with access.lock:
-            return operation(self, access.dataset, *args, **kwargs)
+        for access in DvXrDataset._cache.get(self.filepath):
+            with access.lock:
+                return operation(self, access.dataset, *args, **kwargs)
 
     def dv_values(self, x=None, y=None):
         """
@@ -267,10 +279,6 @@ class PdCsvDataset:
         maxsize = int(os.environ.get("SMALL_FILE_CACHE_SIZE", 200)),
     )
 
-    @classmethod
-    def get_access(cls, filepath):
-        return cls._cache.get(filepath)
-
     def __init__(self, filepath):
         self.filepath = filepath
 
@@ -287,9 +295,9 @@ class PdCsvDataset:
         :param kwargs: Keyword args to pass to `operation`.
         :return: Value returned by `operation`.
         """
-        access = PdCsvDataset.get_access(self.filepath)
-        with access.lock:
-            return operation(self, access.dataset, *args, **kwargs)
+        for access in PdCsvDataset._cache.get(self.filepath):
+            with access.lock:
+                return operation(self, access.dataset, *args, **kwargs)
 
     def data_frame(self):
         """Return the data frame loaded from the file."""
