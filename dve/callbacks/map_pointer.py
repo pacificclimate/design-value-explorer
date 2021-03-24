@@ -27,6 +27,7 @@ from dve.map_utils import (
     rindices_to_lonlat,
     pointer_value,
 )
+from dve.math_utils import round_to_multiple
 
 
 logger = logging.getLogger("dve")
@@ -88,7 +89,10 @@ def map_pointer_table(
                         ]
                         + [
                             html.Td(
-                                round(data_value, 3),
+                                round_to_multiple(
+                                    data_value,
+                                    config["dvs"][design_value_id]["roundto"]
+                                ),
                                 style={
                                     "color": "red"
                                     if design_value_id == selected_dv

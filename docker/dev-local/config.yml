@@ -138,6 +138,7 @@ dvs:
     IDFCF:
         description: IDF future change factors
         cf_units: ratio
+        roundto: 0.001
         future_change_factor_paths:
             "0.5": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2016_DT0.5_Reconstruction.nc
             "1.0": data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2028_DT1.0_Reconstruction.nc
@@ -153,6 +154,7 @@ dvs:
     RL50:
         description: 50-year return level of annual maximum rain-on-snow load
         abs_units: kPa
+        roundto: 0.1
         cf_units: ratio
         station_dv: "RL50 (kPa)"
         station_path: data/station_inputs/sl50_rl50_for_maps.csv
@@ -174,6 +176,7 @@ dvs:
     RHann:
         description: Annual mean of relative humidity
         abs_units: "%"
+        roundto: 1
         cf_units: ratio
         station_dv: "mean RH (%)"
         station_path: data/station_inputs/rh_annual_mean_10yr_for_maps.csv
@@ -195,6 +198,7 @@ dvs:
     HDD:
         description: "Heating degree days (threshold: 18 °C)"
         abs_units: °C-day
+        roundto: 10
         cf_units: °C-day
         station_dv: "HDD (degC-day)"
         station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
@@ -216,6 +220,7 @@ dvs:
     SL50:
         description: 50-year return level of annual maximum snow load
         abs_units: kPa
+        roundto: 0.1
         cf_units: ratio
         station_dv: "SL50 (kPa)"
         station_path: data/station_inputs/sl50_rl50_for_maps.csv
@@ -237,6 +242,7 @@ dvs:
     WP10:
         description: 10-year return level of maximum annual wind pressure
         abs_units: kPa
+        roundto: 0.1
         cf_units: ratio
         station_dv: "WP10 (kPa)"
         station_path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
@@ -258,6 +264,7 @@ dvs:
     WP50:
         description: 50-year return level of wind pressure
         abs_units: kPa
+        roundto: 0.1
         cf_units: ratio
         station_dv: "WP50 (kPa)"
         station_path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
@@ -279,6 +286,7 @@ dvs:
     TJan2.5:
         description: 2.5th percentile of January temperature
         abs_units: °C
+        roundto: 1
         cf_units: °C
         station_dv: "TJan2.5 (degC)"
         station_path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
@@ -301,6 +309,7 @@ dvs:
     TJan1.0:
         description: 1st percentile of January temperature
         abs_units: °C
+        roundto: 1
         cf_units: °C
         station_dv: "TJan1.0 (degC)"
         station_path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
@@ -323,6 +332,7 @@ dvs:
     Tmin:
         description: Annual minimum of mean daily temperature
         abs_units: °C
+        roundto: 1
         cf_units: °C
         station_dv: "Tmin (degC)"
         station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
@@ -345,6 +355,7 @@ dvs:
     Tmax:
         description: Annual maximum of mean daily temperature
         abs_units: °C
+        roundto: 1
         cf_units: °C
         station_dv: "Tmax (degC)"
         station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
@@ -367,6 +378,7 @@ dvs:
     TJul97.5:
         description: 97.5th percentile of July temperature
         abs_units: °C
+        roundto: 1
         cf_units: °C
         station_dv:  "TJul2.5 (degC)"  # Erroneous label
         station_path: data/station_inputs/julT97.5p_allstations_v3_min8yr_for_maps.csv
@@ -389,6 +401,7 @@ dvs:
     TwJul97.5:
         description: 97.5th percentile of July wet-bulb  temperature
         abs_units: °C
+        roundto: 1
         cf_units: °C
         station_dv:  "TwJul2.5 (degC)"  # Erroneous label
         station_path: data/station_inputs/julTwb97.5p_allstations_v3_for_maps.csv
@@ -411,6 +424,7 @@ dvs:
     DRWP5:
         description: 5-year return level of driving rain wind pressure
         abs_units: kPa
+        roundto: 10
         cf_units: ratio
         station_dv: "DRWP-RL5 (Pa)"
         station_path: data/station_inputs/drwp_rl5_for_maps.csv
@@ -432,6 +446,7 @@ dvs:
     PAnn:
         description: Annual total precipitation
         abs_units: mm
+        roundto: 5
         cf_units: ratio
         station_dv: "annual_pr (mm)"
         station_path: data/station_inputs/pr_annual_mean_doy_MSC_25yr_for_maps.csv
@@ -453,6 +468,7 @@ dvs:
     RAnn:
         description: Annual total rainfall
         abs_units: mm
+        roundto: 5
         cf_units: ratio
         station_dv: "annual_rain (mm)"
         station_path: data/station_inputs/rain_annual_mean_doy_MSC_25yr_for_maps.csv
@@ -474,6 +490,7 @@ dvs:
     R1d50:
         description: 50-year return level of 1-day rainfall
         abs_units: mm
+        roundto: 1
         cf_units: ratio
         station_dv: "1day rain RL50 (mm)"
         station_path: data/station_inputs/1day_rain_rl50_for_maps.csv
@@ -517,6 +534,7 @@ dvs:
     R15m10:
         description: 10-year return level of 15-minute rainfall
         abs_units: mm
+        roundto: 5
         cf_units: ratio
         station_dv: "Gum-LM RL10 (mm)"
         station_path: data/station_inputs/15min_rain_rl10_for_maps.csv
