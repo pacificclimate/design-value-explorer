@@ -58,14 +58,26 @@ def dv_name(config, design_value_id):
     return design_value_id
 
 
-def dv_units(config, design_value_id, climate_regime):
+def nice_units(config, units):
+    print(f"units='{units}'")
+    try:
+        return config["units"][units]["nice"]
+    except KeyError:
+        print("- no nice")
+        return units
+
+
+def dv_units(config, design_value_id, climate_regime, nice=True):
     """
     Return the units of a given design variable, for historical or future
     projections.
     """
-    return config["dvs"][design_value_id][
+    units = config["dvs"][design_value_id][
         "abs_units" if climate_regime == "historical" else "cf_units"
     ]
+    if not nice:
+        return units
+    return nice_units(config, units)
 
 
 def dv_label(
@@ -105,3 +117,10 @@ def dv_roundto(config, design_value_id, climate_regime):
 
 def climate_regime_label(config, climate_regime):
     return config["ui"]["labels"]["climate_regime"][climate_regime]
+
+
+def future_change_factor_label(config, dataset_id, nice=True):
+    units = nice_units(config, "degC") if nice else "degC"
+    return config["ui"]["labels"]["future_change_factors"]["short"].format(
+        dataset_id, units
+    )

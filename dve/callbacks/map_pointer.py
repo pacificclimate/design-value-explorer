@@ -19,6 +19,7 @@ from dve.config import (
     dv_units,
     dv_roundto,
     climate_regime_label,
+    future_change_factor_label,
 )
 from dve.map_utils import (
     pointer_rlonlat,
@@ -51,7 +52,7 @@ def map_pointer_table(
         )
     else:
         value_headers = tuple(
-            config["ui"]["labels"]["future_change_factors"]["short_nice"].format(dataset_id)
+            future_change_factor_label(config, dataset_id)
             for dataset_id in dataset_ids
         )
 

@@ -3,7 +3,7 @@ import os.path
 import csv
 from dve.config import dv_has_climate_regime
 from dve.data import dv_value
-from dve.config import dv_units, dv_roundto
+from dve.config import dv_units, dv_roundto, future_change_factor_label
 from dve.math_utils import round_to_multiple
 
 
@@ -125,9 +125,7 @@ def create_download_file(
             )
         else:
             value_headers = tuple(
-                config["ui"]["labels"]["future_change_factors"][
-                    "short_ascii"
-                ].format(dataset_id)
+                future_change_factor_label(config, dataset_id, nice=False)
                 for dataset_id in dataset_ids
             )
 
@@ -142,7 +140,7 @@ def create_download_file(
             writer.writerow(
                 (
                     design_value_id,
-                    dv_units(config, design_value_id, climate_regime)
+                    dv_units(config, design_value_id, climate_regime, nice=False)
                 )
                 + tuple(
                     round_to_multiple(
