@@ -97,5 +97,11 @@ def dv_label(
     return f"{dv_name(config, design_value_id)}{description}{units}"
 
 
+def dv_roundto(config, design_value_id, climate_regime):
+    if dv_units(config, design_value_id, climate_regime) == "ratio":
+        return config["dvs"][design_value_id]["ratio_roundto"]
+    return config["dvs"][design_value_id]["roundto"]
+
+
 def climate_regime_label(config, climate_regime):
     return config["ui"]["labels"]["climate_regime"][climate_regime]

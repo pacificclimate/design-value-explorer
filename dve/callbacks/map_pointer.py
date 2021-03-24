@@ -17,7 +17,7 @@ from dve.download_utils import (
 from dve.config import (
     dv_name,
     dv_units,
-    dv_label,
+    dv_roundto,
     climate_regime_label,
 )
 from dve.map_utils import (
@@ -91,7 +91,9 @@ def map_pointer_table(
                             html.Td(
                                 round_to_multiple(
                                     data_value,
-                                    config["dvs"][design_value_id]["roundto"]
+                                    dv_roundto(
+                                        config, design_value_id, climate_regime
+                                    ),
                                 ),
                                 style={
                                     "color": "red"
