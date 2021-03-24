@@ -14,10 +14,10 @@ from dve.download_utils import (
     get_download_data,
     create_download_file,
 )
-from dve.labelling_utils import (
+from dve.config import (
     dv_name,
     dv_units,
-    dv_label,
+    dv_roundto,
     climate_regime_label,
 )
 from dve.map_utils import (
@@ -27,6 +27,7 @@ from dve.map_utils import (
     rindices_to_lonlat,
     pointer_value,
 )
+from dve.math_utils import round_to_multiple
 
 
 logger = logging.getLogger("dve")
@@ -88,7 +89,12 @@ def map_pointer_table(
                         ]
                         + [
                             html.Td(
-                                round(data_value, 3),
+                                round_to_multiple(
+                                    data_value,
+                                    dv_roundto(
+                                        config, design_value_id, climate_regime
+                                    ),
+                                ),
                                 style={
                                     "color": "red"
                                     if design_value_id == selected_dv

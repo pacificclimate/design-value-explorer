@@ -3,7 +3,8 @@ import os.path
 import csv
 from dve.config import dv_has_climate_regime
 from dve.data import dv_value
-from dve.labelling_utils import dv_units
+from dve.config import dv_units, dv_roundto
+from dve.math_utils import round_to_multiple
 
 
 dash_url_base_path = os.environ.get("DASH_URL_BASE_PATHNAME", "/")
@@ -137,7 +138,20 @@ def create_download_file(
             )
             + value_headers
         )
-        for dv_id, data_row in zip(design_value_ids, data_values):
+        for design_value_id, data_row in zip(design_value_ids, data_values):
             writer.writerow(
-                (dv_id, dv_units(config, dv_id, climate_regime)) + data_row
+                (
+                    design_value_id,
+                    dv_units(config, design_value_id, climate_regime)
+                )
+                + tuple(
+                    round_to_multiple(
+                        data_value,
+                        dv_roundto(
+                            config, design_value_id, climate_regime
+                        ),
+
+                    )
+                    for dataset_id, data_value in zip(dataset_ids, data_row)
+                )
             )
