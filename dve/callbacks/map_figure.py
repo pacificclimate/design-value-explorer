@@ -14,7 +14,7 @@ import numpy as np
 from dve.data import get_data
 from dve.colorbar import plotly_discrete_colorscale
 from dve.generate_iso_lines import lonlat_overlay
-from dve.labelling_utils import dv_label
+from dve.config import dv_label
 from dve.processing import coord_prep
 
 from climpyrical.data import read_data

@@ -3,7 +3,7 @@ import os.path
 import csv
 from dve.config import dv_has_climate_regime
 from dve.data import dv_value
-from dve.labelling_utils import dv_units
+from dve.config import dv_units
 from dve.math_utils import round_to_multiple
 
 

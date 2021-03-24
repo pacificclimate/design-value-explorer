@@ -2,7 +2,7 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_daq as daq
-from dve.labelling_utils import dv_label
+from dve.config import dv_label
 
 scale_ctrl_options = [
     {"label": "Linear", "value": "linear"},

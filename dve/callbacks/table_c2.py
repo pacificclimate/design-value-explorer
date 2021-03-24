@@ -6,7 +6,7 @@ import dash_table
 
 from dve.config import dv_has_climate_regime
 from dve.data import get_data
-from dve.labelling_utils import dv_label
+from dve.config import dv_label
 from dve.math_utils import round_to_multiple
 
 

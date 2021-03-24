@@ -14,7 +14,7 @@ from dve.download_utils import (
     get_download_data,
     create_download_file,
 )
-from dve.labelling_utils import (
+from dve.config import (
     dv_name,
     dv_units,
     dv_label,
