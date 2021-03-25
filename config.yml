@@ -98,8 +98,9 @@ ui:
             historical: Historical design values
             future: Future change relative to 1986-2016
         future_change_factors:
-            short_nice: "{}°C"
-            short_ascii: "{} degC"
+            short: "{value}{separator}{units}"
+            short_nice: "{}°C"      # deprecated
+            short_ascii: "{} degC"  # deprecated
             long: "{}°C above 1986-2016"
         download_table:
             dv: Design value
@@ -198,10 +199,10 @@ dvs:
 
     HDD:
         description: "Heating degree days (threshold: 18 °C)"
-        abs_units: °C-day
+        abs_units: degC-day
         roundto: 10
         ratio_roundto: 0.001
-        cf_units: °C-day
+        cf_units: degC-day
         station_dv: "HDD (degC-day)"
         station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
         input_model_path: data/model_inputs/hdd_CanRCM4-LE_ens35_1951-2016_ann_ensmean.nc
@@ -290,10 +291,10 @@ dvs:
 
     TJan2.5:
         description: 2.5th percentile of January temperature
-        abs_units: °C
+        abs_units: degC
         roundto: 1
         ratio_roundto: 0.001
-        cf_units: °C
+        cf_units: degC
         station_dv: "TJan2.5 (degC)"
         station_path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan2.5p_ensmean.nc
@@ -314,10 +315,10 @@ dvs:
 
     TJan1.0:
         description: 1st percentile of January temperature
-        abs_units: °C
+        abs_units: degC
         roundto: 1
         ratio_roundto: 0.001
-        cf_units: °C
+        cf_units: degC
         station_dv: "TJan1.0 (degC)"
         station_path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan1.0p_ensmean.nc
@@ -338,10 +339,10 @@ dvs:
 
     Tmin:
         description: Annual minimum of mean daily temperature
-        abs_units: °C
+        abs_units: degC
         roundto: 1
         ratio_roundto: 0.001
-        cf_units: °C
+        cf_units: degC
         station_dv: "Tmin (degC)"
         station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_min_ensmean.nc
@@ -362,10 +363,10 @@ dvs:
 
     Tmax:
         description: Annual maximum of mean daily temperature
-        abs_units: °C
+        abs_units: degC
         roundto: 1
         ratio_roundto: 0.001
-        cf_units: °C
+        cf_units: degC
         station_dv: "Tmax (degC)"
         station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_max_ensmean.nc
@@ -386,10 +387,10 @@ dvs:
 
     TJul97.5:
         description: 97.5th percentile of July temperature
-        abs_units: °C
+        abs_units: degC
         roundto: 1
         ratio_roundto: 0.001
-        cf_units: °C
+        cf_units: degC
         station_dv:  "TJul2.5 (degC)"  # Erroneous label
         station_path: data/station_inputs/julT97.5p_allstations_v3_min8yr_for_maps.csv
         input_model_path: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
@@ -410,10 +411,10 @@ dvs:
 
     TwJul97.5:
         description: 97.5th percentile of July wet-bulb  temperature
-        abs_units: °C
+        abs_units: degC
         roundto: 1
         ratio_roundto: 0.001
-        cf_units: °C
+        cf_units: degC
         station_dv:  "TwJul2.5 (degC)"  # Erroneous label
         station_path: data/station_inputs/julTwb97.5p_allstations_v3_for_maps.csv
         input_model_path: data/model_inputs/twb_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
@@ -593,3 +594,10 @@ map:
         lat:
             num_intervals: 4
             round_to: [1, 2, 3, 5, 10, 15]
+
+units:
+    degC:
+        separator: false
+        nice: °C
+    degC-day:
+        nice: °C-day
