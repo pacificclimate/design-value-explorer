@@ -75,8 +75,6 @@ def overlay_options(config):
     
     col_widths = (3, 3, 2, 2, 2)
 
-    print("config", config["ui"]["controls"]["mask"])
-
     return [
         # Section title
         dbc.Row(dbc.Col(html.H5("Overlay Options")), className="mt-2"),

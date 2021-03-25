@@ -59,7 +59,6 @@ def dv_name(config, design_value_id):
 
 
 def nice_units(config, units):
-    print(f"units='{units}'")
     try:
         definition = config["units"][units]
         return (
@@ -67,7 +66,6 @@ def nice_units(config, units):
             (" " if definition.get("separator", True) else "")
         )
     except KeyError:
-        print("- no nice")
         return units, " "
 
 
