@@ -63,7 +63,7 @@ def nice_units(config, units):
         definition = config["units"][units]
         return (
             definition["nice"],
-            (" " if definition.get("separator", True) else "")
+            (" " if definition.get("separator", True) else ""),
         )
     except KeyError:
         return units, " "
@@ -117,12 +117,31 @@ def dv_roundto(config, design_value_id, climate_regime):
     return config["dvs"][design_value_id]["roundto"]
 
 
-def climate_regime_label(config, climate_regime):
-    return config["ui"]["labels"]["climate_regime"][climate_regime]
+def climate_regime_label(config, climate_regime, which="long"):
+    return config["ui"]["labels"]["climate_regime"][climate_regime][which]
 
 
-def future_change_factor_label(config, dataset_id, nice=True):
+def historical_dataset_label(config, dataset_id):
+    return config["ui"]["labels"]["historical_dataset"][dataset_id]
+
+
+def future_change_factor_label(config, dataset_id, which="short", nice=True):
     units, separator = nice_units(config, "degC") if nice else ("degC", " ")
-    return config["ui"]["labels"]["future_change_factors"]["short"].format(
+    return config["ui"]["labels"]["future_change_factors"][which].format(
         value=dataset_id, separator=separator, units=units
+    )
+
+
+def dataset_label(
+    config,
+    climate_regime,
+    historical_dataset_id,
+    future_dataset_id,
+    which="short",
+    nice=True,
+):
+    if climate_regime == "historical":
+        return historical_dataset_label(config, historical_dataset_id)
+    return future_change_factor_label(
+        config, future_dataset_id, which=which, nice=nice
     )
