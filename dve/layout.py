@@ -45,10 +45,10 @@ def header(config):
     ]
 
 
-def climate_regime_ctrl_options(config):
+def climate_regime_ctrl_options(config, which="long"):
     return [
         {
-            "label": config["ui"]["labels"]["climate_regime"][cr],
+            "label": config["ui"]["labels"]["climate_regime"][cr][which],
             "value": cr,
         }
         for cr in ("historical", "future")
