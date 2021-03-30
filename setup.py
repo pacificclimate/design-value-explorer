@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-__version__ = (1, 2, 0)
+__version__ = (1, 3, 0)
 
 setup(
     name="dve",
@@ -12,6 +12,7 @@ setup(
     author="Nic Annau",
     author_email="nannau@uvic.ca",
     zip_safe=True,
+    # TODO: These are not scripts! Why is this here?
     scripts=[
         "dve/layout.py",
         "dve/generate_iso_lines.py",

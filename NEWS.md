@@ -1,6 +1,31 @@
 # News / Release Notes
 
+## 1.3.0
+
+**2021-Mar-30**
+
+Beta Release!
+
+- [Use appropriate rounding in Table C2 CFs](https://github.com/pacificclimate/dash-dv-explorer/pull/136)
+- [Update Table C2 labels](https://github.com/pacificclimate/dash-dv-explorer/pull/134)
+- [Download only reconstruction values](https://github.com/pacificclimate/dash-dv-explorer/pull/131)
+- [Add change factors to Table C2](https://github.com/pacificclimate/dash-dv-explorer/pull/130)
+- [Pre release cleanup](https://github.com/pacificclimate/dash-dv-explorer/pull/124)
+- [Fix units in download files](https://github.com/pacificclimate/dash-dv-explorer/pull/123)
+- [Access files under cache thread lock](https://github.com/pacificclimate/dash-dv-explorer/pull/122)
+- [Precision of reported values](https://github.com/pacificclimate/dash-dv-explorer/pull/119)
+- [Reduce grid density (config)](https://github.com/pacificclimate/dash-dv-explorer/pull/117)
+- [Add control to turn on/off grid lines](https://github.com/pacificclimate/dash-dv-explorer/pull/116)
+- [Always show map modebar (configurable)](https://github.com/pacificclimate/dash-dv-explorer/pull/115)
+- [Add climate regime to map label](https://github.com/pacificclimate/dash-dv-explorer/pull/112)
+- [Update labelling](https://github.com/pacificclimate/dash-dv-explorer/pull/110)
+- [Include IDF CFs as DVs; fix data access problems](https://github.com/pacificclimate/dash-dv-explorer/pull/95)
+- [Add several missing CFs](https://github.com/pacificclimate/dash-dv-explorer/pull/92)
+
+
 ## 1.2.0
+
+**2021-Mar-18**
 
 Major new feature: Show and download future change factor values.
 
@@ -10,8 +35,6 @@ Minor, but important, new feature: Show loading spinners.
 - [Control DVs available more simply in config](https://github.com/pacificclimate/dash-dv-explorer/pull/88)
 - [Add loading spinners](https://github.com/pacificclimate/dash-dv-explorer/pull/85)
 - [Add change factors](https://github.com/pacificclimate/dash-dv-explorer/pull/81)
-
-**2021-Mar-15**
 
 ## 1.1.2
 
