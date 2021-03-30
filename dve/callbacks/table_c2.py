@@ -4,7 +4,11 @@ from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash_table
 
-from dve.config import dv_has_climate_regime
+import pandas
+
+from climpyrical.gridding import transform_coords
+
+from dve.config import dv_has_climate_regime, future_change_factor_label
 from dve.data import get_data
 from dve.config import dv_label
 from dve.math_utils import round_to_multiple
@@ -16,9 +20,12 @@ logger = logging.getLogger("dve")
 def add(app, config):
     @app.callback(
         [Output("table-C2-title", "children"), Output("table-C2", "children")],
-        [Input("design-value-id-ctrl", "value")],
+        [
+            Input("design-value-id-ctrl", "value"),
+            Input("future-dataset-ctrl", "value"),
+        ],
     )
-    def update_tablec2(design_value_id):
+    def update_tablec2(design_value_id, future_dataset_id):
         if not dv_has_climate_regime(config, design_value_id, "historical"):
             return (
                 config["ui"]["labels"]["table_C2"]["no_station_data"].format(
@@ -35,13 +42,35 @@ def add(app, config):
             name_and_units
         )
 
-        df = get_data(
+        historical_dataset = get_data(
             config, design_value_id, "historical", historical_dataset_id="table"
         ).data_frame()
-        df = df[["Location", "Prov", "lon", "lat", "PCIC", "NBCC 2015"]]
-        df["PCIC"] = df["PCIC"].apply(
+
+        display_dataset = historical_dataset[
+            ["Location", "Prov", "lon", "lat", "PCIC", "NBCC 2015"]
+        ]
+        display_dataset["PCIC"] = display_dataset["PCIC"].apply(
             lambda x: round_to_multiple(
                 x, config["dvs"][design_value_id]["roundto"]
+            )
+        )
+
+        future_dataset = get_data(
+            config,
+            design_value_id,
+            "future",
+            future_dataset_id=future_dataset_id,
+        )
+        rlons, rlats = transform_coords(
+            display_dataset["lon"].values, display_dataset["lat"].values
+        )
+        display_dataset["CF"] = pandas.Series(
+            data=map(
+                lambda coords: round_to_multiple(
+                    future_dataset.data_at_rlonlat(*coords)[2],
+                    config["dvs"][design_value_id]["ratio_roundto"],
+                ),
+                zip(rlons, rlats),
             )
         )
 
@@ -55,12 +84,24 @@ def add(app, config):
                 "name": [name_and_units, "NBCC 2015"],
                 "type": "numeric",
             },
+            "CF": {
+                "name": [
+                    dv_label(
+                        config, design_value_id, climate_regime="future"
+                    ),
+                    f"CF ({future_change_factor_label(config, future_dataset_id)})",
+                ],
+                "type": "numeric",
+            },
         }
 
         return [
             title,
             dash_table.DataTable(
-                columns=[{"id": id, **column_info[id]} for id in df.columns],
+                columns=[
+                    {"id": id, **column_info[id]}
+                    for id in display_dataset.columns
+                ],
                 style_table={
                     # "width": "100%",
                     # 'overflowX': 'auto',
@@ -87,6 +128,6 @@ def add(app, config):
                 style_header={"backgroundColor": "white", "fontWeight": "bold"},
                 page_action="none",
                 filter_action="native",
-                data=df.to_dict("records"),
+                data=display_dataset.to_dict("records"),
             ),
         ]
