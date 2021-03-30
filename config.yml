@@ -106,7 +106,7 @@ ui:
             dv: Design value
             units: Units
         table_C2:
-            title: "Reconstruction values of {} at Table C2 locations (HISTORICAL ONLY)"
+            title: "Reconstruction values of {} at Table C2 locations"
             no_station_data: "Variable {} does not have station data"
 
     loading:

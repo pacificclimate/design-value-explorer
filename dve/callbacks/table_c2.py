@@ -4,7 +4,11 @@ from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash_table
 
-from dve.config import dv_has_climate_regime
+import pandas
+
+from climpyrical.gridding import transform_coords
+
+from dve.config import dv_has_climate_regime, future_change_factor_label
 from dve.data import get_data
 from dve.config import dv_label
 from dve.math_utils import round_to_multiple
@@ -35,11 +39,14 @@ def add(app, config):
             name_and_units
         )
 
-        df = get_data(
+        historical_dataset = get_data(
             config, design_value_id, "historical", historical_dataset_id="table"
         ).data_frame()
-        df = df[["Location", "Prov", "lon", "lat", "PCIC", "NBCC 2015"]]
-        df["PCIC"] = df["PCIC"].apply(
+
+        display_dataset = historical_dataset[
+            ["Location", "Prov", "lon", "lat", "NBCC 2015", "PCIC"]
+        ]
+        display_dataset["PCIC"] = display_dataset["PCIC"].apply(
             lambda x: round_to_multiple(
                 x, config["dvs"][design_value_id]["roundto"]
             )
@@ -57,10 +64,44 @@ def add(app, config):
             },
         }
 
+        for future_dataset_id in config["ui"]["future_change_factors"]:
+            future_dataset = get_data(
+                config,
+                design_value_id,
+                "future",
+                future_dataset_id=future_dataset_id,
+            )
+            rlons, rlats = transform_coords(
+                display_dataset["lon"].values, display_dataset["lat"].values
+            )
+            column_id = f"CF{future_dataset_id}"
+            display_dataset[column_id] = pandas.Series(
+                data=map(
+                    lambda coords: round_to_multiple(
+                        future_dataset.data_at_rlonlat(*coords)[2],
+                        config["dvs"][design_value_id]["ratio_roundto"],
+                    ),
+                    zip(rlons, rlats),
+                )
+            )
+
+            column_info[column_id] = {
+                "name": [
+                    dv_label(
+                        config, design_value_id, climate_regime="future"
+                    ),
+                    f"CF ({future_change_factor_label(config, future_dataset_id)})",
+                ],
+                "type": "numeric",
+            }
+
         return [
             title,
             dash_table.DataTable(
-                columns=[{"id": id, **column_info[id]} for id in df.columns],
+                columns=[
+                    {"id": id, **column_info[id]}
+                    for id in display_dataset.columns
+                ],
                 style_table={
                     # "width": "100%",
                     # 'overflowX': 'auto',
@@ -87,6 +128,6 @@ def add(app, config):
                 style_header={"backgroundColor": "white", "fontWeight": "bold"},
                 page_action="none",
                 filter_action="native",
-                data=df.to_dict("records"),
+                data=display_dataset.to_dict("records"),
             ),
         ]
