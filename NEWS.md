@@ -1,5 +1,14 @@
 # News / Release Notes
 
+## 1.3.1
+
+**2021-Mar-30**
+
+Small but important improvements
+
+- [Fix map hover popup text](https://github.com/pacificclimate/dash-dv-explorer/pull/144)
+- [Shorten map title](https://github.com/pacificclimate/dash-dv-explorer/pull/143)
+
 ## 1.3.0
 
 **2021-Mar-30**
