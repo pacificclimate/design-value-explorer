@@ -47,9 +47,11 @@ def map_pointer_table(
     by rotated coordinates rlon, rlat
     """
     if climate_regime == "historical":
-        value_headers = tuple(
-            f"{dataset_id.capitalize()} value" for dataset_id in dataset_ids
-        )
+        # TODO: These label(s) should be defined in config
+        # value_headers = tuple(
+        #     f"{dataset_id.capitalize()} value" for dataset_id in dataset_ids
+        # )
+        value_headers = ("Interpolation value",)
     else:
         value_headers = tuple(
             future_change_factor_label(config, dataset_id)
