@@ -14,7 +14,7 @@ import numpy as np
 from dve.data import get_data
 from dve.colorbar import plotly_discrete_colorscale
 from dve.generate_iso_lines import lonlat_overlay
-from dve.config import dv_label
+from dve.config import dv_label, climate_regime_label, dataset_label
 from dve.processing import coord_prep
 
 from climpyrical.data import read_data
@@ -228,8 +228,25 @@ def add(app, config):
             "data": figures,
             "layout": {
                 "title": (
-                    f"{dv_label(config, design_value_id, climate_regime, with_description=True, )} "
-                    f"     {config['ui']['labels']['climate_regime'][climate_regime]}"
+                    config['ui']['labels']['map']['title'].format(
+                        dv=dv_label(
+                            config,
+                            design_value_id,
+                            climate_regime,
+                            with_description=True
+                        ),
+                        climate_regime=climate_regime_label(
+                            config, climate_regime, which="short"
+                        ),
+                        dataset=dataset_label(
+                            config,
+                            climate_regime,
+                            historical_dataset_id,
+                            future_dataset_id,
+                            which="short",
+                            nice=True,
+                        )
+                    )
                 ),
                 "font": dict(size=13, color="grey"),
                 "xaxis": dict(

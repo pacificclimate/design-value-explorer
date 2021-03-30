@@ -96,13 +96,22 @@ ui:
     labels:
         climate_regime:
             # Labels for the two climate regime selections
-            historical: Historical design values
-            future: Future change relative to 1986-2016
+            historical:
+                short: Historical
+                long: Historical design values
+            future:
+                short: Future
+                long: Future change relative to 1986-2016
+        historical_dataset:
+            model: Model
+            reconstruction: Reconstruction
         future_change_factors:
             short: "{value}{separator}{units}"
             short_nice: "{}°C"      # deprecated
             short_ascii: "{} degC"  # deprecated
             long: "{}°C above 1986-2016"
+        map:
+            title: "{dv} • {climate_regime} ({dataset})"
         download_table:
             dv: Design value
             units: Units
