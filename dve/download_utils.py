@@ -80,11 +80,9 @@ def get_download_data(
 
     # Column ids
     if climate_regime == "historical":
-        dataset_ids = ("model", "reconstruction")
-        # dataset_ids = (historical_dataset_id,)
+        dataset_ids = ("reconstruction",)
     else:
         dataset_ids = tuple(config["ui"]["future_change_factors"])
-        # dataset_ids = (future_dataset_id,)
 
     # Data
     data_values = tuple(
@@ -120,9 +118,11 @@ def create_download_file(
         writer.writerow(tuple())
 
         if climate_regime == "historical":
-            value_headers = tuple(
-                f"{dataset_id.capitalize()}" for dataset_id in dataset_ids
-            )
+            # TODO: These label(s) should be defined in config
+            # value_headers = tuple(
+            #     f"{dataset_id.capitalize()}" for dataset_id in dataset_ids
+            # )
+            value_headers = ("Interpolation value",)
         else:
             value_headers = tuple(
                 future_change_factor_label(config, dataset_id, nice=False)
