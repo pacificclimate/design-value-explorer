@@ -55,25 +55,6 @@ def add(app, config):
             )
         )
 
-        future_dataset = get_data(
-            config,
-            design_value_id,
-            "future",
-            future_dataset_id=future_dataset_id,
-        )
-        rlons, rlats = transform_coords(
-            display_dataset["lon"].values, display_dataset["lat"].values
-        )
-        display_dataset["CF"] = pandas.Series(
-            data=map(
-                lambda coords: round_to_multiple(
-                    future_dataset.data_at_rlonlat(*coords)[2],
-                    config["dvs"][design_value_id]["ratio_roundto"],
-                ),
-                zip(rlons, rlats),
-            )
-        )
-
         column_info = {
             "Location": {"name": ["", "Location"], "type": "text"},
             "Prov": {"name": ["", "Province"], "type": "text"},
@@ -84,7 +65,30 @@ def add(app, config):
                 "name": [name_and_units, "NBCC 2015"],
                 "type": "numeric",
             },
-            "CF": {
+        }
+
+        for future_dataset_id in config["ui"]["future_change_factors"]:
+            future_dataset = get_data(
+                config,
+                design_value_id,
+                "future",
+                future_dataset_id=future_dataset_id,
+            )
+            rlons, rlats = transform_coords(
+                display_dataset["lon"].values, display_dataset["lat"].values
+            )
+            column_id = f"CF{future_dataset_id}"
+            display_dataset[column_id] = pandas.Series(
+                data=map(
+                    lambda coords: round_to_multiple(
+                        future_dataset.data_at_rlonlat(*coords)[2],
+                        config["dvs"][design_value_id]["ratio_roundto"],
+                    ),
+                    zip(rlons, rlats),
+                )
+            )
+
+            column_info[column_id] = {
                 "name": [
                     dv_label(
                         config, design_value_id, climate_regime="future"
@@ -92,8 +96,7 @@ def add(app, config):
                     f"CF ({future_change_factor_label(config, future_dataset_id)})",
                 ],
                 "type": "numeric",
-            },
-        }
+            }
 
         return [
             title,
