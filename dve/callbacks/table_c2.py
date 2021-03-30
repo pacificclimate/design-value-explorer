@@ -47,7 +47,7 @@ def add(app, config):
         ).data_frame()
 
         display_dataset = historical_dataset[
-            ["Location", "Prov", "lon", "lat", "PCIC", "NBCC 2015"]
+            ["Location", "Prov", "lon", "lat", "NBCC 2015", "PCIC"]
         ]
         display_dataset["PCIC"] = display_dataset["PCIC"].apply(
             lambda x: round_to_multiple(
