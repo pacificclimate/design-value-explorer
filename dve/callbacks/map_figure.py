@@ -182,7 +182,7 @@ def add(app, config):
                 # showscale=False,
                 visible=True,
                 hovertemplate=(
-                    f"<b>{design_value_id} (Interp.): %{{z}} </b><br>"
+                    f"<b>Interpolated {dv_label(config, design_value_id, climate_regime)}: %{{z}} </b><br>"
                 ),
                 name="",
             )
@@ -217,7 +217,7 @@ def add(app, config):
                         colorbar={"tickvals": ticks},
                     ),
                     hovertemplate=(
-                        f"<b>{design_value_id} (Station): " f"%{{text}}</b><br>"
+                        f"<b>Station {dv_label(config, design_value_id, climate_regime)}: " f"%{{text}}</b><br>"
                     ),
                     visible=show_stations,
                     name="",
