@@ -107,8 +107,8 @@ ui:
             dv: Design value
             units: Units
         table_C2:
-            title: "Reconstruction values of {} at Table C2 locations"
-            no_station_data: "Variable {} does not have station data"
+            title: "Design values for {} at Table C2 locations"
+            no_station_data: "Variable {} does not have historical data"
 
     loading:
         # This property is provided as keyword args to dcc.Loading and controls
