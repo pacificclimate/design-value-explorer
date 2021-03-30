@@ -20,12 +20,9 @@ logger = logging.getLogger("dve")
 def add(app, config):
     @app.callback(
         [Output("table-C2-title", "children"), Output("table-C2", "children")],
-        [
-            Input("design-value-id-ctrl", "value"),
-            Input("future-dataset-ctrl", "value"),
-        ],
+        [Input("design-value-id-ctrl", "value")],
     )
-    def update_tablec2(design_value_id, future_dataset_id):
+    def update_tablec2(design_value_id):
         if not dv_has_climate_regime(config, design_value_id, "historical"):
             return (
                 config["ui"]["labels"]["table_C2"]["no_station_data"].format(
