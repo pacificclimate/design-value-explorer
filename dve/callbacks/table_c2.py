@@ -8,7 +8,11 @@ import pandas
 
 from climpyrical.gridding import transform_coords
 
-from dve.config import dv_has_climate_regime, future_change_factor_label
+from dve.config import (
+    dv_has_climate_regime,
+    future_change_factor_label,
+    dv_roundto,
+)
 from dve.data import get_data
 from dve.config import dv_label
 from dve.math_utils import round_to_multiple
@@ -79,7 +83,7 @@ def add(app, config):
                 data=map(
                     lambda coords: round_to_multiple(
                         future_dataset.data_at_rlonlat(*coords)[2],
-                        config["dvs"][design_value_id]["ratio_roundto"],
+                        dv_roundto(config, design_value_id, "future"),
                     ),
                     zip(rlons, rlats),
                 )
@@ -87,9 +91,7 @@ def add(app, config):
 
             column_info[column_id] = {
                 "name": [
-                    dv_label(
-                        config, design_value_id, climate_regime="future"
-                    ),
+                    dv_label(config, design_value_id, climate_regime="future"),
                     f"CF ({future_change_factor_label(config, future_dataset_id)})",
                 ],
                 "type": "numeric",
