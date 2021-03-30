@@ -81,9 +81,10 @@ def overlay_options(config):
         # Control titles
         dbc.Row(
             [
-                dbc.Col(html.Label(label), width=width) 
+                dbc.Col(html.Label(label), width=width)
                 for label, width in zip(
-                    ("Climate", "Dataset", "Mask", "Stations", "Grid"), 
+                    # TODO: Get from config
+                    ("Period", "Dataset", "Mask", "Stations", "Grid"),
                     col_widths,
                 )
             ],
