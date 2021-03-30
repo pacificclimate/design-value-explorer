@@ -182,18 +182,6 @@ def add(app, config):
 
         rlon, rlat = pointer_rlonlat(hover_data)
 
-        # logger.debug("display_hover_info: get_data")
-        # dataset = get_data(
-        #     config,
-        #     design_value_id,
-        #     climate_regime,
-        #     historical_dataset_id,
-        #     future_dataset_id,
-        # )
-        # ix, iy = pointer_rindices(hover_data, dataset)
-        # lon, lat = rindices_to_lonlat(dataset, ix, iy)
-        # z, source = pointer_value(hover_data)
-
         lon, lat, *unused = download_info(
             rlon,
             rlat,
