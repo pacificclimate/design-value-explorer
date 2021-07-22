@@ -293,7 +293,7 @@ def map_tab(config):
                                     ),
                                     **config["ui"]["loading"],
                                 ),
-                                lg=10,
+                                lg=11,
                             ),
                             dbc.Col(
                                 dcc.Loading(
@@ -303,7 +303,7 @@ def map_tab(config):
                                       ),
                                       **config["ui"]["loading"],
                                 ),
-                                lg=2,
+                                lg=1,
                             ),
                         ]),
                         lg=7,

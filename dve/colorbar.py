@@ -147,19 +147,34 @@ def colorscale_colorbar(colors, zmin, zmax, scale, tickvals, ticktext, **kwargs)
             showscale=False,
         ),
         layout=go.Layout(
-            xaxis=go.layout.XAxis(fixedrange=True),
+            xaxis=go.layout.XAxis(
+                fixedrange=True,
+                showline=True,
+                linewidth=1,
+                linecolor="black",
+                mirror=True,
+            ),
             yaxis=go.layout.YAxis(
                 side="right",
                 fixedrange=True,
+                showline=True,
+                linewidth=1,
+                linecolor="black",
+                mirror=True,
                 tickmode="array",
                 tickvals=[transform(v) for v in tickvals],
                 ticktext=ticktext,
             ),
             autosize=False,
-            width=50,
+            width=60,  # very sensitive; < 60 => no labels
             height=500,
             margin=go.layout.Margin(
-                t=0, b=0, l=0, r=0
+                t=50,
+                b=10,
+                l=1,
+                # yaxis width must be >= 60 for reasons unknown
+                # adjust visual width of colorbar by adjusting right margin
+                r=40,
             )
         ),
         **kwargs,
