@@ -1,4 +1,5 @@
 import matplotlib
+import matplotlib.cm
 import numpy as np
 
 
@@ -71,3 +72,37 @@ def plotly_discrete_colorscale(bvals, colors):
         )
 
     return discrete_colorscale
+
+
+def colorscale_boundaries(zmin, zmax, num_colours, scale):
+    """
+    Return a list of num_colours + 1 uniformly spaced colourscale boundaries
+    spanning the specified range of values, inclusive. "Uniformly" here means
+    either linear or geometric (for a log-scale display), according as `scale`
+    == "linear" or "logarithmic".
+
+    :param zmin: minimum data value
+    :param zmax: maximum data value
+    :param num_colours: number of colours (intervals)
+    :param scale: "linear" or "logarithmic"
+    :return: list of boundary values of length num_colours + 1
+    """
+    if scale == "logarithmic":
+        return 10 ** np.linspace(
+            np.log10(zmin), np.log10(zmax), num_colours + 1
+        )
+    else:
+        return np.linspace(zmin, zmax, num_colours + 1)
+
+
+def colorscale_colors(colour_map_name, num_colours):
+    """
+    Return a list of num_colours colour definitions (in hex notation)
+    derived from a named matplotlib color map.
+
+    :param colour_map_name: matplotlib colour map name
+    :param num_colours: number of colours
+    :return: list of strings containing hex colour definitions
+    """
+    cmap = matplotlib.cm.get_cmap(colour_map_name, num_colours)
+    return [matplotlib.colors.rgb2hex(cmap(i)) for i in range(cmap.N)]

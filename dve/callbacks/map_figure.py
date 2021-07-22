@@ -8,11 +8,10 @@ from dash.exceptions import PreventUpdate
 import plotly.graph_objects as go
 
 import geopandas as gpd
-import matplotlib.cm
 import numpy as np
 
 from dve.data import get_data
-from dve.colorbar import plotly_discrete_colorscale
+from dve.colorbar import plotly_discrete_colorscale, colorscale_boundaries, colorscale_colors
 from dve.generate_iso_lines import lonlat_overlay
 from dve.config import dv_label, climate_regime_label, dataset_label
 from dve.processing import coord_prep
@@ -98,17 +97,9 @@ def add(app, config):
         zmin = data_range[0]
         zmax = data_range[1]
 
-        if scale == "logarithmic":
-            ticks = np.linspace(np.log10(zmin), np.log10(zmax), num_colours + 1)
-            ticks = np.around(10 ** (ticks), 2)
-        else:
-            ticks = np.around(np.linspace(zmin, zmax, num_colours + 1), 3)
-
-        cmap = matplotlib.cm.get_cmap(colour_map_name, num_colours)
-
-        colours = [matplotlib.colors.rgb2hex(cmap(i)) for i in range(cmap.N)]
-
-        discrete_colorscale = plotly_discrete_colorscale(ticks, colours)
+        boundaries = colorscale_boundaries(zmin, zmax, num_colours, scale)
+        colours = colorscale_colors(colour_map_name, num_colours)
+        discrete_colorscale = plotly_discrete_colorscale(boundaries, colours)
 
         logger.debug("update_ds: get raster dataset")
         raster_dataset = get_data(
@@ -178,8 +169,7 @@ def add(app, config):
                 zmax=zmax,
                 hoverongaps=False,
                 colorscale=discrete_colorscale,
-                colorbar={"tickvals": ticks},
-                # showscale=False,
+                showscale=False,  # Hide colorbar
                 visible=True,
                 hovertemplate=(
                     f"<b>Interpolated {dv_label(config, design_value_id, climate_regime)}: %{{z}} </b><br>"
@@ -212,9 +202,8 @@ def add(app, config):
                         cmin=zmin,
                         cmax=zmax,
                         line=dict(width=1, color="DarkSlateGrey"),
-                        showscale=False,
                         colorscale=discrete_colorscale,
-                        colorbar={"tickvals": ticks},
+                        showscale=False, # Hide colorbar
                     ),
                     hovertemplate=(
                         f"<b>Station {dv_label(config, design_value_id, climate_regime)}: " f"%{{text}}</b><br>"
