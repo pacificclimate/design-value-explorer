@@ -145,6 +145,7 @@ def colorscale_colorbar(colors, zmin, zmax, scale, tickvals, ticktext, **kwargs)
             z=[[z] for z in midpoints],
             colorscale=colorscale,
             showscale=False,
+            hoverinfo="skip",
         ),
         layout=go.Layout(
             xaxis=go.layout.XAxis(
