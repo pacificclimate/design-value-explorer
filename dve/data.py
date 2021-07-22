@@ -80,10 +80,10 @@ class ThreadSafeCache:
         :param key: Cache key.
         :yield: Cached item.
         """
-        logger.debug(f"{self.name} cache size: {len(self._cache)}")
+        # logger.debug(f"{self.name} cache size: {len(self._cache)}")
         with self._lock:
             if key in self._cache:
-                logger.debug(f"{self.name} cache hit: {key}")
+                # logger.debug(f"{self.name} cache hit: {key}")
                 yield self._cache[key]
 
             if len(self._cache) > self.maxsize - 1:
@@ -97,7 +97,7 @@ class ThreadSafeCache:
                 del self._cache[rand_key]
 
             # Create a new item and add it to the cache
-            logger.debug(f"{self.name} cache miss: {key}")
+            # logger.debug(f"{self.name} cache miss: {key}")
             item = self.on_miss(key)
             self._cache[key] = item
 

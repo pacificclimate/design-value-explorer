@@ -1,6 +1,11 @@
+import logging
 import matplotlib
 import matplotlib.cm
+import plotly.graph_objects as go
 import numpy as np
+
+
+logger = logging.getLogger("dve")
 
 
 def matplotlib_to_plotly(cmap, vmin, vmax, N):
@@ -106,3 +111,71 @@ def colorscale_colors(colour_map_name, num_colours):
     """
     cmap = matplotlib.cm.get_cmap(colour_map_name, num_colours)
     return [matplotlib.colors.rgb2hex(cmap(i)) for i in range(cmap.N)]
+
+
+def scale_transform(scale):
+    return (
+        {
+            "linear": lambda x: x,
+            "logarithmic": np.log10,
+        }[scale],
+        {
+            "linear": lambda x: x,
+            "logarithmic": lambda x: 10 ** x,
+        }[scale]
+    )
+
+
+def colorscale_colorbar(colors, zmin, zmax, scale, tickvals, ticktext, **kwargs):
+    colors = list(colors)
+    num_colours = len(colors)
+    # TODO: Compute this by normalizing boundaries
+    norm_boundaries = np.linspace(0, 1, num_colours + 1)
+    colorscale = plotly_discrete_colorscale(norm_boundaries, colors)
+    transform, _ = scale_transform(scale)
+    # TODO: Compute this by transforming boundaries
+    t_boundaries = np.linspace(transform(zmin), transform(zmax), num_colours + 1)
+    midpoints = (t_boundaries[1:] + t_boundaries[:-1]) / 2
+    logger.debug(f"{num_colours} colours: {colors}")
+    logger.debug(f"midpoints: {midpoints}")
+    return go.Figure(
+        data=go.Heatmap(
+            x=[""],
+            y=midpoints,
+            z=[[z] for z in midpoints],
+            colorscale=colorscale,
+            showscale=False,
+        ),
+        layout=go.Layout(
+            xaxis=go.layout.XAxis(fixedrange=True),
+            yaxis=go.layout.YAxis(
+                side="right",
+                fixedrange=True,
+                tickmode="array",
+                tickvals=[transform(v) for v in tickvals],
+                ticktext=ticktext,
+            ),
+            autosize=False,
+            width=50,
+            height=500,
+            margin=go.layout.Margin(
+                t=0, b=0, l=0, r=0
+            )
+        ),
+        **kwargs,
+    )
+
+
+def midpoint_ticks(zmin, zmax, scale, num_colours):
+    fwd, back = scale_transform(scale)
+    # TODO: Compute this by transforming boundaries
+    t_boundaries = np.linspace(fwd(zmin), fwd(zmax), num_colours + 1)
+    midpoints = (t_boundaries[1:] + t_boundaries[:-1]) / 2
+    return np.around(back(midpoints), 2)
+
+
+def boundary_ticks(zmin, zmax, scale, num_colours):
+    fwd, back = scale_transform(scale)
+    # TODO: Compute this by transforming boundaries
+    t_boundaries = np.linspace(fwd(zmin), fwd(zmax), num_colours + 1)
+    return np.around(back(t_boundaries), 2)

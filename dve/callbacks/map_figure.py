@@ -11,7 +11,14 @@ import geopandas as gpd
 import numpy as np
 
 from dve.data import get_data
-from dve.colorbar import plotly_discrete_colorscale, colorscale_boundaries, colorscale_colors
+from dve.colorbar import (
+    plotly_discrete_colorscale,
+    colorscale_boundaries,
+    colorscale_colors,
+    colorscale_colorbar,
+    midpoint_ticks,
+    boundary_ticks,
+)
 from dve.generate_iso_lines import lonlat_overlay
 from dve.config import dv_label, climate_regime_label, dataset_label
 from dve.processing import coord_prep
@@ -45,7 +52,10 @@ def add(app, config):
     )
 
     @app.callback(
-        Output("my-graph", "figure"),
+        [
+            Output("my-graph", "figure"),
+            Output("my-colorscale", "figure"),
+        ],
         [
             # DV selection
             Input("design-value-id-ctrl", "value"),
@@ -98,6 +108,7 @@ def add(app, config):
         zmax = data_range[1]
 
         boundaries = colorscale_boundaries(zmin, zmax, num_colours, scale)
+        logger.debug(f"boundaries: {boundaries}")
         colours = colorscale_colors(colour_map_name, num_colours)
         discrete_colorscale = plotly_discrete_colorscale(boundaries, colours)
 
@@ -213,58 +224,66 @@ def add(app, config):
                 )
             )
 
-        return {
-            "data": figures,
-            "layout": {
-                "title": (
-                    config['ui']['labels']['map']['title'].format(
-                        dv=dv_label(
-                            config,
-                            design_value_id,
-                            climate_regime,
-                            with_description=True
-                        ),
-                        climate_regime=climate_regime_label(
-                            config, climate_regime, which="short"
-                        ),
-                        dataset=dataset_label(
-                            config,
-                            climate_regime,
-                            historical_dataset_id,
-                            future_dataset_id,
-                            which="short",
-                            nice=True,
+        # Accompanying colorbar. It would be nice to use the built-in colorbar,
+        # but Plotly's logarithmic colorbar is not suitable to our purposes.
+        tickvals = boundary_ticks(zmin, zmax, scale, num_colours)
+        colorbar = colorscale_colorbar(colours, zmin, zmax, scale, tickvals, tickvals)
+
+        return (
+            {
+                "data": figures,
+                "layout": {
+                    "title": (
+                        config['ui']['labels']['map']['title'].format(
+                            dv=dv_label(
+                                config,
+                                design_value_id,
+                                climate_regime,
+                                with_description=True
+                            ),
+                            climate_regime=climate_regime_label(
+                                config, climate_regime, which="short"
+                            ),
+                            dataset=dataset_label(
+                                config,
+                                climate_regime,
+                                historical_dataset_id,
+                                future_dataset_id,
+                                which="short",
+                                nice=True,
+                            )
                         )
-                    )
-                ),
-                "font": dict(size=13, color="grey"),
-                "xaxis": dict(
-                    zeroline=False,
-                    range=[rlon.values[icxmin], rlon.values[icxmax]],
-                    showgrid=False,  # thin lines in the background
-                    visible=False,  # numbers below
-                ),
-                "yaxis": dict(
-                    zeroline=False,
-                    range=[rlat.values[icymin], rlat.values[icymax]],
-                    showgrid=False,  # thin lines in the background
-                    visible=False,
-                ),
-                "xaxis_showgrid": False,
-                "yaxis_showgrid": False,
-                "hoverlabel": dict(
-                    bgcolor="white", font_size=16, font_family="Rockwell"
-                ),
-                "hoverdistance": 5,
-                "hovermode": "closest",
-                # width is unspecified; it is therefore adaptive to window
-                "height": 750,
-                "showlegend": False,
-                "legend_orientation": "v",
-                "scrollZoom": True,
-                "uirevision": "None",
+                    ),
+                    "font": dict(size=13, color="grey"),
+                    "xaxis": dict(
+                        zeroline=False,
+                        range=[rlon.values[icxmin], rlon.values[icxmax]],
+                        showgrid=False,  # thin lines in the background
+                        visible=False,  # numbers below
+                    ),
+                    "yaxis": dict(
+                        zeroline=False,
+                        range=[rlat.values[icymin], rlat.values[icymax]],
+                        showgrid=False,  # thin lines in the background
+                        visible=False,
+                    ),
+                    "xaxis_showgrid": False,
+                    "yaxis_showgrid": False,
+                    "hoverlabel": dict(
+                        bgcolor="white", font_size=16, font_family="Rockwell"
+                    ),
+                    "hoverdistance": 5,
+                    "hovermode": "closest",
+                    # width is unspecified; it is therefore adaptive to window
+                    "height": 750,
+                    "showlegend": False,
+                    "legend_orientation": "v",
+                    "scrollZoom": True,
+                    "uirevision": "None",
+                },
             },
-        }
+            colorbar
+        )
 
     @app.callback(
         Output("viewport-ds", "children"),
