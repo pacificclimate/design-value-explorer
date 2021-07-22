@@ -51,7 +51,7 @@ services:
         target: /codebase/dve/data/tables/
         read_only: true
 
-networks:
-  default:
-    external:
-      name: pcicbr0
+#networks:
+#  default:
+#    external:
+#      name: pcicbr0
