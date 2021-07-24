@@ -187,11 +187,17 @@ def midpoint_ticks(zmin, zmax, scale, num_colours):
     # TODO: Compute this by transforming boundaries
     t_boundaries = np.linspace(fwd(zmin), fwd(zmax), num_colours + 1)
     midpoints = (t_boundaries[1:] + t_boundaries[:-1]) / 2
-    return np.around(back(midpoints), 2)
+    return back(midpoints)
 
 
 def boundary_ticks(zmin, zmax, scale, num_colours):
     fwd, back = scale_transform(scale)
     # TODO: Compute this by transforming boundaries
     t_boundaries = np.linspace(fwd(zmin), fwd(zmax), num_colours + 1)
-    return np.around(back(t_boundaries), 2)
+    return back(t_boundaries)
+
+
+def use_ticks(zmin, zmax, scale, num_colours, max_num_ticks):
+    if num_colours <= max_num_ticks:
+        return boundary_ticks(zmin, zmax, scale, num_colours)
+    return boundary_ticks(zmin, zmax, scale, max_num_ticks)

@@ -18,6 +18,7 @@ from dve.colorbar import (
     colorscale_colorbar,
     midpoint_ticks,
     boundary_ticks,
+    use_ticks,
 )
 from dve.generate_iso_lines import lonlat_overlay
 from dve.config import dv_label, climate_regime_label, dataset_label
@@ -226,8 +227,12 @@ def add(app, config):
 
         # Accompanying colorbar. It would be nice to use the built-in colorbar,
         # but Plotly's logarithmic colorbar is not suitable to our purposes.
-        tickvals = boundary_ticks(zmin, zmax, scale, num_colours)
-        colorbar = colorscale_colorbar(colours, zmin, zmax, scale, tickvals, tickvals)
+        tickvals = use_ticks(
+            zmin, zmax, scale, num_colours, config["ui"]["ticks"]["max-num"]
+        )
+        colorbar = colorscale_colorbar(
+            colours, zmin, zmax, scale, tickvals, np.around(tickvals, 2)
+        )
 
         return (
             {

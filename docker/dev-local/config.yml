@@ -60,25 +60,27 @@ ui:
                 2: "2"
                 30: "30"
         colourbar-range: {}
+    ticks:
+        max-num: 10
 
     dvs:
         # Design variables to actually offer in the UI.
         # Simplifies commenting them in and out of service.
 #        - DRWP5
 #        - HDD
-        - IDFCF
+#        - IDFCF
 #        - MI
 #        - PAnn
-        - R1d50
-        - R15m10
+#        - R1d50
+#        - R15m10
 #        - RAnn
         - RL50
         - RHann
 #        - SL50
-        - TJan2.5
+#        - TJan2.5
 #        - TJan1.0
-        - TJul97.5
-        - TwJul97.5
+#        - TJul97.5
+#        - TwJul97.5
 #        - Tmin
 #        - Tmax
 #        - WP10
