@@ -130,22 +130,25 @@ def colorscale_colorbar(colors, zmin, zmax, scale, tickvals, ticktext, **kwargs)
     colors = list(colors)
     num_colours = len(colors)
     # TODO: Compute this by normalizing boundaries
-    norm_boundaries = np.linspace(0, 1, num_colours + 1)
-    colorscale = plotly_discrete_colorscale(norm_boundaries, colors)
-    transform, _ = scale_transform(scale)
-    # TODO: Compute this by transforming boundaries
-    t_boundaries = np.linspace(transform(zmin), transform(zmax), num_colours + 1)
-    midpoints = (t_boundaries[1:] + t_boundaries[:-1]) / 2
-    logger.debug(f"{num_colours} colours: {colors}")
-    logger.debug(f"midpoints: {midpoints}")
+    fwd, back = scale_transform(scale)
+    t_boundaries = np.linspace(fwd(zmin), fwd(zmax), num_colours + 1)
+    logger.debug(f"t_boundaries: {t_boundaries}")
+    raw_boundaries = back(t_boundaries)
+    norm_raw_boundaries = (raw_boundaries - raw_boundaries[0]) / (
+        raw_boundaries[-1] - raw_boundaries[0])
+    t_midpoints = (t_boundaries[1:] + t_boundaries[:-1]) / 2
+    raw_midpoints = back(t_midpoints)
+    colorscale = plotly_discrete_colorscale(norm_raw_boundaries, colors)
     return go.Figure(
         data=go.Heatmap(
             x=[""],
-            y=midpoints,
-            z=[[z] for z in midpoints],
+            y=t_midpoints,
+            z=[[z] for z in raw_midpoints],
             colorscale=colorscale,
             showscale=False,
-            hoverinfo="skip",
+            hovertemplate="%{z:3.2r}<extra></extra>",
+            zmin=zmin,
+            zmax=zmax,
         ),
         layout=go.Layout(
             xaxis=go.layout.XAxis(
@@ -163,7 +166,7 @@ def colorscale_colorbar(colors, zmin, zmax, scale, tickvals, ticktext, **kwargs)
                 linecolor="black",
                 mirror=True,
                 tickmode="array",
-                tickvals=[transform(v) for v in tickvals],
+                tickvals=[fwd(v) for v in tickvals],
                 ticktext=ticktext,
             ),
             autosize=False,
