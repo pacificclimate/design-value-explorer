@@ -71,7 +71,7 @@ def add(app, config):
             Input("viewport-ds", "children"),
         ],
     )
-    def update_ds(
+    def update_map(
         # DV selection
         design_value_id,
         # Overlay options
@@ -102,7 +102,6 @@ def add(app, config):
         zmax = data_range[1]
 
         boundaries = uniformly_spaced(zmin, zmax, num_colours + 1, scale)
-        logger.debug(f"boundaries: {boundaries}")
         colours = colorscale_colors(colour_map_name, num_colours)
         colorscale = discrete_colorscale(boundaries, colours)
 
