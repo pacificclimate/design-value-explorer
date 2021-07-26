@@ -8,17 +8,6 @@ import numpy as np
 logger = logging.getLogger("dve")
 
 
-def matplotlib_to_plotly(cmap, vmin, vmax, N):
-    # h = 1.0 / (pl_entries - 1)
-    ticks = np.linspace(0, 1, N + 1)
-    pl_colorscale = []
-
-    for k in range(N):
-        C = list(map(np.uint8, np.array(cmap(ticks[k])[:3]) * 255))
-        pl_colorscale.append([ticks[k], "rgb" + str((C[0], C[1], C[2]))])
-
-    return pl_colorscale
-
 # The map can be displayed with either a linear or logarithmic colorscale.
 # Unfortunately, continuous logarithmic colorscales are not available directly
 # from Plotly, so we must roll our own. Also, their "logarithmic" option on
