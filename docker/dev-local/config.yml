@@ -45,9 +45,9 @@ ui:
             value: logarithmic
             clearable: false
         num-colours:
-            min: 2
-            max: 30
-            step: 1
+            min: 5
+            max: 100
+            step: 5
             value: 10
             size: 150
             handleLabel:
@@ -57,11 +57,11 @@ ui:
                     font-size: "0.8em"
                     color: black
             marks:
-                2: "2"
-                30: "30"
+                5: "5"
+                100: "100"
         colourbar-range: {}
     ticks:
-        max-num: 10
+        max-num: 11
 
     dvs:
         # Design variables to actually offer in the UI.
@@ -73,7 +73,7 @@ ui:
 #        - PAnn
 #        - R1d50
 #        - R15m10
-#        - RAnn
+        - RAnn
         - RL50
         - RHann
 #        - SL50
