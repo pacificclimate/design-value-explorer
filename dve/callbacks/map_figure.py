@@ -12,12 +12,10 @@ import numpy as np
 
 from dve.data import get_data
 from dve.colorbar import (
-    plotly_discrete_colorscale,
-    colorscale_boundaries,
+    uniformly_spaced,
+    discrete_colorscale,
     colorscale_colors,
-    colorscale_colorbar,
-    midpoint_ticks,
-    boundary_ticks,
+    discrete_colorscale_colorbar,
     use_ticks,
 )
 from dve.generate_iso_lines import lonlat_overlay
@@ -53,10 +51,7 @@ def add(app, config):
     )
 
     @app.callback(
-        [
-            Output("my-graph", "figure"),
-            Output("my-colorscale", "figure"),
-        ],
+        [Output("my-graph", "figure"), Output("my-colorscale", "figure")],
         [
             # DV selection
             Input("design-value-id-ctrl", "value"),
@@ -94,9 +89,7 @@ def add(app, config):
         # Client-side state
         viewport_ds,
     ):
-        if not dv_has_climate_regime(
-            config, design_value_id, climate_regime
-        ):
+        if not dv_has_climate_regime(config, design_value_id, climate_regime):
             raise PreventUpdate
 
         # This list of figures is returned by this function. It is built up
@@ -108,10 +101,10 @@ def add(app, config):
         zmin = data_range[0]
         zmax = data_range[1]
 
-        boundaries = colorscale_boundaries(zmin, zmax, num_colours, scale)
+        boundaries = uniformly_spaced(zmin, zmax, num_colours + 1, scale)
         logger.debug(f"boundaries: {boundaries}")
         colours = colorscale_colors(colour_map_name, num_colours)
-        discrete_colorscale = plotly_discrete_colorscale(boundaries, colours)
+        colorscale = discrete_colorscale(boundaries, colours)
 
         logger.debug("update_ds: get raster dataset")
         raster_dataset = get_data(
@@ -122,11 +115,7 @@ def add(app, config):
             future_dataset_id,
         )
         rlon, rlat, dv = raster_dataset.apply(
-            lambda dvds, ds: (
-                ds.rlon,
-                ds.rlat,
-                ds[dvds.dv_name],
-            )
+            lambda dvds, ds: (ds.rlon, ds.rlat, ds[dvds.dv_name])
         )
 
         # Figure: Lon-lat overlay
@@ -180,7 +169,7 @@ def add(app, config):
                 zmin=zmin,
                 zmax=zmax,
                 hoverongaps=False,
-                colorscale=discrete_colorscale,
+                colorscale=colorscale,
                 showscale=False,  # Hide colorbar
                 visible=True,
                 hovertemplate=(
@@ -214,11 +203,12 @@ def add(app, config):
                         cmin=zmin,
                         cmax=zmax,
                         line=dict(width=1, color="DarkSlateGrey"),
-                        colorscale=discrete_colorscale,
-                        showscale=False, # Hide colorbar
+                        colorscale=colorscale,
+                        showscale=False,  # Hide colorbar
                     ),
                     hovertemplate=(
-                        f"<b>Station {dv_label(config, design_value_id, climate_regime)}: " f"%{{text}}</b><br>"
+                        f"<b>Station {dv_label(config, design_value_id, climate_regime)}: "
+                        f"%{{text}}</b><br>"
                     ),
                     visible=show_stations,
                     name="",
@@ -230,8 +220,12 @@ def add(app, config):
         tickvals = use_ticks(
             zmin, zmax, scale, num_colours, config["ui"]["ticks"]["max-num"]
         )
-        colorbar = colorscale_colorbar(
-            colours, zmin, zmax, scale, tickvals, np.around(tickvals, 2)
+        colorbar = discrete_colorscale_colorbar(
+            boundaries,
+            colorscale,
+            scale,
+            tickvals,
+            np.around(tickvals, 2),
         )
 
         return (
@@ -239,12 +233,12 @@ def add(app, config):
                 "data": figures,
                 "layout": {
                     "title": (
-                        config['ui']['labels']['map']['title'].format(
+                        config["ui"]["labels"]["map"]["title"].format(
                             dv=dv_label(
                                 config,
                                 design_value_id,
                                 climate_regime,
-                                with_description=True
+                                with_description=True,
                             ),
                             climate_regime=climate_regime_label(
                                 config, climate_regime, which="short"
@@ -256,7 +250,7 @@ def add(app, config):
                                 future_dataset_id,
                                 which="short",
                                 nice=True,
-                            )
+                            ),
                         )
                     ),
                     "font": dict(size=13, color="grey"),
@@ -287,7 +281,7 @@ def add(app, config):
                     "uirevision": "None",
                 },
             },
-            colorbar
+            colorbar,
         )
 
     @app.callback(
