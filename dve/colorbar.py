@@ -11,12 +11,13 @@ logger = logging.getLogger("dve")
 # The map can be displayed with either a linear or logarithmic colorscale.
 # Unfortunately, continuous logarithmic colorscales are not available directly
 # from Plotly, so we must roll our own. Also, their "logarithmic" option on
-# colorbars is completely unsuited to our application, and we must also roll
-# our own colorbar.
+# colorbars is completely unsuited to our application, so we must roll
+# our own colorbar too.
 #
 # The map is therefore displayed using a "discrete colorscale", which is a
 # colorscale in which data values are mapped to a set of discrete (not
-# continuous or interpolated) colors. For information on this, see
+# continuous or interpolated) colors. In particular, we map appropriately
+# selected data value intervals onto colors. For information on this, see
 # https://plotly.com/python/colorscales/, sections "Custom Discretized Heatmap
 # Color scale with Graph Objects" and "Constructing a Discrete or Discontinuous
 # Color Scale". To maintain uniform appearance and behaviour, both linear and
@@ -61,10 +62,10 @@ def scale_transform(scale):
     :param scale: "linear" or "logarithmic"
     :return: 2-tuple: (forward, back)
     """
-    return (
-        {"linear": lambda x: x, "logarithmic": np.log10}[scale],
-        {"linear": lambda x: x, "logarithmic": lambda x: 10 ** x}[scale],
-    )
+    return {
+        "linear": (lambda x: x, lambda x: x),
+        "logarithmic": (np.log10, lambda x: 10 ** x),
+    }[scale]
 
 
 def uniformly_spaced(zmin, zmax, num_values, scale):
