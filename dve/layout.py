@@ -284,13 +284,28 @@ def map_tab(config):
             dbc.Row(
                 [
                     dbc.Col(
-                        dcc.Loading(
-                            dcc.Graph(
-                                id="my-graph",
-                                config=config["ui"]["graph"],
+                        dbc.Row([
+                            dbc.Col(
+                                dcc.Loading(
+                                    dcc.Graph(
+                                        id="my-graph",
+                                        config=config["ui"]["graph"],
+                                    ),
+                                    **config["ui"]["loading"],
+                                ),
+                                lg=11,
                             ),
-                            **config["ui"]["loading"],
-                        ),
+                            dbc.Col(
+                                dcc.Loading(
+                                      dcc.Graph(
+                                          id="my-colorscale",
+                                          config={"displayModeBar": False}
+                                      ),
+                                      **config["ui"]["loading"],
+                                ),
+                                lg=1,
+                            ),
+                        ]),
                         lg=7,
                         md=12,
                         sm=12,

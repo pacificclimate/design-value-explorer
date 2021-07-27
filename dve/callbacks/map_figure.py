@@ -8,11 +8,16 @@ from dash.exceptions import PreventUpdate
 import plotly.graph_objects as go
 
 import geopandas as gpd
-import matplotlib.cm
 import numpy as np
 
 from dve.data import get_data
-from dve.colorbar import plotly_discrete_colorscale
+from dve.colorbar import (
+    uniformly_spaced,
+    discrete_colorscale,
+    colorscale_colors,
+    discrete_colorscale_colorbar,
+    use_ticks,
+)
 from dve.generate_iso_lines import lonlat_overlay
 from dve.config import dv_label, climate_regime_label, dataset_label
 from dve.processing import coord_prep
@@ -46,7 +51,7 @@ def add(app, config):
     )
 
     @app.callback(
-        Output("my-graph", "figure"),
+        [Output("my-graph", "figure"), Output("my-colorscale", "figure")],
         [
             # DV selection
             Input("design-value-id-ctrl", "value"),
@@ -66,7 +71,7 @@ def add(app, config):
             Input("viewport-ds", "children"),
         ],
     )
-    def update_ds(
+    def update_map(
         # DV selection
         design_value_id,
         # Overlay options
@@ -84,9 +89,7 @@ def add(app, config):
         # Client-side state
         viewport_ds,
     ):
-        if not dv_has_climate_regime(
-            config, design_value_id, climate_regime
-        ):
+        if not dv_has_climate_regime(config, design_value_id, climate_regime):
             raise PreventUpdate
 
         # This list of figures is returned by this function. It is built up
@@ -98,17 +101,9 @@ def add(app, config):
         zmin = data_range[0]
         zmax = data_range[1]
 
-        if scale == "logarithmic":
-            ticks = np.linspace(np.log10(zmin), np.log10(zmax), num_colours + 1)
-            ticks = np.around(10 ** (ticks), 2)
-        else:
-            ticks = np.around(np.linspace(zmin, zmax, num_colours + 1), 3)
-
-        cmap = matplotlib.cm.get_cmap(colour_map_name, num_colours)
-
-        colours = [matplotlib.colors.rgb2hex(cmap(i)) for i in range(cmap.N)]
-
-        discrete_colorscale = plotly_discrete_colorscale(ticks, colours)
+        boundaries = uniformly_spaced(zmin, zmax, num_colours + 1, scale)
+        colours = colorscale_colors(colour_map_name, num_colours)
+        colorscale = discrete_colorscale(boundaries, colours)
 
         logger.debug("update_ds: get raster dataset")
         raster_dataset = get_data(
@@ -119,11 +114,7 @@ def add(app, config):
             future_dataset_id,
         )
         rlon, rlat, dv = raster_dataset.apply(
-            lambda dvds, ds: (
-                ds.rlon,
-                ds.rlat,
-                ds[dvds.dv_name],
-            )
+            lambda dvds, ds: (ds.rlon, ds.rlat, ds[dvds.dv_name])
         )
 
         # Figure: Lon-lat overlay
@@ -177,9 +168,8 @@ def add(app, config):
                 zmin=zmin,
                 zmax=zmax,
                 hoverongaps=False,
-                colorscale=discrete_colorscale,
-                colorbar={"tickvals": ticks},
-                # showscale=False,
+                colorscale=colorscale,
+                showscale=False,  # Hide colorbar
                 visible=True,
                 hovertemplate=(
                     f"<b>Interpolated {dv_label(config, design_value_id, climate_regime)}: %{{z}} </b><br>"
@@ -212,70 +202,86 @@ def add(app, config):
                         cmin=zmin,
                         cmax=zmax,
                         line=dict(width=1, color="DarkSlateGrey"),
-                        showscale=False,
-                        colorscale=discrete_colorscale,
-                        colorbar={"tickvals": ticks},
+                        colorscale=colorscale,
+                        showscale=False,  # Hide colorbar
                     ),
                     hovertemplate=(
-                        f"<b>Station {dv_label(config, design_value_id, climate_regime)}: " f"%{{text}}</b><br>"
+                        f"<b>Station {dv_label(config, design_value_id, climate_regime)}: "
+                        f"%{{text}}</b><br>"
                     ),
                     visible=show_stations,
                     name="",
                 )
             )
 
-        return {
-            "data": figures,
-            "layout": {
-                "title": (
-                    config['ui']['labels']['map']['title'].format(
-                        dv=dv_label(
-                            config,
-                            design_value_id,
-                            climate_regime,
-                            with_description=True
-                        ),
-                        climate_regime=climate_regime_label(
-                            config, climate_regime, which="short"
-                        ),
-                        dataset=dataset_label(
-                            config,
-                            climate_regime,
-                            historical_dataset_id,
-                            future_dataset_id,
-                            which="short",
-                            nice=True,
+        # Accompanying colorbar. It would be nice to use the built-in colorbar,
+        # but Plotly's logarithmic colorbar is not suitable to our purposes.
+        tickvals = use_ticks(
+            zmin, zmax, scale, num_colours, config["ui"]["ticks"]["max-num"]
+        )
+        colorbar = discrete_colorscale_colorbar(
+            boundaries,
+            colorscale,
+            scale,
+            tickvals,
+            np.around(tickvals, 2),
+        )
+
+        return (
+            {
+                "data": figures,
+                "layout": {
+                    "title": (
+                        config["ui"]["labels"]["map"]["title"].format(
+                            dv=dv_label(
+                                config,
+                                design_value_id,
+                                climate_regime,
+                                with_description=True,
+                            ),
+                            climate_regime=climate_regime_label(
+                                config, climate_regime, which="short"
+                            ),
+                            dataset=dataset_label(
+                                config,
+                                climate_regime,
+                                historical_dataset_id,
+                                future_dataset_id,
+                                which="short",
+                                nice=True,
+                            ),
                         )
-                    )
-                ),
-                "font": dict(size=13, color="grey"),
-                "xaxis": dict(
-                    zeroline=False,
-                    range=[rlon.values[icxmin], rlon.values[icxmax]],
-                    showgrid=False,  # thin lines in the background
-                    visible=False,  # numbers below
-                ),
-                "yaxis": dict(
-                    zeroline=False,
-                    range=[rlat.values[icymin], rlat.values[icymax]],
-                    showgrid=False,  # thin lines in the background
-                    visible=False,
-                ),
-                "xaxis_showgrid": False,
-                "yaxis_showgrid": False,
-                "hoverlabel": dict(
-                    bgcolor="white", font_size=16, font_family="Rockwell"
-                ),
-                "hoverdistance": 5,
-                "hovermode": "closest",
-                # width is unspecified; it is therefore adaptive to window
-                "height": 750,
-                "showlegend": False,
-                "legend_orientation": "v",
-                "scrollZoom": True,
-                "uirevision": "None",
+                    ),
+                    "font": dict(size=13, color="grey"),
+                    "xaxis": dict(
+                        zeroline=False,
+                        range=[rlon.values[icxmin], rlon.values[icxmax]],
+                        showgrid=False,  # thin lines in the background
+                        visible=False,  # numbers below
+                    ),
+                    "yaxis": dict(
+                        zeroline=False,
+                        range=[rlat.values[icymin], rlat.values[icymax]],
+                        showgrid=False,  # thin lines in the background
+                        visible=False,
+                    ),
+                    "xaxis_showgrid": False,
+                    "yaxis_showgrid": False,
+                    "hoverlabel": dict(
+                        bgcolor="white", font_size=16, font_family="Rockwell"
+                    ),
+                    "hoverdistance": 5,
+                    "hovermode": "closest",
+                    # width is unspecified; it is therefore adaptive to window
+                    "height": 750,
+                    "showlegend": False,
+                    "legend_orientation": "v",
+                    "scrollZoom": True,
+                    "uirevision": "None",
+                },
             },
-        }
+            colorbar,
+        )
 
     @app.callback(
         Output("viewport-ds", "children"),
