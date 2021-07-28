@@ -34,7 +34,7 @@ numpy==1.17.3
 nptyping
 packaging==19.2
 pandas
-plotly==4.7.1
+plotly==5.1.0
 pluggy==0.13.0
 py==1.10.0
 pyparsing==2.4.0
