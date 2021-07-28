@@ -2,6 +2,7 @@ import json
 import logging
 from pkg_resources import resource_filename
 
+import dash
 from dash.dependencies import Input, Output, State
 from dve.config import dv_has_climate_regime
 from dash.exceptions import PreventUpdate
@@ -89,6 +90,21 @@ def add(app, config):
         # Client-side state
         viewport_ds,
     ):
+        ctx = dash.callback_context
+
+        # Do not update if viewport has changed but lat-lon grid is not shown.
+        # Changing lat-lon grid for vp change is only reason to update.
+        # TODO: Generate lat-lon grid for entire area at given zoom; don't
+        #  update if zoom has not changed.
+        if (
+            ctx.triggered
+            and ctx.triggered[0]["prop_id"].startswith("viewport-ds")
+            and not show_grid
+        ):
+            raise PreventUpdate
+
+        # Do not update if design values for requested climate regime do not
+        # exist.
         if not dv_has_climate_regime(config, design_value_id, climate_regime):
             raise PreventUpdate
 
@@ -219,11 +235,7 @@ def add(app, config):
             zmin, zmax, scale, num_colours, config["ui"]["ticks"]["max-num"]
         )
         colorbar = discrete_colorscale_colorbar(
-            boundaries,
-            colorscale,
-            scale,
-            tickvals,
-            np.around(tickvals, 2),
+            boundaries, colorscale, scale, tickvals, np.around(tickvals, 2)
         )
 
         return (
