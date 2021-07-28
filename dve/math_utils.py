@@ -60,24 +60,6 @@ def nice_bounds(low, high, delta):
     return low, high, num_intervals
 
 
-def nice(low, high, num_intervals, round_to):
-    """
-    Return "nice" low, high, and num_intervals from non-nice values of
-    same, and preferred increment values.
-
-    :param low:
-    :param high:
-    :param num_intervals:
-    :param round_to:
-    :return:
-    """
-    delta = nearest(round_to, (high - low) / num_intervals)
-    low = round_to_multiple(low, delta, direction="down")
-    high = round_to_multiple(high, delta, direction="up")
-    num_intervals = round((high - low) / delta)
-    return low, high, num_intervals
-
-
 def sigfigs(x, n=3):
     """Round a float to specified number of significant figures (decimal)."""
     if not isinstance(x, float):
