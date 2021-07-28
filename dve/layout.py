@@ -353,7 +353,9 @@ def internal_data():
 
     :return: List of components.
     """
-    return [html.Div(id="viewport-ds", style={"display": "none"})]
+    return [
+        html.Div(id="viewport-ds", style={"display": "none"}, children="null")
+    ]
 
 
 def main(config):

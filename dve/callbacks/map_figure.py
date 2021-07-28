@@ -1,6 +1,7 @@
 import json
 import logging
 from pkg_resources import resource_filename
+import math
 
 import dash
 from dash.dependencies import Input, Output, State
@@ -92,6 +93,8 @@ def add(app, config):
     ):
         ctx = dash.callback_context
 
+        viewport = viewport_ds and json.loads(viewport_ds)
+
         # Do not update if viewport has changed but lat-lon grid is not shown.
         # Changing lat-lon grid for vp change is only reason to update.
         # TODO: Generate lat-lon grid for entire area at given zoom; don't
@@ -99,9 +102,24 @@ def add(app, config):
         if (
             ctx.triggered
             and ctx.triggered[0]["prop_id"].startswith("viewport-ds")
-            and not show_grid
         ):
-            raise PreventUpdate
+            if not show_grid:
+                raise PreventUpdate
+
+            if viewport and viewport["previous"]:
+                vp_prev = viewport["previous"]
+                vp_curr = viewport["current"]
+                if (
+                    math.isclose(
+                        vp_prev["x_max"] - vp_prev["x_min"],
+                        vp_curr["x_max"] - vp_curr["x_min"],
+                    )
+                    and math.isclose(
+                        vp_prev["y_max"] - vp_prev["y_min"],
+                        vp_curr["y_max"] - vp_curr["y_min"],
+                    )
+                ):
+                    raise PreventUpdate
 
         # Do not update if design values for requested climate regime do not
         # exist.
@@ -111,8 +129,6 @@ def add(app, config):
         # This list of figures is returned by this function. It is built up
         # incrementally depending on the values of the inputs.
         figures = []
-
-        viewport = viewport_ds and json.loads(viewport_ds)
 
         zmin = data_range[0]
         zmax = data_range[1]
@@ -141,7 +157,7 @@ def add(app, config):
                 # dataset, but that's how the code works. Ick.
                 rlon_grid_size=rlon.size,
                 rlat_grid_size=rlat.size,
-                viewport=viewport,
+                viewport=viewport and viewport["current"],
                 num_lon_intervals=lonlat_overlay_config["lon"]["num_intervals"],
                 lon_round_to=lonlat_overlay_config["lon"]["round_to"],
                 num_lat_intervals=lonlat_overlay_config["lat"]["num_intervals"],
@@ -302,12 +318,25 @@ def add(app, config):
     def update_viewport(relayout_data, prev_viewport):
         # Save map viewport bounds when and only when they change
         # (zoom, pan events)
-        if relayout_data is not None and "xaxis.range[0]" in relayout_data:
-            viewport = {
-                "x_min": relayout_data["xaxis.range[0]"],
-                "x_max": relayout_data["xaxis.range[1]"],
-                "y_min": relayout_data["yaxis.range[0]"],
-                "y_max": relayout_data["yaxis.range[1]"],
-            }
-            return json.dumps(viewport)
-        return prev_viewport
+        prev_viewport = json.loads(prev_viewport)
+        if relayout_data is not None:
+            if "xaxis.autorange" in relayout_data:
+                return json.dumps(None)
+
+            if "xaxis.range[0]" in relayout_data:
+                x_min = relayout_data["xaxis.range[0]"]
+                x_max = relayout_data["xaxis.range[1]"]
+                y_min = relayout_data["yaxis.range[0]"]
+                y_max = relayout_data["yaxis.range[1]"]
+                viewport = {
+                    "current": {
+                        "x_min": x_min,
+                        "x_max": x_max,
+                        "y_min": y_min,
+                        "y_max": y_max,
+                    },
+                    "previous": prev_viewport and prev_viewport["current"]
+                }
+                return json.dumps(viewport)
+
+        raise PreventUpdate
