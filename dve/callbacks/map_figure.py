@@ -95,17 +95,18 @@ def add(app, config):
 
         viewport = viewport_ds and json.loads(viewport_ds)
 
-        # Do not update if viewport has changed but lat-lon grid is not shown.
-        # Changing lat-lon grid for vp change is only reason to update.
-        # TODO: Generate lat-lon grid for entire area at given zoom; don't
-        #  update if zoom has not changed.
         if (
             ctx.triggered
             and ctx.triggered[0]["prop_id"].startswith("viewport-ds")
         ):
+            # Do not update if viewport has changed but lat-lon grid is not shown.
+            # Changing lat-lon grid for vp change is only reason to update.
             if not show_grid:
                 raise PreventUpdate
 
+            # Do not update if viewport dimensions have not changed.
+            # Grid covers entirety of Canada, and only changes when vp dims
+            # change.
             if viewport and viewport["previous"]:
                 vp_prev = viewport["previous"]
                 vp_curr = viewport["current"]
