@@ -153,8 +153,7 @@ def add(app, config):
         icymin = find_nearest_index(rlat.values, cy_min)
         icymax = find_nearest_index(rlat.values, cy_max)
 
-        # TODO: Why copy?
-        ds_arr = dv.values[icymin:icymax, icxmin:icxmax].copy()
+        ds_arr = dv.values[icymin:icymax, icxmin:icxmax]
 
         if historical_dataset_id == "model" and mask_on:
             mask = native_mask[icymin:icymax, icxmin:icxmax]
