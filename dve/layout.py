@@ -279,6 +279,7 @@ def map_tab(config):
     :return: dbc.Tab
     """
     return dbc.Tab(
+        tab_id="map-tab",
         label="Map",
         children=[
             dbc.Row(
@@ -331,6 +332,7 @@ def map_tab(config):
 
 def table_C2_tab(config):
     return dbc.Tab(
+        tab_id="table-tab",
         label="Table C-2",
         children=dcc.Loading(
             [
@@ -369,7 +371,13 @@ def main(config):
         children=[
             *header(config),
             dbc.Row(
-                dbc.Col(dbc.Tabs([map_tab(config), table_C2_tab(config)])),
+                dbc.Col(
+                    dbc.Tabs(
+                        id="tabs",
+                        children=[map_tab(config), table_C2_tab(config)],
+                        active_tab="map-tab",
+                    )
+                ),
                 style={"margin-top": "1em"},
             ),
             *internal_data(),

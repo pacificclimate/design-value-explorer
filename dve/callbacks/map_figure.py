@@ -55,6 +55,8 @@ def add(app, config):
     @app.callback(
         [Output("my-graph", "figure"), Output("my-colorscale", "figure")],
         [
+            # Tab selection
+            Input("tabs", "active_tab"),
             # DV selection
             Input("design-value-id-ctrl", "value"),
             # Overlay options
@@ -74,6 +76,8 @@ def add(app, config):
         ],
     )
     def update_map(
+        # Tab selection
+        active_tab,
         # DV selection
         design_value_id,
         # Overlay options
@@ -91,6 +95,10 @@ def add(app, config):
         # Client-side state
         viewport_ds,
     ):
+        # Do not update if the tab is not selected
+        if active_tab != "map-tab":
+            raise PreventUpdate
+
         ctx = dash.callback_context
 
         viewport = viewport_ds and json.loads(viewport_ds)
