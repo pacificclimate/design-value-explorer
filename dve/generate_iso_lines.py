@@ -5,7 +5,9 @@ from climpyrical.gridding import (
 )
 import numpy as np
 import plotly.graph_objects as go
-from dve.math_utils import nearest, round_to_multiple, nice
+from dve.math_utils import (
+    nice_delta, nice_bounds,
+)
 
 
 def lonlat_overlay(
@@ -16,10 +18,20 @@ def lonlat_overlay(
     num_lat_intervals=5,
     lon_round_to = (1, 2, 3, 5, 10, 15),
     lat_round_to = (1, 2, 3, 5, 10, 15),
+    grid_lon_min = 360 - 140,
+    grid_lon_max = 360 - 50,
+    grid_lat_min = 45,
+    grid_lat_max = 85,
 ):
     """
     Returns a list of graphical objects that render latitude and longitude lines
     in the map graph.
+
+    Lat and lon lines are generated to cover the entire area defined by args
+    `grid_lon_min`, `grid_lon_max`, `grid_lat_min`, `grid_lat_max`, which is
+    by default the entire extent of Canada. The density of lines is determined
+    by the viewport they will be shown in, but not the extent of them. This
+    facilitates panning without reloading the map.
 
     Lines are constructed (I think) by creating "dotted lines" at the resolution
     of the grid scale, and plotting these across the map. It's not clear why
@@ -38,11 +50,11 @@ def lonlat_overlay(
     :return: (list) Graphical objects representing lon-lat overlay.
     """
     if viewport is None:
-        # Default (max zoom; all Canada) lon and lat bounds
-        lon_min = 360 - 140
-        lon_max = 360 - 50
-        lat_min = 45
-        lat_max = 85
+        # Default (max zoom; full area) lon and lat bounds
+        vp_lon_min = grid_lon_min
+        vp_lon_max = grid_lon_max
+        vp_lat_min = grid_lat_min
+        vp_lat_max = grid_lat_max
     else:
         # Transform rotated pole viewport corners to standard lon-lat
         vp_x_range, vp_y_range = transform_coords(
@@ -59,20 +71,32 @@ def lonlat_overlay(
             },
             target_crs={"init": "epsg:4326"},
         )
-        lon_min, lon_max = 360 + vp_x_range
-        lat_min, lat_max = vp_y_range
+        vp_lon_min, vp_lon_max = 360 + vp_x_range
+        vp_lat_min, vp_lat_max = vp_y_range
 
     # Compute "nice" lines of lon and lat in standard coordinates.
     # "Nice" means an increment between lines of one of the preferred values,
     # and lines at multiples of the increment.
-    lon_min, lon_max, num_lon_intervals = nice(
-        lon_min, lon_max, num_lon_intervals, lon_round_to
+
+    vp_lon_delta = nice_delta(
+        vp_lon_min, vp_lon_max, num_lon_intervals, lon_round_to
     )
-    lon_lines = np.linspace(lon_min, lon_max, num_lon_intervals + 1)
-    lat_min, lat_max, num_lat_intervals = nice(
-        lat_min, lat_max, num_lat_intervals, lat_round_to
+    grid_lon_min, grid_lon_max, num_grid_lon_intervals = nice_bounds(
+        grid_lon_min, grid_lon_max, vp_lon_delta
     )
-    lat_lines = np.linspace(lat_min, lat_max, num_lat_intervals + 1)
+    lon_lines = np.linspace(
+        grid_lon_min, grid_lon_max, num_grid_lon_intervals + 1
+    )
+    
+    vp_lat_delta = nice_delta(
+        vp_lat_min, vp_lat_max, num_lat_intervals, lat_round_to
+    )
+    grid_lat_min, grid_lat_max, num_grid_lat_intervals = nice_bounds(
+        grid_lat_min, grid_lat_max, vp_lat_delta
+    )
+    lat_lines = np.linspace(
+        grid_lat_min, grid_lat_max, num_grid_lat_intervals + 1
+    )
 
     # This is where the craziness begins.
     # Compute x and y coordinates for lines of latitude.

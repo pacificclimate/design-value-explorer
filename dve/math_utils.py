@@ -31,18 +31,29 @@ def round_to_multiple(value, multiple, direction="nearest"):
     return round(value, figs)
 
 
-def nice(low, high, num_intervals, round_to):
+def nice_delta(low, high, n, round_to):
     """
-    Return "nice" low, high, and num_intervals from non-nice values of
-    same, and preferred increment values.
+    Return a "nice" value approximately equal to (high - low) / n.
 
-    :param low:
-    :param high:
-    :param num_intervals:
-    :param round_to:
-    :return:
+    :param low: low end of range
+    :param high: high end of range
+    :param n: approx number of parts
+    :param round_to: a sequence of "nice" values to which to round the raw delta
+    :return: nice delta
     """
-    delta = nearest(round_to, (high - low) / num_intervals)
+    return nearest(round_to, (high - low) / n)
+
+
+def nice_bounds(low, high, delta):
+    """
+    Return a "nice" lower and upper bounds that are multiples of delta;
+    also return number of delta intervals between bounds.
+
+    :param low: low end of range
+    :param high: high end of range
+    :param delta: interval size
+    :return: tuple: (rounded low, rounded high, num_intervals)
+    """
     low = round_to_multiple(low, delta, direction="down")
     high = round_to_multiple(high, delta, direction="up")
     num_intervals = round((high - low) / delta)
