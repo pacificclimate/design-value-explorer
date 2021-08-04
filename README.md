@@ -170,6 +170,12 @@ commands can be run, including running tests and running the app.
      
         1. Follow the instructions in the `pdp-docker` documentation:
          [Setting up Docker namespace remapping (with recommended parameters)](https://github.com/pacificclimate/pdp-docker#setting-up-docker-namespace-remapping-with-recommended-parameters).
+         
+        1. Grant permissions on the downloads directory:
+        
+            ```
+            setfacl -m "g:dockremap1000:rwx" docker/dev-local/downloads/ 
+            ``` 
 
     1. Update the development config (`docker/dev-local/config.yml`) as needed.
     
@@ -219,7 +225,7 @@ commands can be run, including running tests and running the app.
     From the container bash prompt:
     
     ```
-    python dve_app.py --debug
+    python /codebase/dve_app.py --debug
     ```
     
     The `--debug` option does two things: Runs the server with `debug=True`, and
@@ -229,8 +235,8 @@ commands can be run, including running tests and running the app.
     Flask documentation 
     [strongly recommends](https://flask.palletsprojects.com/en/1.1.x/server/#command-line)
     running apps for development using the Flask command line `flask run`.
-    Unfortunately, that does not work for a Dash app, and we must run it more
-    directly from a script as above. 
+    Unfortunately, that does not work for a Dash app, and we must run 
+    using a Python script as above. 
     
     This enables the development environment, including the interactive debugger 
     and reloader, and then starts the server on `http://localhost:5000/`.

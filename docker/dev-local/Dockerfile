@@ -32,18 +32,13 @@ RUN if [ "$USERNAME" != "root" ]; \
         chown ${USERNAME}:${GROUPNAME} ${USER_DIR}; \
     fi
 
-# IMPORTANT: You must mount the local codebase to this directory
-WORKDIR /codebase
-ADD *requirements.txt /codebase/
-RUN chown ${USERNAME}:${GROUPNAME} /codebase
-
-# Set user
+# Install dependencies
+# Note we install in ${USER_DIR} and not /codebase. This prevents the mounting
+# of /codebase to the container from obscuring the installation of clympirical.
+WORKDIR ${USER_DIR}
+ADD *requirements.txt ${USER_DIR}/
 USER ${USERNAME}
-
-RUN pip install --trusted-host pypi.python.org -r /codebase/requirements.txt #\
-    #pip install -e git+https://github.com/pacificclimate/climpyrical.git#egg=climpyrical
-# requirements.txt contains a line for clympirical, but it is not installed (???)
-# after the first pip install. The second one fixes that. An ugly mystery.
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
 # Flask app port
 EXPOSE 5000
