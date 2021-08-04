@@ -5,13 +5,13 @@ import math
 
 import dash
 from dash.dependencies import Input, Output, State
-from dve.config import dv_has_climate_regime
 from dash.exceptions import PreventUpdate
 import plotly.graph_objects as go
 
 import geopandas as gpd
 import numpy as np
 
+from dve.config import dv_has_climate_regime, dv_roundto
 from dve.data import get_data
 from dve.colorbar import (
     uniformly_spaced,
@@ -23,6 +23,7 @@ from dve.colorbar import (
 from dve.generate_iso_lines import lonlat_overlay
 from dve.config import dv_label, climate_regime_label, dataset_label
 from dve.processing import coord_prep
+from dve.math_utils import round_to_multiple
 
 from climpyrical.data import read_data
 from climpyrical.gridding import find_nearest_index
@@ -103,9 +104,8 @@ def add(app, config):
 
         viewport = viewport_ds and json.loads(viewport_ds)
 
-        if (
-            ctx.triggered
-            and ctx.triggered[0]["prop_id"].startswith("viewport-ds")
+        if ctx.triggered and ctx.triggered[0]["prop_id"].startswith(
+            "viewport-ds"
         ):
             # Do not update if viewport has changed but lat-lon grid is not shown.
             # Changing lat-lon grid for vp change is only reason to update.
@@ -118,15 +118,12 @@ def add(app, config):
             if viewport and viewport["previous"]:
                 vp_prev = viewport["previous"]
                 vp_curr = viewport["current"]
-                if (
-                    math.isclose(
-                        vp_prev["x_max"] - vp_prev["x_min"],
-                        vp_curr["x_max"] - vp_curr["x_min"],
-                    )
-                    and math.isclose(
-                        vp_prev["y_max"] - vp_prev["y_min"],
-                        vp_curr["y_max"] - vp_curr["y_min"],
-                    )
+                if math.isclose(
+                    vp_prev["x_max"] - vp_prev["x_min"],
+                    vp_curr["x_max"] - vp_curr["x_min"],
+                ) and math.isclose(
+                    vp_prev["y_max"] - vp_prev["y_min"],
+                    vp_curr["y_max"] - vp_curr["y_min"],
                 ):
                     raise PreventUpdate
 
@@ -260,7 +257,17 @@ def add(app, config):
             zmin, zmax, scale, num_colours, config["ui"]["ticks"]["max-num"]
         )
         colorbar = discrete_colorscale_colorbar(
-            boundaries, colorscale, scale, tickvals, np.around(tickvals, 2)
+            boundaries,
+            colorscale,
+            scale,
+            tickvals,
+            [
+                round_to_multiple(
+                    data_value,
+                    dv_roundto(config, design_value_id, climate_regime),
+                )
+                for data_value in tickvals
+            ],
         )
 
         return (
@@ -344,7 +351,7 @@ def add(app, config):
                         "y_min": y_min,
                         "y_max": y_max,
                     },
-                    "previous": prev_viewport and prev_viewport["current"]
+                    "previous": prev_viewport and prev_viewport["current"],
                 }
                 return json.dumps(viewport)
 
