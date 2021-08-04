@@ -1,5 +1,21 @@
 # News / Release Notes
 
+## 1.4.0
+
+**2021-Aug-04**
+
+Internal evaluation release. Changes to date:
+
+- [Apply Black](https://github.com/pacificclimate/dash-dv-explorer/pull/155)
+- [Round colorbar annotations](https://github.com/pacificclimate/dash-dv-explorer/pull/154)
+- [Don't update download table when DV changes](https://github.com/pacificclimate/dash-dv-explorer/pull/153)
+- [Improve table loading spinners](https://github.com/pacificclimate/dash-dv-explorer/pull/150)
+- [Improve Docker security in dev-local](https://github.com/pacificclimate/dash-dv-explorer/pull/149)
+- [Update only selected tab](https://github.com/pacificclimate/dash-dv-explorer/pull/148)
+- [Improve map behaviour with lat-lon grid](https://github.com/pacificclimate/dash-dv-explorer/pull/147)
+- [Upgrade plotly, Dash; install orjson](https://github.com/pacificclimate/dash-dv-explorer/pull/146)
+- [Improve log scale colourbar](https://github.com/pacificclimate/dash-dv-explorer/pull/145)
+
 ## 1.3.1
 
 **2021-Mar-30**
