@@ -1,6 +1,7 @@
 import logging
 import functools
 
+import dash
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash_html_components as html
@@ -274,9 +275,20 @@ def add(app, config):
         two parts: Download button and data display. Unfortunately this is
         repetitive but no other solution is known.
         """
+        # On startup
         if click_data is None:
             return None
 
+        # If only the DV selection has changed, don't update.
+        ctx = dash.callback_context
+        if (
+            ctx.triggered
+            and ctx.triggered[0]["prop_id"].startswith("design-value-id-ctrl")
+        ):
+            raise PreventUpdate
+
+        # If the selected DV doesn't cover the selected climate regime,
+        # don't update.
         if not dv_has_climate_regime(
             config, design_value_id, climate_regime
         ):
@@ -313,7 +325,5 @@ def add(app, config):
                 config,
                 climate_regime,
                 *download_data,
-                selected_dv=design_value_id,
-                selected_dataset_id=historical_dataset_id,
             ),
         ]
