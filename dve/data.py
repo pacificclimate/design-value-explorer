@@ -108,6 +108,7 @@ class ThreadSafeCache:
 
 # Operations for use with DvXrDataset.apply
 
+
 def grid_size(dvds, ds):
     return ds.rlon.size, ds.rlat.size
 
@@ -132,6 +133,7 @@ def data_at_rlonlat(dvds, ds, rlon, rlat):
 
 
 # Cache event callbacks.
+
 
 def open_xr_dataset(filepath):
     lock = threading.RLock()
@@ -159,20 +161,17 @@ class DvXrDataset:
     4. Provides methods for common operations (e.g., translation of rlonlat
        to lonlat coords).
     """
+
     CacheItem = namedtuple("CacheItem", "dataset lock")
 
     _cache = ThreadSafeCache(
         "DvXrDataset",
         on_miss=open_xr_dataset,
         on_evict=close_xr_dataset,
-        maxsize = int(os.environ.get("LARGE_FILE_CACHE_SIZE", 20)),
+        maxsize=int(os.environ.get("LARGE_FILE_CACHE_SIZE", 20)),
     )
 
-    def __init__(
-        self,
-        filepath,
-        required_keys = ("rlat", "rlon", "lat", "lon")
-    ):
+    def __init__(self, filepath, required_keys=("rlat", "rlon", "lat", "lon")):
         self.filepath = filepath
         self.required_keys = required_keys
         self.dv_name = self.apply(
@@ -248,6 +247,7 @@ class DvXrDataset:
 
 # Manage small CSV datasets opened as `pandas.csv`s
 
+
 def open_pd_dataset(filepath):
     lock = threading.RLock()
     with lock:
@@ -276,7 +276,7 @@ class PdCsvDataset:
         "PdCsvDataset",
         on_miss=open_pd_dataset,
         on_evict=close_pd_dataset,
-        maxsize = int(os.environ.get("SMALL_FILE_CACHE_SIZE", 200)),
+        maxsize=int(os.environ.get("SMALL_FILE_CACHE_SIZE", 200)),
     )
 
     def __init__(self, filepath):

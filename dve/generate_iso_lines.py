@@ -5,9 +5,7 @@ from climpyrical.gridding import (
 )
 import numpy as np
 import plotly.graph_objects as go
-from dve.math_utils import (
-    nice_delta, nice_bounds,
-)
+from dve.math_utils import nice_delta, nice_bounds
 
 
 def lonlat_overlay(
@@ -16,12 +14,12 @@ def lonlat_overlay(
     viewport=None,
     num_lon_intervals=6,
     num_lat_intervals=5,
-    lon_round_to = (1, 2, 3, 5, 10, 15),
-    lat_round_to = (1, 2, 3, 5, 10, 15),
-    grid_lon_min = 360 - 140,
-    grid_lon_max = 360 - 50,
-    grid_lat_min = 45,
-    grid_lat_max = 85,
+    lon_round_to=(1, 2, 3, 5, 10, 15),
+    lat_round_to=(1, 2, 3, 5, 10, 15),
+    grid_lon_min=360 - 140,
+    grid_lon_max=360 - 50,
+    grid_lat_min=45,
+    grid_lat_max=85,
 ):
     """
     Returns a list of graphical objects that render latitude and longitude lines
@@ -87,7 +85,7 @@ def lonlat_overlay(
     lon_lines = np.linspace(
         grid_lon_min, grid_lon_max, num_grid_lon_intervals + 1
     )
-    
+
     vp_lat_delta = nice_delta(
         vp_lat_min, vp_lat_max, num_lat_intervals, lat_round_to
     )
@@ -148,7 +146,6 @@ def lonlat_overlay(
             name="",
             line=dict(width=1, color="grey", dash="dash"),
         ),
-
         # Latitude lines
         go.Scattergl(
             x=rp_x_lat_line,
@@ -159,7 +156,6 @@ def lonlat_overlay(
             name="",
             line=dict(width=1, color="grey", dash="dash"),
         ),
-
         # Labels for lon/lat lines
         go.Scattergl(
             x=prlon,
