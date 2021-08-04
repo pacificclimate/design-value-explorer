@@ -13,23 +13,22 @@ services:
     ports:
       - "30023:5000"
     volumes:
-      # Source code
+      # Code under development -- this repo
       - type: bind
         source: ../..
         target: /codebase
-#        read_only: true
+
+      # Development configuration
       - type: bind
         source: ./config.yml
-        target: /codebase/config.yml
+        target: /opt/dockremap/config.yml
         read_only: true
-      - type: bind
-        source: ./downloads
-        target: /downloads
 
         # Data files
         # Reconstructions are large (54M) files, and take a long time to load
         # from `/storage/data/...`, so we make local copies of the ones we
-        # are using to support development.
+        # are using to support development. The development config (mounted
+        # above) should reflect what files are mounted here.
       - type: bind
         source: /storage/data/projects/comp_support/dv-explorer/data/model_inputs/
         target: /codebase/dve/data/model_inputs/
@@ -51,7 +50,8 @@ services:
         target: /codebase/dve/data/tables/
         read_only: true
 
-#networks:
-#  default:
-#    external:
-#      name: pcicbr0
+      # Directory for creating download files in
+      - type: bind
+        source: ./downloads
+        target: /downloads
+

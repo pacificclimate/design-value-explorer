@@ -158,82 +158,99 @@ using `docker exec` commands. Most convenient is to use `docker exec` to run
 an interactive `bash` shell in the container. From that bash shell all ordinary
 commands can be run, including running tests and running the app.
 
-#### Prepare
+#### Instructions
 
-1. Update the development config (`docker/dev-local/config.yml`) as needed.
-1. Copy any large datasets (e.g., reconstructions) to your local codebase
-   (typically under `local-data/`). This cuts app startup time from minutes
-   to seconds. App startup is incurred every time you make a change to the
-   codebase and want to see the results.
+1. **Advance prep**
 
-#### Build the image
+    Do each of the following things *once per workstation*.
+    
+    1. Configure Docker user namespace mapping.
+    
+        1. Clone [`pdp-docker`](https://github.com/pacificclimate/pdp-docker).
+     
+        1. Follow the instructions in the `pdp-docker` documentation:
+         [Setting up Docker namespace remapping (with recommended parameters)](https://github.com/pacificclimate/pdp-docker#setting-up-docker-namespace-remapping-with-recommended-parameters).
+         
+        1. Grant permissions on the downloads directory:
+        
+            ```
+            setfacl -m "g:dockremap1000:rwx" docker/dev-local/downloads/ 
+            ``` 
 
-The image need only be (re)built when the project is first cloned and when 
-`requirements.txt` changes. To build the image:
+    1. Update the development config (`docker/dev-local/config.yml`) as needed.
+    
+    1. Copy any large datasets (e.g., reconstructions) to your local codebase
+       (typically under `local-data/`). This cuts app startup time from minutes
+       to seconds. App startup is incurred every time you make a change to the
+       codebase and want to see the results.
 
-```
-docker-compose -f docker/dev-local/docker-compose.yml build
-```
+1. **Build the image**
 
-The image name is `pcic/dve-dev-local`.
+    The image need only be (re)built when the project is first cloned and when 
+    `requirements.txt` changes. To build the image:
+    
+    ```
+    docker-compose -f docker/dev-local/docker-compose.yml build
+    ```
+    
+    The image name is `pcic/dve-dev-local`.
 
-#### Start the container
+1. **Start the container**
 
-```
-docker-compose -f docker/dev-local/docker-compose.yml up -d
-```
+    ```
+    docker-compose -f docker/dev-local/docker-compose.yml up -d
+    ```
+    
+    The container name is `dve-dev-local`.
+    
+1. **Connect to a bash shell inside the container**
+    
+    When the container is running, you can connect to it and run a bash shell
+    inside it with
+    
+    ```
+    docker exec -it dve-dev-local bash
+    ```
+    
+    You will see a prompt like
+    
+    ```
+    root@f4bcdc72b9f2:/codebase# 
+    ```
+    
+    At this prompt you can enter bash commands, including the following:
 
-The container name is `dve-dev-local`.
+1. **Start the app inside the container**
 
-#### Connect to a bash shell inside the container
+    From the container bash prompt:
+    
+    ```
+    python /codebase/dve_app.py --debug
+    ```
+    
+    The `--debug` option does two things: Runs the server with `debug=True`, and
+    defaults the logging level to `DEBUG`.
+    
+    Aside: Dash apps are based on Flask. 
+    Flask documentation 
+    [strongly recommends](https://flask.palletsprojects.com/en/1.1.x/server/#command-line)
+    running apps for development using the Flask command line `flask run`.
+    Unfortunately, that does not work for a Dash app, and we must run 
+    using a Python script as above. 
+    
+    This enables the development environment, including the interactive debugger 
+    and reloader, and then starts the server on `http://localhost:5000/`.
+    
+    For more details, see the link above.
 
-When the container is running, you can connect to it and run a bash shell
-inside it with
+1. **Stop the container**
 
-```
-docker exec -it dve-dev-local bash
-```
-
-You will see a prompt like
-
-```
-root@f4bcdc72b9f2:/codebase# 
-```
-
-At this prompt you can enter bash commands, including the following:
-
-#### Start the app inside the container
-
-From the bash prompt:
-
-```
-python dve_app.py --debug
-```
-
-The `--debug` option does two things: Runs the server with `debug=True`, and
-defaults the logging level to `DEBUG`.
-
-Aside: Dash apps are based on Flask. 
-Flask documentation 
-[strongly recommends](https://flask.palletsprojects.com/en/1.1.x/server/#command-line)
-running apps for development using the Flask command line `flask run`.
-Unfortunately, that does not work for a Dash app, and we must run it more
-directly from a script as above. 
-
-This enables the development environment, including the interactive debugger 
-and reloader, and then starts the server on `http://localhost:5000/`.
-
-For more details, see the link above.
-
-
-#### Stop the container
-
-When you have completed a cycle of development and testing, you may wish
-to stop the Docker container.
-
-```
-docker-compose -f docker/dev-local/docker-compose.yml down
-```
+    When you have completed a cycle of development and testing, you may wish
+    to stop the Docker container.
+    
+    ```
+    docker-compose -f docker/dev-local/docker-compose.yml down
+    ```
 
 ## Installing and running directly (no Docker)
 
