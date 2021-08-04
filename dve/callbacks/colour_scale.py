@@ -69,13 +69,22 @@ def add(app, config):
             Input("future-dataset-ctrl", "value"),
         ],
     )
-    def update_slider(design_value_id, climate_regime, historical_dataset_id, future_dataset_id):
-        if not dv_has_climate_regime(
-            config, design_value_id, climate_regime
-        ):
+    def update_slider(
+        design_value_id,
+        climate_regime,
+        historical_dataset_id,
+        future_dataset_id,
+    ):
+        if not dv_has_climate_regime(config, design_value_id, climate_regime):
             raise PreventUpdate
 
-        data = get_data(config, design_value_id, climate_regime, historical_dataset_id, future_dataset_id)
+        data = get_data(
+            config,
+            design_value_id,
+            climate_regime,
+            historical_dataset_id,
+            future_dataset_id,
+        )
         field = data.dv_values()
 
         minimum = float(np.round(np.nanmin(field), 3))

@@ -39,7 +39,9 @@ logger = logging.getLogger("dve")
 def map_pointer_table(
     config,
     climate_regime,
-    design_value_ids, dataset_ids, data_values,
+    design_value_ids,
+    dataset_ids,
+    data_values,
     selected_dv=None,
     selected_dataset_id=None,
 ):
@@ -63,7 +65,7 @@ def map_pointer_table(
         [
             html.Caption(
                 climate_regime_label(config, climate_regime),
-                style={"caption-side": "top", "padding": "0 0 0.5em 0"}
+                style={"caption-side": "top", "padding": "0 0 0.5em 0"},
             ),
             html.Thead(
                 html.Tr(
@@ -106,10 +108,14 @@ def map_pointer_table(
                                     else "inherit"
                                 },
                             )
-                            for dataset_id, data_value in zip(dataset_ids, data_row)
+                            for dataset_id, data_value in zip(
+                                dataset_ids, data_row
+                            )
                         ]
                     )
-                    for design_value_id, data_row in zip(design_value_ids, data_values)
+                    for design_value_id, data_row in zip(
+                        design_value_ids, data_values
+                    )
                 ]
             ),
         ],
@@ -157,7 +163,6 @@ def add(app, config):
         filename = download_filename(lon, lat, climate_regime)
         return lon, lat, url, filename
 
-
     @app.callback(
         Output("hover-info", "children"),
         [
@@ -178,9 +183,7 @@ def add(app, config):
         if hover_data is None:
             return None
 
-        if not dv_has_climate_regime(
-            config, design_value_id, climate_regime
-        ):
+        if not dv_has_climate_regime(config, design_value_id, climate_regime):
             raise PreventUpdate
 
         rlon, rlat = pointer_rlonlat(hover_data)
@@ -229,9 +232,7 @@ def add(app, config):
         if click_data is None:
             return None
 
-        if not dv_has_climate_regime(
-            config, design_value_id, climate_regime
-        ):
+        if not dv_has_climate_regime(config, design_value_id, climate_regime):
             raise PreventUpdate
 
         rlon, rlat = pointer_rlonlat(click_data)
@@ -243,7 +244,7 @@ def add(app, config):
             historical_dataset_id,
             future_dataset_id,
         )
-        
+
         return [
             html.A(
                 "Download this data",
@@ -281,17 +282,14 @@ def add(app, config):
 
         # If only the DV selection has changed, don't update.
         ctx = dash.callback_context
-        if (
-            ctx.triggered
-            and ctx.triggered[0]["prop_id"].startswith("design-value-id-ctrl")
+        if ctx.triggered and ctx.triggered[0]["prop_id"].startswith(
+            "design-value-id-ctrl"
         ):
             raise PreventUpdate
 
         # If the selected DV doesn't cover the selected climate regime,
         # don't update.
-        if not dv_has_climate_regime(
-            config, design_value_id, climate_regime
-        ):
+        if not dv_has_climate_regime(config, design_value_id, climate_regime):
             raise PreventUpdate
 
         rlon, rlat = pointer_rlonlat(click_data)
@@ -321,9 +319,5 @@ def add(app, config):
                 ("Lon", round(lon, 6)),
                 # (f"Z ({design_value_id_ctrl}) ({source})", round(z, 6)),
             ),
-            map_pointer_table(
-                config,
-                climate_regime,
-                *download_data,
-            ),
+            map_pointer_table(config, climate_regime, *download_data),
         ]

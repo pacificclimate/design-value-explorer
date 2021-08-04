@@ -140,15 +140,14 @@ def create_download_file(
             writer.writerow(
                 (
                     design_value_id,
-                    dv_units(config, design_value_id, climate_regime, nice=False)
+                    dv_units(
+                        config, design_value_id, climate_regime, nice=False
+                    ),
                 )
                 + tuple(
                     round_to_multiple(
                         data_value,
-                        dv_roundto(
-                            config, design_value_id, climate_regime
-                        ),
-
+                        dv_roundto(config, design_value_id, climate_regime),
                     )
                     for dataset_id, data_value in zip(dataset_ids, data_row)
                 )
