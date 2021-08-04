@@ -63,8 +63,9 @@ def overlay_options(config):
     future_dataset_ctrl_options = [
         {
             "label": (
-                config["ui"]["labels"]["future_change_factors"]["long"]
-                    .format(id)
+                config["ui"]["labels"]["future_change_factors"]["long"].format(
+                    id
+                )
             ),
             "value": id,
         }
@@ -72,7 +73,7 @@ def overlay_options(config):
     ]
 
     climate_regime_ctrl_opts = climate_regime_ctrl_options(config)
-    
+
     col_widths = (3, 3, 2, 2, 2)
 
     return [
@@ -87,7 +88,7 @@ def overlay_options(config):
                     ("Period", "Dataset", "Mask", "Stations", "Grid"),
                     col_widths,
                 )
-            ],
+            ]
         ),
         # Controls
         dbc.Row(
@@ -113,7 +114,9 @@ def overlay_options(config):
                                         "value": "model",
                                     },
                                 ],
-                                **config["ui"]["controls"]["historical-dataset"],
+                                **config["ui"]["controls"][
+                                    "historical-dataset"
+                                ],
                             ),
                             dcc.Dropdown(
                                 id="future-dataset-ctrl",
@@ -122,16 +125,14 @@ def overlay_options(config):
                             ),
                         ],
                         daq.BooleanSwitch(
-                            id="mask-ctrl",
-                            **config["ui"]["controls"]["mask"],
+                            id="mask-ctrl", **config["ui"]["controls"]["mask"]
                         ),
                         daq.BooleanSwitch(
                             id="stations-ctrl",
                             **config["ui"]["controls"]["stations"],
                         ),
                         daq.BooleanSwitch(
-                            id="grid-ctrl",
-                            **config["ui"]["controls"]["grid"],
+                            id="grid-ctrl", **config["ui"]["controls"]["grid"]
                         ),
                     ),
                     col_widths,
@@ -154,10 +155,7 @@ def colourbar_options(config):
 
     return [
         # Section title
-        dbc.Row(
-            dbc.Col(html.H5("Colour Scale Options")),
-            className="mt-5",
-        ),
+        dbc.Row(dbc.Col(html.H5("Colour Scale Options")), className="mt-5"),
         # Control titles
         dbc.Row(
             [
@@ -166,7 +164,7 @@ def colourbar_options(config):
                 dbc.Col(html.Label("Num. Colours")),
                 dcc.Loading(
                     dbc.Col(
-                        html.Label(id="colourbar-range-ctrl-output-container"),
+                        html.Label(id="colourbar-range-ctrl-output-container")
                     ),
                     **config["ui"]["loading"],
                 ),
@@ -285,28 +283,30 @@ def map_tab(config):
             dbc.Row(
                 [
                     dbc.Col(
-                        dbc.Row([
-                            dbc.Col(
-                                dcc.Loading(
-                                    dcc.Graph(
-                                        id="my-graph",
-                                        config=config["ui"]["graph"],
+                        dbc.Row(
+                            [
+                                dbc.Col(
+                                    dcc.Loading(
+                                        dcc.Graph(
+                                            id="my-graph",
+                                            config=config["ui"]["graph"],
+                                        ),
+                                        **config["ui"]["loading"],
                                     ),
-                                    **config["ui"]["loading"],
+                                    lg=11,
                                 ),
-                                lg=11,
-                            ),
-                            dbc.Col(
-                                dcc.Loading(
-                                      dcc.Graph(
-                                          id="my-colorscale",
-                                          config={"displayModeBar": False}
-                                      ),
-                                      **config["ui"]["loading"],
+                                dbc.Col(
+                                    dcc.Loading(
+                                        dcc.Graph(
+                                            id="my-colorscale",
+                                            config={"displayModeBar": False},
+                                        ),
+                                        **config["ui"]["loading"],
+                                    ),
+                                    lg=1,
                                 ),
-                                lg=1,
-                            ),
-                        ]),
+                            ]
+                        ),
                         lg=7,
                         md=12,
                         sm=12,
@@ -334,16 +334,13 @@ def table_C2_tab(config):
     return dbc.Tab(
         tab_id="table-tab",
         label="Table C-2",
-        children=dcc.Loading(
-            [
-                html.H5(
-                    id="table-C2-title",
-                    className="mt-3",
-                ),
-                html.Div(id="table-C2"),
-            ],
-            **config["ui"]["loading"],
-        ),
+        children=[
+            dcc.Loading(
+                html.H5(id="table-C2-title", className="mt-3"),
+                **config["ui"]["loading"],
+            ),
+            dcc.Loading(html.Div(id="table-C2"), **config["ui"]["loading"]),
+        ],
     )
 
 
