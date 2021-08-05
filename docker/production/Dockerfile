@@ -18,9 +18,9 @@ USER ${RUN_USER}
 WORKDIR ${RUN_HOME}
 COPY --chown=${RUN_GROUP}:${RUN_USER} . /app
 
-RUN pip install --trusted-host pypi.python.org -r /app/requirements.txt && \
-    pip install -e git+https://github.com/pacificclimate/climpyrical.git#egg=climpyrical && \
-    pip install /app
+RUN pip install pipenv && \
+    pipenv install install && \
+    pipenv install /app
 
 # Flask app port
 EXPOSE 5000
