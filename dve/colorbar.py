@@ -1,4 +1,6 @@
 import logging
+import math
+
 import matplotlib
 import matplotlib.cm
 import plotly.graph_objects as go
@@ -62,27 +64,79 @@ def scale_transform(scale):
     :param scale: "linear" or "logarithmic"
     :return: 2-tuple: (forward, back)
     """
-    return {
-        "linear": (lambda x: x, lambda x: x),
-        "logarithmic": (np.log10, lambda x: 10 ** x),
-    }[scale]
+    try:
+        return {
+            "linear": (lambda x: x, lambda x: x),
+            "logarithmic": (np.log10, lambda x: 10 ** x),
+        }[scale]
+    except KeyError:
+        raise ValueError(
+            f"scale must be either 'linear' or 'logarithmic'; got {scale}"
+        )
 
 
-def uniformly_spaced(zmin, zmax, num_values, scale):
+def uniformly_spaced_with_target(
+    zmin, zmax, num_values, target=None, scale="linear"
+):
     """
-    Return a set of num_values "uniformly" spaced values between zmin and zmax.
+    Return an array of n in {num_values, num_values + 1} values, "uniformly"
+    spaced between approximately zmin and zmax, with the target value, if
+    specified (not None), guaranteed to be in the array.
 
-    Note: "Uniformly" here means either linear or geometric (for a log-scale
-    display), according as `scale` == "linear" or "logarithmic".
+    Note: "Uniformly" here means either a linear or geometric sequence,
+    according as `scale` == "linear" or "logarithmic".
+
+    This function is used to create boundary values for discrete color maps,
+    and to create tick values for the same.
+
+    If target is None, or if zmin, zmax, and num_values happen to hit the
+    target value (within a small tolerance relative to the z-values), then
+    the array length is n = num_values, and z[0] == zmin, z[n-1] == zmax.
+
+    Otherwise, the array length is n = num_values + 1.
+
+    Informally, the array has the same spacing as would the array without
+    target, but values in the array are adjusted by the smallest amount possible
+    such that the target is hit by some value in the array. This may add a
+    single item at the beginning or end of the array depending on the value of
+    the target.
+
+    Formally:
+    z[1] - z[0] == (zmax - zmin) / (num_values - 1),
+    z[0] <= zmin <= z[1],
+    z[n-2] <= zmax <= z[n-1],
+    target in z.
 
     :param zmin: Minimum value
     :param zmax: Maximum value
-    :param scale: Name of scale ("linear" or "logarithmic")
+    :param target: Target value
     :param num_values: Number of values
-    :return: numpy array of uniformly spaced values
+    :param scale: Name of scale ("linear" or "logarithmic")
+    :return: numpy array of uniformly spaced values including target
     """
     fwd, back = scale_transform(scale)
-    return back(np.linspace(fwd(zmin), fwd(zmax), num_values))
+
+    if target is None:
+        return back(np.linspace(fwd(zmin), fwd(zmax), num_values))
+
+    # Work in transformed value space
+    z0, zn, v = map(fwd, (zmin, zmax, target))
+
+    # Unadjusted values
+    z = np.linspace(z0, zn, num_values)  # unadjusted array of values
+    delta_z = (zn - z0) / (num_values - 1)  # == z[1] - z[0]
+    k = int(round(v - z0) / delta_z)  # z[k] is closest to v
+    d = v - z[k]
+
+    # Targeted values
+    d_islarge = not math.isclose(d / delta_z, 0, abs_tol=1e-3)
+    d = d if d_islarge else 0
+    before = [z0 - delta_z] if d_islarge and d > 0 else []
+    after = [zn + delta_z] if d_islarge and d < 0 else []
+    z_prime = np.concatenate((before, z, after)) + d
+
+    # Transform back
+    return back(z_prime)
 
 
 def colorscale_colors(colour_map_name, num_colours):
@@ -174,8 +228,8 @@ def discrete_colorscale_colorbar(
     )
 
 
-def use_ticks(zmin, zmax, scale, num_colours, max_num_ticks):
+def use_ticks(zmin, zmax, target, scale, num_colours, max_num_ticks):
     """Pick a useful set of ticks."""
-    return uniformly_spaced(
-        zmin, zmax, min(num_colours + 1, max_num_ticks), scale
+    return uniformly_spaced_with_target(
+        zmin, zmax, min(num_colours + 1, max_num_ticks), target, scale
     )

@@ -11,14 +11,14 @@ import plotly.graph_objects as go
 import geopandas as gpd
 import numpy as np
 
-from dve.config import dv_has_climate_regime, dv_roundto
+from dve.config import dv_has_climate_regime, dv_roundto, dv_units
 from dve.data import get_data
 from dve.colorbar import (
-    uniformly_spaced,
     discrete_colorscale,
     colorscale_colors,
     discrete_colorscale_colorbar,
     use_ticks,
+    uniformly_spaced_with_target,
 )
 from dve.generate_iso_lines import lonlat_overlay
 from dve.config import dv_label, climate_regime_label, dataset_label
@@ -139,8 +139,19 @@ def add(app, config):
         zmin = data_range[0]
         zmax = data_range[1]
 
-        boundaries = uniformly_spaced(zmin, zmax, num_colours + 1, scale)
-        colours = colorscale_colors(colour_map_name, num_colours)
+        # Create colorscale appropriate to this map
+        if climate_regime == "historical":
+            target = None
+        else:
+            is_relative = (
+                dv_units(config, design_value_id, climate_regime) == "ratio"
+            )
+            target = 1 if is_relative else 0
+        boundaries = uniformly_spaced_with_target(
+            zmin, zmax, num_colours + 1, target=target, scale=scale
+        )
+        num_actual_colors = len(boundaries) - 1
+        colours = colorscale_colors(colour_map_name, num_actual_colors)
         colorscale = discrete_colorscale(boundaries, colours)
 
         logger.debug("update_ds: get raster dataset")
@@ -254,7 +265,12 @@ def add(app, config):
         # Accompanying colorbar. It would be nice to use the built-in colorbar,
         # but Plotly's logarithmic colorbar is not suitable to our purposes.
         tickvals = use_ticks(
-            zmin, zmax, scale, num_colours, config["ui"]["ticks"]["max-num"]
+            zmin,
+            zmax,
+            target,
+            scale,
+            num_actual_colors,
+            config["ui"]["ticks"]["max-num"],
         )
         colorbar = discrete_colorscale_colorbar(
             boundaries,
@@ -264,7 +280,7 @@ def add(app, config):
             [
                 round_to_multiple(
                     data_value,
-                    dv_roundto(config, design_value_id, climate_regime),
+                    dv_roundto(config, design_value_id, climate_regime) / 10,
                 )
                 for data_value in tickvals
             ],
