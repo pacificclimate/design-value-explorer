@@ -1,9 +1,9 @@
 FROM python:3.6-slim
-MAINTAINER Rod Glover <rglover@uvic.ca>
+LABEL Maintainer="Rod Glover <rglover@uvic.ca>"
 
 RUN apt-get update && \
     apt-get install -y git && \
-    pip install --upgrade pip
+    pip install --upgrade pip pipenv
 
 ARG RUN_GROUP=dve
 ARG RUN_USER=dve
@@ -18,9 +18,7 @@ USER ${RUN_USER}
 WORKDIR ${RUN_HOME}
 COPY --chown=${RUN_GROUP}:${RUN_USER} . /app
 
-RUN pip install pipenv && \
-    pipenv install install && \
-    pipenv install /app
+RUN pipenv install
 
 # Flask app port
 EXPOSE 5000
