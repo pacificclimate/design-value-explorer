@@ -1,5 +1,14 @@
 # News / Release Notes
 
+## 1.4.1
+
+**2021-Aug-05**
+
+Internal evaluation release. Changes to date:
+
+- [Map colourscale threshold - no change](https://github.com/pacificclimate/dash-dv-explorer/issues/127)
+- [Round colourbar annotations like all other reported values - adjustment](https://github.com/pacificclimate/dash-dv-explorer/issues/139)
+
 ## 1.4.0
 
 **2021-Aug-04**
