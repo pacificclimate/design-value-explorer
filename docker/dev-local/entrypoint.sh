@@ -1,3 +1,3 @@
 # Install the package from local codebase
-pip install -e /codebase
+pipenv install -e /codebase
 /bin/bash
