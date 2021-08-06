@@ -281,7 +281,7 @@ def add(app, config):
             [
                 round_to_multiple(
                     data_value,
-                    dv_roundto(config, design_value_id, climate_regime) / 10,
+                    dv_roundto(config, design_value_id, climate_regime),
                 )
                 for data_value in tickvals
             ],
