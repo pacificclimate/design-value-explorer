@@ -2,7 +2,7 @@ FROM python:3.8-slim
 LABEL Maintainer="Rod Glover <rglover@uvic.ca>"
 
 RUN apt-get update && \
-    apt-get install -y git && \
+    apt-get install -y git libgeos-dev && \
     pip install --upgrade pip pipenv
 
 ARG RUN_GROUP=dve
