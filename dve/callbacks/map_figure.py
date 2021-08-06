@@ -147,6 +147,7 @@ def add(app, config):
                 dv_units(config, design_value_id, climate_regime) == "ratio"
             )
             target = 1 if is_relative else 0
+            target = target if (zmin <= target <= zmax) else None
         boundaries = uniformly_spaced_with_target(
             zmin, zmax, num_colours + 1, target=target, scale=scale
         )

@@ -6,7 +6,7 @@ ui:
         # effects. This is not quite as abstract as would be nice, but it does
         # move the details of formatting from code to config.
         design-value-id:
-            value: RL50
+            value: HDD
             searchable: true
             clearable: false
         climate-regime:
@@ -67,7 +67,7 @@ ui:
         # Design variables to actually offer in the UI.
         # Simplifies commenting them in and out of service.
 #        - DRWP5
-#        - HDD
+        - HDD
 #        - IDFCF
 #        - MI
 #        - PAnn
