@@ -14,8 +14,12 @@ import numpy as np
 from dve.config import dv_has_climate_regime, dv_roundto, dv_units
 from dve.data import get_data
 from dve.colorbar import (
-    discrete_colorscale, colorscale_colors, discrete_colorscale_colorbar,
-    use_ticks, uniformly_spaced_with_target, scale_transform,
+    discrete_colorscale,
+    colorscale_colors,
+    discrete_colorscale_colorbar,
+    use_ticks,
+    uniformly_spaced_with_target,
+    scale_transform,
 )
 from dve.generate_iso_lines import lonlat_overlay
 from dve.config import dv_label, climate_regime_label, dataset_label
@@ -284,13 +288,7 @@ def add(app, config):
             colorscale,
             scale,
             tickvals,
-            [
-                round_to_multiple(
-                    t,
-                    roundto,
-                )
-                for t in tickvals
-            ],
+            [round_to_multiple(t, roundto) for t in tickvals],
         )
 
         return (
