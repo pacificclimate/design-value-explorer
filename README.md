@@ -263,14 +263,14 @@ If for some reason, you do need to install and run the app directly, here's how.
 
 ### Install requirements
 ```
-pip install -r dash-dv-explorer/requirements.txt
+pipenv install
 ```
 
 This installation may fail if Cython is not explicitly installed first.
 
 ### Install DVE
 ```
-pip install -e dash-dv-explorer
+pipenv install -e dash-dv-explorer
 ```
 
 ### Run
