@@ -3,7 +3,7 @@ FROM python:3.6-slim
 USER root
 
 RUN apt-get update && \
-    apt-get install -y git
+    apt-get install -y git libgeos-dev
 
 # Build arguments (scope limited to build). If you wish to use a different user,
 # group, or user home dir, override these in the build command or change them here.
@@ -38,8 +38,8 @@ RUN if [ "$USERNAME" != "root" ]; \
 WORKDIR ${USER_DIR}
 ADD *Pipfile ${USER_DIR}/
 USER ${USERNAME}
-RUN pip install pipenv && \
-    pipenv install
+RUN pip install -U pip pipenv && \
+    pipenv install --dev
 
 # Flask app port
 EXPOSE 5000
