@@ -1,4 +1,4 @@
-FROM python:3.6-slim
+FROM python:3.8-slim
 LABEL Maintainer="Rod Glover <rglover@uvic.ca>"
 
 RUN apt-get update && \
