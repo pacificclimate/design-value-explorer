@@ -25,7 +25,7 @@ EXPOSE 5000
 
 ENV NAME Explorer
 
-CMD /app/.local/bin/gunicorn \
+CMD pipenv run gunicorn \
     --config /app/docker/production/gunicorn.conf \
     --log-config /app/docker/production/logging.conf \
     dve_app:server

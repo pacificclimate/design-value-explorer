@@ -1,8 +1,13 @@
 version: '3.2'
 services:
   dv-explorer-prod:
+    build:
+      context: ../..
+      dockerfile: ./docker/production/Dockerfile
     image: pcic/dash-dv-explorer
     container_name: dv-explorer-prod
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
     env_file:
       - .env
     ports:
@@ -11,33 +16,33 @@ services:
       # Configuration
       - type: bind
         source: ./config.yml
-        target: /app/config.yml
+        target: /opt/dockremap/config.yml
         read_only: true
         
         # Data files
 #      - type: bind
 #        source: /storage/data/projects/comp_support/dv-explorer/data/
-#        target: /app/dve/data/
+#        target: /opt/dockremap/dve/data/
 #        read_only: true
       - type: bind
         source: /storage/data/projects/comp_support/dv-explorer/data/model_inputs/
-        target: /app/dve/data/model_inputs/
+        target: /opt/dockremap/dve/data/model_inputs/
         read_only: true
       - type: bind
         source: /storage/data/projects/comp_support/dv-explorer/data/reconstructions/
-        target: /app/dve/data/reconstructions/
+        target: /opt/dockremap/dve/data/reconstructions/
         read_only: true
       - type: bind
         source: /storage/data/projects/comp_support/dv-explorer/data/station_inputs/
-        target: /app/dve/data/station_inputs/
+        target: /opt/dockremap/dve/data/station_inputs/
         read_only: true
       - type: bind
         source: /storage/data/projects/comp_support/dv-explorer/data/tables/
-        target: /app/dve/data/tables/
+        target: /opt/dockremap/dve/data/tables/
         read_only: true
       - type: bind
         source: /storage/data/projects/nrc/CanRCM4_large_ensemble/design_values/change_factors/
-        target: /app/dve/data/change_factors/
+        target: /opt/dockremap/dve/data/change_factors/
         read_only: true
 
         # Download files: presently are permanent so best stored in an
@@ -47,7 +52,7 @@ services:
         source: ./downloads
         target: /downloads
 
-networks:
-  default:
-    external:
-      name: pcicbr0
+#networks:
+#  default:
+#    external:
+#      name: pcicbr0
