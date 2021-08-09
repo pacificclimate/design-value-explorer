@@ -1,9 +1,9 @@
-FROM python:3.6-slim
-MAINTAINER Rod Glover <rglover@uvic.ca>
+FROM python:3.8-slim
+LABEL Maintainer="Rod Glover <rglover@uvic.ca>"
 
 RUN apt-get update && \
-    apt-get install -y git && \
-    pip install --upgrade pip
+    apt-get install -y git libgeos-dev && \
+    pip install --upgrade pip pipenv
 
 ARG RUN_GROUP=dve
 ARG RUN_USER=dve
@@ -18,16 +18,14 @@ USER ${RUN_USER}
 WORKDIR ${RUN_HOME}
 COPY --chown=${RUN_GROUP}:${RUN_USER} . /app
 
-RUN pip install --trusted-host pypi.python.org -r /app/requirements.txt && \
-    pip install -e git+https://github.com/pacificclimate/climpyrical.git#egg=climpyrical && \
-    pip install /app
+RUN pipenv install
 
 # Flask app port
 EXPOSE 5000
 
 ENV NAME Explorer
 
-CMD /app/.local/bin/gunicorn \
+CMD pipenv run gunicorn \
     --config /app/docker/production/gunicorn.conf \
     --log-config /app/docker/production/logging.conf \
     dve_app:server

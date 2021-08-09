@@ -1,4 +1,9 @@
 .git
 .github
+.gitignore
+.dockerignore
 venv*
 local-data
+src*
+dve.egg-info
+docker/dev-local

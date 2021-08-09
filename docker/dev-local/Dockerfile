@@ -1,9 +1,9 @@
-FROM python:3.6-slim
+FROM python:3.8-slim
 
 USER root
 
 RUN apt-get update && \
-    apt-get install -y git
+    apt-get install -y git libgeos-dev
 
 # Build arguments (scope limited to build). If you wish to use a different user,
 # group, or user home dir, override these in the build command or change them here.
@@ -36,9 +36,11 @@ RUN if [ "$USERNAME" != "root" ]; \
 # Note we install in ${USER_DIR} and not /codebase. This prevents the mounting
 # of /codebase to the container from obscuring the installation of clympirical.
 WORKDIR ${USER_DIR}
-ADD *requirements.txt ${USER_DIR}/
+ENV PATH ${USER_DIR}/.local/bin:${PATH}
+COPY --chown=${USERNAME}:${GROUPNAME} Pipfile* ${USER_DIR}/
 USER ${USERNAME}
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
+RUN pip install -U pip pipenv && \
+    pipenv install --dev
 
 # Flask app port
 EXPOSE 5000
