@@ -6,8 +6,6 @@ services:
       dockerfile: ./docker/production/Dockerfile
     image: pcic/dash-dv-explorer
     container_name: dv-explorer-prod
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
     env_file:
       - .env
     ports:
@@ -52,7 +50,7 @@ services:
         source: ./downloads
         target: /downloads
 
-#networks:
-#  default:
-#    external:
-#      name: pcicbr0
+networks:
+  default:
+    external:
+      name: pcicbr0
