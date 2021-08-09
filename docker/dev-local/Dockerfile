@@ -36,7 +36,8 @@ RUN if [ "$USERNAME" != "root" ]; \
 # Note we install in ${USER_DIR} and not /codebase. This prevents the mounting
 # of /codebase to the container from obscuring the installation of clympirical.
 WORKDIR ${USER_DIR}
-ADD *Pipfile ${USER_DIR}/
+ENV PATH ${USER_DIR}/.local/bin:${PATH}
+COPY --chown=${USERNAME}:${GROUPNAME} Pipfile* ${USER_DIR}/
 USER ${USERNAME}
 RUN pip install -U pip pipenv && \
     pipenv install --dev
