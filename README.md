@@ -215,7 +215,7 @@ commands can be run, including running tests and running the app.
     You will see a prompt like
     
     ```
-    root@f4bcdc72b9f2:/codebase# 
+    dockremap@f4bcdc72b9f2:/codebase# 
     ```
     
     At this prompt you can enter bash commands, including the following:
@@ -225,7 +225,7 @@ commands can be run, including running tests and running the app.
     From the container bash prompt:
     
     ```
-    python /codebase/dve_app.py --debug
+    pipenv run python /codebase/dve_app.py --debug
     ```
     
     The `--debug` option does two things: Runs the server with `debug=True`, and
