@@ -1,6 +1,7 @@
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
+from dash_extensions import Download
 import dash_daq as daq
 from dve.config import dv_label
 
@@ -353,6 +354,8 @@ def main(config):
             label=config["ui"]["labels"]["main_tabs"]["table-tab"],
             children=[
                 Loading(html.H5(id="table-C2-title", className="mt-3")),
+                html.Button(id="table-C2-download-button"),
+                Download(id="table-C2-download"),
                 Loading(html.Div(id="table-C2")),
             ],
         )

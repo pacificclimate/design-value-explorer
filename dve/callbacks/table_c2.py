@@ -31,6 +31,7 @@ def add(app, config):
         if main_tabs_active_tab != "table-tab":
             raise PreventUpdate
 
+        # Show "No data" if there is no data for this variable
         if not dv_has_climate_regime(config, design_variable, "historical"):
             return (
                 config["ui"]["labels"]["table_C2"]["no_station_data"].format(
@@ -137,3 +138,20 @@ def add(app, config):
                 data=display_dataset.to_dict("records"),
             ),
         ]
+
+    @app.callback(
+        Output("table-C2-download", "data"),
+        [Input("main_tabs", "active_tab"), Input("table-C2-download-button", "n_clicks"), Input("design_variable", "value")]
+    )
+    def download_table_c2(main_tabs_active_tab, n_clicks, design_variable):
+        # Do not update if the tab is not selected
+        if main_tabs_active_tab != "table-tab":
+            raise PreventUpdate
+
+        # No historical data for this dv
+        # TODO: Disable button in this case (separate callback) and remove
+        if not dv_has_climate_regime(config, design_variable, "historical"):
+            raise dict(content=f"No data for {design_variable}", filename="tableC2.txt")
+
+        return dict(content=f"Table C2 for {design_variable}", filename="tableC2.txt")
+        # return send_file()
