@@ -209,7 +209,7 @@ def main(config):
                     ),
                     dbc.Col(
                         daq.Slider(
-                            id="cbar-slider",
+                            id="num_colors",
                             **config["ui"]["controls"]["num-colours"],
                         ),
                         style={"padding-top": "2em"},

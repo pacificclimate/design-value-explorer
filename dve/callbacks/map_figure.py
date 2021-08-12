@@ -73,7 +73,7 @@ def add(app, config):
             # Colour scale options
             Input("color_map", "value"),
             Input("color_scale_type", "value"),
-            Input("cbar-slider", "value"),
+            Input("num_colors", "value"),
             Input("colourbar-range-ctrl", "value"),
             # Client-side state
             Input("viewport-ds", "children"),
