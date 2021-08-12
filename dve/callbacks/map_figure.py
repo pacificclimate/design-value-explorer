@@ -57,7 +57,10 @@ def add(app, config):
     )
 
     @app.callback(
-        [Output("map_main_graph", "figure"), Output("my-colorscale", "figure")],
+        [
+            Output("map_main_graph", "figure"),
+            Output("map_colorscale_graph", "figure")
+        ],
         [
             # Tab selection
             Input("tabs", "active_tab"),

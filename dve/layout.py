@@ -321,7 +321,7 @@ def main(config):
                                     dbc.Col(
                                         Loading(
                                             dcc.Graph(
-                                                id="my-colorscale",
+                                                id="map_colorscale_graph",
                                                 config={
                                                     "displayModeBar": False
                                                 },
