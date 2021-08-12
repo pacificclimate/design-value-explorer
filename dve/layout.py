@@ -44,13 +44,13 @@ def main(config):
             {
                 "label": dv_label(
                     config,
-                    design_value_id,
+                    design_variable,
                     with_units=False,
                     with_description=True,
                 ),
-                "value": design_value_id,
+                "value": design_variable,
             }
-            for design_value_id in config["ui"]["dvs"]
+            for design_variable in config["ui"]["dvs"]
         ]
         return [
             dbc.Row(dbc.Col(html.H1("Design Value Explorer"))),
@@ -59,7 +59,7 @@ def main(config):
                     dbc.Col(html.Label("Design Variable"), width=1),
                     dbc.Col(
                         dcc.Dropdown(
-                            id="design-value-id-ctrl",
+                            id="design_variable",
                             options=dd_options,
                             **config["ui"]["controls"]["design-value-id"],
                         ),
@@ -111,13 +111,13 @@ def main(config):
                     for control, width in zip(
                         (
                             dcc.RadioItems(
-                                id="climate-regime-ctrl",
+                                id="climate_regime",
                                 options=climate_regime_ctrl_opts,
                                 **config["ui"]["controls"]["climate-regime"],
                             ),
                             [
                                 dcc.Dropdown(
-                                    id="historical-dataset-ctrl",
+                                    id="historical_dataset_id",
                                     options=[
                                         {
                                             "label": "HSM Reconstruction",
@@ -133,7 +133,7 @@ def main(config):
                                     ],
                                 ),
                                 dcc.Dropdown(
-                                    id="future-dataset-ctrl",
+                                    id="future_dataset_id",
                                     options=future_dataset_ctrl_options,
                                     **config["ui"]["controls"][
                                         "future-dataset"
@@ -141,15 +141,15 @@ def main(config):
                                 ),
                             ],
                             daq.BooleanSwitch(
-                                id="mask-ctrl",
+                                id="apply_mask",
                                 **config["ui"]["controls"]["mask"],
                             ),
                             daq.BooleanSwitch(
-                                id="stations-ctrl",
+                                id="show_stations",
                                 **config["ui"]["controls"]["stations"],
                             ),
                             daq.BooleanSwitch(
-                                id="grid-ctrl",
+                                id="show_grid",
                                 **config["ui"]["controls"]["grid"],
                             ),
                         ),
@@ -179,13 +179,7 @@ def main(config):
                     dbc.Col(html.Label("Colour Map")),
                     dbc.Col(html.Label("Scale")),
                     dbc.Col(html.Label("Num. Colours")),
-                    Loading(
-                        dbc.Col(
-                            html.Label(
-                                id="colourbar-range-ctrl-output-container"
-                            )
-                        )
-                    ),
+                    Loading(dbc.Col(html.Label(id="colorscale_range_label"))),
                 ]
             ),
             # Controls
@@ -193,7 +187,7 @@ def main(config):
                 [
                     dbc.Col(
                         dcc.Dropdown(
-                            id="colour-map-ctrl",
+                            id="color_map",
                             options=[
                                 {"value": x, "label": x} for x in colour_maps
                             ],
@@ -202,14 +196,14 @@ def main(config):
                     ),
                     dbc.Col(
                         dcc.Dropdown(
-                            id="scale-ctrl",
+                            id="color_scale_type",
                             options=scale_ctrl_options,
                             **config["ui"]["controls"]["scale"],
                         )
                     ),
                     dbc.Col(
                         daq.Slider(
-                            id="cbar-slider",
+                            id="num_colors",
                             **config["ui"]["controls"]["num-colours"],
                         ),
                         style={"padding-top": "2em"},
@@ -218,7 +212,7 @@ def main(config):
                         Loading(
                             html.Div(
                                 dcc.RangeSlider(
-                                    id="colourbar-range-ctrl",
+                                    id="color_scale_data_range",
                                     **config["ui"]["controls"][
                                         "colourbar-range"
                                     ],
@@ -263,13 +257,13 @@ def main(config):
                 [
                     dbc.Col(
                         html.Div(
-                            id="hover-output",
+                            id="map_hover_output",
                             children=[
                                 html.Div(
-                                    id="hover-info",
+                                    id="map_hover_info",
                                     style={"font-size": "0.8em"},
                                 ),
-                                html.Pre(id="hover-data"),
+                                html.Pre(id="map_hover_data"),
                             ],
                         ),
                         width=3,
@@ -277,13 +271,13 @@ def main(config):
                     dbc.Col(
                         Loading(
                             html.Div(
-                                id="click-output",
+                                id="map_click_output",
                                 children=[
                                     html.Div(
-                                        id="click-info",
+                                        id="map_click_info",
                                         style={"font-size": "0.8em"},
                                     ),
-                                    html.Pre(id="click-data"),
+                                    html.Pre(id="map_click_data"),
                                 ],
                             )
                         ),
@@ -312,7 +306,7 @@ def main(config):
                                     dbc.Col(
                                         Loading(
                                             dcc.Graph(
-                                                id="my-graph",
+                                                id="map_main_graph",
                                                 config=config["ui"]["graph"],
                                             )
                                         ),
@@ -321,7 +315,7 @@ def main(config):
                                     dbc.Col(
                                         Loading(
                                             dcc.Graph(
-                                                id="my-colorscale",
+                                                id="map_colorscale_graph",
                                                 config={
                                                     "displayModeBar": False
                                                 },
@@ -378,7 +372,6 @@ def main(config):
         ]
 
     return dbc.Container(
-        id="big-app-container",
         fluid=True,
         style={"padding": "0.5em 1em 0"},
         children=[
@@ -386,7 +379,7 @@ def main(config):
             dbc.Row(
                 dbc.Col(
                     dbc.Tabs(
-                        id="tabs",
+                        id="main_tabs",
                         children=[map_tab(), table_C2_tab()],
                         active_tab="map-tab",
                     )

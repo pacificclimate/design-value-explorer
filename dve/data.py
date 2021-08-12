@@ -323,7 +323,7 @@ def load_file(path):
 
 def get_data(
     config,
-    design_value_id,
+    design_variable,
     climate_regime,
     historical_dataset_id=None,
     future_dataset_id=None,
@@ -332,7 +332,7 @@ def get_data(
     Get a specific data object. This function knows the structure
     of `config` so that clients don't have to.
     """
-    description = f"get_data {(design_value_id, climate_regime, historical_dataset_id, future_dataset_id)}"
+    description = f"get_data {(design_variable, climate_regime, historical_dataset_id, future_dataset_id)}"
 
     with timing(description, log=timing_log):
         if climate_regime == "historical":
@@ -342,10 +342,10 @@ def get_data(
                 "model": "input_model_path",
                 "reconstruction": "reconstruction_path",
             }[historical_dataset_id]
-            file = load_file(config["dvs"][design_value_id][path_key])
+            file = load_file(config["dvs"][design_variable][path_key])
         else:
             file = load_file(
-                config["dvs"][design_value_id]["future_change_factor_paths"][
+                config["dvs"][design_variable]["future_change_factor_paths"][
                     future_dataset_id
                 ]
             )
@@ -356,7 +356,7 @@ def dv_value(
     rlon,
     rlat,
     config,
-    design_value_id,
+    design_variable,
     climate_regime,
     historical_dataset_id=None,
     future_dataset_id=None,
@@ -367,7 +367,7 @@ def dv_value(
     """
     dataset = get_data(
         config,
-        design_value_id,
+        design_variable,
         climate_regime,
         historical_dataset_id,
         future_dataset_id,

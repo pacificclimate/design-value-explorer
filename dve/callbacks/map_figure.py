@@ -57,50 +57,53 @@ def add(app, config):
     )
 
     @app.callback(
-        [Output("my-graph", "figure"), Output("my-colorscale", "figure")],
+        [
+            Output("map_main_graph", "figure"),
+            Output("map_colorscale_graph", "figure"),
+        ],
         [
             # Tab selection
-            Input("tabs", "active_tab"),
+            Input("main_tabs", "active_tab"),
             # DV selection
-            Input("design-value-id-ctrl", "value"),
+            Input("design_variable", "value"),
             # Overlay options
-            Input("climate-regime-ctrl", "value"),
-            Input("historical-dataset-ctrl", "value"),
-            Input("future-dataset-ctrl", "value"),
-            Input("mask-ctrl", "on"),
-            Input("stations-ctrl", "on"),
-            Input("grid-ctrl", "on"),
+            Input("climate_regime", "value"),
+            Input("historical_dataset_id", "value"),
+            Input("future_dataset_id", "value"),
+            Input("apply_mask", "on"),
+            Input("show_stations", "on"),
+            Input("show_grid", "on"),
             # Colour scale options
-            Input("colour-map-ctrl", "value"),
-            Input("scale-ctrl", "value"),
-            Input("cbar-slider", "value"),
-            Input("colourbar-range-ctrl", "value"),
+            Input("color_map", "value"),
+            Input("color_scale_type", "value"),
+            Input("num_colors", "value"),
+            Input("color_scale_data_range", "value"),
             # Client-side state
             Input("viewport-ds", "children"),
         ],
     )
     def update_map(
         # Tab selection
-        active_tab,
+        main_tabs_active_tab,
         # DV selection
-        design_value_id,
+        design_variable,
         # Overlay options
         climate_regime,
         historical_dataset_id,
         future_dataset_id,
-        mask_on,
+        apply_mask,
         show_stations,
         show_grid,
         # Colour scale options
-        colour_map_name,
-        scale,
+        color_map_name,
+        color_scale_type,
         num_colours,
-        data_range,
+        color_scale_data_range,
         # Client-side state
         viewport_ds,
     ):
         # Do not update if the tab is not selected
-        if active_tab != "map-tab":
+        if main_tabs_active_tab != "map-tab":
             raise PreventUpdate
 
         ctx = dash.callback_context
@@ -132,21 +135,21 @@ def add(app, config):
 
         # Do not update if design values for requested climate regime do not
         # exist.
-        if not dv_has_climate_regime(config, design_value_id, climate_regime):
+        if not dv_has_climate_regime(config, design_variable, climate_regime):
             raise PreventUpdate
 
         # This list of figures is returned by this function. It is built up
         # incrementally depending on the values of the inputs.
         figures = []
 
-        roundto = dv_roundto(config, design_value_id, climate_regime)
-        if scale == "linear":
-            zmin = round_to_multiple(data_range[0], roundto, "down")
-            zmax = round_to_multiple(data_range[1], roundto, "up")
+        roundto = dv_roundto(config, design_variable, climate_regime)
+        if color_scale_type == "linear":
+            zmin = round_to_multiple(color_scale_data_range[0], roundto, "down")
+            zmax = round_to_multiple(color_scale_data_range[1], roundto, "up")
         else:
             # TODO: Round for logarithmic scale. This is not easy.
-            zmin, zmax = data_range
-        logger.debug(f"data_range = {data_range}")
+            zmin, zmax = color_scale_data_range
+        logger.debug(f"color_scale_data_range = {color_scale_data_range}")
         logger.debug(f"zmin = {zmin}")
         logger.debug(f"zmax = {zmax}")
 
@@ -155,22 +158,22 @@ def add(app, config):
             target = None
         else:
             is_relative = (
-                dv_units(config, design_value_id, climate_regime) == "ratio"
+                dv_units(config, design_variable, climate_regime) == "ratio"
             )
             target = 1 if is_relative else 0
             target = target if (zmin <= target <= zmax) else None
         boundaries = uniformly_spaced_with_target(
-            zmin, zmax, num_colours + 1, target=target, scale=scale
+            zmin, zmax, num_colours + 1, target=target, scale=color_scale_type
         )
         logger.debug(f"boundaries = {boundaries}")
         num_actual_colors = len(boundaries) - 1
-        colours = colorscale_colors(colour_map_name, num_actual_colors)
+        colours = colorscale_colors(color_map_name, num_actual_colors)
         colorscale = discrete_colorscale(boundaries, colours)
 
         logger.debug("update_ds: get raster dataset")
         raster_dataset = get_data(
             config,
-            design_value_id,
+            design_variable,
             climate_regime,
             historical_dataset_id,
             future_dataset_id,
@@ -231,7 +234,7 @@ def add(app, config):
         #         for j in range(icymax - icymin):
         #             x = ds_arr[j,i]
 
-        if historical_dataset_id == "model" and mask_on:
+        if historical_dataset_id == "model" and apply_mask:
             with timing("apply masking to dataset", log=timing_log):
                 mask = native_mask[icymin:icymax, icxmin:icxmax]
                 ds_arr[~mask] = np.nan
@@ -249,7 +252,7 @@ def add(app, config):
                     showscale=False,  # Hide colorbar
                     visible=True,
                     hovertemplate=(
-                        f"<b>Interpolated {dv_label(config, design_value_id, climate_regime)}: %{{z}} </b><br>"
+                        f"<b>Interpolated {dv_label(config, design_variable, climate_regime)}: %{{z}} </b><br>"
                     ),
                     name="",
                 )
@@ -257,16 +260,16 @@ def add(app, config):
 
         # Figure: Stations
         if show_stations and dv_has_climate_regime(
-            config, design_value_id, "historical"
+            config, design_variable, "historical"
         ):
             logger.debug("update_ds: get station dataset")
             df = get_data(
                 config,
-                design_value_id,
+                design_variable,
                 "historical",
                 historical_dataset_id="stations",
             ).data_frame()
-            station_dv = config["dvs"][design_value_id]["station_dv"]
+            station_dv = config["dvs"][design_variable]["station_dv"]
             with timing("coord_prep for stations", log=timing_log):
                 df = coord_prep(df, station_dv)
             figures.append(
@@ -286,7 +289,7 @@ def add(app, config):
                         showscale=False,  # Hide colorbar
                     ),
                     hovertemplate=(
-                        f"<b>Station {dv_label(config, design_value_id, climate_regime)}: "
+                        f"<b>Station {dv_label(config, design_variable, climate_regime)}: "
                         f"%{{text}}</b><br>"
                     ),
                     name="",
@@ -299,14 +302,14 @@ def add(app, config):
             zmin,
             zmax,
             target,
-            scale,
+            color_scale_type,
             num_actual_colors,
             config["ui"]["ticks"]["max-num"],
         )
         colorbar = discrete_colorscale_colorbar(
             boundaries,
             colorscale,
-            scale,
+            color_scale_type,
             tickvals,
             [round_to_multiple(t, roundto) for t in tickvals],
         )
@@ -319,7 +322,7 @@ def add(app, config):
                         config["ui"]["labels"]["map"]["title"].format(
                             dv=dv_label(
                                 config,
-                                design_value_id,
+                                design_variable,
                                 climate_regime,
                                 with_description=True,
                             ),
@@ -369,22 +372,22 @@ def add(app, config):
 
     @app.callback(
         Output("viewport-ds", "children"),
-        [Input("my-graph", "relayoutData")],
+        [Input("map_main_graph", "relayoutData")],
         [State("viewport-ds", "children")],
     )
-    def update_viewport(relayout_data, prev_viewport):
+    def update_viewport(map_main_relayout_data, prev_viewport):
         # Save map viewport bounds when and only when they change
         # (zoom, pan events)
         prev_viewport = json.loads(prev_viewport)
-        if relayout_data is not None:
-            if "xaxis.autorange" in relayout_data:
+        if map_main_relayout_data is not None:
+            if "xaxis.autorange" in map_main_relayout_data:
                 return json.dumps(None)
 
-            if "xaxis.range[0]" in relayout_data:
-                x_min = relayout_data["xaxis.range[0]"]
-                x_max = relayout_data["xaxis.range[1]"]
-                y_min = relayout_data["yaxis.range[0]"]
-                y_max = relayout_data["yaxis.range[1]"]
+            if "xaxis.range[0]" in map_main_relayout_data:
+                x_min = map_main_relayout_data["xaxis.range[0]"]
+                x_max = map_main_relayout_data["xaxis.range[1]"]
+                y_min = map_main_relayout_data["yaxis.range[0]"]
+                y_max = map_main_relayout_data["yaxis.range[1]"]
                 viewport = {
                     "current": {
                         "x_min": x_min,

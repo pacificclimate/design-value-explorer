@@ -16,29 +16,28 @@ logger = logging.getLogger("dve")
 
 def add(app, config):
     @app.callback(
-        Output("colour-map-ctrl", "value"),
-        [Input("design-value-id-ctrl", "value")],
+        Output("color_map", "value"), [Input("design_variable", "value")]
     )
-    def update_colour_map_ctrl_value(design_value_id):
-        return config["dvs"][design_value_id]["colour_map"]
+    def update_colour_map_ctrl_value(design_variable):
+        return config["dvs"][design_variable]["colour_map"]
 
     @app.callback(
-        Output("scale-ctrl", "value"), [Input("design-value-id-ctrl", "value")]
+        Output("color_scale_type", "value"), [Input("design_variable", "value")]
     )
-    def update_scale_ctrl_value(design_value_id):
-        return config["dvs"][design_value_id]["scale"]["default"]
+    def update_scale_ctrl_value(design_variable):
+        return config["dvs"][design_variable]["scale"]["default"]
 
     @app.callback(
-        Output("scale-ctrl", "options"),
-        [Input("design-value-id-ctrl", "value")],
+        Output("color_scale_type", "options"),
+        [Input("design_variable", "value")],
     )
-    def update_scale_ctrl_options(design_value_id):
+    def update_scale_ctrl_options(design_variable):
         options = [
             {
                 **option,
                 "disabled": (
                     option["value"] == "logarithmic"
-                    and config["dvs"][design_value_id]["scale"].get(
+                    and config["dvs"][design_variable]["scale"].get(
                         "disable_logarithmic", False
                     )
                 ),
@@ -48,39 +47,39 @@ def add(app, config):
         return options
 
     @app.callback(
-        Output("colourbar-range-ctrl-output-container", "children"),
-        [Input("colourbar-range-ctrl", "value")],
+        Output("colorscale_range_label", "children"),
+        [Input("color_scale_data_range", "value")],
     )
-    def update_colourbar_range_label(value):
-        return f"Range: {sigfigs(value[0])} to {sigfigs(value[1])}"
+    def update_colourbar_range_label(range):
+        return f"Range: {sigfigs(range[0])} to {sigfigs(range[1])}"
 
     @app.callback(
         [
-            Output("colourbar-range-ctrl", "min"),
-            Output("colourbar-range-ctrl", "max"),
-            Output("colourbar-range-ctrl", "step"),
-            Output("colourbar-range-ctrl", "marks"),
-            Output("colourbar-range-ctrl", "value"),
+            Output("color_scale_data_range", "min"),
+            Output("color_scale_data_range", "max"),
+            Output("color_scale_data_range", "step"),
+            Output("color_scale_data_range", "marks"),
+            Output("color_scale_data_range", "value"),
         ],
         [
-            Input("design-value-id-ctrl", "value"),
-            Input("climate-regime-ctrl", "value"),
-            Input("historical-dataset-ctrl", "value"),
-            Input("future-dataset-ctrl", "value"),
+            Input("design_variable", "value"),
+            Input("climate_regime", "value"),
+            Input("historical_dataset_id", "value"),
+            Input("future_dataset_id", "value"),
         ],
     )
     def update_slider(
-        design_value_id,
+        design_variable,
         climate_regime,
         historical_dataset_id,
         future_dataset_id,
     ):
-        if not dv_has_climate_regime(config, design_value_id, climate_regime):
+        if not dv_has_climate_regime(config, design_variable, climate_regime):
             raise PreventUpdate
 
         data = get_data(
             config,
-            design_value_id,
+            design_variable,
             climate_regime,
             historical_dataset_id,
             future_dataset_id,

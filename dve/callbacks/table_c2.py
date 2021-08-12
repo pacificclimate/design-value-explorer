@@ -24,23 +24,23 @@ logger = logging.getLogger("dve")
 def add(app, config):
     @app.callback(
         [Output("table-C2-title", "children"), Output("table-C2", "children")],
-        [Input("tabs", "active_tab"), Input("design-value-id-ctrl", "value")],
+        [Input("main_tabs", "active_tab"), Input("design_variable", "value")],
     )
-    def update_tablec2(active_tab, design_value_id):
+    def update_tablec2(main_tabs_active_tab, design_variable):
         # Do not update if the tab is not selected
-        if active_tab != "table-tab":
+        if main_tabs_active_tab != "table-tab":
             raise PreventUpdate
 
-        if not dv_has_climate_regime(config, design_value_id, "historical"):
+        if not dv_has_climate_regime(config, design_variable, "historical"):
             return (
                 config["ui"]["labels"]["table_C2"]["no_station_data"].format(
-                    design_value_id
+                    design_variable
                 ),
                 None,
             )
 
         name_and_units = dv_label(
-            config, design_value_id, climate_regime="historical"
+            config, design_variable, climate_regime="historical"
         )
 
         title = config["ui"]["labels"]["table_C2"]["title"].format(
@@ -48,7 +48,7 @@ def add(app, config):
         )
 
         historical_dataset = get_data(
-            config, design_value_id, "historical", historical_dataset_id="table"
+            config, design_variable, "historical", historical_dataset_id="table"
         ).data_frame()
 
         display_dataset = historical_dataset[
@@ -56,7 +56,7 @@ def add(app, config):
         ]
         display_dataset["PCIC"] = display_dataset["PCIC"].apply(
             lambda x: round_to_multiple(
-                x, config["dvs"][design_value_id]["roundto"]
+                x, config["dvs"][design_variable]["roundto"]
             )
         )
 
@@ -75,7 +75,7 @@ def add(app, config):
         for future_dataset_id in config["ui"]["future_change_factors"]:
             future_dataset = get_data(
                 config,
-                design_value_id,
+                design_variable,
                 "future",
                 future_dataset_id=future_dataset_id,
             )
@@ -87,7 +87,7 @@ def add(app, config):
                 data=map(
                     lambda coords: round_to_multiple(
                         future_dataset.data_at_rlonlat(*coords)[2],
-                        dv_roundto(config, design_value_id, "future"),
+                        dv_roundto(config, design_variable, "future"),
                     ),
                     zip(rlons, rlats),
                 )
@@ -95,7 +95,7 @@ def add(app, config):
 
             column_info[column_id] = {
                 "name": [
-                    dv_label(config, design_value_id, climate_regime="future"),
+                    dv_label(config, design_variable, climate_regime="future"),
                     f"CF ({future_change_factor_label(config, future_dataset_id)})",
                 ],
                 "type": "numeric",

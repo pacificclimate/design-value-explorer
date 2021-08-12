@@ -39,7 +39,7 @@ logger = logging.getLogger("dve")
 def map_pointer_table(
     config,
     climate_regime,
-    design_value_ids,
+    design_variables,
     dataset_ids,
     data_values,
     selected_dv=None,
@@ -85,10 +85,10 @@ def map_pointer_table(
                 [
                     html.Tr(
                         [
-                            html.Th(dv_name(config, design_value_id)),
+                            html.Th(dv_name(config, design_variable)),
                             html.Th(
                                 dv_units(
-                                    config, design_value_id, climate_regime
+                                    config, design_variable, climate_regime
                                 ),
                                 style={"width": "5em"},
                             ),
@@ -98,12 +98,12 @@ def map_pointer_table(
                                 round_to_multiple(
                                     data_value,
                                     dv_roundto(
-                                        config, design_value_id, climate_regime
+                                        config, design_variable, climate_regime
                                     ),
                                 ),
                                 style={
                                     "color": "red"
-                                    if design_value_id == selected_dv
+                                    if design_variable == selected_dv
                                     and dataset_id == selected_dataset_id
                                     else "inherit"
                                 },
@@ -113,8 +113,8 @@ def map_pointer_table(
                             )
                         ]
                     )
-                    for design_value_id, data_row in zip(
-                        design_value_ids, data_values
+                    for design_variable, data_row in zip(
+                        design_variables, data_values
                     )
                 ]
             ),
@@ -146,14 +146,14 @@ def add(app, config):
     def download_info(
         rlon,
         rlat,
-        design_value_id,
+        design_variable,
         climate_regime,
         historical_dataset_id,
         future_dataset_id,
     ):
         dataset = get_data(
             config,
-            design_value_id,
+            design_variable,
             climate_regime,
             historical_dataset_id,
             future_dataset_id,
@@ -164,18 +164,18 @@ def add(app, config):
         return lon, lat, url, filename
 
     @app.callback(
-        Output("hover-info", "children"),
+        Output("map_hover_info", "children"),
         [
-            Input("my-graph", "hoverData"),
-            Input("design-value-id-ctrl", "value"),
-            Input("climate-regime-ctrl", "value"),
-            Input("historical-dataset-ctrl", "value"),
-            Input("future-dataset-ctrl", "value"),
+            Input("map_main_graph", "hoverData"),
+            Input("design_variable", "value"),
+            Input("climate_regime", "value"),
+            Input("historical_dataset_id", "value"),
+            Input("future_dataset_id", "value"),
         ],
     )
     def display_hover_info(
         hover_data,
-        design_value_id,
+        design_variable,
         climate_regime,
         historical_dataset_id,
         future_dataset_id,
@@ -183,7 +183,7 @@ def add(app, config):
         if hover_data is None:
             return None
 
-        if not dv_has_climate_regime(config, design_value_id, climate_regime):
+        if not dv_has_climate_regime(config, design_variable, climate_regime):
             raise PreventUpdate
 
         rlon, rlat = pointer_rlonlat(hover_data)
@@ -191,7 +191,7 @@ def add(app, config):
         lon, lat, *unused = download_info(
             rlon,
             rlat,
-            design_value_id,
+            design_variable,
             climate_regime,
             historical_dataset_id,
             future_dataset_id,
@@ -201,7 +201,7 @@ def add(app, config):
             value_table(
                 ("Lat", round(lat, 6)),
                 ("Lon", round(lon, 6)),
-                # (f"Z ({design_value_id_ctrl}) ({source})", round(z, 6)),
+                # (f"Z ({design_variable_ctrl}) ({source})", round(z, 6)),
             )
         ]
 
@@ -210,16 +210,16 @@ def add(app, config):
     @app.callback(
         Output("data-download-header", "children"),
         [
-            Input("my-graph", "clickData"),
-            Input("design-value-id-ctrl", "value"),
-            Input("climate-regime-ctrl", "value"),
-            Input("historical-dataset-ctrl", "value"),
-            Input("future-dataset-ctrl", "value"),
+            Input("map_main_graph", "clickData"),
+            Input("design_variable", "value"),
+            Input("climate_regime", "value"),
+            Input("historical_dataset_id", "value"),
+            Input("future_dataset_id", "value"),
         ],
     )
     def display_download_button(
         click_data,
-        design_value_id,
+        design_variable,
         climate_regime,
         historical_dataset_id,
         future_dataset_id,
@@ -232,14 +232,14 @@ def add(app, config):
         if click_data is None:
             return None
 
-        if not dv_has_climate_regime(config, design_value_id, climate_regime):
+        if not dv_has_climate_regime(config, design_variable, climate_regime):
             raise PreventUpdate
 
         rlon, rlat = pointer_rlonlat(click_data)
         lon, lat, url, filename = download_info(
             rlon,
             rlat,
-            design_value_id,
+            design_variable,
             climate_regime,
             historical_dataset_id,
             future_dataset_id,
@@ -255,18 +255,18 @@ def add(app, config):
         ]
 
     @app.callback(
-        Output("click-info", "children"),
+        Output("map_click_info", "children"),
         [
-            Input("my-graph", "clickData"),
-            Input("design-value-id-ctrl", "value"),
-            Input("climate-regime-ctrl", "value"),
-            Input("historical-dataset-ctrl", "value"),
-            Input("future-dataset-ctrl", "value"),
+            Input("map_main_graph", "clickData"),
+            Input("design_variable", "value"),
+            Input("climate_regime", "value"),
+            Input("historical_dataset_id", "value"),
+            Input("future_dataset_id", "value"),
         ],
     )
     def display_click_info(
         click_data,
-        design_value_id,
+        design_variable,
         climate_regime,
         historical_dataset_id,
         future_dataset_id,
@@ -283,20 +283,20 @@ def add(app, config):
         # If only the DV selection has changed, don't update.
         ctx = dash.callback_context
         if ctx.triggered and ctx.triggered[0]["prop_id"].startswith(
-            "design-value-id-ctrl"
+            "design_variable"
         ):
             raise PreventUpdate
 
         # If the selected DV doesn't cover the selected climate regime,
         # don't update.
-        if not dv_has_climate_regime(config, design_value_id, climate_regime):
+        if not dv_has_climate_regime(config, design_variable, climate_regime):
             raise PreventUpdate
 
         rlon, rlat = pointer_rlonlat(click_data)
         lon, lat, url, filename = download_info(
             rlon,
             rlat,
-            design_value_id,
+            design_variable,
             climate_regime,
             historical_dataset_id,
             future_dataset_id,
@@ -317,7 +317,7 @@ def add(app, config):
             value_table(
                 ("Lat", round(lat, 6)),
                 ("Lon", round(lon, 6)),
-                # (f"Z ({design_value_id_ctrl}) ({source})", round(z, 6)),
+                # (f"Z ({design_variable_ctrl}) ({source})", round(z, 6)),
             ),
             map_pointer_table(config, climate_regime, *download_data),
         ]
