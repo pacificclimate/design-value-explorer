@@ -378,7 +378,6 @@ def main(config):
         ]
 
     return dbc.Container(
-        id="big-app-container",
         fluid=True,
         style={"padding": "0.5em 1em 0"},
         children=[
@@ -386,7 +385,7 @@ def main(config):
             dbc.Row(
                 dbc.Col(
                     dbc.Tabs(
-                        id="tabs",
+                        id="main_tabs",
                         children=[map_tab(), table_C2_tab()],
                         active_tab="map-tab",
                     )

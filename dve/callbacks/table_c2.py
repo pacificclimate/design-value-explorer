@@ -24,11 +24,11 @@ logger = logging.getLogger("dve")
 def add(app, config):
     @app.callback(
         [Output("table-C2-title", "children"), Output("table-C2", "children")],
-        [Input("tabs", "active_tab"), Input("design_variable", "value")],
+        [Input("main_tabs", "active_tab"), Input("design_variable", "value")],
     )
-    def update_tablec2(active_tab, design_variable):
+    def update_tablec2(main_tabs_active_tab, design_variable):
         # Do not update if the tab is not selected
-        if active_tab != "table-tab":
+        if main_tabs_active_tab != "table-tab":
             raise PreventUpdate
 
         if not dv_has_climate_regime(config, design_variable, "historical"):

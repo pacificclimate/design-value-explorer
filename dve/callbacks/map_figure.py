@@ -63,7 +63,7 @@ def add(app, config):
         ],
         [
             # Tab selection
-            Input("tabs", "active_tab"),
+            Input("main_tabs", "active_tab"),
             # DV selection
             Input("design_variable", "value"),
             # Overlay options
@@ -84,7 +84,7 @@ def add(app, config):
     )
     def update_map(
         # Tab selection
-        active_tab,
+        main_tabs_active_tab,
         # DV selection
         design_variable,
         # Overlay options
@@ -103,7 +103,7 @@ def add(app, config):
         viewport_ds,
     ):
         # Do not update if the tab is not selected
-        if active_tab != "map-tab":
+        if main_tabs_active_tab != "map-tab":
             raise PreventUpdate
 
         ctx = dash.callback_context
