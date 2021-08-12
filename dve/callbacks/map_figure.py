@@ -71,7 +71,7 @@ def add(app, config):
             Input("show_stations", "on"),
             Input("show_grid", "on"),
             # Colour scale options
-            Input("colour-map-ctrl", "value"),
+            Input("color_map", "value"),
             Input("scale-ctrl", "value"),
             Input("cbar-slider", "value"),
             Input("colourbar-range-ctrl", "value"),
@@ -92,7 +92,7 @@ def add(app, config):
         show_stations,
         show_grid,
         # Colour scale options
-        colour_map_name,
+        color_map_name,
         scale,
         num_colours,
         data_range,
@@ -164,7 +164,7 @@ def add(app, config):
         )
         logger.debug(f"boundaries = {boundaries}")
         num_actual_colors = len(boundaries) - 1
-        colours = colorscale_colors(colour_map_name, num_actual_colors)
+        colours = colorscale_colors(color_map_name, num_actual_colors)
         colorscale = discrete_colorscale(boundaries, colours)
 
         logger.debug("update_ds: get raster dataset")

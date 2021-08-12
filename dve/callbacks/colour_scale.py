@@ -16,7 +16,7 @@ logger = logging.getLogger("dve")
 
 def add(app, config):
     @app.callback(
-        Output("colour-map-ctrl", "value"),
+        Output("color_map", "value"),
         [Input("design_variable", "value")],
     )
     def update_colour_map_ctrl_value(design_variable):

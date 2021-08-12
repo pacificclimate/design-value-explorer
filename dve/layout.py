@@ -193,7 +193,7 @@ def main(config):
                 [
                     dbc.Col(
                         dcc.Dropdown(
-                            id="colour-map-ctrl",
+                            id="color_map",
                             options=[
                                 {"value": x, "label": x} for x in colour_maps
                             ],
