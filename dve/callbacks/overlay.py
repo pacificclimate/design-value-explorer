@@ -16,14 +16,14 @@ def add(app, config):
             Output("climate-regime-ctrl", "options"),
             Output("climate-regime-ctrl", "value"),
         ],
-        [Input("design-value-id-ctrl", "value")],
+        [Input("design_variable", "value")],
     )
-    def update_dataset_ctrl_value(design_value_id):
+    def update_dataset_ctrl_value(design_variable):
         """
         If this DV does not have historical data, set climate regime
         to future and disable historical option. Otherwise leave things alone.
         """
-        if dv_has_climate_regime(config, design_value_id, "historical"):
+        if dv_has_climate_regime(config, design_variable, "historical"):
             return climate_regime_ctrl_options(config), dash.no_update
         options = [
             {**option, "disabled": option["value"] == "historical"}

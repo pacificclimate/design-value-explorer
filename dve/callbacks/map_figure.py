@@ -62,7 +62,7 @@ def add(app, config):
             # Tab selection
             Input("tabs", "active_tab"),
             # DV selection
-            Input("design-value-id-ctrl", "value"),
+            Input("design_variable", "value"),
             # Overlay options
             Input("climate-regime-ctrl", "value"),
             Input("historical-dataset-ctrl", "value"),
@@ -83,7 +83,7 @@ def add(app, config):
         # Tab selection
         active_tab,
         # DV selection
-        design_value_id,
+        design_variable,
         # Overlay options
         climate_regime,
         historical_dataset_id,
@@ -132,14 +132,14 @@ def add(app, config):
 
         # Do not update if design values for requested climate regime do not
         # exist.
-        if not dv_has_climate_regime(config, design_value_id, climate_regime):
+        if not dv_has_climate_regime(config, design_variable, climate_regime):
             raise PreventUpdate
 
         # This list of figures is returned by this function. It is built up
         # incrementally depending on the values of the inputs.
         figures = []
 
-        roundto = dv_roundto(config, design_value_id, climate_regime)
+        roundto = dv_roundto(config, design_variable, climate_regime)
         if scale == "linear":
             zmin = round_to_multiple(data_range[0], roundto, "down")
             zmax = round_to_multiple(data_range[1], roundto, "up")
@@ -155,7 +155,7 @@ def add(app, config):
             target = None
         else:
             is_relative = (
-                dv_units(config, design_value_id, climate_regime) == "ratio"
+                dv_units(config, design_variable, climate_regime) == "ratio"
             )
             target = 1 if is_relative else 0
             target = target if (zmin <= target <= zmax) else None
@@ -170,7 +170,7 @@ def add(app, config):
         logger.debug("update_ds: get raster dataset")
         raster_dataset = get_data(
             config,
-            design_value_id,
+            design_variable,
             climate_regime,
             historical_dataset_id,
             future_dataset_id,
@@ -249,7 +249,7 @@ def add(app, config):
                     showscale=False,  # Hide colorbar
                     visible=True,
                     hovertemplate=(
-                        f"<b>Interpolated {dv_label(config, design_value_id, climate_regime)}: %{{z}} </b><br>"
+                        f"<b>Interpolated {dv_label(config, design_variable, climate_regime)}: %{{z}} </b><br>"
                     ),
                     name="",
                 )
@@ -257,16 +257,16 @@ def add(app, config):
 
         # Figure: Stations
         if show_stations and dv_has_climate_regime(
-            config, design_value_id, "historical"
+            config, design_variable, "historical"
         ):
             logger.debug("update_ds: get station dataset")
             df = get_data(
                 config,
-                design_value_id,
+                design_variable,
                 "historical",
                 historical_dataset_id="stations",
             ).data_frame()
-            station_dv = config["dvs"][design_value_id]["station_dv"]
+            station_dv = config["dvs"][design_variable]["station_dv"]
             with timing("coord_prep for stations", log=timing_log):
                 df = coord_prep(df, station_dv)
             figures.append(
@@ -286,7 +286,7 @@ def add(app, config):
                         showscale=False,  # Hide colorbar
                     ),
                     hovertemplate=(
-                        f"<b>Station {dv_label(config, design_value_id, climate_regime)}: "
+                        f"<b>Station {dv_label(config, design_variable, climate_regime)}: "
                         f"%{{text}}</b><br>"
                     ),
                     name="",
@@ -319,7 +319,7 @@ def add(app, config):
                         config["ui"]["labels"]["map"]["title"].format(
                             dv=dv_label(
                                 config,
-                                design_value_id,
+                                design_variable,
                                 climate_regime,
                                 with_description=True,
                             ),

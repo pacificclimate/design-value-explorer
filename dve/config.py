@@ -24,10 +24,10 @@ def validate(config):
     for filepath in config["paths"].values():
         validate_filepath(filepath)
 
-    for design_value_id in config["ui"]["dvs"]:
-        dv_defn = config["dvs"][design_value_id]
+    for design_variable in config["ui"]["dvs"]:
+        dv_defn = config["dvs"][design_variable]
 
-        if dv_has_climate_regime(config, design_value_id, "historical"):
+        if dv_has_climate_regime(config, design_variable, "historical"):
             for key in (
                 "station_path",
                 "input_model_path",
@@ -40,22 +40,22 @@ def validate(config):
             validate_filepath(dv_defn["future_change_factor_paths"][fcf_id])
 
 
-def dv_has_climate_regime(config, design_value_id, climate_regime):
+def dv_has_climate_regime(config, design_variable, climate_regime):
     """
     Return a boolean indicating whether a DV has definitions for specific
     climate regime (historical or future) datasets.
     """
     return (
         "abs_units" if climate_regime == "historical" else "cf_units"
-    ) in config["dvs"][design_value_id]
+    ) in config["dvs"][design_variable]
 
 
-def dv_name(config, design_value_id):
+def dv_name(config, design_variable):
     """
     Return the name of a design variable. Currently this is the internal
     id of the DV, so `config` is not used. That could conceivably change.
     """
-    return design_value_id
+    return design_variable
 
 
 def nice_units(config, units):
@@ -69,12 +69,12 @@ def nice_units(config, units):
         return units, " "
 
 
-def dv_units(config, design_value_id, climate_regime, nice=True):
+def dv_units(config, design_variable, climate_regime, nice=True):
     """
     Return the units of a given design variable, for historical or future
     projections.
     """
-    units = config["dvs"][design_value_id][
+    units = config["dvs"][design_variable][
         "abs_units" if climate_regime == "historical" else "cf_units"
     ]
     if not nice:
@@ -84,7 +84,7 @@ def dv_units(config, design_value_id, climate_regime, nice=True):
 
 def dv_label(
     config,
-    design_value_id,
+    design_variable,
     climate_regime="historical",
     with_units=True,
     with_description=False,
@@ -93,28 +93,28 @@ def dv_label(
     Return the name, with optional description, and units of a DV.
 
     :param config:
-    :param design_value_id:
+    :param design_variable:
     :param climate_regime:
     :param with_description:
     :return:
     """
     description = (
-        f" [{config['dvs'][design_value_id]['description']}]"
+        f" [{config['dvs'][design_variable]['description']}]"
         if with_description
         else ""
     )
     units = (
-        f" ({dv_units(config, design_value_id, climate_regime)})"
+        f" ({dv_units(config, design_variable, climate_regime)})"
         if with_units
         else ""
     )
-    return f"{dv_name(config, design_value_id)}{description}{units}"
+    return f"{dv_name(config, design_variable)}{description}{units}"
 
 
-def dv_roundto(config, design_value_id, climate_regime):
-    if dv_units(config, design_value_id, climate_regime) == "ratio":
-        return config["dvs"][design_value_id]["ratio_roundto"]
-    return config["dvs"][design_value_id]["roundto"]
+def dv_roundto(config, design_variable, climate_regime):
+    if dv_units(config, design_variable, climate_regime) == "ratio":
+        return config["dvs"][design_variable]["ratio_roundto"]
+    return config["dvs"][design_variable]["roundto"]
 
 
 def climate_regime_label(config, climate_regime, which="long"):

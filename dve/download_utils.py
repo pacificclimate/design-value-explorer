@@ -66,13 +66,13 @@ def get_download_data(
     crash.
 
     :return: sequence of
-        (row ids) seq of design_value_ids
+        (row ids) seq of design_variables
         (column ids) seq of dataset_ids
         (data) seq of data rows, matched to row ids;
             each data row is a sequence of data values, matched to column ids.
     """
     # Row ids
-    design_value_ids = tuple(
+    design_variables = tuple(
         dv_id
         for dv_id in config["ui"]["dvs"]
         if dv_has_climate_regime(config, dv_id, climate_regime)
@@ -92,7 +92,7 @@ def get_download_data(
                     rlon,
                     rlat,
                     config,
-                    design_value_id,
+                    design_variable,
                     climate_regime,
                     historical_dataset_id=dataset_id,
                     future_dataset_id=dataset_id,
@@ -100,14 +100,14 @@ def get_download_data(
             )
             for dataset_id in dataset_ids
         )
-        for design_value_id in design_value_ids
+        for design_variable in design_variables
     )
 
-    return design_value_ids, dataset_ids, data_values
+    return design_variables, dataset_ids, data_values
 
 
 def create_download_file(
-    lon, lat, config, climate_regime, design_value_ids, dataset_ids, data_values
+    lon, lat, config, climate_regime, design_variables, dataset_ids, data_values
 ):
     with open(
         os.path.join("/", download_filepath(lon, lat, climate_regime)), "w"
@@ -136,18 +136,18 @@ def create_download_file(
             )
             + value_headers
         )
-        for design_value_id, data_row in zip(design_value_ids, data_values):
+        for design_variable, data_row in zip(design_variables, data_values):
             writer.writerow(
                 (
-                    design_value_id,
+                    design_variable,
                     dv_units(
-                        config, design_value_id, climate_regime, nice=False
+                        config, design_variable, climate_regime, nice=False
                     ),
                 )
                 + tuple(
                     round_to_multiple(
                         data_value,
-                        dv_roundto(config, design_value_id, climate_regime),
+                        dv_roundto(config, design_variable, climate_regime),
                     )
                     for dataset_id, data_value in zip(dataset_ids, data_row)
                 )

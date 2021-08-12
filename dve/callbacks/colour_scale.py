@@ -17,28 +17,28 @@ logger = logging.getLogger("dve")
 def add(app, config):
     @app.callback(
         Output("colour-map-ctrl", "value"),
-        [Input("design-value-id-ctrl", "value")],
+        [Input("design_variable", "value")],
     )
-    def update_colour_map_ctrl_value(design_value_id):
-        return config["dvs"][design_value_id]["colour_map"]
+    def update_colour_map_ctrl_value(design_variable):
+        return config["dvs"][design_variable]["colour_map"]
 
     @app.callback(
-        Output("scale-ctrl", "value"), [Input("design-value-id-ctrl", "value")]
+        Output("scale-ctrl", "value"), [Input("design_variable", "value")]
     )
-    def update_scale_ctrl_value(design_value_id):
-        return config["dvs"][design_value_id]["scale"]["default"]
+    def update_scale_ctrl_value(design_variable):
+        return config["dvs"][design_variable]["scale"]["default"]
 
     @app.callback(
         Output("scale-ctrl", "options"),
-        [Input("design-value-id-ctrl", "value")],
+        [Input("design_variable", "value")],
     )
-    def update_scale_ctrl_options(design_value_id):
+    def update_scale_ctrl_options(design_variable):
         options = [
             {
                 **option,
                 "disabled": (
                     option["value"] == "logarithmic"
-                    and config["dvs"][design_value_id]["scale"].get(
+                    and config["dvs"][design_variable]["scale"].get(
                         "disable_logarithmic", False
                     )
                 ),
@@ -63,24 +63,24 @@ def add(app, config):
             Output("colourbar-range-ctrl", "value"),
         ],
         [
-            Input("design-value-id-ctrl", "value"),
+            Input("design_variable", "value"),
             Input("climate-regime-ctrl", "value"),
             Input("historical-dataset-ctrl", "value"),
             Input("future-dataset-ctrl", "value"),
         ],
     )
     def update_slider(
-        design_value_id,
+        design_variable,
         climate_regime,
         historical_dataset_id,
         future_dataset_id,
     ):
-        if not dv_has_climate_regime(config, design_value_id, climate_regime):
+        if not dv_has_climate_regime(config, design_variable, climate_regime):
             raise PreventUpdate
 
         data = get_data(
             config,
-            design_value_id,
+            design_variable,
             climate_regime,
             historical_dataset_id,
             future_dataset_id,

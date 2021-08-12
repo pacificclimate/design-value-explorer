@@ -44,13 +44,13 @@ def main(config):
             {
                 "label": dv_label(
                     config,
-                    design_value_id,
+                    design_variable,
                     with_units=False,
                     with_description=True,
                 ),
-                "value": design_value_id,
+                "value": design_variable,
             }
-            for design_value_id in config["ui"]["dvs"]
+            for design_variable in config["ui"]["dvs"]
         ]
         return [
             dbc.Row(dbc.Col(html.H1("Design Value Explorer"))),
@@ -59,7 +59,7 @@ def main(config):
                     dbc.Col(html.Label("Design Variable"), width=1),
                     dbc.Col(
                         dcc.Dropdown(
-                            id="design-value-id-ctrl",
+                            id="design_variable",
                             options=dd_options,
                             **config["ui"]["controls"]["design-value-id"],
                         ),
