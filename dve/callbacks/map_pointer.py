@@ -169,8 +169,8 @@ def add(app, config):
             Input("my-graph", "hoverData"),
             Input("design_variable", "value"),
             Input("climate_regime", "value"),
-            Input("historical-dataset-ctrl", "value"),
-            Input("future-dataset-ctrl", "value"),
+            Input("historical_dataset_id", "value"),
+            Input("future_dataset_id", "value"),
         ],
     )
     def display_hover_info(
@@ -213,8 +213,8 @@ def add(app, config):
             Input("my-graph", "clickData"),
             Input("design_variable", "value"),
             Input("climate_regime", "value"),
-            Input("historical-dataset-ctrl", "value"),
-            Input("future-dataset-ctrl", "value"),
+            Input("historical_dataset_id", "value"),
+            Input("future_dataset_id", "value"),
         ],
     )
     def display_download_button(
@@ -260,8 +260,8 @@ def add(app, config):
             Input("my-graph", "clickData"),
             Input("design_variable", "value"),
             Input("climate_regime", "value"),
-            Input("historical-dataset-ctrl", "value"),
-            Input("future-dataset-ctrl", "value"),
+            Input("historical_dataset_id", "value"),
+            Input("future_dataset_id", "value"),
         ],
     )
     def display_click_info(

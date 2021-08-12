@@ -117,7 +117,7 @@ def main(config):
                             ),
                             [
                                 dcc.Dropdown(
-                                    id="historical-dataset-ctrl",
+                                    id="historical_dataset_id",
                                     options=[
                                         {
                                             "label": "HSM Reconstruction",
@@ -133,7 +133,7 @@ def main(config):
                                     ],
                                 ),
                                 dcc.Dropdown(
-                                    id="future-dataset-ctrl",
+                                    id="future_dataset_id",
                                     options=future_dataset_ctrl_options,
                                     **config["ui"]["controls"][
                                         "future-dataset"
@@ -141,7 +141,7 @@ def main(config):
                                 ),
                             ],
                             daq.BooleanSwitch(
-                                id="mask-ctrl",
+                                id="apply_mask",
                                 **config["ui"]["controls"]["mask"],
                             ),
                             daq.BooleanSwitch(

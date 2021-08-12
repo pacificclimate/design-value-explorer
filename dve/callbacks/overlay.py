@@ -33,8 +33,8 @@ def add(app, config):
 
     @app.callback(
         [
-            Output("historical-dataset-ctrl", "disabled"),
-            Output("future-dataset-ctrl", "disabled"),
+            Output("historical_dataset_id", "disabled"),
+            Output("future_dataset_id", "disabled"),
         ],
         [Input("climate_regime", "value")],
     )

@@ -65,9 +65,9 @@ def add(app, config):
             Input("design_variable", "value"),
             # Overlay options
             Input("climate_regime", "value"),
-            Input("historical-dataset-ctrl", "value"),
-            Input("future-dataset-ctrl", "value"),
-            Input("mask-ctrl", "on"),
+            Input("historical_dataset_id", "value"),
+            Input("future_dataset_id", "value"),
+            Input("apply_mask", "on"),
             Input("stations-ctrl", "on"),
             Input("grid-ctrl", "on"),
             # Colour scale options
@@ -88,7 +88,7 @@ def add(app, config):
         climate_regime,
         historical_dataset_id,
         future_dataset_id,
-        mask_on,
+        apply_mask,
         show_stations,
         show_grid,
         # Colour scale options
@@ -231,7 +231,7 @@ def add(app, config):
         #         for j in range(icymax - icymin):
         #             x = ds_arr[j,i]
 
-        if historical_dataset_id == "model" and mask_on:
+        if historical_dataset_id == "model" and apply_mask:
             with timing("apply masking to dataset", log=timing_log):
                 mask = native_mask[icymin:icymax, icxmin:icxmax]
                 ds_arr[~mask] = np.nan
