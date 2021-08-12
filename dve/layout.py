@@ -145,7 +145,7 @@ def main(config):
                                 **config["ui"]["controls"]["mask"],
                             ),
                             daq.BooleanSwitch(
-                                id="stations-ctrl",
+                                id="show_stations",
                                 **config["ui"]["controls"]["stations"],
                             ),
                             daq.BooleanSwitch(

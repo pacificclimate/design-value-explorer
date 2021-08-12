@@ -68,7 +68,7 @@ def add(app, config):
             Input("historical_dataset_id", "value"),
             Input("future_dataset_id", "value"),
             Input("apply_mask", "on"),
-            Input("stations-ctrl", "on"),
+            Input("show_stations", "on"),
             Input("grid-ctrl", "on"),
             # Colour scale options
             Input("colour-map-ctrl", "value"),
