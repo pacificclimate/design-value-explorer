@@ -256,7 +256,9 @@ def add(app, config):
             )
 
         # Figure: Stations
-        if dv_has_climate_regime(config, design_value_id, "historical"):
+        if show_stations and dv_has_climate_regime(
+            config, design_value_id, "historical"
+        ):
             logger.debug("update_ds: get station dataset")
             df = get_data(
                 config,
@@ -287,7 +289,6 @@ def add(app, config):
                         f"<b>Station {dv_label(config, design_value_id, climate_regime)}: "
                         f"%{{text}}</b><br>"
                     ),
-                    visible=show_stations,
                     name="",
                 )
             )
