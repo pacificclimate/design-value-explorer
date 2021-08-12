@@ -179,13 +179,7 @@ def main(config):
                     dbc.Col(html.Label("Colour Map")),
                     dbc.Col(html.Label("Scale")),
                     dbc.Col(html.Label("Num. Colours")),
-                    Loading(
-                        dbc.Col(
-                            html.Label(
-                                id="colorscale_range_label"
-                            )
-                        )
-                    ),
+                    Loading(dbc.Col(html.Label(id="colorscale_range_label"))),
                 ]
             ),
             # Controls
