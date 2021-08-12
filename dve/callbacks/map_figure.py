@@ -74,7 +74,7 @@ def add(app, config):
             Input("color_map", "value"),
             Input("color_scale_type", "value"),
             Input("num_colors", "value"),
-            Input("colourbar-range-ctrl", "value"),
+            Input("color_scale_data_range", "value"),
             # Client-side state
             Input("viewport-ds", "children"),
         ],
@@ -95,7 +95,7 @@ def add(app, config):
         color_map_name,
         color_scale_type,
         num_colours,
-        data_range,
+        color_scale_data_range,
         # Client-side state
         viewport_ds,
     ):
@@ -141,12 +141,12 @@ def add(app, config):
 
         roundto = dv_roundto(config, design_variable, climate_regime)
         if color_scale_type == "linear":
-            zmin = round_to_multiple(data_range[0], roundto, "down")
-            zmax = round_to_multiple(data_range[1], roundto, "up")
+            zmin = round_to_multiple(color_scale_data_range[0], roundto, "down")
+            zmax = round_to_multiple(color_scale_data_range[1], roundto, "up")
         else:
             # TODO: Round for logarithmic scale. This is not easy.
-            zmin, zmax = data_range
-        logger.debug(f"data_range = {data_range}")
+            zmin, zmax = color_scale_data_range
+        logger.debug(f"color_scale_data_range = {color_scale_data_range}")
         logger.debug(f"zmin = {zmin}")
         logger.debug(f"zmax = {zmax}")
 

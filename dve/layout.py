@@ -218,7 +218,7 @@ def main(config):
                         Loading(
                             html.Div(
                                 dcc.RangeSlider(
-                                    id="colourbar-range-ctrl",
+                                    id="color_scale_data_range",
                                     **config["ui"]["controls"][
                                         "colourbar-range"
                                     ],

@@ -49,18 +49,18 @@ def add(app, config):
 
     @app.callback(
         Output("colorscale_range_label", "children"),
-        [Input("colourbar-range-ctrl", "value")],
+        [Input("color_scale_data_range", "value")],
     )
-    def update_colourbar_range_label(value):
-        return f"Range: {sigfigs(value[0])} to {sigfigs(value[1])}"
+    def update_colourbar_range_label(range):
+        return f"Range: {sigfigs(range[0])} to {sigfigs(range[1])}"
 
     @app.callback(
         [
-            Output("colourbar-range-ctrl", "min"),
-            Output("colourbar-range-ctrl", "max"),
-            Output("colourbar-range-ctrl", "step"),
-            Output("colourbar-range-ctrl", "marks"),
-            Output("colourbar-range-ctrl", "value"),
+            Output("color_scale_data_range", "min"),
+            Output("color_scale_data_range", "max"),
+            Output("color_scale_data_range", "step"),
+            Output("color_scale_data_range", "marks"),
+            Output("color_scale_data_range", "value"),
         ],
         [
             Input("design_variable", "value"),
