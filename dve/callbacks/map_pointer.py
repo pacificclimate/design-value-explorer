@@ -166,7 +166,7 @@ def add(app, config):
     @app.callback(
         Output("map_hover_info", "children"),
         [
-            Input("my-graph", "hoverData"),
+            Input("map_main_graph", "hoverData"),
             Input("design_variable", "value"),
             Input("climate_regime", "value"),
             Input("historical_dataset_id", "value"),
@@ -210,7 +210,7 @@ def add(app, config):
     @app.callback(
         Output("data-download-header", "children"),
         [
-            Input("my-graph", "clickData"),
+            Input("map_main_graph", "clickData"),
             Input("design_variable", "value"),
             Input("climate_regime", "value"),
             Input("historical_dataset_id", "value"),
@@ -257,7 +257,7 @@ def add(app, config):
     @app.callback(
         Output("map_click_info", "children"),
         [
-            Input("my-graph", "clickData"),
+            Input("map_main_graph", "clickData"),
             Input("design_variable", "value"),
             Input("climate_regime", "value"),
             Input("historical_dataset_id", "value"),

@@ -312,7 +312,7 @@ def main(config):
                                     dbc.Col(
                                         Loading(
                                             dcc.Graph(
-                                                id="my-graph",
+                                                id="map_main_graph",
                                                 config=config["ui"]["graph"],
                                             )
                                         ),

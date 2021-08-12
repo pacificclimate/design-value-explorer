@@ -57,7 +57,7 @@ def add(app, config):
     )
 
     @app.callback(
-        [Output("my-graph", "figure"), Output("my-colorscale", "figure")],
+        [Output("map_main_graph", "figure"), Output("my-colorscale", "figure")],
         [
             # Tab selection
             Input("tabs", "active_tab"),
@@ -369,22 +369,22 @@ def add(app, config):
 
     @app.callback(
         Output("viewport-ds", "children"),
-        [Input("my-graph", "relayoutData")],
+        [Input("map_main_graph", "relayoutData")],
         [State("viewport-ds", "children")],
     )
-    def update_viewport(relayout_data, prev_viewport):
+    def update_viewport(map_main_relayout_data, prev_viewport):
         # Save map viewport bounds when and only when they change
         # (zoom, pan events)
         prev_viewport = json.loads(prev_viewport)
-        if relayout_data is not None:
-            if "xaxis.autorange" in relayout_data:
+        if map_main_relayout_data is not None:
+            if "xaxis.autorange" in map_main_relayout_data:
                 return json.dumps(None)
 
-            if "xaxis.range[0]" in relayout_data:
-                x_min = relayout_data["xaxis.range[0]"]
-                x_max = relayout_data["xaxis.range[1]"]
-                y_min = relayout_data["yaxis.range[0]"]
-                y_max = relayout_data["yaxis.range[1]"]
+            if "xaxis.range[0]" in map_main_relayout_data:
+                x_min = map_main_relayout_data["xaxis.range[0]"]
+                x_max = map_main_relayout_data["xaxis.range[1]"]
+                y_min = map_main_relayout_data["yaxis.range[0]"]
+                y_max = map_main_relayout_data["yaxis.range[1]"]
                 viewport = {
                     "current": {
                         "x_min": x_min,
