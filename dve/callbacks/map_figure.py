@@ -25,6 +25,7 @@ from dve.generate_iso_lines import lonlat_overlay
 from dve.config import dv_label, climate_regime_label, dataset_label
 from dve.processing import coord_prep
 from dve.math_utils import round_to_multiple
+from dve.timing import timing
 
 from climpyrical.data import read_data
 from climpyrical.gridding import find_nearest_index
@@ -32,6 +33,7 @@ from climpyrical.mask import stratify_coords
 
 
 logger = logging.getLogger("dve")
+timing_log = logger.debug  # Set to None to not log timing
 
 
 def add(app, config):
@@ -173,24 +175,31 @@ def add(app, config):
             historical_dataset_id,
             future_dataset_id,
         )
-        rlon, rlat, dv = raster_dataset.apply(
-            lambda dvds, ds: (ds.rlon, ds.rlat, ds[dvds.dv_name])
-        )
+        with timing("extract vars from raster", log=timing_log):
+            rlon, rlat, dv = raster_dataset.apply(
+                lambda dvds, ds: (ds.rlon, ds.rlat, ds[dvds.dv_name])
+            )
 
         # Figure: Lon-lat overlay
         if show_grid:
             lonlat_overlay_config = config["map"]["lonlat_overlay"]
-            figures += lonlat_overlay(
-                # It's not clear why the grid sizes should be taken from the
-                # dataset, but that's how the code works. Ick.
-                rlon_grid_size=rlon.size,
-                rlat_grid_size=rlat.size,
-                viewport=viewport and viewport["current"],
-                num_lon_intervals=lonlat_overlay_config["lon"]["num_intervals"],
-                lon_round_to=lonlat_overlay_config["lon"]["round_to"],
-                num_lat_intervals=lonlat_overlay_config["lat"]["num_intervals"],
-                lat_round_to=lonlat_overlay_config["lat"]["round_to"],
-            )
+
+            with timing("create lon-lat graticule", log=timing_log):
+                figures += lonlat_overlay(
+                    # It's not clear why the grid sizes should be taken from the
+                    # dataset, but that's how the code works. Ick.
+                    rlon_grid_size=rlon.size,
+                    rlat_grid_size=rlat.size,
+                    viewport=viewport and viewport["current"],
+                    num_lon_intervals=lonlat_overlay_config["lon"][
+                        "num_intervals"
+                    ],
+                    lon_round_to=lonlat_overlay_config["lon"]["round_to"],
+                    num_lat_intervals=lonlat_overlay_config["lat"][
+                        "num_intervals"
+                    ],
+                    lat_round_to=lonlat_overlay_config["lat"]["round_to"],
+                )
 
         # Figure: Canada map
         figures += [
@@ -213,32 +222,43 @@ def add(app, config):
         icymin = find_nearest_index(rlat.values, cy_min)
         icymax = find_nearest_index(rlat.values, cy_max)
 
-        ds_arr = dv.values[icymin:icymax, icxmin:icxmax]
+        with timing("extract dv values from raster", log=timing_log):
+            ds_arr = dv.values[icymin:icymax, icxmin:icxmax].copy()
+        # Experiment to characterize time to process entire raster.
+        # Takes about 350 ms on workstation.
+        # with timing("iterate dv values", log=timing_log):
+        #     for i in range(icxmax - icxmin):
+        #         for j in range(icymax - icymin):
+        #             x = ds_arr[j,i]
 
         if historical_dataset_id == "model" and mask_on:
-            mask = native_mask[icymin:icymax, icxmin:icxmax]
-            ds_arr[~mask] = np.nan
+            with timing("apply masking to dataset", log=timing_log):
+                mask = native_mask[icymin:icymax, icxmin:icxmax]
+                ds_arr[~mask] = np.nan
 
-        figures.append(
-            go.Heatmap(
-                z=ds_arr,
-                x=rlon.values[icxmin:icxmax],
-                y=rlat.values[icymin:icymax],
-                zmin=zmin,
-                zmax=zmax,
-                hoverongaps=False,
-                colorscale=colorscale,
-                showscale=False,  # Hide colorbar
-                visible=True,
-                hovertemplate=(
-                    f"<b>Interpolated {dv_label(config, design_value_id, climate_regime)}: %{{z}} </b><br>"
-                ),
-                name="",
+        with timing("create heatmap", log=timing_log):
+            figures.append(
+                go.Heatmap(
+                    z=ds_arr,
+                    x=rlon.values[icxmin:icxmax],
+                    y=rlat.values[icymin:icymax],
+                    zmin=zmin,
+                    zmax=zmax,
+                    hoverongaps=False,
+                    colorscale=colorscale,
+                    showscale=False,  # Hide colorbar
+                    visible=True,
+                    hovertemplate=(
+                        f"<b>Interpolated {dv_label(config, design_value_id, climate_regime)}: %{{z}} </b><br>"
+                    ),
+                    name="",
+                )
             )
-        )
 
         # Figure: Stations
-        if dv_has_climate_regime(config, design_value_id, "historical"):
+        if show_stations and dv_has_climate_regime(
+            config, design_value_id, "historical"
+        ):
             logger.debug("update_ds: get station dataset")
             df = get_data(
                 config,
@@ -247,7 +267,8 @@ def add(app, config):
                 historical_dataset_id="stations",
             ).data_frame()
             station_dv = config["dvs"][design_value_id]["station_dv"]
-            df = coord_prep(df, station_dv)
+            with timing("coord_prep for stations", log=timing_log):
+                df = coord_prep(df, station_dv)
             figures.append(
                 go.Scattergl(
                     x=df.rlon,
@@ -268,7 +289,6 @@ def add(app, config):
                         f"<b>Station {dv_label(config, design_value_id, climate_regime)}: "
                         f"%{{text}}</b><br>"
                     ),
-                    visible=show_stations,
                     name="",
                 )
             )
