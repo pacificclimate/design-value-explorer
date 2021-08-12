@@ -149,7 +149,7 @@ def main(config):
                                 **config["ui"]["controls"]["stations"],
                             ),
                             daq.BooleanSwitch(
-                                id="grid-ctrl",
+                                id="show_grid",
                                 **config["ui"]["controls"]["grid"],
                             ),
                         ),

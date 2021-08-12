@@ -69,7 +69,7 @@ def add(app, config):
             Input("future_dataset_id", "value"),
             Input("apply_mask", "on"),
             Input("show_stations", "on"),
-            Input("grid-ctrl", "on"),
+            Input("show_grid", "on"),
             # Colour scale options
             Input("colour-map-ctrl", "value"),
             Input("scale-ctrl", "value"),
