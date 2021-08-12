@@ -1,5 +1,6 @@
 import logging
 
+import dash
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash_table
@@ -8,6 +9,7 @@ import pandas
 
 from climpyrical.gridding import transform_coords
 
+from dve.callbacks.utils import triggered_by
 from dve.config import (
     dv_has_climate_regime,
     future_change_factor_label,
@@ -148,10 +150,16 @@ def add(app, config):
         if main_tabs_active_tab != "table-tab":
             raise PreventUpdate
 
+        # Don't download unless the user has actually clicked the button.
+        if not triggered_by("table-C2-download-button.", dash.callback_context):
+            raise PreventUpdate
+
+        logger.debug(f"download n_clicks = {n_clicks}")
+
         # No historical data for this dv
         # TODO: Disable button in this case (separate callback) and remove
         if not dv_has_climate_regime(config, design_variable, "historical"):
-            raise dict(content=f"No data for {design_variable}", filename="tableC2.txt")
+            return dict(content=f"No data for {design_variable}", filename="tableC2.txt")
 
         return dict(content=f"Table C2 for {design_variable}", filename="tableC2.txt")
         # return send_file()
