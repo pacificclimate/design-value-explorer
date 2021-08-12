@@ -164,7 +164,7 @@ def add(app, config):
         return lon, lat, url, filename
 
     @app.callback(
-        Output("hover-info", "children"),
+        Output("map_hover_info", "children"),
         [
             Input("my-graph", "hoverData"),
             Input("design_variable", "value"),

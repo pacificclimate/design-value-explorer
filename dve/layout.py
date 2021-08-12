@@ -263,13 +263,13 @@ def main(config):
                 [
                     dbc.Col(
                         html.Div(
-                            id="hover-output",
+                            id="map_hover_output",
                             children=[
                                 html.Div(
-                                    id="hover-info",
+                                    id="map_hover_info",
                                     style={"font-size": "0.8em"},
                                 ),
-                                html.Pre(id="hover-data"),
+                                html.Pre(id="map_hover_data"),
                             ],
                         ),
                         width=3,
