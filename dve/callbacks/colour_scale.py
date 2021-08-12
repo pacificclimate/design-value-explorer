@@ -23,13 +23,13 @@ def add(app, config):
         return config["dvs"][design_variable]["colour_map"]
 
     @app.callback(
-        Output("scale-ctrl", "value"), [Input("design_variable", "value")]
+        Output("color_scale_type", "value"), [Input("design_variable", "value")]
     )
     def update_scale_ctrl_value(design_variable):
         return config["dvs"][design_variable]["scale"]["default"]
 
     @app.callback(
-        Output("scale-ctrl", "options"),
+        Output("color_scale_type", "options"),
         [Input("design_variable", "value")],
     )
     def update_scale_ctrl_options(design_variable):

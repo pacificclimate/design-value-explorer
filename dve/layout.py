@@ -202,7 +202,7 @@ def main(config):
                     ),
                     dbc.Col(
                         dcc.Dropdown(
-                            id="scale-ctrl",
+                            id="color_scale_type",
                             options=scale_ctrl_options,
                             **config["ui"]["controls"]["scale"],
                         )

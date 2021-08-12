@@ -72,7 +72,7 @@ def add(app, config):
             Input("show_grid", "on"),
             # Colour scale options
             Input("color_map", "value"),
-            Input("scale-ctrl", "value"),
+            Input("color_scale_type", "value"),
             Input("cbar-slider", "value"),
             Input("colourbar-range-ctrl", "value"),
             # Client-side state
@@ -93,7 +93,7 @@ def add(app, config):
         show_grid,
         # Colour scale options
         color_map_name,
-        scale,
+        color_scale_type,
         num_colours,
         data_range,
         # Client-side state
@@ -140,7 +140,7 @@ def add(app, config):
         figures = []
 
         roundto = dv_roundto(config, design_variable, climate_regime)
-        if scale == "linear":
+        if color_scale_type == "linear":
             zmin = round_to_multiple(data_range[0], roundto, "down")
             zmax = round_to_multiple(data_range[1], roundto, "up")
         else:
@@ -160,7 +160,7 @@ def add(app, config):
             target = 1 if is_relative else 0
             target = target if (zmin <= target <= zmax) else None
         boundaries = uniformly_spaced_with_target(
-            zmin, zmax, num_colours + 1, target=target, scale=scale
+            zmin, zmax, num_colours + 1, target=target, scale=color_scale_type
         )
         logger.debug(f"boundaries = {boundaries}")
         num_actual_colors = len(boundaries) - 1
@@ -299,14 +299,14 @@ def add(app, config):
             zmin,
             zmax,
             target,
-            scale,
+            color_scale_type,
             num_actual_colors,
             config["ui"]["ticks"]["max-num"],
         )
         colorbar = discrete_colorscale_colorbar(
             boundaries,
             colorscale,
-            scale,
+            color_scale_type,
             tickvals,
             [round_to_multiple(t, roundto) for t in tickvals],
         )
