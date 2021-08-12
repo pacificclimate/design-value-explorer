@@ -182,7 +182,7 @@ def main(config):
                     Loading(
                         dbc.Col(
                             html.Label(
-                                id="colourbar-range-ctrl-output-container"
+                                id="colorscale_range_label"
                             )
                         )
                     ),

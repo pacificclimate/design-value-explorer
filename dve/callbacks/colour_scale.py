@@ -48,7 +48,7 @@ def add(app, config):
         return options
 
     @app.callback(
-        Output("colourbar-range-ctrl-output-container", "children"),
+        Output("colorscale_range_label", "children"),
         [Input("colourbar-range-ctrl", "value")],
     )
     def update_colourbar_range_label(value):
