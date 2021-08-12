@@ -64,7 +64,7 @@ def add(app, config):
         ],
         [
             Input("design_variable", "value"),
-            Input("climate-regime-ctrl", "value"),
+            Input("climate_regime", "value"),
             Input("historical-dataset-ctrl", "value"),
             Input("future-dataset-ctrl", "value"),
         ],

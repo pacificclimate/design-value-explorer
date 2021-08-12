@@ -13,8 +13,8 @@ logger = logging.getLogger("dve")
 def add(app, config):
     @app.callback(
         [
-            Output("climate-regime-ctrl", "options"),
-            Output("climate-regime-ctrl", "value"),
+            Output("climate_regime", "options"),
+            Output("climate_regime", "value"),
         ],
         [Input("design_variable", "value")],
     )
@@ -36,7 +36,7 @@ def add(app, config):
             Output("historical-dataset-ctrl", "disabled"),
             Output("future-dataset-ctrl", "disabled"),
         ],
-        [Input("climate-regime-ctrl", "value")],
+        [Input("climate_regime", "value")],
     )
     def update_dataset_ctrl_disable(climate_regime):
         return [climate_regime != x for x in ("historical", "future")]

@@ -111,7 +111,7 @@ def main(config):
                     for control, width in zip(
                         (
                             dcc.RadioItems(
-                                id="climate-regime-ctrl",
+                                id="climate_regime",
                                 options=climate_regime_ctrl_opts,
                                 **config["ui"]["controls"]["climate-regime"],
                             ),

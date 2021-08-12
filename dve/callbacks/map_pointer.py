@@ -168,7 +168,7 @@ def add(app, config):
         [
             Input("my-graph", "hoverData"),
             Input("design_variable", "value"),
-            Input("climate-regime-ctrl", "value"),
+            Input("climate_regime", "value"),
             Input("historical-dataset-ctrl", "value"),
             Input("future-dataset-ctrl", "value"),
         ],
@@ -212,7 +212,7 @@ def add(app, config):
         [
             Input("my-graph", "clickData"),
             Input("design_variable", "value"),
-            Input("climate-regime-ctrl", "value"),
+            Input("climate_regime", "value"),
             Input("historical-dataset-ctrl", "value"),
             Input("future-dataset-ctrl", "value"),
         ],
@@ -259,7 +259,7 @@ def add(app, config):
         [
             Input("my-graph", "clickData"),
             Input("design_variable", "value"),
-            Input("climate-regime-ctrl", "value"),
+            Input("climate_regime", "value"),
             Input("historical-dataset-ctrl", "value"),
             Input("future-dataset-ctrl", "value"),
         ],

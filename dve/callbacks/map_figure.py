@@ -64,7 +64,7 @@ def add(app, config):
             # DV selection
             Input("design_variable", "value"),
             # Overlay options
-            Input("climate-regime-ctrl", "value"),
+            Input("climate_regime", "value"),
             Input("historical-dataset-ctrl", "value"),
             Input("future-dataset-ctrl", "value"),
             Input("mask-ctrl", "on"),
