@@ -296,7 +296,7 @@ def main(config):
         """
         return dbc.Tab(
             tab_id="map-tab",
-            label="Map",
+            label=config["ui"]["labels"]["main_tabs"]["map-tab"],
             children=[
                 dbc.Row(
                     [
@@ -350,7 +350,7 @@ def main(config):
     def table_C2_tab():
         return dbc.Tab(
             tab_id="table-tab",
-            label="Table C-2",
+            label=config["ui"]["labels"]["main_tabs"]["table-tab"],
             children=[
                 Loading(html.H5(id="table-C2-title", className="mt-3")),
                 Loading(html.Div(id="table-C2")),
@@ -381,7 +381,9 @@ def main(config):
                     dbc.Tabs(
                         id="main_tabs",
                         children=[map_tab(), table_C2_tab()],
-                        active_tab="map-tab",
+                        active_tab=config["ui"]["controls"]["main_tabs"][
+                            "active-tab"
+                        ],
                     )
                 ),
                 style={"margin-top": "1em"},
