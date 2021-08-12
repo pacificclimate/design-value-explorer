@@ -277,13 +277,13 @@ def main(config):
                     dbc.Col(
                         Loading(
                             html.Div(
-                                id="click-output",
+                                id="map_click_output",
                                 children=[
                                     html.Div(
-                                        id="click-info",
+                                        id="map_click_info",
                                         style={"font-size": "0.8em"},
                                     ),
-                                    html.Pre(id="click-data"),
+                                    html.Pre(id="map_click_data"),
                                 ],
                             )
                         ),

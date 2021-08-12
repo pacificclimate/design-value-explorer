@@ -255,7 +255,7 @@ def add(app, config):
         ]
 
     @app.callback(
-        Output("click-info", "children"),
+        Output("map_click_info", "children"),
         [
             Input("my-graph", "clickData"),
             Input("design_variable", "value"),
