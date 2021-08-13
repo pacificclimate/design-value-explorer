@@ -1,5 +1,6 @@
 import logging
 
+import dash
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash_table
@@ -9,9 +10,7 @@ import pandas
 from climpyrical.gridding import transform_coords
 
 from dve.config import (
-    dv_has_climate_regime,
-    future_change_factor_label,
-    dv_roundto,
+    dv_has_climate_regime, future_change_factor_label, dv_roundto,
 )
 from dve.data import get_data
 from dve.config import dv_label
@@ -31,6 +30,7 @@ def add(app, config):
         if main_tabs_active_tab != "table-tab":
             raise PreventUpdate
 
+        # Show "No data" if there is no data for this variable
         if not dv_has_climate_regime(config, design_variable, "historical"):
             return (
                 config["ui"]["labels"]["table_C2"]["no_station_data"].format(
@@ -135,5 +135,6 @@ def add(app, config):
                 page_action="none",
                 filter_action="native",
                 data=display_dataset.to_dict("records"),
+                export_format="csv",
             ),
         ]

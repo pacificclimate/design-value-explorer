@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "971c71f8c1e9ec3e26a55d5000d3ca384d3521bf2f985d814c75fdb1b4b7ce84"
+            "sha256": "75b8dd611029020dc1b5a46abcfdd6c921b7445cc43dd5613e7d0a57281060e0"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -228,6 +228,14 @@
             "index": "pypi",
             "version": "==0.5.0"
         },
+        "dash-extensions": {
+            "hashes": [
+                "sha256:71f130651074e90ee079b7438f7c76ab8c1fb02ed6da60da35c0792d7d8ff5db",
+                "sha256:cb4e642c06a3db307ecd074589876c600a73fd10fde4ea588d44b491ef0ffff7"
+            ],
+            "index": "pypi",
+            "version": "==0.0.60"
+        },
         "dash-html-components": {
             "hashes": [
                 "sha256:dc4f423e13716d179d51a42b3c7e2a2ed02e05185c742f88214b58d59e24bbd4"
@@ -270,6 +278,13 @@
             ],
             "index": "pypi",
             "version": "==1.1.2"
+        },
+        "flask-caching": {
+            "hashes": [
+                "sha256:bcda8acbc7508e31e50f63e9b1ab83185b446f6b6318bd9dd1d45626fba2e903",
+                "sha256:cf19b722fcebc2ba03e4ae7c55b532ed53f0cbf683ce36fafe5e881789a01c00"
+            ],
+            "version": "==1.10.1"
         },
         "flask-compress": {
             "hashes": [

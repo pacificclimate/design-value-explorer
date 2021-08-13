@@ -5,6 +5,8 @@ ui:
         # dcc.RadioItems, and that determines the argument names, values, and
         # effects. This is not quite as abstract as would be nice, but it does
         # move the details of formatting from code to config.
+        main_tabs:
+            active-tab: table-tab
         design-value-id:
             value: HDD
             searchable: true
@@ -96,6 +98,9 @@ ui:
         - "3.5"
 
     labels:
+        main_tabs:
+            map-tab: Map
+            table-tab: Table C-2
         climate_regime:
             # Labels for the two climate regime selections
             historical:

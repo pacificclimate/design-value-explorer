@@ -40,6 +40,29 @@ def validate(config):
             validate_filepath(dv_defn["future_change_factor_paths"][fcf_id])
 
 
+def filepath_for(
+    config,
+    design_variable,
+    climate_regime,
+    historical_dataset_id=None,
+    future_dataset_id=None,
+):
+    if climate_regime == "historical":
+        path_key = {
+            "stations": "station_path",
+            "table": "table",
+            "model": "input_model_path",
+            "reconstruction": "reconstruction_path",
+        }[historical_dataset_id]
+        return config["dvs"][design_variable][path_key]
+    else:
+        return (
+            config["dvs"][design_variable]["future_change_factor_paths"][
+                future_dataset_id
+            ]
+        )
+
+
 def dv_has_climate_regime(config, design_variable, climate_regime):
     """
     Return a boolean indicating whether a DV has definitions for specific
