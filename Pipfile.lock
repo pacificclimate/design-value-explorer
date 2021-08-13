@@ -257,11 +257,6 @@
             "index": "pypi",
             "version": "==4.12.0"
         },
-        "dve": {
-            "editable": true,
-            "git": "git@github.com:pacificclimate/dash-dv-explorer.git",
-            "ref": "4c01e3da65b1979d4820993889be7535dcff4f0e"
-        },
         "fiona": {
             "hashes": [
                 "sha256:02880556540e36ad6aac97687799d9b3093c354787a47bc0e73026c7fc15f1b3",
