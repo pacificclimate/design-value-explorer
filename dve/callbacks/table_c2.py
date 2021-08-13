@@ -9,11 +9,8 @@ import pandas
 
 from climpyrical.gridding import transform_coords
 
-from dve.callbacks.utils import triggered_by
 from dve.config import (
-    dv_has_climate_regime,
-    future_change_factor_label,
-    dv_roundto,
+    dv_has_climate_regime, future_change_factor_label, dv_roundto,
 )
 from dve.data import get_data
 from dve.config import dv_label
@@ -138,28 +135,6 @@ def add(app, config):
                 page_action="none",
                 filter_action="native",
                 data=display_dataset.to_dict("records"),
+                export_format="csv",
             ),
         ]
-
-    @app.callback(
-        Output("table-C2-download", "data"),
-        [Input("main_tabs", "active_tab"), Input("table-C2-download-button", "n_clicks"), Input("design_variable", "value")]
-    )
-    def download_table_c2(main_tabs_active_tab, n_clicks, design_variable):
-        # Do not update if the tab is not selected
-        if main_tabs_active_tab != "table-tab":
-            raise PreventUpdate
-
-        # Don't download unless the user has actually clicked the button.
-        if not triggered_by("table-C2-download-button.", dash.callback_context):
-            raise PreventUpdate
-
-        logger.debug(f"download n_clicks = {n_clicks}")
-
-        # No historical data for this dv
-        # TODO: Disable button in this case (separate callback) and remove
-        if not dv_has_climate_regime(config, design_variable, "historical"):
-            return dict(content=f"No data for {design_variable}", filename="tableC2.txt")
-
-        return dict(content=f"Table C2 for {design_variable}", filename="tableC2.txt")
-        # return send_file()
