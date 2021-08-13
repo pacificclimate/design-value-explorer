@@ -202,8 +202,8 @@ def add(app, config):
                         "num_intervals"
                     ],
                     lat_round_to=lonlat_overlay_config["lat"]["round_to"],
-                    lon_min=lon_0_to_360(lonlat_overlay_config["lon"]["min"]),
-                    lon_max=lon_0_to_360(lonlat_overlay_config["lon"]["max"]),
+                    lon_min=lonlat_overlay_config["lon"]["min"],
+                    lon_max=lonlat_overlay_config["lon"]["max"],
                     lat_min=lonlat_overlay_config["lat"]["min"],
                     lat_max=lonlat_overlay_config["lat"]["max"],
                 )

@@ -24,8 +24,8 @@ def lonlat_overlay(
     num_lat_intervals=5,
     lon_round_to=(1, 2, 3, 5, 10, 15),
     lat_round_to=(1, 2, 3, 5, 10, 15),
-    lon_min=360 - 140,
-    lon_max=360 - 50,
+    lon_min=140,
+    lon_max=50,
     lat_min=40,
     lat_max=85,
 ):
@@ -55,6 +55,8 @@ def lonlat_overlay(
     :param lat_round_to: (list) Values of latitude increment to use.
     :return: (list) Graphical objects representing lon-lat overlay.
     """
+    lon_min = lon_0_to_360(lon_min)
+    lon_max = lon_0_to_360(lon_max)
 
     # Determine range of lat and lon in current viewport. This is used to
     # compute the grid deltas, and does not determine the lat-lon range of
