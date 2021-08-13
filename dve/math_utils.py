@@ -67,3 +67,7 @@ def sigfigs(x, n=3):
     if x == 0:
         return x
     return round(x, -int(math.floor(math.log10(abs(x)))) + (n - 1))
+
+
+def lon_0_to_360(lon):
+    return lon % 360.0

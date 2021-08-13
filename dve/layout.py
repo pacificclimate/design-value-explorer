@@ -1,8 +1,13 @@
+import logging
+
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_daq as daq
 from dve.config import dv_label
+
+
+logger = logging.getLogger("dve")
 
 scale_ctrl_options = [
     {"label": "Linear", "value": "linear"},
@@ -371,6 +376,7 @@ def main(config):
             )
         ]
 
+    print(f'active tab {config["ui"]["controls"]["main_tabs"][ "active-tab"]}')
     return dbc.Container(
         fluid=True,
         style={"padding": "0.5em 1em 0"},

@@ -24,7 +24,7 @@ from dve.colorbar import (
 from dve.generate_iso_lines import lonlat_overlay
 from dve.config import dv_label, climate_regime_label, dataset_label
 from dve.processing import coord_prep
-from dve.math_utils import round_to_multiple
+from dve.math_utils import round_to_multiple, lon_0_to_360
 from dve.timing import timing
 
 from climpyrical.data import read_data
@@ -202,6 +202,10 @@ def add(app, config):
                         "num_intervals"
                     ],
                     lat_round_to=lonlat_overlay_config["lat"]["round_to"],
+                    lon_min=lon_0_to_360(lonlat_overlay_config["lon"]["min"]),
+                    lon_max=lon_0_to_360(lonlat_overlay_config["lon"]["max"]),
+                    lat_min=lonlat_overlay_config["lat"]["min"],
+                    lat_max=lonlat_overlay_config["lat"]["max"],
                 )
 
         # Figure: Canada map

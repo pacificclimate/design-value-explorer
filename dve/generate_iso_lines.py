@@ -16,17 +16,17 @@ def lonlat_overlay(
     num_lat_intervals=5,
     lon_round_to=(1, 2, 3, 5, 10, 15),
     lat_round_to=(1, 2, 3, 5, 10, 15),
-    grid_lon_min=360 - 140,
-    grid_lon_max=360 - 50,
-    grid_lat_min=45,
-    grid_lat_max=85,
+    lon_min=360 - 140,
+    lon_max=360 - 50,
+    lat_min=40,
+    lat_max=85,
 ):
     """
     Returns a list of graphical objects that render latitude and longitude lines
     in the map graph.
 
     Lat and lon lines are generated to cover the entire area defined by args
-    `grid_lon_min`, `grid_lon_max`, `grid_lat_min`, `grid_lat_max`, which is
+    ` lon_min`, ` lon_max`, ` lat_min`, ` lat_max`, which is
     by default the entire extent of Canada. The density of lines is determined
     by the viewport they will be shown in, but not the extent of them. This
     facilitates panning without reloading the map.
@@ -47,12 +47,16 @@ def lonlat_overlay(
     :param lat_round_to: (list) Values of latitude increment to use.
     :return: (list) Graphical objects representing lon-lat overlay.
     """
+
+    # Determine range of lat and lon in current viewport. This is used to
+    # compute the grid deltas, and does not determine the lat-lon range of
+    # grid lines created.
     if viewport is None:
         # Default (max zoom; full area) lon and lat bounds
-        vp_lon_min = grid_lon_min
-        vp_lon_max = grid_lon_max
-        vp_lat_min = grid_lat_min
-        vp_lat_max = grid_lat_max
+        vp_lon_min = lon_min
+        vp_lon_max = lon_max
+        vp_lat_min = lat_min
+        vp_lat_max = lat_max
     else:
         # Transform rotated pole viewport corners to standard lon-lat
         vp_x_range, vp_y_range = transform_coords(
@@ -79,21 +83,21 @@ def lonlat_overlay(
     vp_lon_delta = nice_delta(
         vp_lon_min, vp_lon_max, num_lon_intervals, lon_round_to
     )
-    grid_lon_min, grid_lon_max, num_grid_lon_intervals = nice_bounds(
-        grid_lon_min, grid_lon_max, vp_lon_delta
+    lon_min, lon_max, num_grid_lon_intervals = nice_bounds(
+        lon_min, lon_max, vp_lon_delta
     )
     lon_lines = np.linspace(
-        grid_lon_min, grid_lon_max, num_grid_lon_intervals + 1
+        lon_min, lon_max, num_grid_lon_intervals + 1
     )
 
     vp_lat_delta = nice_delta(
         vp_lat_min, vp_lat_max, num_lat_intervals, lat_round_to
     )
-    grid_lat_min, grid_lat_max, num_grid_lat_intervals = nice_bounds(
-        grid_lat_min, grid_lat_max, vp_lat_delta
+    lat_min, lat_max, num_grid_lat_intervals = nice_bounds(
+        lat_min, lat_max, vp_lat_delta
     )
     lat_lines = np.linspace(
-        grid_lat_min, grid_lat_max, num_grid_lat_intervals + 1
+        lat_min, lat_max, num_grid_lat_intervals + 1
     )
 
     # This is where the craziness begins.
