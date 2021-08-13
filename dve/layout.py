@@ -4,6 +4,7 @@ import dash_core_components as dcc
 import dash_daq as daq
 from dve.config import dv_label
 
+
 scale_ctrl_options = [
     {"label": "Linear", "value": "linear"},
     {"label": "Logarithmic", "value": "logarithmic"},

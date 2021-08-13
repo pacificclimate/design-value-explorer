@@ -6,7 +6,7 @@ ui:
         # effects. This is not quite as abstract as would be nice, but it does
         # move the details of formatting from code to config.
         main_tabs:
-            active-tab: table-tab
+            active-tab: map-tab
         design-value-id:
             value: HDD
             searchable: true
@@ -137,7 +137,6 @@ ui:
         # This prop is provided to the dcc.Graph component and controls quite
         # a bit of its behaviour.
         displayModeBar: true
-
 
 # Parameterize the pipeline
 # The pipeline will iterate through each parent tree
@@ -609,9 +608,13 @@ map:
         lon:
             num_intervals: 4
             round_to: [1, 2, 3, 5, 10, 15]
+            min: -140
+            max: -50
         lat:
             num_intervals: 4
             round_to: [1, 2, 3, 5, 10, 15]
+            min: 40
+            max: 85
 
 units:
     degC:
