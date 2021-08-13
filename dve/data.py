@@ -40,6 +40,7 @@ import xarray
 
 from climpyrical.data import check_valid_data, check_valid_keys
 
+from dve.config import filepath_for
 from dve.map_utils import rlonlat_to_rindices, rindices_to_lonlat
 from dve.timing import timing
 
@@ -335,21 +336,15 @@ def get_data(
     description = f"get_data {(design_variable, climate_regime, historical_dataset_id, future_dataset_id)}"
 
     with timing(description, log=timing_log):
-        if climate_regime == "historical":
-            path_key = {
-                "stations": "station_path",
-                "table": "table",
-                "model": "input_model_path",
-                "reconstruction": "reconstruction_path",
-            }[historical_dataset_id]
-            file = load_file(config["dvs"][design_variable][path_key])
-        else:
-            file = load_file(
-                config["dvs"][design_variable]["future_change_factor_paths"][
-                    future_dataset_id
-                ]
+        return load_file(
+            filepath_for(
+                config,
+                design_variable,
+                climate_regime,
+                historical_dataset_id,
+                future_dataset_id,
             )
-    return file
+        )
 
 
 def dv_value(
