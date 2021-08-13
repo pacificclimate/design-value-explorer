@@ -5,7 +5,15 @@ from climpyrical.gridding import (
 )
 import numpy as np
 import plotly.graph_objects as go
-from dve.math_utils import nice_delta, nice_bounds
+from dve.math_utils import nice_delta, nice_bounds, lon_0_to_360
+
+
+def nice_linspace(vp_min, vp_max, num_intervals, round_to, full_min, full_max):
+    vp_delta = nice_delta(vp_min, vp_max, num_intervals, round_to)
+    full_min, full_max, num_intervals = nice_bounds(
+        full_min, full_max, vp_delta
+    )
+    return np.linspace(full_min, full_max, num_intervals + 1)
 
 
 def lonlat_overlay(
@@ -73,31 +81,28 @@ def lonlat_overlay(
             },
             target_crs={"init": "epsg:4326"},
         )
-        vp_lon_min, vp_lon_max = 360 + vp_x_range
+        vp_lon_min, vp_lon_max = lon_0_to_360(vp_x_range)
         vp_lat_min, vp_lat_max = vp_y_range
 
     # Compute "nice" lines of lon and lat in standard coordinates.
     # "Nice" means an increment between lines of one of the preferred values,
     # and lines at multiples of the increment.
 
-    vp_lon_delta = nice_delta(
-        vp_lon_min, vp_lon_max, num_lon_intervals, lon_round_to
+    lon_lines = nice_linspace(
+        vp_lon_min,
+        vp_lon_max,
+        num_lon_intervals,
+        lon_round_to,
+        lon_min,
+        lon_max,
     )
-    lon_min, lon_max, num_grid_lon_intervals = nice_bounds(
-        lon_min, lon_max, vp_lon_delta
-    )
-    lon_lines = np.linspace(
-        lon_min, lon_max, num_grid_lon_intervals + 1
-    )
-
-    vp_lat_delta = nice_delta(
-        vp_lat_min, vp_lat_max, num_lat_intervals, lat_round_to
-    )
-    lat_min, lat_max, num_grid_lat_intervals = nice_bounds(
-        lat_min, lat_max, vp_lat_delta
-    )
-    lat_lines = np.linspace(
-        lat_min, lat_max, num_grid_lat_intervals + 1
+    lat_lines = nice_linspace(
+        vp_lat_min,
+        vp_lat_max,
+        num_lat_intervals,
+        lat_round_to,
+        lat_min,
+        lat_max,
     )
 
     # This is where the craziness begins.
