@@ -56,11 +56,9 @@ def filepath_for(
         }[historical_dataset_id]
         return config["dvs"][design_variable][path_key]
     else:
-        return (
-            config["dvs"][design_variable]["future_change_factor_paths"][
-                future_dataset_id
-            ]
-        )
+        return config["dvs"][design_variable]["future_change_factor_paths"][
+            future_dataset_id
+        ]
 
 
 def dv_has_climate_regime(config, design_variable, climate_regime):
@@ -122,7 +120,7 @@ def dv_label(
     :return:
     """
     description = (
-        f" [{config['dvs'][design_variable]['description']}]"
+        f" {config['dvs'][design_variable]['description']}"
         if with_description
         else ""
     )
@@ -167,4 +165,31 @@ def dataset_label(
         return historical_dataset_label(config, historical_dataset_id)
     return future_change_factor_label(
         config, future_dataset_id, which=which, nice=nice
+    )
+
+
+def map_title(
+    config,
+    design_variable,
+    climate_regime,
+    historical_dataset_id,
+    future_dataset_id,
+):
+    dl = dataset_label(
+        config,
+        climate_regime,
+        historical_dataset_id,
+        future_dataset_id,
+        which="short",
+        nice=True,
+    )
+    dataset = "" if climate_regime == "historical" else f" ({dl})"
+    return config["ui"]["labels"]["map"]["title"].format(
+        dv=dv_label(
+            config, design_variable, climate_regime, with_description=True
+        ),
+        climate_regime=climate_regime_label(
+            config, climate_regime, which="short"
+        ),
+        dataset=dataset,
     )

@@ -118,7 +118,7 @@ ui:
             short_ascii: "{} degC"  # deprecated
             long: "{}°C above 1986-2016"
         map:
-            title: "{dv} • {climate_regime} ({dataset})"
+            title: "{dv} • {climate_regime}{dataset}"
         download_table:
             dv: Design value
             units: Units
@@ -152,7 +152,7 @@ paths:
 
 dvs:
     IDFCF:
-        description: IDF future change factors
+        description: IDF future change factor
         cf_units: ratio
         roundto: 0.001
         ratio_roundto: 0.001
@@ -169,7 +169,7 @@ dvs:
             default: linear
 
     RL50:
-        description: 50-year return level of annual maximum rain-on-snow load
+        description: Annual maximum rain-on-snow, 1/50
         abs_units: kPa
         roundto: 0.1
         ratio_roundto: 0.001
@@ -192,7 +192,7 @@ dvs:
             default: logarithmic
 
     RHann:
-        description: Annual mean of relative humidity
+        description: Annual mean relative humidity
         abs_units: "%"
         roundto: 1
         ratio_roundto: 0.001
@@ -215,7 +215,7 @@ dvs:
             default: linear
 
     HDD:
-        description: "Heating degree days (threshold: 18 °C)"
+        description: "Heating degree days above 18 °C"
         abs_units: degC-day
         roundto: 10
         ratio_roundto: 0.001
@@ -238,7 +238,7 @@ dvs:
             default: linear
 
     SL50:
-        description: 50-year return level of annual maximum snow load
+        description: Annual maximum snow load, 1/50
         abs_units: kPa
         roundto: 0.1
         ratio_roundto: 0.001
@@ -261,7 +261,7 @@ dvs:
             default: linear
 
     WP10:
-        description: 10-year return level of maximum annual wind pressure
+        description: Annual maximum wind pressure, 1/10
         abs_units: kPa
         roundto: 0.1
         ratio_roundto: 0.001
@@ -284,7 +284,7 @@ dvs:
             default: linear
 
     WP50:
-        description: 50-year return level of wind pressure
+        description: Annual maximum wind pressure, 1/50
         abs_units: kPa
         roundto: 0.1
         ratio_roundto: 0.001
@@ -307,7 +307,7 @@ dvs:
             default: linear
 
     TJan2.5:
-        description: 2.5th percentile of January temperature
+        description: January temperature 2.5%
         abs_units: degC
         roundto: 1
         ratio_roundto: 0.001
@@ -331,7 +331,7 @@ dvs:
             default: linear
 
     TJan1.0:
-        description: 1st percentile of January temperature
+        description: January temperature 1%
         abs_units: degC
         roundto: 1
         ratio_roundto: 0.001
@@ -355,7 +355,7 @@ dvs:
             default: linear
 
     Tmin:
-        description: Annual minimum of mean daily temperature
+        description: Annual minimum daily temperature
         abs_units: degC
         roundto: 1
         ratio_roundto: 0.001
@@ -379,7 +379,7 @@ dvs:
             default: linear
 
     Tmax:
-        description: Annual maximum of mean daily temperature
+        description: Annual maximum daily temperature
         abs_units: degC
         roundto: 1
         ratio_roundto: 0.001
@@ -403,7 +403,7 @@ dvs:
             default: linear
 
     TJul97.5:
-        description: 97.5th percentile of July temperature
+        description: July temperature 97.5%
         abs_units: degC
         roundto: 1
         ratio_roundto: 0.001
@@ -427,7 +427,7 @@ dvs:
             default: linear
 
     TwJul97.5:
-        description: 97.5th percentile of July wet-bulb  temperature
+        description: July wet-bulb temperature 97.5%
         abs_units: degC
         roundto: 1
         ratio_roundto: 0.001
@@ -451,7 +451,7 @@ dvs:
             default: linear
 
     DRWP5:
-        description: 5-year return level of driving rain wind pressure
+        description: Driving rain wind pressure, 1/5
         abs_units: kPa
         roundto: 10
         ratio_roundto: 0.001
@@ -520,7 +520,7 @@ dvs:
             default: logarithmic
 
     R1d50:
-        description: 50-year return level of 1-day rainfall
+        description: 1-day rainfall, 1/50
         abs_units: mm
         roundto: 1
         ratio_roundto: 0.001
@@ -565,7 +565,7 @@ dvs:
             default: logarithmic
 
     R15m10:
-        description: 10-year return level of 15-minute rainfall
+        description: 15-min rainfall, 1/10
         abs_units: mm
         roundto: 5
         ratio_roundto: 0.001
