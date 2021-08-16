@@ -11,7 +11,7 @@ import plotly.graph_objects as go
 import geopandas as gpd
 import numpy as np
 
-from dve.config import dv_has_climate_regime, dv_roundto, dv_units
+from dve.config import dv_has_climate_regime, dv_roundto, dv_units, map_title
 from dve.data import get_data
 from dve.colorbar import (
     discrete_colorscale,
@@ -322,26 +322,12 @@ def add(app, config):
             {
                 "data": figures,
                 "layout": {
-                    "title": (
-                        config["ui"]["labels"]["map"]["title"].format(
-                            dv=dv_label(
-                                config,
-                                design_variable,
-                                climate_regime,
-                                with_description=True,
-                            ),
-                            climate_regime=climate_regime_label(
-                                config, climate_regime, which="short"
-                            ),
-                            dataset=dataset_label(
-                                config,
-                                climate_regime,
-                                historical_dataset_id,
-                                future_dataset_id,
-                                which="short",
-                                nice=True,
-                            ),
-                        )
+                    "title": map_title(
+                        config,
+                        design_variable,
+                        climate_regime,
+                        historical_dataset_id,
+                        future_dataset_id,
                     ),
                     "font": dict(size=13, color="grey"),
                     "xaxis": dict(
