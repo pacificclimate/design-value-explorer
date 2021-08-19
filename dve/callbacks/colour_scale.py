@@ -5,11 +5,10 @@ from dash.exceptions import PreventUpdate
 
 import numpy as np
 
-from dve.config import dv_has_climate_regime
+from dve.config import dv_has_climate_regime, dv_roundto
 from dve.data import get_data
 import dve.layout
-from dve.math_utils import sigfigs
-
+from dve.math_utils import sigfigs, round_to_multiple
 
 logger = logging.getLogger("dve")
 
@@ -47,7 +46,7 @@ def add(app, config):
         return options
 
     @app.callback(
-        Output("colorscale_range_label", "children"),
+        Output("colorscale_options_label_range", "children"),
         [Input("color_scale_data_range", "value")],
     )
     def update_colourbar_range_label(range):
@@ -86,13 +85,14 @@ def add(app, config):
         )
         field = data.dv_values()
 
-        minimum = float(np.round(np.nanmin(field), 3))
-        maximum = float(np.round(np.nanmax(field), 3))
+        roundto = dv_roundto(config, design_variable, climate_regime)
+        minimum = round_to_multiple(np.nanmin(field), roundto, "down")
+        maximum = round_to_multiple(np.nanmax(field), roundto, "up")
         num_steps = 20
         step = (maximum - minimum) / (num_steps + 1)
         marks = {
-            x: str(sigfigs(x, 2))
-            for x in (minimum * 1.008, (minimum + maximum) / 2, maximum)
+            x: str(x)
+            for x in (minimum, (minimum + maximum) / 2, maximum)
         }
-        default_value = [minimum, maximum]
-        return [minimum, maximum, step, marks, default_value]
+        default_value = (minimum, maximum)
+        return (minimum, maximum, step, marks, default_value)
