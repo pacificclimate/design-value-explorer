@@ -32,11 +32,8 @@ def add(app, config):
         return options, "future"
 
     @app.callback(
-        [
-            Output("historical_dataset_id", "disabled"),
-            Output("future_dataset_id", "disabled"),
-        ],
+        Output("future_dataset_id", "disabled"),
         [Input("climate_regime", "value")],
     )
     def update_dataset_ctrl_disable(climate_regime):
-        return [climate_regime != x for x in ("historical", "future")]
+        return climate_regime != "future"

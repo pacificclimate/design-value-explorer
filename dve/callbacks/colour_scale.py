@@ -63,14 +63,14 @@ def add(app, config):
         [
             Input("design_variable", "value"),
             Input("climate_regime", "value"),
-            Input("historical_dataset_id", "value"),
+            # Input("historical_dataset_id", "value"),
             Input("future_dataset_id", "value"),
         ],
     )
     def update_slider(
         design_variable,
         climate_regime,
-        historical_dataset_id,
+        # historical_dataset_id,
         future_dataset_id,
     ):
         if not dv_has_climate_regime(config, design_variable, climate_regime):
@@ -80,8 +80,8 @@ def add(app, config):
             config,
             design_variable,
             climate_regime,
-            historical_dataset_id,
-            future_dataset_id,
+            historical_dataset_id="reconstruction",
+            future_dataset_id=future_dataset_id,
         )
         field = data.dv_values()
 

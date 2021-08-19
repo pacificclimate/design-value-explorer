@@ -112,23 +112,7 @@ def main(config):
                                 options=climate_regime_ctrl_opts,
                                 **config["ui"]["controls"]["climate-regime"],
                             ),
-                            [
-                                dcc.Dropdown(
-                                    id="historical_dataset_id",
-                                    options=[
-                                        {
-                                            "label": "HSM Reconstruction",
-                                            "value": "reconstruction",
-                                        },
-                                        {
-                                            "label": "CanRCM4 Ensemble Mean",
-                                            "value": "model",
-                                        },
-                                    ],
-                                    **config["ui"]["controls"][
-                                        "historical-dataset"
-                                    ],
-                                ),
+                            html.Div(
                                 dcc.Dropdown(
                                     id="future_dataset_id",
                                     options=future_dataset_ctrl_options,
@@ -136,7 +120,8 @@ def main(config):
                                         "future-dataset"
                                     ],
                                 ),
-                            ],
+                                style={"margin-top": "4em"},
+                            ),
                             daq.BooleanSwitch(
                                 id="apply_mask",
                                 **config["ui"]["controls"]["mask"],

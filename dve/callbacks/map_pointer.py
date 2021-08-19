@@ -169,7 +169,7 @@ def add(app, config):
             Input("map_main_graph", "hoverData"),
             Input("design_variable", "value"),
             Input("climate_regime", "value"),
-            Input("historical_dataset_id", "value"),
+            # Input("historical_dataset_id", "value"),
             Input("future_dataset_id", "value"),
         ],
     )
@@ -177,11 +177,13 @@ def add(app, config):
         hover_data,
         design_variable,
         climate_regime,
-        historical_dataset_id,
+        # historical_dataset_id,
         future_dataset_id,
     ):
         if hover_data is None:
             return None
+
+        historical_dataset_id = "reconstruction"
 
         if not dv_has_climate_regime(config, design_variable, climate_regime):
             raise PreventUpdate
@@ -213,7 +215,7 @@ def add(app, config):
             Input("map_main_graph", "clickData"),
             Input("design_variable", "value"),
             Input("climate_regime", "value"),
-            Input("historical_dataset_id", "value"),
+            # Input("historical_dataset_id", "value"),
             Input("future_dataset_id", "value"),
         ],
     )
@@ -221,7 +223,7 @@ def add(app, config):
         click_data,
         design_variable,
         climate_regime,
-        historical_dataset_id,
+        # historical_dataset_id,
         future_dataset_id,
     ):
         """
@@ -231,6 +233,8 @@ def add(app, config):
         """
         if click_data is None:
             return None
+
+        historical_dataset_id = "reconstruction"
 
         if not dv_has_climate_regime(config, design_variable, climate_regime):
             raise PreventUpdate
@@ -260,7 +264,7 @@ def add(app, config):
             Input("map_main_graph", "clickData"),
             Input("design_variable", "value"),
             Input("climate_regime", "value"),
-            Input("historical_dataset_id", "value"),
+            # Input("historical_dataset_id", "value"),
             Input("future_dataset_id", "value"),
         ],
     )
@@ -268,7 +272,7 @@ def add(app, config):
         click_data,
         design_variable,
         climate_regime,
-        historical_dataset_id,
+        # historical_dataset_id,
         future_dataset_id,
     ):
         """
@@ -279,6 +283,8 @@ def add(app, config):
         # On startup
         if click_data is None:
             return None
+
+        historical_dataset_id = "reconstruction"
 
         # If only the DV selection has changed, don't update.
         ctx = dash.callback_context
