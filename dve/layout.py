@@ -89,20 +89,16 @@ def main(config):
 
         climate_regime_ctrl_opts = climate_regime_ctrl_options(config)
 
-        col_widths = (3, 3, 2, 2, 2)
+        cfg = config["ui"]["labels"]["overlay-options"]
 
         return [
             # Section title
-            dbc.Row(dbc.Col(html.H5("Overlay Options")), className="mt-2"),
+            dbc.Row(dbc.Col(html.H5(cfg["title"])), className="mt-2"),
             # Control titles
             dbc.Row(
                 [
-                    dbc.Col(html.Label(label), width=width)
-                    for label, width in zip(
-                        # TODO: Get from config
-                        ("Period", "Dataset", "Mask", "Stations", "Grid"),
-                        col_widths,
-                    )
+                    dbc.Col(html.Label(column["title"]), width=column["width"])
+                    for column in cfg["columns"]
                 ]
             ),
             # Controls
@@ -154,7 +150,7 @@ def main(config):
                                 **config["ui"]["controls"]["grid"],
                             ),
                         ),
-                        col_widths,
+                        [column["width"] for column in cfg["columns"]],
                     )
                 ],
                 style={"font-size": "0.8em"},
@@ -171,58 +167,67 @@ def main(config):
         cmap_r = tuple(f"{color}_r" for color in colour_maps)
         colour_maps += cmap_r
 
+        cfg = config["ui"]["labels"]["colorscale-options"]
+
+        # Controls by column key in config
+        controls = {
+            "color-map": dcc.Dropdown(
+                id="color_map",
+                options=[{"value": x, "label": x} for x in colour_maps],
+                **config["ui"]["controls"]["colour-map"],
+            ),
+            "scale": dcc.Dropdown(
+                id="color_scale_type",
+                options=scale_ctrl_options,
+                **config["ui"]["controls"]["scale"],
+            ),
+            "num-colors": html.Div(
+                daq.Slider(
+                    id="num_colors", **config["ui"]["controls"]["num-colours"]
+                ),
+                style={"padding-top": "2em"},
+            ),
+            "range": Loading(
+                html.Div(
+                    dcc.RangeSlider(
+                        id="color_scale_data_range",
+                        **config["ui"]["controls"]["colourbar-range"],
+                    ),
+                    # RangeSlider has unwanted horiz padding of 25px.
+                    style={"margin": "2em -25px"},
+                )
+            ),
+        }
+
         return [
             # Section title
-            dbc.Row(dbc.Col(html.H5("Colour Scale Options")), className="mt-5"),
+            dbc.Row(dbc.Col(html.H5(cfg["title"])), className="mt-5"),
             # Control titles
             dbc.Row(
                 [
-                    dbc.Col(html.Label("Colour Map")),
-                    dbc.Col(html.Label("Scale")),
-                    dbc.Col(html.Label("Num. Colours")),
-                    Loading(dbc.Col(html.Label(id="colorscale_range_label"))),
+                    dbc.Col(
+                        Loading(
+                            html.Label(
+                                column["title"],
+                                id=f"colorscale_options_label_{col_key}",
+                            )
+                        ),
+                        width=column["width"],
+                    )
+                    for col_key, column in (
+                        (col_id, cfg["columns"][col_id])
+                        for col_id in cfg["column-order"]
+                    )
                 ]
             ),
             # Controls
             dbc.Row(
                 [
-                    dbc.Col(
-                        dcc.Dropdown(
-                            id="color_map",
-                            options=[
-                                {"value": x, "label": x} for x in colour_maps
-                            ],
-                            **config["ui"]["controls"]["colour-map"],
-                        )
-                    ),
-                    dbc.Col(
-                        dcc.Dropdown(
-                            id="color_scale_type",
-                            options=scale_ctrl_options,
-                            **config["ui"]["controls"]["scale"],
-                        )
-                    ),
-                    dbc.Col(
-                        daq.Slider(
-                            id="num_colors",
-                            **config["ui"]["controls"]["num-colours"],
-                        ),
-                        style={"padding-top": "2em"},
-                    ),
-                    dbc.Col(
-                        Loading(
-                            html.Div(
-                                dcc.RangeSlider(
-                                    id="color_scale_data_range",
-                                    **config["ui"]["controls"][
-                                        "colourbar-range"
-                                    ],
-                                ),
-                                # RangeSlider has unwanted horiz padding of 25px.
-                                style={"margin": "2em -25px"},
-                            )
-                        )
-                    ),
+                    dbc.Col(controls[col_key], width=column["width"])
+                    for col_key, column in (
+                        (col_id, cfg["columns"][col_id])
+                        for col_id in cfg["column-order"]
+                    )
                 ],
                 style={"font-size": "0.8em"},
             ),
