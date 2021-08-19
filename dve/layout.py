@@ -215,8 +215,8 @@ def main(config):
                         width=column["width"],
                     )
                     for col_key, column in (
-                        (col_id, cfg["columns"][col_id])
-                        for col_id in cfg["column-order"]
+                        (col_key, cfg["columns"][col_key])
+                        for col_key in cfg["column-order"]
                     )
                 ]
             ),
@@ -225,8 +225,8 @@ def main(config):
                 [
                     dbc.Col(controls[col_key], width=column["width"])
                     for col_key, column in (
-                        (col_id, cfg["columns"][col_id])
-                        for col_id in cfg["column-order"]
+                        (col_key, cfg["columns"][col_key])
+                        for col_key in cfg["column-order"]
                     )
                 ],
                 style={"font-size": "0.8em"},
