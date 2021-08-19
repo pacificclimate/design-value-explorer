@@ -33,7 +33,7 @@ from climpyrical.mask import stratify_coords
 
 
 logger = logging.getLogger("dve")
-timing_log = logger.debug  # Set to None to not log timing
+timing_log = logger.info  # Set to None to not log timing
 
 
 def add(app, config):

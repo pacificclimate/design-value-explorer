@@ -16,9 +16,11 @@ from dve.config import (
 from dve.data import get_data
 from dve.config import dv_label
 from dve.math_utils import round_to_multiple
+from dve.timing import timing
 
 
 logger = logging.getLogger("dve")
+timing_log = logger.info
 
 
 def add(app, config):
@@ -27,8 +29,10 @@ def add(app, config):
         'CACHE_DIR': 'table-c2-cache'
     })
 
-    @cache.memoize()
+    @cache.memoize(timeout=config["table_C2"]["cache_timeout"])
     def make_data_table(design_variable):
+        logger.info(f"Table C2 cache miss: {design_variable}")
+
         name_and_units = dv_label(
             config, design_variable, climate_regime="historical"
         )
@@ -145,4 +149,6 @@ def add(app, config):
                 None,
             )
 
-        return make_data_table(design_variable)
+        with timing(f"Table C2 for {design_variable}", timing_log):
+            data_table = make_data_table(design_variable)
+        return data_table
