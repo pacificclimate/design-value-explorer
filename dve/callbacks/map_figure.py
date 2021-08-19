@@ -68,7 +68,7 @@ def add(app, config):
             Input("design_variable", "value"),
             # Overlay options
             Input("climate_regime", "value"),
-            Input("historical_dataset_id", "value"),
+            # Input("historical_dataset_id", "value"),
             Input("future_dataset_id", "value"),
             Input("apply_mask", "on"),
             Input("show_stations", "on"),
@@ -89,7 +89,7 @@ def add(app, config):
         design_variable,
         # Overlay options
         climate_regime,
-        historical_dataset_id,
+        # historical_dataset_id,
         future_dataset_id,
         apply_mask,
         show_stations,
@@ -105,6 +105,8 @@ def add(app, config):
         # Do not update if the tab is not selected
         if main_tabs_active_tab != "map-tab":
             raise PreventUpdate
+
+        historical_dataset_id = "reconstruction"
 
         ctx = dash.callback_context
 
