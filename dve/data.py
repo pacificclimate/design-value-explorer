@@ -46,7 +46,7 @@ from dve.timing import timing
 
 
 logger = logging.getLogger("dve")
-timing_log = logger.debug  # Set to None to not log timing
+timing_log = logger.info  # Set to None to not log timing
 
 
 class ThreadSafeCache:
