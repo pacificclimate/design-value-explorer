@@ -29,6 +29,8 @@ def add(app, config):
 
     @cache.memoize()
     def make_data_table(design_variable):
+        logger.info(f"Table C2 cache miss: {design_variable}")
+
         name_and_units = dv_label(
             config, design_variable, climate_regime="historical"
         )
