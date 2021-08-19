@@ -27,7 +27,7 @@ def add(app, config):
         'CACHE_DIR': 'table-c2-cache'
     })
 
-    @cache.memoize()
+    @cache.memoize(timeout=config["table_C2"]["cache_timeout"])
     def make_data_table(design_variable):
         logger.info(f"Table C2 cache miss: {design_variable}")
 

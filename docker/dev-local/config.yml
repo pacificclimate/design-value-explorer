@@ -616,6 +616,9 @@ map:
             min: 40
             max: 85
 
+table_C2:
+    cache_timeout: 0
+
 units:
     degC:
         separator: false
