@@ -19,12 +19,11 @@ from dve.colorbar import (
     discrete_colorscale_colorbar,
     use_ticks,
     uniformly_spaced_with_target,
-    scale_transform,
 )
 from dve.generate_iso_lines import lonlat_overlay
-from dve.config import dv_label, climate_regime_label, dataset_label
+from dve.config import dv_label
 from dve.processing import coord_prep
-from dve.math_utils import round_to_multiple, lon_0_to_360
+from dve.math_utils import round_to_multiple, sigfigs
 from dve.timing import timing
 
 from climpyrical.data import read_data
@@ -164,6 +163,13 @@ def add(app, config):
             )
             target = 1 if is_relative else 0
             target = target if (zmin <= target <= zmax) else None
+
+        # Hacky fix for logarithmic scales for data with min value zero.
+        # Note that log scale is prohibited for several datasets, but is allowed
+        # for a few (e.g., RL50) that can include 0.
+        if color_scale_type == "logarithmic" and zmin == 0:
+            zmin = zmax / config["map"]["logscale_zmin_factor"]
+
         boundaries = uniformly_spaced_with_target(
             zmin, zmax, num_colours + 1, target=target, scale=color_scale_type
         )
@@ -317,7 +323,9 @@ def add(app, config):
             colorscale,
             color_scale_type,
             tickvals,
-            [round_to_multiple(t, roundto) for t in tickvals],
+            # Formatting of tickvals is difficult; this seems to be a
+            # reasonable solution after several different experiments.
+            [sigfigs(t, 2) for t in tickvals],
         )
 
         return (

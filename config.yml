@@ -648,6 +648,7 @@ map:
             round_to: [1, 2, 3, 5, 10, 15]
             min: 40
             max: 85
+    logscale_zmin_factor: 100
 
 table_C2:
     cache_timeout: 0

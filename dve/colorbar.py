@@ -6,6 +6,7 @@ import matplotlib.cm
 import plotly.graph_objects as go
 import numpy as np
 
+from dve.math_utils import nearest
 
 logger = logging.getLogger("dve")
 
@@ -233,3 +234,19 @@ def use_ticks(zmin, zmax, target, scale, num_colours, max_num_ticks):
     return uniformly_spaced_with_target(
         zmin, zmax, min(num_colours + 1, max_num_ticks), target, scale
     )
+
+
+def tick_roundto(tickvals):
+    num_ticks = len(tickvals)
+    tick_delta = (tickvals[-1] - tickvals[0]) / (num_ticks - 1)
+    tick_delta_pow_10 = 10 ** math.floor(math.log10(tick_delta))
+    tick_delta_mantissa = tick_delta / tick_delta_pow_10
+    nice_mantissa = nearest((1, 2, 5), tick_delta_mantissa)
+    roundto = nice_mantissa * tick_delta_pow_10
+    logger.debug(f"tick rounding: "
+                 f"num_ticks={num_ticks}, "
+                 f"tick_delta_pow_10={tick_delta_pow_10}, "
+                 f"tick_delta_mantissa={tick_delta_mantissa}, "
+                 f"nice_mantissa={nice_mantissa}, "
+                 f"tick_roundto={tick_roundto}, ")
+    return roundto
