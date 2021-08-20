@@ -19,10 +19,9 @@ from dve.colorbar import (
     discrete_colorscale_colorbar,
     use_ticks,
     uniformly_spaced_with_target,
-    scale_transform,
 )
 from dve.generate_iso_lines import lonlat_overlay
-from dve.config import dv_label, climate_regime_label, dataset_label
+from dve.config import dv_label
 from dve.processing import coord_prep
 from dve.math_utils import round_to_multiple, sigfigs
 from dve.timing import timing
