@@ -164,6 +164,13 @@ def add(app, config):
             )
             target = 1 if is_relative else 0
             target = target if (zmin <= target <= zmax) else None
+
+        # Hacky fix for logarithmic scales for data with min value zero.
+        # Note that log scale is prohibited for several datasets, but is allowed
+        # for a few (e.g., RL50) that can include 0.
+        if color_scale_type == "logarithmic" and zmin == 0:
+            zmin = zmax / config["map"]["logscale_zmin_factor"]
+
         boundaries = uniformly_spaced_with_target(
             zmin, zmax, num_colours + 1, target=target, scale=color_scale_type
         )
