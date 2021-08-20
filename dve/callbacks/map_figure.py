@@ -24,7 +24,7 @@ from dve.colorbar import (
 from dve.generate_iso_lines import lonlat_overlay
 from dve.config import dv_label, climate_regime_label, dataset_label
 from dve.processing import coord_prep
-from dve.math_utils import round_to_multiple, lon_0_to_360
+from dve.math_utils import round_to_multiple, sigfigs
 from dve.timing import timing
 
 from climpyrical.data import read_data
@@ -317,7 +317,9 @@ def add(app, config):
             colorscale,
             color_scale_type,
             tickvals,
-            [round_to_multiple(t, roundto) for t in tickvals],
+            # Formatting of tickvals is difficult; this seems to be a
+            # reasonable solution after several different experiments.
+            [sigfigs(t, 2) for t in tickvals],
         )
 
         return (
