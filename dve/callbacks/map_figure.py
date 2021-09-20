@@ -173,10 +173,11 @@ def add(app, config):
         boundaries = uniformly_spaced_with_target(
             zmin, zmax, num_colours + 1, target=target, scale=color_scale_type
         )
-        logger.debug(f"boundaries = {boundaries}")
+        # logger.debug(f"boundaries = {boundaries}")
         num_actual_colors = len(boundaries) - 1
         colours = colorscale_colors(color_map_name, num_actual_colors)
         colorscale = discrete_colorscale(boundaries, colours)
+        # logger.debug(f"colorscale = {colorscale}")
 
         logger.debug("update_ds: get raster dataset")
         raster_dataset = get_data(
