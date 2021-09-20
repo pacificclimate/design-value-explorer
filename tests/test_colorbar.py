@@ -19,6 +19,8 @@ from dve.colorbar import uniformly_spaced_with_target, scale_transform
         (2, 1e6, 7, 1e3, "logarithmic"),
         (1e-3, 1e3, 7, 1, "logarithmic"),
         (1e-4, 1e3, 7, 1, "logarithmic"),
+
+        (0.791, 1.156, 10 + 1, 1, "logarithmic"),
     ]
 )
 def test_uniformly_spaced_with_target(zmin, zmax, num_values, target, scale):
