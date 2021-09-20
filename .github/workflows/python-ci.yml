@@ -32,7 +32,8 @@ jobs:
     - name: Install dependencies if changed
       if: steps.cache-pipenv.outputs.cache-hit != 'true' && ${{ matrix.python-version == '3.8' }}
       run: |
-        pipenv install --dev .
+        pipenv install --dev
+        pipenv run pip install .
 
 # We aren't using a matrix testing strategy yet
 #    - name: Re-install dependencies if alternative python version
