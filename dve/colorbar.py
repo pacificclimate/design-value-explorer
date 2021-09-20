@@ -126,7 +126,7 @@ def uniformly_spaced_with_target(
     # Unadjusted values
     z = np.linspace(z0, zn, num_values)  # unadjusted array of values
     delta_z = (zn - z0) / (num_values - 1)  # == z[1] - z[0]
-    k = int(round(v - z0) / delta_z)  # z[k] is closest to v
+    k = int(round((v - z0) / delta_z))  # z[k] is closest to v
     d = v - z[k]
 
     # Targeted values
@@ -191,8 +191,8 @@ def discrete_colorscale_colorbar(
             z=[[z] for z in raw_midpoints],
             colorscale=colorscale,
             showscale=False,
-            hoverinfo="skip",
-            # hovertemplate="%{z:3.2r}<extra></extra>",
+            # hoverinfo="skip",
+            hovertemplate="Mid: %{z:5.3r}<extra></extra>",
         ),
         layout=go.Layout(
             xaxis=go.layout.XAxis(
@@ -214,7 +214,7 @@ def discrete_colorscale_colorbar(
                 ticktext=ticktext,
             ),
             autosize=False,
-            width=60,  # very sensitive; < 60 => no labels
+            width=80,  # very sensitive; < 60 => no labels
             height=500,
             margin=go.layout.Margin(
                 t=50,
@@ -222,7 +222,7 @@ def discrete_colorscale_colorbar(
                 l=1,
                 # yaxis width must be >= 60 for reasons unknown
                 # adjust visual width of colorbar by adjusting right margin
-                r=40,
+                r=60,
             ),
         ),
         **kwargs,
