@@ -1,5 +1,11 @@
 # News / Release Notes
 
+## 1.4.2
+
+**2021-Sep-21**
+
+- [Fix colorscale](https://github.com/pacificclimate/dash-dv-explorer/pull/174)
+
 ## 1.4.1
 
 **2021-Aug-05**
