@@ -8,6 +8,20 @@ import os.path
 from pkg_resources import resource_filename
 
 
+def path_get(d, path, default=None):
+    """
+    Get a value addressed by `path` from a dict `d`.
+    If `path` is not valid within the dict, return `default`.
+    """
+    if not isinstance(d, dict):
+        return default
+    if isinstance(path, (list, tuple)):
+        if len(path) == 1:
+            return d.get(path[0], default)
+        return path_get(d[path[0]], path[1:], default)
+    return d.get(path, default)
+
+
 def validate_filepath(filepath):
     filepath = resource_filename("dve", filepath)
     if not os.path.isfile(filepath):
@@ -25,19 +39,20 @@ def validate(config):
         validate_filepath(filepath)
 
     for design_variable in config["ui"]["dvs"]:
-        dv_defn = config["dvs"][design_variable]
 
         if dv_has_climate_regime(config, design_variable, "historical"):
-            for key in (
-                "station_path",
-                "input_model_path",
-                "reconstruction_path",
-                "table",
+            datasets = config["dvs"][design_variable]["historical"]["datasets"]
+            for path in (
+                "model",
+                "reconstruction",
+                ["stations", "path"],
+                "table_C2",
             ):
-                validate_filepath(dv_defn[key])
+                validate_filepath(path_get(datasets, path))
 
-        for fcf_id in config["ui"]["future_change_factors"]:
-            validate_filepath(dv_defn["future_change_factor_paths"][fcf_id])
+        datasets = config["dvs"][design_variable]["future"]["datasets"]
+        for key in config["ui"]["future_change_factors"]:
+            validate_filepath(datasets[key])
 
 
 def filepath_for(
@@ -48,17 +63,20 @@ def filepath_for(
     future_dataset_id=None,
 ):
     if climate_regime == "historical":
-        path_key = {
-            "stations": "station_path",
-            "table": "table",
-            "model": "input_model_path",
-            "reconstruction": "reconstruction_path",
+        path = {
+            "stations": ["stations", "path"],
+            "table": "table_C2",
+            "model": "model",
+            "reconstruction": "reconstruction",
         }[historical_dataset_id]
-        return config["dvs"][design_variable][path_key]
-    else:
-        return config["dvs"][design_variable]["future_change_factor_paths"][
-            future_dataset_id
-        ]
+        return path_get(
+            config["dvs"][design_variable]["historical"]["datasets"],
+            path,
+        )
+
+    return config["dvs"][design_variable]["future"]["datasets"][
+        future_dataset_id
+    ]
 
 
 def dv_has_climate_regime(config, design_variable, climate_regime):
@@ -66,9 +84,7 @@ def dv_has_climate_regime(config, design_variable, climate_regime):
     Return a boolean indicating whether a DV has definitions for specific
     climate regime (historical or future) datasets.
     """
-    return (
-        "abs_units" if climate_regime == "historical" else "cf_units"
-    ) in config["dvs"][design_variable]
+    return climate_regime in config["dvs"][design_variable]
 
 
 def dv_name(config, design_variable):
@@ -95,9 +111,7 @@ def dv_units(config, design_variable, climate_regime, nice=True):
     Return the units of a given design variable, for historical or future
     projections.
     """
-    units = config["dvs"][design_variable][
-        "abs_units" if climate_regime == "historical" else "cf_units"
-    ]
+    units = config["dvs"][design_variable][climate_regime]["units"]
     if not nice:
         return units
     return nice_units(config, units)[0]
@@ -112,12 +126,6 @@ def dv_label(
 ):
     """
     Return the name, with optional description, and units of a DV.
-
-    :param config:
-    :param design_variable:
-    :param climate_regime:
-    :param with_description:
-    :return:
     """
     description = (
         f" {config['dvs'][design_variable]['description']}"
@@ -133,9 +141,19 @@ def dv_label(
 
 
 def dv_roundto(config, design_variable, climate_regime):
-    if dv_units(config, design_variable, climate_regime) == "ratio":
-        return config["dvs"][design_variable]["ratio_roundto"]
-    return config["dvs"][design_variable]["roundto"]
+    return config["dvs"][design_variable][climate_regime]["roundto"]
+
+
+def dv_colour_map(config, design_variable, climate_regime):
+    return config["dvs"][design_variable][climate_regime]["colour_map"]
+
+
+def dv_colour_scale_type_default(config, design_variable, climate_regime):
+    return config["dvs"][design_variable][climate_regime]["scale"]["default"]
+
+
+def dv_historical_stations_column(config, design_variable):
+    return config["dvs"][design_variable]["historical"]["stations"]["column"]
 
 
 def climate_regime_label(config, climate_regime, which="long"):

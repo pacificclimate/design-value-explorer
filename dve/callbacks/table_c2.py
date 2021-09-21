@@ -50,7 +50,7 @@ def add(app, config):
         ]
         display_dataset["PCIC"] = display_dataset["PCIC"].apply(
             lambda x: round_to_multiple(
-                x, config["dvs"][design_variable]["roundto"]
+                x, dv_roundto(config, design_variable, "historical")
             )
         )
 
