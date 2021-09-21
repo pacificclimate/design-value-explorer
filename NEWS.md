@@ -1,5 +1,11 @@
 # News / Release Notes
 
+## 1.4.3
+
+**2021-Sep-21**
+
+- Fix error in python-ci
+
 ## 1.4.2
 
 **2021-Sep-21**
