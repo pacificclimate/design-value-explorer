@@ -258,8 +258,8 @@ def add(app, config):
                     z=ds_arr,
                     x=rlon.values[icxmin:icxmax],
                     y=rlat.values[icymin:icymax],
-                    zmin=zmin,
-                    zmax=zmax,
+                    zmin=boundaries[0],
+                    zmax=boundaries[-1],
                     hoverongaps=False,
                     colorscale=colorscale,
                     showscale=False,  # Hide colorbar
@@ -326,7 +326,7 @@ def add(app, config):
             tickvals,
             # Formatting of tickvals is difficult; this seems to be a
             # reasonable solution after several different experiments.
-            [sigfigs(t, 2) for t in tickvals],
+            [sigfigs(t, 3) for t in tickvals],
         )
 
         return (
