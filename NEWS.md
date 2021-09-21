@@ -1,5 +1,11 @@
 # News / Release Notes
 
+## 1.4.4
+
+**2021-Sep-21**
+
+- Fix heatmap zmin, zmax (color mapping bounds)
+
 ## 1.4.3
 
 **2021-Sep-21**
