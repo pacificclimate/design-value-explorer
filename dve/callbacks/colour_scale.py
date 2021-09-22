@@ -9,7 +9,7 @@ from dve.config import (
     dv_has_climate_regime,
     dv_roundto,
     dv_colour_map,
-    dv_colour_scale_type_default,
+    dv_colour_scale_type,
 )
 from dve.data import get_data
 import dve.layout
@@ -31,7 +31,7 @@ def add(app, config):
         [Input("design_variable", "value"), Input("climate_regime", "value")],
     )
     def update_colour_scale_type(design_variable, climate_regime):
-        return dv_colour_scale_type_default(
+        return dv_colour_scale_type(
             config, design_variable, climate_regime
         )
 
