@@ -187,7 +187,7 @@ dvs:
     DRWP5:
         description: Driving rain wind pressure, 1/5
         future:
-            colour_map: terrain_r
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/driving_rain_wind_pressures_q5yr/D0.5C/DRWP5_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/driving_rain_wind_pressures_q5yr/D1.0C/DRWP5_CanRCM4_ensmean_CF_DT1.0.nc
@@ -216,7 +216,7 @@ dvs:
     HDD:
         description: "Heating degree days above 18 \xB0C"
         future:
-            colour_map: RdBu
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/degree_days_below_18/D0.5C/HDD_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/degree_days_below_18/D1.0C/HDD_CanRCM4_ensmean_CF_DT1.0.nc
@@ -245,7 +245,7 @@ dvs:
     IDFCF:
         description: IDF future change factor
         future:
-            colour_map: terrain_r
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2016_DT0.5_Reconstruction.nc
                 '1.0': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2028_DT1.0_Reconstruction.nc
@@ -261,7 +261,7 @@ dvs:
     MI:
         description: Moisture index
         future:
-            colour_map: terrain_r
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/foo/D0.5C/MI_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/foo/D1.0C/MI_CanRCM4_ensmean_CF_DT1.0.nc
@@ -272,7 +272,7 @@ dvs:
                 '3.5': data/change_factors/foo/D3.0C/MI_CanRCM4_ensmean_CF_DT3.0.nc
             roundto: null
             scale:
-                default: logarithmic
+                default: linear
             units: ratio
         historical:
             colour_map: terrain_r
@@ -290,7 +290,7 @@ dvs:
     PAnn:
         description: Annual total precipitation
         future:
-            colour_map: PuBuGn
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/annual_total_precipitation/D0.5C/PAnn_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/annual_total_precipitation/D1.0C/PAnn_CanRCM4_ensmean_CF_DT1.0.nc
@@ -301,7 +301,7 @@ dvs:
                 '3.5': data/change_factors/annual_total_precipitation/D3.0C/PAnn_CanRCM4_ensmean_CF_DT3.0.nc
             roundto: 0.001
             scale:
-                default: logarithmic
+                default: linear
             units: ratio
         historical:
             colour_map: PuBuGn
@@ -319,7 +319,7 @@ dvs:
     R15m10:
         description: 15-min rainfall, 1/10
         future:
-            colour_map: PuBuGn
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2016_DT0.5_Reconstruction.nc
                 '1.0': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2028_DT1.0_Reconstruction.nc
@@ -330,7 +330,7 @@ dvs:
                 '3.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2077_DT3.5_Reconstruction.nc
             roundto: 0.001
             scale:
-                default: logarithmic
+                default: linear
             units: ratio
         historical:
             colour_map: PuBuGn
@@ -348,7 +348,7 @@ dvs:
     R1d50:
         description: 1-day rainfall, 1/50
         future:
-            colour_map: PuBuGn
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2016_DT0.5_Reconstruction.nc
                 '1.0': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2028_DT1.0_Reconstruction.nc
@@ -359,7 +359,7 @@ dvs:
                 '3.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2077_DT3.5_Reconstruction.nc
             roundto: 0.001
             scale:
-                default: logarithmic
+                default: linear
             units: ratio
         historical:
             colour_map: PuBuGn
@@ -377,7 +377,7 @@ dvs:
     RAnn:
         description: Annual total rainfall
         future:
-            colour_map: PuBuGn
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/annual_rain/D0.5C/RAnn_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/annual_rain/D1.0C/RAnn_CanRCM4_ensmean_CF_DT1.0.nc
@@ -388,7 +388,7 @@ dvs:
                 '3.5': data/change_factors/annual_rain/D3.0C/RAnn_CanRCM4_ensmean_CF_DT3.0.nc
             roundto: 0.001
             scale:
-                default: logarithmic
+                default: linear
             units: ratio
         historical:
             colour_map: PuBuGn
@@ -406,7 +406,7 @@ dvs:
     RHann:
         description: Annual mean relative humidity
         future:
-            colour_map: terrain_r
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/annual_relative_humidity/D0.5C/RHann_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/annual_relative_humidity/D1.0C/RHann_CanRCM4_ensmean_CF_DT1.0.nc
@@ -435,7 +435,7 @@ dvs:
     RL50:
         description: Annual maximum rain-on-snow, 1/50
         future:
-            colour_map: terrain_r
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/rain_q50yr/D0.5C/RL50_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/rain_q50yr/D1.0C/RL50_CanRCM4_ensmean_CF_DT1.0.nc
@@ -446,7 +446,7 @@ dvs:
                 '3.5': data/change_factors/rain_q50yr/D3.0C/RL50_CanRCM4_ensmean_CF_DT3.0.nc
             roundto: 0.001
             scale:
-                default: logarithmic
+                default: linear
             units: ratio
         historical:
             colour_map: terrain_r
@@ -464,7 +464,7 @@ dvs:
     SL50:
         description: Annual maximum snow load, 1/50
         future:
-            colour_map: terrain_r
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/snow_q50yr/D0.5C/SL50_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/snow_q50yr/D1.0C/SL50_CanRCM4_ensmean_CF_DT1.0.nc
@@ -493,7 +493,7 @@ dvs:
     TJan1.0:
         description: January temperature 1%
         future:
-            colour_map: RdBu_r
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/january_1%_dry/D0.5C/TJan1.0_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/january_1%_dry/D1.0C/TJan1.0_CanRCM4_ensmean_CF_DT1.0.nc
@@ -522,7 +522,7 @@ dvs:
     TJan2.5:
         description: January temperature 2.5%
         future:
-            colour_map: RdBu_r
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/january_2.5%_dry/D0.5C/TJan2.5_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/january_2.5%_dry/D1.0C/TJan2.5_CanRCM4_ensmean_CF_DT1.0.nc
@@ -551,7 +551,7 @@ dvs:
     TJul97.5:
         description: July temperature 97.5%
         future:
-            colour_map: RdBu_r
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/july_2.5%_dry/D0.5C/TJul2.5_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/july_2.5%_dry/D1.0C/TJul2.5_CanRCM4_ensmean_CF_DT1.0.nc
@@ -580,7 +580,7 @@ dvs:
     Tmax:
         description: Annual maximum daily temperature
         future:
-            colour_map: RdBu_r
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/maximum_mean_daily_temperature/D0.5C/Tmax_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/maximum_mean_daily_temperature/D1.0C/Tmax_CanRCM4_ensmean_CF_DT1.0.nc
@@ -609,7 +609,7 @@ dvs:
     Tmin:
         description: Annual minimum daily temperature
         future:
-            colour_map: RdBu_r
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/minimum_mean_daily_temperature/D0.5C/Tmin_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/minimum_mean_daily_temperature/D1.0C/Tmin_CanRCM4_ensmean_CF_DT1.0.nc
@@ -638,7 +638,7 @@ dvs:
     TwJul97.5:
         description: July wet-bulb temperature 97.5%
         future:
-            colour_map: RdBu_r
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/july_2.5%_wet/D0.5C/TwJul2.5_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/july_2.5%_wet/D1.0C/TwJul2.5_CanRCM4_ensmean_CF_DT1.0.nc
@@ -667,7 +667,7 @@ dvs:
     WP10:
         description: Annual maximum wind pressure, 1/10
         future:
-            colour_map: terrain_r
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/hourly_wind_pressures_q10wp/D0.5C/WP10_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/hourly_wind_pressures_q10wp/D1.0C/WP10_CanRCM4_ensmean_CF_DT1.0.nc
@@ -696,7 +696,7 @@ dvs:
     WP50:
         description: Annual maximum wind pressure, 1/50
         future:
-            colour_map: terrain_r
+            colour_map: jet
             datasets:
                 '0.5': data/change_factors/hourly_wind_pressures_q50wp/D0.5C/WP50_CanRCM4_ensmean_CF_DT0.5.nc
                 '1.0': data/change_factors/hourly_wind_pressures_q50wp/D1.0C/WP50_CanRCM4_ensmean_CF_DT1.0.nc
