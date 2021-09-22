@@ -11,7 +11,10 @@ import plotly.graph_objects as go
 import geopandas as gpd
 import numpy as np
 
-from dve.config import dv_has_climate_regime, dv_roundto, dv_units, map_title
+from dve.config import (
+    dv_has_climate_regime, dv_roundto, dv_units, map_title,
+    dv_historical_stations_column,
+)
 from dve.data import get_data
 from dve.colorbar import (
     discrete_colorscale,
@@ -282,19 +285,19 @@ def add(app, config):
                 "historical",
                 historical_dataset_id="stations",
             ).data_frame()
-            station_dv = config["dvs"][design_variable]["station_dv"]
+            stations_column = dv_historical_stations_column(config, design_variable)
             with timing("coord_prep for stations", log=timing_log):
-                df = coord_prep(df, station_dv)
+                df = coord_prep(df, stations_column)
             figures.append(
                 go.Scattergl(
                     x=df.rlon,
                     y=df.rlat,
-                    text=df[station_dv],
+                    text=df[stations_column],
                     mode="markers",
                     marker=dict(
                         size=10,
                         symbol="circle",
-                        color=df[station_dv],
+                        color=df[stations_column],
                         cmin=zmin,
                         cmax=zmax,
                         line=dict(width=1, color="DarkSlateGrey"),

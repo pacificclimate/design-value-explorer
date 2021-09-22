@@ -5,7 +5,12 @@ from dash.exceptions import PreventUpdate
 
 import numpy as np
 
-from dve.config import dv_has_climate_regime, dv_roundto
+from dve.config import (
+    dv_has_climate_regime,
+    dv_roundto,
+    dv_colour_map,
+    dv_colour_scale_type_default,
+)
 from dve.data import get_data
 import dve.layout
 from dve.math_utils import sigfigs, round_to_multiple
@@ -15,30 +20,34 @@ logger = logging.getLogger("dve")
 
 def add(app, config):
     @app.callback(
-        Output("color_map", "value"), [Input("design_variable", "value")]
+        Output("color_map", "value"),
+        [Input("design_variable", "value"), Input("climate_regime", "value")],
     )
-    def update_colour_map_ctrl_value(design_variable):
-        return config["dvs"][design_variable]["colour_map"]
+    def update_colour_map_ctrl_value(design_variable, climate_regime):
+        return dv_colour_map(config, design_variable, climate_regime)
 
     @app.callback(
-        Output("color_scale_type", "value"), [Input("design_variable", "value")]
+        Output("color_scale_type", "value"),
+        [Input("design_variable", "value"), Input("climate_regime", "value")],
     )
-    def update_scale_ctrl_value(design_variable):
-        return config["dvs"][design_variable]["scale"]["default"]
+    def update_colour_scale_type(design_variable, climate_regime):
+        return dv_colour_scale_type_default(
+            config, design_variable, climate_regime
+        )
 
     @app.callback(
         Output("color_scale_type", "options"),
-        [Input("design_variable", "value")],
+        [Input("design_variable", "value"), Input("climate_regime", "value")],
     )
-    def update_scale_ctrl_options(design_variable):
+    def update_scale_ctrl_options(design_variable, climate_regime):
         options = [
             {
                 **option,
                 "disabled": (
                     option["value"] == "logarithmic"
-                    and config["dvs"][design_variable]["scale"].get(
-                        "disable_logarithmic", False
-                    )
+                    and config["dvs"][design_variable][climate_regime][
+                        "scale"
+                    ].get("disable_logarithmic", False)
                 ),
             }
             for option in dve.layout.scale_ctrl_options
@@ -90,9 +99,6 @@ def add(app, config):
         maximum = round_to_multiple(np.nanmax(field), roundto, "up")
         num_steps = 20
         step = (maximum - minimum) / (num_steps + 1)
-        marks = {
-            x: str(x)
-            for x in (minimum, (minimum + maximum) / 2, maximum)
-        }
+        marks = {x: str(x) for x in (minimum, (minimum + maximum) / 2, maximum)}
         default_value = (minimum, maximum)
         return (minimum, maximum, step, marks, default_value)
