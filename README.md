@@ -19,52 +19,43 @@ directly on a development machine.
 
 ## App configuration
 
-Configuration paths go into `config.yml`. An example is provided by default. 
-Note that the paths are not absolute, and use `resource_pkgs.resource_filename` 
-set within `dve/` as a reference.
+The app is configured by two mechanisms:
+- Environment variables for deployment parameters
+- A configuration file (`config.yml`) for internal app config
 
-The generic recipe is:
-```yaml
-paths:
-    mask_path: data/masks/canada_mask_rp.nc
-    north_mask_path: data/masks/canada_mask_north_rp.nc
-    canada_vector: data/vectors/canada_final.shp
-    native_mask: data/masks/land_mask_CanRCM4_sftlf.nc
-    total_table_c2: data/tables/combined_dv_tablec2.csv
+### Environment variables
 
-dvs:
-    RL50:
-        description: 50-year return level of annual maximum rain-on-snow load
-        units: kPa
-        station_dv: "RL50 (kPa)" # As found in the station DV column csv
-        station_path: data/station_inputs/sl50_rl50_for_maps.csv # station csv (requires lat, lon columns)
-        input_model_path: data/model_inputs/snw_rain_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc # is the input model path associated with the dv
-        reconstruction_path: data/reconstructions/RL50_reconstruction.nc # the HSM reconstruction from climpyrical
-        table: data/tables/RL50_TableC2.csv # the table generated from the HSM for NBCC locations
-        cmap: "terrain_r" # default colormap
-        scale:
-            disable_logarithmic: False  # optional: default False
-            default: logarithmic
+Environment variables configure major deployment parameters such as the
+base path name and Gunicorn parameters.
 
-    HDD:
-        description: "Heating degree days (threshold: 18 °C)"
-        units: °C-day
-        station_dv: "HDD (degC-day)"
-        station_path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
-        input_model_path: data/model_inputs/hdd_CanRCM4-LE_ens35_1951-2016_ann_ensmean.nc
-        reconstruction_path: data/reconstructions/HDD_reconstruction.nc
-        table: data/tables/HDD_TableC2.csv
-        cmap: "RdBu"
-        scale:
-            disable_logarithmic: False
-            default: linear
+`DASH_URL_BASE_PATHNAME`
+- Base path for the app and all associated URLs including downloads
 
-    # and so on...
+`LARGE_FILE_CACHE_SIZE`
+- Number of large files (e.g., NetCDF data files) cached inside the app.
 
-colormaps:
-    # list of colormaps as found in matplotlib.cm
-    ['viridis', 'plasma', 'inferno', ...] 
-```
+`SMALL_FILE_CACHE_SIZE`
+- Number of small files (e.g., CSV files) cached inside the app.
+
+`GUNICORN_<param>`
+- GUNICORN configuration parameters. The Gunicorn configuration file 
+  (`docker/production/gunicorn.conf`) scrapes all environment variables 
+  of the form `GUNICORN_<param>` and sets value of configuration parameter 
+  `<param>` (converted to lowercase) to the value of the environment var.
+
+### Configuration file
+
+On startup, the app loads a configuration file (`config.yml`) containing
+parameters used to direct the behaviour of the app. Configuration 
+parameters include:
+- User interface defaults, settings, and labels (key `ui`)
+- Filepaths to some data files (key `paths`)
+- Filepaths and information about each design value (key `dvs`)
+- A miscellany of other values
+
+Filepaths are not absolute, and use `resource_pkgs.resource_filename` 
+set within `dve/` as a reference. This is not a desirable practice and
+will change to absolute, direct filepaths at some point.
 
 ## Deploying to production
 
