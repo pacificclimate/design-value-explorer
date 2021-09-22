@@ -258,19 +258,6 @@ dvs:
             scale:
                 default: linear
             units: ratio
-        historical:
-            colour_map: terrain_r
-            datasets:
-                model: null
-                reconstruction: null
-                stations:
-                    column: null
-                    path: null
-                table_C2: null
-            roundto: 0.001
-            scale:
-                default: linear
-            units: null
     MI:
         description: Moisture index
         future:
