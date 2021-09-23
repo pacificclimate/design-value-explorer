@@ -227,11 +227,11 @@ dvs:
                 '3.0': data/change_factors/degree_days_below_18/D3.0C/HDD_CanRCM4_ensmean_CF_DT3.0.nc
                 '3.5': data/change_factors/degree_days_below_18/D3.0C/HDD_CanRCM4_ensmean_CF_DT3.0.nc
             units: degC-day
-            roundto: 0.001
+            roundto: 10
             colour_map: jet
             scale: linear
             colorbar:
-                sigfigs: 3
+                sigfigs: 2
         historical:
             datasets:
                 model: data/model_inputs/hdd_CanRCM4-LE_ens35_1951-2016_ann_ensmean.nc
@@ -275,7 +275,7 @@ dvs:
                 '3.0': data/change_factors/foo/D3.0C/MI_CanRCM4_ensmean_CF_DT3.0.nc
                 '3.5': data/change_factors/foo/D3.0C/MI_CanRCM4_ensmean_CF_DT3.0.nc
             units: ratio
-            roundto: null
+            roundto: 0.001
             colour_map: jet
             scale: linear
             colorbar:
@@ -523,7 +523,7 @@ dvs:
                 '3.0': data/change_factors/january_1%_dry/D3.0C/TJan1.0_CanRCM4_ensmean_CF_DT3.0.nc
                 '3.5': data/change_factors/january_1%_dry/D3.0C/TJan1.0_CanRCM4_ensmean_CF_DT3.0.nc
             units: degC
-            roundto: 0.001
+            roundto: 1
             colour_map: jet
             scale: linear
             colorbar:
@@ -554,7 +554,7 @@ dvs:
                 '3.0': data/change_factors/january_2.5%_dry/D3.0C/TJan2.5_CanRCM4_ensmean_CF_DT3.0.nc
                 '3.5': data/change_factors/january_2.5%_dry/D3.0C/TJan2.5_CanRCM4_ensmean_CF_DT3.0.nc
             units: degC
-            roundto: 0.001
+            roundto: 1
             colour_map: jet
             scale: linear
             colorbar:
@@ -585,7 +585,7 @@ dvs:
                 '3.0': data/change_factors/july_2.5%_dry/D3.0C/TJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
                 '3.5': data/change_factors/july_2.5%_dry/D3.0C/TJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
             units: degC
-            roundto: 0.001
+            roundto: 1
             colour_map: jet
             scale: linear
             colorbar:
@@ -616,7 +616,7 @@ dvs:
                 '3.0': data/change_factors/maximum_mean_daily_temperature/D3.0C/Tmax_CanRCM4_ensmean_CF_DT3.0.nc
                 '3.5': data/change_factors/maximum_mean_daily_temperature/D3.0C/Tmax_CanRCM4_ensmean_CF_DT3.0.nc
             units: degC
-            roundto: 0.001
+            roundto: 1
             colour_map: jet
             scale: linear
             colorbar:
@@ -647,7 +647,7 @@ dvs:
                 '3.0': data/change_factors/minimum_mean_daily_temperature/D3.0C/Tmin_CanRCM4_ensmean_CF_DT3.0.nc
                 '3.5': data/change_factors/minimum_mean_daily_temperature/D3.0C/Tmin_CanRCM4_ensmean_CF_DT3.0.nc
             units: degC
-            roundto: 0.001
+            roundto: 1
             colour_map: jet
             scale: linear
             colorbar:
@@ -678,7 +678,7 @@ dvs:
                 '3.0': data/change_factors/july_2.5%_wet/D3.0C/TwJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
                 '3.5': data/change_factors/july_2.5%_wet/D3.0C/TwJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
             units: degC
-            roundto: 0.001
+            roundto: 1
             colour_map: jet
             scale: linear
             colorbar:
