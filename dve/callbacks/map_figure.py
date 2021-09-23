@@ -11,6 +11,7 @@ import plotly.graph_objects as go
 import geopandas as gpd
 import numpy as np
 
+from dve.callbacks.utils import triggered_by
 from dve.config import (
     dv_has_climate_regime,
     dv_roundto,
@@ -61,6 +62,31 @@ def add(app, config):
         ]
         >= 1.0
     )
+
+    @app.callback(
+        Output("local_config", "data"),
+        Output("apply_mask", "on"),
+        Input("local_config", "modified_timestamp"),
+        Input("apply_mask", "on"),
+        State("local_config", "data"),
+    )
+    def update_local_config(local_config_ts, apply_mask, local_config):
+        if local_config_ts is None:
+            logger.debug(f"initializing local_config from config")
+            return {
+                "mask": config["ui"]["controls"]["mask"]["on"]
+            }, dash.no_update
+        ctx = dash.callback_context
+        if triggered_by("apply_mask.", ctx):
+            logger.debug("updating local_config from mask")
+            local_config["mask"] = apply_mask
+        if triggered_by("local_config.", ctx):
+            logger.debug("updating mask from local_config")
+            apply_mask_out = local_config["mask"]
+        else:
+            apply_mask_out = dash.no_update
+        return local_config, apply_mask_out
+
 
     @app.callback(
         [
