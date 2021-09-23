@@ -9,7 +9,8 @@ from dve.config import (
     dv_has_climate_regime,
     dv_roundto,
     dv_colour_map,
-    dv_colour_scale_type,
+    dv_colour_scale_default,
+    dv_colour_scale_disable_logarithmic,
 )
 from dve.data import get_data
 import dve.layout
@@ -31,9 +32,7 @@ def add(app, config):
         [Input("design_variable", "value"), Input("climate_regime", "value")],
     )
     def update_colour_scale_type(design_variable, climate_regime):
-        return dv_colour_scale_type(
-            config, design_variable, climate_regime
-        )
+        return dv_colour_scale_default(config, design_variable, climate_regime)
 
     @app.callback(
         Output("color_scale_type", "options"),
@@ -45,9 +44,9 @@ def add(app, config):
                 **option,
                 "disabled": (
                     option["value"] == "logarithmic"
-                    and config["dvs"][design_variable][climate_regime][
-                        "scale"
-                    ].get("disable_logarithmic", False)
+                    and dv_colour_scale_disable_logarithmic(
+                        config, design_variable, climate_regime
+                    )
                 ),
             }
             for option in dve.layout.scale_ctrl_options

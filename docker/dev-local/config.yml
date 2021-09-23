@@ -198,7 +198,8 @@ dvs:
             units: ratio
             roundto: 0.001
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
         historical:
@@ -212,7 +213,8 @@ dvs:
             units: kPa
             roundto: 10
             colour_map: terrain_r
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
     HDD:
@@ -229,7 +231,8 @@ dvs:
             units: degC-day
             roundto: 10
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 2
         historical:
@@ -243,7 +246,8 @@ dvs:
             units: degC-day
             roundto: 10
             colour_map: RdBu
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
     IDFCF:
@@ -260,7 +264,8 @@ dvs:
             units: ratio
             roundto: 0.001
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
     MI:
@@ -277,7 +282,8 @@ dvs:
             units: ratio
             roundto: 0.001
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
         historical:
@@ -291,7 +297,8 @@ dvs:
             units: ''
             roundto: null
             colour_map: terrain_r
-            scale: logarithmic
+            scale:
+                default: logarithmic
             colorbar:
                 sigfigs: 3
     PAnn:
@@ -308,7 +315,8 @@ dvs:
             units: ratio
             roundto: 0.001
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
         historical:
@@ -322,7 +330,8 @@ dvs:
             units: mm
             roundto: 5
             colour_map: PuBuGn
-            scale: logarithmic
+            scale:
+                default: logarithmic
             colorbar:
                 sigfigs: 3
     R15m10:
@@ -339,7 +348,8 @@ dvs:
             units: ratio
             roundto: 0.001
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
         historical:
@@ -353,7 +363,8 @@ dvs:
             units: mm
             roundto: 5
             colour_map: PuBuGn
-            scale: logarithmic
+            scale:
+                default: logarithmic
             colorbar:
                 sigfigs: 3
     R1d50:
@@ -370,7 +381,8 @@ dvs:
             units: ratio
             roundto: 0.001
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
         historical:
@@ -384,7 +396,8 @@ dvs:
             units: mm
             roundto: 1
             colour_map: PuBuGn
-            scale: logarithmic
+            scale:
+                default: logarithmic
             colorbar:
                 sigfigs: 3
     RAnn:
@@ -401,7 +414,8 @@ dvs:
             units: ratio
             roundto: 0.001
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
         historical:
@@ -415,7 +429,8 @@ dvs:
             units: mm
             roundto: 5
             colour_map: PuBuGn
-            scale: logarithmic
+            scale:
+                default: logarithmic
             colorbar:
                 sigfigs: 3
     RHann:
@@ -432,7 +447,8 @@ dvs:
             units: ratio
             roundto: 0.001
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 4
         historical:
@@ -446,7 +462,8 @@ dvs:
             units: '%'
             roundto: 1
             colour_map: terrain_r
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
     RL50:
@@ -463,7 +480,8 @@ dvs:
             units: ratio
             roundto: 0.001
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
         historical:
@@ -477,7 +495,8 @@ dvs:
             units: kPa
             roundto: 0.1
             colour_map: terrain_r
-            scale: logarithmic
+            scale:
+                default: logarithmic
             colorbar:
                 sigfigs: 3
     SL50:
@@ -494,7 +513,8 @@ dvs:
             units: ratio
             roundto: 0.001
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
         historical:
@@ -508,7 +528,8 @@ dvs:
             units: kPa
             roundto: 0.1
             colour_map: terrain_r
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
     TJan1.0:
@@ -525,7 +546,8 @@ dvs:
             units: degC
             roundto: 1
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
         historical:
@@ -539,7 +561,9 @@ dvs:
             units: degC
             roundto: 1
             colour_map: RdBu_r
-            scale: linear
+            scale:
+                default: linear
+                disable_logarithmic: True
             colorbar:
                 sigfigs: 3
     TJan2.5:
@@ -556,7 +580,9 @@ dvs:
             units: degC
             roundto: 1
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
+                disable_logarithmic: True
             colorbar:
                 sigfigs: 3
         historical:
@@ -570,7 +596,8 @@ dvs:
             units: degC
             roundto: 1
             colour_map: RdBu_r
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
     TJul97.5:
@@ -587,7 +614,8 @@ dvs:
             units: degC
             roundto: 1
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
         historical:
@@ -601,7 +629,9 @@ dvs:
             units: degC
             roundto: 1
             colour_map: RdBu_r
-            scale: linear
+            scale:
+                default: linear
+                disable_logarithmic: True
             colorbar:
                 sigfigs: 3
     Tmax:
@@ -618,7 +648,8 @@ dvs:
             units: degC
             roundto: 1
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
         historical:
@@ -632,7 +663,9 @@ dvs:
             units: degC
             roundto: 1
             colour_map: RdBu_r
-            scale: linear
+            scale:
+                default: linear
+                disable_logarithmic: True
             colorbar:
                 sigfigs: 3
     Tmin:
@@ -649,7 +682,8 @@ dvs:
             units: degC
             roundto: 1
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
         historical:
@@ -663,7 +697,9 @@ dvs:
             units: degC
             roundto: 1
             colour_map: RdBu_r
-            scale: linear
+            scale:
+                default: linear
+                disable_logarithmic: True
             colorbar:
                 sigfigs: 3
     TwJul97.5:
@@ -680,7 +716,8 @@ dvs:
             units: degC
             roundto: 1
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
         historical:
@@ -694,7 +731,9 @@ dvs:
             units: degC
             roundto: 1
             colour_map: RdBu_r
-            scale: linear
+            scale:
+                default: linear
+                disable_logarithmic: True
             colorbar:
                 sigfigs: 3
     WP10:
@@ -711,7 +750,8 @@ dvs:
             units: ratio
             roundto: 0.001
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
         historical:
@@ -725,7 +765,8 @@ dvs:
             units: kPa
             roundto: 0.1
             colour_map: terrain_r
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
     WP50:
@@ -742,7 +783,8 @@ dvs:
             units: ratio
             roundto: 0.001
             colour_map: jet
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
         historical:
@@ -756,7 +798,8 @@ dvs:
             units: kPa
             roundto: 0.1
             colour_map: terrain_r
-            scale: linear
+            scale:
+                default: linear
             colorbar:
                 sigfigs: 3
 
