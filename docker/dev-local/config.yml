@@ -434,7 +434,7 @@ dvs:
             colour_map: jet
             scale: linear
             colorbar:
-                sigfigs: 3
+                sigfigs: 4
         historical:
             datasets:
                 model: data/model_inputs/hurs_CanRCM4-LE_ens15_1951-2016_ensmean.nc
