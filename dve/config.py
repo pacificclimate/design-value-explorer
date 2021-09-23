@@ -148,8 +148,12 @@ def dv_colour_map(config, design_variable, climate_regime):
     return config["dvs"][design_variable][climate_regime]["colour_map"]
 
 
-def dv_colour_scale_type_default(config, design_variable, climate_regime):
-    return config["dvs"][design_variable][climate_regime]["scale"]["default"]
+def dv_colour_scale_type(config, design_variable, climate_regime):
+    return config["dvs"][design_variable][climate_regime]["scale"]
+
+
+def dv_colour_bar_sigfigs(config, design_variable, climate_regime):
+    return config["dvs"][design_variable][climate_regime]["colorbar"]["sigfigs"]
 
 
 def dv_historical_stations_column(config, design_variable):
