@@ -12,8 +12,12 @@ import geopandas as gpd
 import numpy as np
 
 from dve.config import (
-    dv_has_climate_regime, dv_roundto, dv_units, map_title,
+    dv_has_climate_regime,
+    dv_roundto,
+    dv_units,
+    map_title,
     dv_historical_stations_column,
+    dv_colour_bar_sigfigs,
 )
 from dve.data import get_data
 from dve.colorbar import (
@@ -285,7 +289,9 @@ def add(app, config):
                 "historical",
                 historical_dataset_id="stations",
             ).data_frame()
-            stations_column = dv_historical_stations_column(config, design_variable)
+            stations_column = dv_historical_stations_column(
+                config, design_variable
+            )
             with timing("coord_prep for stations", log=timing_log):
                 df = coord_prep(df, stations_column)
             figures.append(
@@ -327,9 +333,15 @@ def add(app, config):
             colorscale,
             color_scale_type,
             tickvals,
-            # Formatting of tickvals is difficult; this seems to be a
-            # reasonable solution after several different experiments.
-            [sigfigs(t, 3) for t in tickvals],
+            [
+                sigfigs(
+                    t,
+                    dv_colour_bar_sigfigs(
+                        config, design_variable, climate_regime
+                    ),
+                )
+                for t in tickvals
+            ],
         )
 
         return (
