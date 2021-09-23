@@ -70,8 +70,7 @@ def filepath_for(
             "reconstruction": "reconstruction",
         }[historical_dataset_id]
         return path_get(
-            config["dvs"][design_variable]["historical"]["datasets"],
-            path,
+            config["dvs"][design_variable]["historical"]["datasets"], path
         )
 
     return config["dvs"][design_variable]["future"]["datasets"][
@@ -148,8 +147,16 @@ def dv_colour_map(config, design_variable, climate_regime):
     return config["dvs"][design_variable][climate_regime]["colour_map"]
 
 
-def dv_colour_scale_type(config, design_variable, climate_regime):
-    return config["dvs"][design_variable][climate_regime]["scale"]
+def dv_colour_scale_default(config, design_variable, climate_regime):
+    return config["dvs"][design_variable][climate_regime]["scale"]["default"]
+
+
+def dv_colour_scale_disable_logarithmic(
+    config, design_variable, climate_regime
+):
+    return config["dvs"][design_variable][climate_regime]["scale"].get(
+        "disable_logarithmic", False
+    )
 
 
 def dv_colour_bar_sigfigs(config, design_variable, climate_regime):
