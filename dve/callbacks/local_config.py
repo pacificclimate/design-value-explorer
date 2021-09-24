@@ -4,7 +4,7 @@ import dash
 from dash.dependencies import Input, Output, State
 
 from dve.callbacks.utils import triggered_by
-from dve.config import path_get
+from dve.dict_utils import path_get
 
 logger = logging.getLogger("dve")
 

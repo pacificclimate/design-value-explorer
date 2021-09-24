@@ -1,5 +1,5 @@
 import pytest
-from dve.config import path_get
+from dve.dict_utils import path_get
 
 d1 = {
     "a": {
