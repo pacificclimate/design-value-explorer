@@ -165,7 +165,9 @@ def dv_colour_bar_sigfigs(config, design_variable, climate_regime):
 
 
 def dv_historical_stations_column(config, design_variable):
-    return config["dvs"][design_variable]["historical"]["stations"]["column"]
+    return config["dvs"][design_variable]["historical"]["datasets"]["stations"][
+        "column"
+    ]
 
 
 def climate_regime_label(config, climate_regime, which="long"):
