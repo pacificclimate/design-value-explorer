@@ -15,6 +15,8 @@ ui_elements = (
     # (element id, element property, path in config)
     ("design_variable", "value", "ui.controls.design-value-id.value"),
     ("apply_mask", "on", "ui.controls.mask.on"),
+    ("show_stations", "on", "ui.controls.stations.on"),
+    ("show_grid", "on", "ui.controls.grid.on"),
 )
 
 
