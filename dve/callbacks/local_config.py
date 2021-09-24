@@ -15,20 +15,48 @@ def add(app, config):
         Output("local_config", "data"),
         Output("design_variable", "value"),
         Output("apply_mask", "on"),
-
         Input("local_config", "modified_timestamp"),
         Input("design_variable", "value"),
         Input("apply_mask", "on"),
-
         State("local_config", "data"),
     )
-    def update_local_config(local_config_ts, design_variable, apply_mask, local_config):
+    def update_local_config(
+        local_config_ts, design_variable, apply_mask, local_config
+    ):
         if local_config_ts is None or local_config is None:
             logger.debug(f"initializing local_config from config")
-            return {
-                       "design_variable": config["ui"]["controls"]["design-value-id"]["value"],
-                       "mask": config["ui"]["controls"]["mask"]["on"]
-                   }, dash.no_update, dash.no_update
+            return (
+                {
+                    "local_config_id": config["ui"]["local_config_id"],
+                    "design_variable": config["ui"]["controls"][
+                        "design-value-id"
+                    ]["value"],
+                    "mask": config["ui"]["controls"]["mask"]["on"],
+                },
+                dash.no_update,
+                dash.no_update,
+            )
+
+        if (
+            local_config.get("local_config_id")
+            != config["ui"]["local_config_id"]
+        ):
+            logger.debug(f"updating local_config from config")
+            return (
+                {
+                    "local_config_id": config["ui"]["local_config_id"],
+                    "design_variable": local_config.get(
+                        "design_variable",
+                        config["ui"]["controls"]["design-value-id"]["value"],
+                    ),
+                    "mask": local_config.get(
+                        "mask",
+                        config["ui"]["controls"]["mask"]["on"],
+                    ),
+                },
+                dash.no_update,
+                dash.no_update,
+            )
 
         ctx = dash.callback_context
 
@@ -49,5 +77,3 @@ def add(app, config):
             local_config["mask"] = apply_mask
 
         return local_config, design_variable_out, apply_mask_out
-
-
