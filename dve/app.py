@@ -2,6 +2,7 @@ import yaml
 
 import dve
 import dve.config
+import dve.callbacks.local_config
 import dve.callbacks.map_figure
 import dve.callbacks.table_c2
 import dve.callbacks.colour_scale
@@ -52,6 +53,7 @@ def get_app(config):
     app.layout = dve.layout.main(config)
 
     # Add callbacks
+    dve.callbacks.local_config.add(app, config)
     dve.callbacks.table_c2.add(app, config)
     dve.callbacks.overlay.add(app, config)
     dve.callbacks.colour_scale.add(app, config)
