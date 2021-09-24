@@ -12,20 +12,27 @@ logger = logging.getLogger("dve")
 # local configuration. To add a new UI element whose state is maintained in
 # local storage, add a new item to this list.
 ui_elements = (
-    # (element id, element property, path in config)
-    ("design_variable", "value", "ui.controls.design-value-id.value"),
-    ("apply_mask", "on", "ui.controls.mask.on"),
-    ("show_stations", "on", "ui.controls.stations.on"),
-    ("show_grid", "on", "ui.controls.grid.on"),
+    {
+        "id": "design_variable",
+        "prop": "value",
+        "cfg_path": "ui.controls.design-value-id.value",
+    },
+    {"id": "apply_mask", "prop": "on", "cfg_path": "ui.controls.mask.on"},
+    {
+        "id": "show_stations",
+        "prop": "on",
+        "cfg_path": "ui.controls.stations.on",
+    },
+    {"id": "show_grid", "prop": "on", "cfg_path": "ui.controls.grid.on"},
 )
 
 
 def add(app, config):
     @app.callback(
         Output("local_config", "data"),
-        *(Output(id, prop) for id, prop, _ in ui_elements),
+        *(Output(e["id"], e["prop"]) for e in ui_elements),
         Input("local_config", "modified_timestamp"),
-        *(Input(id, prop) for id, prop, _ in ui_elements),
+        *(Input(e["id"], e["prop"]) for e in ui_elements),
         State("local_config", "data"),
     )
     def update_local_config(*args):
@@ -35,8 +42,8 @@ def add(app, config):
         local_config_ts, *ui_inputs, local_config = args
 
         config_vals = {
-            element_id: path_get(config, path)
-            for element_id, _, path in ui_elements
+            e["id"]: path_get(config, e["cfg_path"])
+            for e in ui_elements
         }
         ui_elements_no_update = (dash.no_update,) * len(ui_elements)
 
@@ -63,10 +70,8 @@ def add(app, config):
                 {
                     "local_config_id": config["ui"]["local_config_id"],
                     **{
-                        element_id: local_config.get(
-                            element_id, config_vals[element_id]
-                        )
-                        for element_id, _, path in ui_elements
+                        e["id"]: local_config.get(e["id"], config_vals[e["id"]])
+                        for e in ui_elements
                     },
                 },
                 *ui_elements_no_update,
@@ -83,17 +88,15 @@ def add(app, config):
             # local config.
             local_config_output = dash.no_update
             ui_outputs = [
-                local_config[element_id] for element_id, _, path in ui_elements
+                local_config[e["id"]] for e in ui_elements
             ]
         else:
             # A UI element triggered this callback. Therefore update the local
             # config and don't update the UI elements.
             local_config_output = local_config
-            for element_id, input_value in zip(
-                (e[0] for e in ui_elements), ui_inputs
-            ):
-                if triggered_by(f"{element_id}.", ctx):
-                    local_config_output[element_id] = input_value
+            for element, input_value in zip(ui_elements, ui_inputs):
+                if triggered_by(f'{element["id"]}.', ctx):
+                    local_config_output[element["id"]] = input_value
             ui_outputs = ui_elements_no_update
 
         return (local_config_output, *ui_outputs)
