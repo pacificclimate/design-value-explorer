@@ -15,6 +15,7 @@ d1 = {"a": {"b": {"c": 42}}}
         (d1, ["x"], None, None),
         (d1, ["a", "x"], None, None),
         (d1, ["a", "b", "x"], None, None),
+        (d1, ["x", "y"], None, None),
         (d1, ["a", "b", "c", "x"], None, None),
         (d1, "a", None, d1["a"]),
         (d1, "a.b", None, d1["a"]["b"]),

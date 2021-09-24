@@ -8,9 +8,12 @@ def path_get(d, path, default=None, separator="."):
     if isinstance(path, str):
         return path_get(d, path.split(separator), default)
     if isinstance(path, (list, tuple)):
+        head = path[0]
         if len(path) == 1:
-            return d.get(path[0], default)
-        return path_get(d[path[0]], path[1:], default)
+            return d.get(head, default)
+        if head in d:
+            return path_get(d[head], path[1:], default)
+        return default
 
 
 def path_set(d, path, value, separator="."):
