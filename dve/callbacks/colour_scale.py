@@ -20,12 +20,12 @@ logger = logging.getLogger("dve")
 
 
 def add(app, config):
-    @app.callback(
-        Output("color_map", "value"),
-        [Input("design_variable", "value"), Input("climate_regime", "value")],
-    )
-    def update_colour_map_ctrl_value(design_variable, climate_regime):
-        return dv_colour_map(config, design_variable, climate_regime)
+    # @app.callback(
+    #     Output("color_map", "value"),
+    #     [Input("design_variable", "value"), Input("climate_regime", "value")],
+    # )
+    # def update_colour_map_ctrl_value(design_variable, climate_regime):
+    #     return dv_colour_map(config, design_variable, climate_regime)
 
     @app.callback(
         Output("color_scale_type", "value"),
