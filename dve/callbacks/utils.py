@@ -1,4 +1,4 @@
-def triggered_by(name, ctx):
+def triggered_by(names, ctx):
     """
     Return boolean indicating whether the callback was triggered by the
     Input identified by `id`.
@@ -12,4 +12,9 @@ def triggered_by(name, ctx):
     :param ctx: dash.callback_context inside callback
     :return: Boolean
     """
-    return any(trigger["prop_id"].startswith(name) for trigger in ctx.triggered)
+    if not isinstance(names, (tuple, list)):
+        names = (names,)
+    return any(
+        any(trigger["prop_id"].startswith(name) for trigger in ctx.triggered)
+        for name in names
+    )

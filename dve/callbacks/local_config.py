@@ -86,13 +86,21 @@ def add(app, config):
         # We have to unpack args like this because anything after a *args in
         # a method argument list is interpreted by Python as a keyword argument,
         # not a positional argument. So we can't just drop this in there.
-        local_config_ts, design_variable, climate_regime, *ui_inputs, local_config = (
-            args
-        )
+        (
+            local_config_ts,
+            design_variable,
+            climate_regime,
+            *updatable_ui_inputs,
+            local_config,
+        ) = args
 
         # Helper
-        simple_options_ui_elements_no_update = (dash.no_update,) * len(simple_options_ui_elements)
-        colour_scale_options_ui_elements_no_update = (dash.no_update,) * len(colour_scale_options_ui_elements)
+        simple_options_ui_elements_no_update = (dash.no_update,) * len(
+            simple_options_ui_elements
+        )
+        colour_scale_options_ui_elements_no_update = (dash.no_update,) * len(
+            colour_scale_options_ui_elements
+        )
 
         # Helper
         def init_local_config(preserve_local=True):
@@ -104,7 +112,8 @@ def add(app, config):
                     result,
                     path,
                     path_get(local_config, path, default=global_value)
-                    if preserve_local else global_value,
+                    if preserve_local
+                    else global_value,
                 )
 
             for e in simple_options_ui_elements:
@@ -121,9 +130,7 @@ def add(app, config):
                     for cr in ("historical", "future"):
                         update_result(
                             expanded_path(
-                                e,
-                                design_variable=dv,
-                                climate_regime=cr,
+                                e, design_variable=dv, climate_regime=cr
                             )
                         )
 
@@ -136,7 +143,7 @@ def add(app, config):
             return (
                 init_local_config(preserve_local=False),
                 *simple_options_ui_elements_no_update,
-                *colour_scale_options_ui_elements_no_update
+                *colour_scale_options_ui_elements_no_update,
             )
 
         # If the local configuration is out of date, update it from the global
@@ -149,7 +156,7 @@ def add(app, config):
             return (
                 init_local_config(preserve_local=True),
                 *simple_options_ui_elements_no_update,
-                *colour_scale_options_ui_elements_no_update
+                *colour_scale_options_ui_elements_no_update,
             )
 
         # Strictly speaking, the callback could be triggered by any combination
@@ -163,7 +170,6 @@ def add(app, config):
             # the UI elements with values from local config, and don't update
             # local config.
             # TODO: This seems to happen too often
-            logger.debug("!! Local config change triggered callback")
             logger.debug("updating UI elements from local config")
             return (
                 dash.no_update,
@@ -184,10 +190,7 @@ def add(app, config):
         # callback. Therefore update the Colour Scale options UI elements from
         # local configuration and don't update the local config or the Overlay
         # Options UI elements.
-        if (
-            triggered_by("design_variable.", ctx) or
-            triggered_by("climate_regime.", ctx)
-        ):
+        if triggered_by(("design_variable.", "climate_regime."), ctx):
             logger.debug("updating colour scale options")
             return (
                 dash.no_update,
@@ -195,10 +198,14 @@ def add(app, config):
                 *(
                     path_get(
                         local_config,
-                        expanded_path(e, design_variable=design_variable, climate_regime=climate_regime)
+                        expanded_path(
+                            e,
+                            design_variable=design_variable,
+                            climate_regime=climate_regime,
+                        ),
                     )
                     for e in colour_scale_options_ui_elements
-                )
+                ),
             )
 
         # An Overlay Options or Colour Scale Options UI element triggered this
@@ -206,7 +213,9 @@ def add(app, config):
         # elements.
         logger.debug("updating local config from UI change")
         local_config_output = local_config
-        for element, input_value in zip(updatable_ui_elements, ui_inputs):
+        for element, input_value in zip(
+            updatable_ui_elements, updatable_ui_inputs
+        ):
             if triggered_by(f'{element["id"]}.', ctx):
                 path_set(
                     local_config_output,
@@ -220,5 +229,5 @@ def add(app, config):
         return (
             local_config_output,
             *simple_options_ui_elements_no_update,
-            *colour_scale_options_ui_elements_no_update
+            *colour_scale_options_ui_elements_no_update,
         )
