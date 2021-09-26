@@ -29,6 +29,11 @@ colour_scale_options_ui_elements = (
         "prop": "value",
         "path": "dvs.{design_variable}.{climate_regime}.colour_map",
     },
+    {
+        "id": "color_scale_type",
+        "prop": "value",
+        "path": "dvs.{design_variable}.{climate_regime}.scale.default",
+    },
 )
 
 updatable_ui_elements = (
