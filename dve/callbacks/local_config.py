@@ -36,6 +36,13 @@ updatable_ui_elements = (
 )
 
 
+# Helper
+def expanded_path(ui_element, **kwargs):
+    """Expands the path in `ui_element` by substituting interpolated
+    values."""
+    return ui_element["path"].format(**kwargs)
+
+
 def add(app, config):
     @app.callback(
         Output("local_config", "data"),
@@ -86,52 +93,39 @@ def add(app, config):
         # Helper
         simple_options_ui_elements_no_update = (dash.no_update,) * len(simple_options_ui_elements)
         colour_scale_options_ui_elements_no_update = (dash.no_update,) * len(colour_scale_options_ui_elements)
-        # TODO: Separate uses of this into combos of above
-        ui_elements_no_update = (dash.no_update,) * len(updatable_ui_elements)
-
-        # Helper
-        def expanded_path(ui_element, **kwargs):
-            """Expands the path in `ui_element` by substituting interpolated
-            values."""
-            return ui_element["path"].format(**kwargs)
 
         # Helper
         def init_local_config(preserve_local=True):
             result = {"local_config_id": config["ui"]["local_config_id"]}
-            # TODO: DRY up
-            for e in simple_options_ui_elements:
-                path = expanded_path(
-                    e,
-                    design_variable=design_variable,
-                    climate_regime=climate_regime,
-                )
+
+            def update_result(path):
                 global_value = path_get(config, path)
-                if preserve_local:
-                    path_set(
-                        result,
-                        path,
-                        path_get(local_config, path, default=global_value),
+                path_set(
+                    result,
+                    path,
+                    path_get(local_config, path, default=global_value)
+                    if preserve_local else global_value,
+                )
+
+            for e in simple_options_ui_elements:
+                update_result(
+                    expanded_path(
+                        e,
+                        design_variable=design_variable,
+                        climate_regime=climate_regime,
                     )
-                else:
-                    path_set(result, path, global_value)
+                )
 
             for e in colour_scale_options_ui_elements:
                 for dv in config["ui"]["dvs"]:
                     for cr in ("historical", "future"):
-                        path = expanded_path(
-                            e,
-                            design_variable=dv,
-                            climate_regime=cr,
-                        )
-                        global_value = path_get(config, path)
-                        if preserve_local:
-                            path_set(
-                                result,
-                                path,
-                                path_get(local_config, path, default=global_value),
+                        update_result(
+                            expanded_path(
+                                e,
+                                design_variable=dv,
+                                climate_regime=cr,
                             )
-                        else:
-                            path_set(result, path, global_value)
+                        )
 
             return result
 
@@ -141,7 +135,8 @@ def add(app, config):
             logger.debug(f"initializing local_config from config")
             return (
                 init_local_config(preserve_local=False),
-                *ui_elements_no_update
+                *simple_options_ui_elements_no_update,
+                *colour_scale_options_ui_elements_no_update
             )
 
         # If the local configuration is out of date, update it from the global
@@ -153,7 +148,8 @@ def add(app, config):
             logger.debug(f"updating local_config from config")
             return (
                 init_local_config(preserve_local=True),
-                *ui_elements_no_update
+                *simple_options_ui_elements_no_update,
+                *colour_scale_options_ui_elements_no_update
             )
 
         # Strictly speaking, the callback could be triggered by any combination
@@ -221,4 +217,8 @@ def add(app, config):
                     ),
                     input_value,
                 )
-        return (local_config_output, *ui_elements_no_update)
+        return (
+            local_config_output,
+            *simple_options_ui_elements_no_update,
+            *colour_scale_options_ui_elements_no_update
+        )
