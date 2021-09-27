@@ -361,7 +361,7 @@ dvs:
                     path: data/station_inputs/15min_rain_rl10_for_maps.csv
                 table_C2: data/tables/R15m10_TableC2.csv
             units: mm
-            roundto: 5
+            roundto: 1
             colour_map: PuBuGn
             scale:
                 default: logarithmic
@@ -529,7 +529,7 @@ dvs:
             roundto: 0.1
             colour_map: terrain_r
             scale:
-                default: linear
+                default: logarithmic
             colorbar:
                 sigfigs: 3
     TJan1.0:
