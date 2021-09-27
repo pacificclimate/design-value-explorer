@@ -9,7 +9,8 @@ nor the accompanying notions of signin etc.)
 
 Local configuration includes:
 
-- Simple options (Mask, Stations, Grid), which are independent of DV and Period
+- Simple options (Mask, Stations, Grid, Num Colours), which are independent
+  of DV and Period
 - Per-DV/Period options (Colour Map, Scale)
 
 When a client (web browser instance) first loads DVE, default settings for these
@@ -33,12 +34,9 @@ Implementation notes:
   see "Retrieving the initial store data" in
   https://dash.plotly.com/dash-core-components/store . We follow that advice.
 - To accommodate changes in the contents of local config (e.g., what options
-  are managed by it, its layout), the global config value `ui.local_config_id`
+  are managed by it, its layout), the global config value `local_config.version`
   is stored locally and compared on each load. If it differs, the local config
   is reloaded from global config, preserving local config settings if possible.
-- Variables  `simple_ui_elements` and `per_dv_cr_ui_elements` configure this
-  callback (including its Input and Output elements). They should probably
-  be moved into the (global) app config.
 """
 
 import logging
@@ -51,42 +49,6 @@ from dve.dict_utils import path_get, path_set
 
 logger = logging.getLogger("dve")
 
-# These variables define the UI elements that mutually set and are set by the
-# local configuration. To add a new UI element whose state is maintained in
-# local storage, add a new item to a list.
-simple_ui_elements = (
-    # TODO: Have to do this as a special case ... later
-    # {
-    #     "id": "design_variable",
-    #     "prop": "value",
-    #     "path": "ui.controls.design-value-id.value",
-    # },
-    {"id": "apply_mask", "prop": "on", "path": "ui.controls.mask.on"},
-    {"id": "show_stations", "prop": "on", "path": "ui.controls.stations.on"},
-    {"id": "show_grid", "prop": "on", "path": "ui.controls.grid.on"},
-)
-
-per_dv_cr_ui_elements = (
-    {
-        "id": "color_map",
-        "prop": "value",
-        "path": "dvs.{design_variable}.{climate_regime}.colour_map",
-    },
-    {
-        "id": "color_scale_type",
-        "prop": "value",
-        "path": "dvs.{design_variable}.{climate_regime}.scale.default",
-    },
-)
-
-updatable_ui_elements = simple_ui_elements + per_dv_cr_ui_elements
-
-
-# Helpers
-simple_ui_elements_no_update = (dash.no_update,) * len(simple_ui_elements)
-per_dv_cr_ui_elements_no_update = (dash.no_update,) * len(per_dv_cr_ui_elements)
-
-
 # Helper
 def expanded_path(ui_element, **kwargs):
     """Expands the path in `ui_element` by substituting interpolated
@@ -95,6 +57,19 @@ def expanded_path(ui_element, **kwargs):
 
 
 def add(app, config):
+    # These variables define the UI elements that mutually set and are set by
+    # local configuration. To add a new UI element whose state is maintained in
+    # local storage, add a new item to a list.
+    simple_ui_elements = config["local_config"]["simple_ui_elements"]
+    per_dv_cr_ui_elements = config["local_config"]["per_dv_cr_ui_elements"]
+    updatable_ui_elements = simple_ui_elements + per_dv_cr_ui_elements
+
+    # Helpers
+    simple_ui_elements_no_update = (dash.no_update,) * len(simple_ui_elements)
+    per_dv_cr_ui_elements_no_update = (dash.no_update,) * len(
+        per_dv_cr_ui_elements
+    )
+
     @app.callback(
         Output("local_config", "data"),
         *(Output(e["id"], e["prop"]) for e in updatable_ui_elements),
@@ -118,7 +93,9 @@ def add(app, config):
 
         # Helper
         def init_local_config(preserve_local=True):
-            result = {"local_config_id": config["ui"]["local_config_id"]}
+            result = {}
+            v_path = "local_config.version"
+            path_set(result, v_path, path_get(config, v_path))
 
             def update_result(path):
                 global_value = path_get(config, path)
@@ -162,9 +139,8 @@ def add(app, config):
 
         # If the local configuration is out of date, update it from the global
         # app config, preserving existing values of local config where possible.
-        if (
-            local_config.get("local_config_id")
-            != config["ui"]["local_config_id"]
+        if path_get(local_config, "local_config.version") != path_get(
+            config, "local_config.version"
         ):
             logger.debug(f"updating local_config from config")
             return (

@@ -1,5 +1,4 @@
 ui:
-    local_config_id: 6
     controls:
         # Args controlling initial settings and other features of controls.
         # These are dependent on the type of control, e.g., climate-regime is a
@@ -844,3 +843,28 @@ units:
         nice: °C
     degC-day:
         nice: °C-day
+
+local_config:
+    version: 7
+    simple_ui_elements:
+      - id: "apply_mask"
+        prop: "on"
+        path: "ui.controls.mask.on"
+      - id: "show_stations"
+        prop: "on"
+        path: "ui.controls.stations.on"
+      - id: "show_grid"
+        prop: "on"
+        path: "ui.controls.grid.on"
+      - id: "num_colors"
+        prop: "value"
+        path: "ui.controls.num-colours.value"
+    per_dv_cr_ui_elements:
+      - id: "color_map"
+        prop: "value"
+        path: "dvs.{design_variable}.{climate_regime}.colour_map"
+      - id: "color_scale_type"
+        prop: "value"
+        path: "dvs.{design_variable}.{climate_regime}.scale.default"
+        
+        
