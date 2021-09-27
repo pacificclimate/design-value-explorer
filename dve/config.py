@@ -6,20 +6,7 @@ cases are centralized here.
 
 import os.path
 from pkg_resources import resource_filename
-
-
-def path_get(d, path, default=None):
-    """
-    Get a value addressed by `path` from a dict `d`.
-    If `path` is not valid within the dict, return `default`.
-    """
-    if not isinstance(d, dict):
-        return default
-    if isinstance(path, (list, tuple)):
-        if len(path) == 1:
-            return d.get(path[0], default)
-        return path_get(d[path[0]], path[1:], default)
-    return d.get(path, default)
+from dve.dict_utils import path_get
 
 
 def validate_filepath(filepath):
@@ -164,7 +151,9 @@ def dv_colour_bar_sigfigs(config, design_variable, climate_regime):
 
 
 def dv_historical_stations_column(config, design_variable):
-    return config["dvs"][design_variable]["historical"]["stations"]["column"]
+    return config["dvs"][design_variable]["historical"]["datasets"]["stations"][
+        "column"
+    ]
 
 
 def climate_regime_label(config, climate_regime, which="long"):

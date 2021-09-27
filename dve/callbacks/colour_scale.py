@@ -8,8 +8,6 @@ import numpy as np
 from dve.config import (
     dv_has_climate_regime,
     dv_roundto,
-    dv_colour_map,
-    dv_colour_scale_default,
     dv_colour_scale_disable_logarithmic,
 )
 from dve.data import get_data
@@ -20,20 +18,6 @@ logger = logging.getLogger("dve")
 
 
 def add(app, config):
-    @app.callback(
-        Output("color_map", "value"),
-        [Input("design_variable", "value"), Input("climate_regime", "value")],
-    )
-    def update_colour_map_ctrl_value(design_variable, climate_regime):
-        return dv_colour_map(config, design_variable, climate_regime)
-
-    @app.callback(
-        Output("color_scale_type", "value"),
-        [Input("design_variable", "value"), Input("climate_regime", "value")],
-    )
-    def update_colour_scale_type(design_variable, climate_regime):
-        return dv_colour_scale_default(config, design_variable, climate_regime)
-
     @app.callback(
         Output("color_scale_type", "options"),
         [Input("design_variable", "value"), Input("climate_regime", "value")],
