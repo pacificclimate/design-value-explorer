@@ -1,3 +1,46 @@
+"""
+This module implements the mutual update relationship between local
+configuration and the UI elements related to that configuration.
+
+"Local configuration" means per-client configuration/preferences stored in
+browser local storage. (Note: A "client" is a single instance of a web browser;
+DVE does not provide for users with identities separate from browser instances,
+nor the accompanying notions of signin etc.)
+
+Local configuration includes:
+
+- Simple options (Mask, Stations, Grid), which are independent of DV and Period
+- Per-DV/Period options (Colour Map, Scale)
+
+When a client (web browser instance) first loads DVE, default settings for these
+options are loaded from a global, client-independent configuration. Thereafter,
+DVE uses the local configuration to manage these values: The app
+sets the local configuration according to the user's selections of
+these options in the UI. Conversely, when the app is reloaded by the same
+client, the locally stored configuration is used to set the default
+settings of the UI elements. In addition, per-DV/Period UI elements are set
+to the locally stored value when either DV or Period is changed. This means
+that the app remembers a user's preference for how to view each dataset.
+
+Implementation notes:
+- Local configuration is stored using a `dcc.Store` layout element with
+  id `"local_config"`.
+- The mutual relationship between local config and the UI settings requires
+  circular updates. That is permitted by Dash only in a single callback;
+  circularity due to two or more callbacks is forbidden.
+  For more information, see https://dash.plotly.com/advanced-callbacks
+- There are some complications due to using `dcc.Store`: Specifically
+  see "Retrieving the initial store data" in
+  https://dash.plotly.com/dash-core-components/store . We follow that advice.
+- To accommodate changes in the contents of local config (e.g., what options
+  are managed by it, its layout), the global config value `ui.local_config_id`
+  is stored locally and compared on each load. If it differs, the local config
+  is reloaded from global config, preserving local config settings if possible.
+- Variables  `simple_ui_elements` and `per_dv_cr_ui_elements` configure this
+  callback (including its Input and Output elements). They should probably
+  be moved into the (global) app config.
+"""
+
 import logging
 
 import dash
@@ -8,11 +51,11 @@ from dve.dict_utils import path_get, path_set
 
 logger = logging.getLogger("dve")
 
-# This variable defines the UI elements that mutually set and are set by the
+# These variables define the UI elements that mutually set and are set by the
 # local configuration. To add a new UI element whose state is maintained in
-# local storage, add a new item to this list.
-simple_options_ui_elements = (
-    # TODO: Probably have to do this as a special case ... later
+# local storage, add a new item to a list.
+simple_ui_elements = (
+    # TODO: Have to do this as a special case ... later
     # {
     #     "id": "design_variable",
     #     "prop": "value",
@@ -23,7 +66,7 @@ simple_options_ui_elements = (
     {"id": "show_grid", "prop": "on", "path": "ui.controls.grid.on"},
 )
 
-colour_scale_options_ui_elements = (
+per_dv_cr_ui_elements = (
     {
         "id": "color_map",
         "prop": "value",
@@ -36,9 +79,12 @@ colour_scale_options_ui_elements = (
     },
 )
 
-updatable_ui_elements = (
-    simple_options_ui_elements + colour_scale_options_ui_elements
-)
+updatable_ui_elements = simple_ui_elements + per_dv_cr_ui_elements
+
+
+# Helpers
+simple_ui_elements_no_update = (dash.no_update,) * len(simple_ui_elements)
+per_dv_cr_ui_elements_no_update = (dash.no_update,) * len(per_dv_cr_ui_elements)
 
 
 # Helper
@@ -59,38 +105,9 @@ def add(app, config):
         State("local_config", "data"),
     )
     def update_local_config(*args):
-        """
-        This callback implements the mutual update relationship between local
-        configuration (i.e., per-client configuration stored in browser local
-        storage) and the UI elements related to that configuration. For example:
-        The "Mask" UI element defaults to "on". That default is stored in the
-        global, client-independent configuration. Each client (web browser
-        instance) has a local configuration storage in which the user's setting
-        of this UI selection is stored. That local setting is applied to Mask
-        when the app is started again in web browser after being closed.
-
-        There are two classes of UI settings that are stored in local
-        configuration:
-        - A subset of the Overlay Options (Mask, Stations, Grid)
-        - A subset of the Colour Scale Options (all?)
-
-        The Overlay Options settings are independent of (i.e., apply to all)
-        Design Variable and Period / Global Warming choices.
-
-        The Colour Scale Options are managed per Design Variable and Period
-        choice. For example, the choice of Colour Map is specific to the DV
-        and Period chosen; selecting a different DV or Period means a different
-        Colour Map (although the user is free to choose the same Colour Map for
-        different DVs and Periods).
-
-        Defaults for local configuration are loaded from global configuration.
-
-
-        """
-
-        # We have to unpack args like this because anything after a *args in
+        # We have to unpack args like this because anything after a `*args` in
         # a method argument list is interpreted by Python as a keyword argument,
-        # not a positional argument. So we can't just drop this in there.
+        # not a positional argument. So we can't just drop that in there.
         (
             local_config_ts,
             design_variable,
@@ -98,14 +115,6 @@ def add(app, config):
             *updatable_ui_inputs,
             local_config,
         ) = args
-
-        # Helper
-        simple_options_ui_elements_no_update = (dash.no_update,) * len(
-            simple_options_ui_elements
-        )
-        colour_scale_options_ui_elements_no_update = (dash.no_update,) * len(
-            colour_scale_options_ui_elements
-        )
 
         # Helper
         def init_local_config(preserve_local=True):
@@ -121,7 +130,7 @@ def add(app, config):
                     else global_value,
                 )
 
-            for e in simple_options_ui_elements:
+            for e in simple_ui_elements:
                 update_result(
                     expanded_path(
                         e,
@@ -130,7 +139,7 @@ def add(app, config):
                     )
                 )
 
-            for e in colour_scale_options_ui_elements:
+            for e in per_dv_cr_ui_elements:
                 for dv in config["ui"]["dvs"]:
                     for cr in ("historical", "future"):
                         update_result(
@@ -147,8 +156,8 @@ def add(app, config):
             logger.debug(f"initializing local_config from config")
             return (
                 init_local_config(preserve_local=False),
-                *simple_options_ui_elements_no_update,
-                *colour_scale_options_ui_elements_no_update,
+                *simple_ui_elements_no_update,
+                *per_dv_cr_ui_elements_no_update,
             )
 
         # If the local configuration is out of date, update it from the global
@@ -160,8 +169,8 @@ def add(app, config):
             logger.debug(f"updating local_config from config")
             return (
                 init_local_config(preserve_local=True),
-                *simple_options_ui_elements_no_update,
-                *colour_scale_options_ui_elements_no_update,
+                *simple_ui_elements_no_update,
+                *per_dv_cr_ui_elements_no_update,
             )
 
         # Strictly speaking, the callback could be triggered by any combination
@@ -174,7 +183,13 @@ def add(app, config):
             # A local config change triggered this callback. Therefore update
             # the UI elements with values from local config, and don't update
             # local config.
-            # TODO: This seems to happen too often
+            # TODO: This happens when the client app is reloaded and whenever
+            #  local_config is updated. It would be better if we could
+            #  distinguish app reloads from updates so that we don't do
+            #  unnecessary updates to the ui elements. (The latter also seems
+            #  it should create an infinite loop of updates, but Dash apparently
+            #  prevents that.) I suspect there is a different and better way to
+            #  structure this callback. This does work.
             logger.debug("updating UI elements from local config")
             return (
                 dash.no_update,
@@ -199,7 +214,7 @@ def add(app, config):
             logger.debug("updating colour scale options")
             return (
                 dash.no_update,
-                *simple_options_ui_elements_no_update,
+                *simple_ui_elements_no_update,
                 *(
                     path_get(
                         local_config,
@@ -209,7 +224,7 @@ def add(app, config):
                             climate_regime=climate_regime,
                         ),
                     )
-                    for e in colour_scale_options_ui_elements
+                    for e in per_dv_cr_ui_elements
                 ),
             )
 
@@ -233,6 +248,6 @@ def add(app, config):
                 )
         return (
             local_config_output,
-            *simple_options_ui_elements_no_update,
-            *colour_scale_options_ui_elements_no_update,
+            *simple_ui_elements_no_update,
+            *per_dv_cr_ui_elements_no_update,
         )
