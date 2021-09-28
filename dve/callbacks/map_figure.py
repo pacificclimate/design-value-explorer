@@ -7,7 +7,6 @@ import dash
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 
 import geopandas as gpd
 import numpy as np
@@ -355,14 +354,12 @@ def add(app, config):
                         future_dataset_id,
                     ),
                     font=go.layout.title.Font(
-                        color="#000000",
-                        family="Helvetica",
-                        size=16,
+                        color="#000000", family="Helvetica", size=16
                     ),
                     x=0.5,
                     xanchor="center",
                     y=0.9,
-                    yanchor="top"
+                    yanchor="top",
                 ),
                 font=dict(size=13, color="black"),
                 hoverlabel=dict(
@@ -373,22 +370,18 @@ def add(app, config):
                 # width is unspecified; it is therefore adaptive to window
                 height=750,
                 showlegend=False,
-                legend_orientation="v",
-                # scrollZoom=True,
                 uirevision="None",
-            ),
+            )
         )
         # TODO: From config
         colorbar_column_width = 0.03
         figure.set_subplots(
             rows=1,
             cols=2,
-            column_widths=[1-colorbar_column_width, colorbar_column_width],
+            column_widths=[1 - colorbar_column_width, colorbar_column_width],
             # TODO: From config
             horizontal_spacing=0.02,
-            specs=[
-                [{}, dict(t=0.1, b=0.1)],
-            ],
+            specs=[[{}, dict(t=0.1, b=0.1)]],
         )
 
         # Add map traces to lefthand column of figure

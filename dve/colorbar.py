@@ -230,10 +230,12 @@ def tick_roundto(tickvals):
     tick_delta_mantissa = tick_delta / tick_delta_pow_10
     nice_mantissa = nearest((1, 2, 5), tick_delta_mantissa)
     roundto = nice_mantissa * tick_delta_pow_10
-    logger.debug(f"tick rounding: "
-                 f"num_ticks={num_ticks}, "
-                 f"tick_delta_pow_10={tick_delta_pow_10}, "
-                 f"tick_delta_mantissa={tick_delta_mantissa}, "
-                 f"nice_mantissa={nice_mantissa}, "
-                 f"tick_roundto={tick_roundto}, ")
+    logger.debug(
+        f"tick rounding: "
+        f"num_ticks={num_ticks}, "
+        f"tick_delta_pow_10={tick_delta_pow_10}, "
+        f"tick_delta_mantissa={tick_delta_mantissa}, "
+        f"nice_mantissa={nice_mantissa}, "
+        f"tick_roundto={tick_roundto}, "
+    )
     return roundto
