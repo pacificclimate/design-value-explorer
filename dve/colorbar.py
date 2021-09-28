@@ -157,8 +157,9 @@ def discrete_colorscale_colorbar(
     boundaries, colorscale, scale, tickvals, ticktext, **kwargs
 ):
     """
-    Return a Plotly Figure that displays a vertical colourbar depicting a
-    given discrete colorscale.
+    Return a dict containing Plotly Graph Objects -- namely a trace (heatmap),
+    xaxis, and yaxis -- for displaying a vertical colourbar depicting a given
+    discrete colorscale.
 
     The heatmap has 1 x-axis cells (identified by empty string), and
     num_colours = len(boundaries) - 1 = len(colorscale) / 2 y-axis cells.
@@ -178,14 +179,14 @@ def discrete_colorscale_colorbar(
     :param tickvals: values where ticks (labels) should be placed
     :param ticktext: ticks (labels) for colorbar
     :param kwargs: further arts to be passed to the Figure
-    :return: plotly.graphical_objects.Figure
+    :return: dict with keys "trace", "xaxis", "yaxis"
     """
     fwd, back = scale_transform(scale)
     t_boundaries = fwd(boundaries)
     t_midpoints = (t_boundaries[1:] + t_boundaries[:-1]) / 2
     raw_midpoints = back(t_midpoints)
-    return go.Figure(
-        data=go.Heatmap(
+    return {
+        "trace": go.Heatmap(
             x=[""],
             y=t_midpoints,
             z=[[z] for z in raw_midpoints],
@@ -194,39 +195,25 @@ def discrete_colorscale_colorbar(
             # hoverinfo="skip",
             hovertemplate="Mid: %{z:5.3r}<extra></extra>",
         ),
-        layout=go.Layout(
-            xaxis=go.layout.XAxis(
-                fixedrange=True,
-                showline=True,
-                linewidth=1,
-                linecolor="black",
-                mirror=True,
-            ),
-            yaxis=go.layout.YAxis(
-                side="right",
-                fixedrange=True,
-                showline=True,
-                linewidth=1,
-                linecolor="black",
-                mirror=True,
-                tickmode="array",
-                tickvals=[fwd(v) for v in tickvals],
-                ticktext=ticktext,
-            ),
-            autosize=False,
-            width=80,  # very sensitive; < 60 => no labels
-            height=500,
-            margin=go.layout.Margin(
-                t=50,
-                b=10,
-                l=1,
-                # yaxis width must be >= 60 for reasons unknown
-                # adjust visual width of colorbar by adjusting right margin
-                r=60,
-            ),
+        "xaxis": go.layout.XAxis(
+            fixedrange=True,
+            showline=True,
+            linewidth=1,
+            linecolor="black",
+            mirror=True,
         ),
-        **kwargs,
-    )
+        "yaxis": go.layout.YAxis(
+            side="right",
+            fixedrange=True,
+            showline=True,
+            linewidth=1,
+            linecolor="black",
+            mirror=True,
+            tickmode="array",
+            tickvals=[fwd(v) for v in tickvals],
+            ticktext=ticktext,
+        ),
+    }
 
 
 def use_ticks(zmin, zmax, target, scale, num_colours, max_num_ticks):

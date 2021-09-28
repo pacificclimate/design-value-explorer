@@ -292,29 +292,11 @@ def main(config):
                 dbc.Row(
                     [
                         dbc.Col(
-                            dbc.Row(
-                                [
-                                    dbc.Col(
-                                        Loading(
-                                            dcc.Graph(
-                                                id="map_main_graph",
-                                                config=config["ui"]["graph"],
-                                            )
-                                        ),
-                                        lg=11,
-                                    ),
-                                    dbc.Col(
-                                        Loading(
-                                            dcc.Graph(
-                                                id="map_colorscale_graph",
-                                                config={
-                                                    "displayModeBar": False
-                                                },
-                                            )
-                                        ),
-                                        lg=1,
-                                    ),
-                                ]
+                            Loading(
+                                dcc.Graph(
+                                    id="map_main_graph",
+                                    config=config["ui"]["graph"],
+                                )
                             ),
                             lg=7,
                             md=12,

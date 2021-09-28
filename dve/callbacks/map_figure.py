@@ -7,6 +7,7 @@ import dash
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 import geopandas as gpd
 import numpy as np
@@ -63,10 +64,7 @@ def add(app, config):
     )
 
     @app.callback(
-        [
-            Output("map_main_graph", "figure"),
-            Output("map_colorscale_graph", "figure"),
-        ],
+        Output("map_main_graph", "figure"),
         [
             # Tab selection
             Input("main_tabs", "active_tab"),
@@ -146,9 +144,9 @@ def add(app, config):
         if not dv_has_climate_regime(config, design_variable, climate_regime):
             raise PreventUpdate
 
-        # This list of figures is returned by this function. It is built up
-        # incrementally depending on the values of the inputs.
-        figures = []
+        # This list is the set of overlaid figures that comprise the map.
+        # It is built up incrementally depending on the values of the inputs.
+        maps = []
 
         roundto = dv_roundto(config, design_variable, climate_regime)
         if color_scale_type == "linear":
@@ -204,7 +202,7 @@ def add(app, config):
             lonlat_overlay_config = config["map"]["lonlat_overlay"]
 
             with timing("create lon-lat graticule", log=timing_log):
-                figures += lonlat_overlay(
+                maps += lonlat_overlay(
                     # It's not clear why the grid sizes should be taken from the
                     # dataset, but that's how the code works. Ick.
                     rlon_grid_size=rlon.size,
@@ -225,7 +223,7 @@ def add(app, config):
                 )
 
         # Figure: Canada map
-        figures += [
+        maps += [
             go.Scattergl(
                 x=canada_x,
                 y=canada_y,
@@ -260,7 +258,7 @@ def add(app, config):
                 ds_arr[~mask] = np.nan
 
         with timing("create heatmap", log=timing_log):
-            figures.append(
+            maps.append(
                 go.Heatmap(
                     z=ds_arr,
                     x=rlon.values[icxmin:icxmax],
@@ -294,7 +292,7 @@ def add(app, config):
             )
             with timing("coord_prep for stations", log=timing_log):
                 df = coord_prep(df, stations_column)
-            figures.append(
+            maps.append(
                 go.Scattergl(
                     x=df.rlon,
                     y=df.rlat,
@@ -344,47 +342,85 @@ def add(app, config):
             ],
         )
 
-        return (
-            {
-                "data": figures,
-                "layout": {
-                    "title": map_title(
+        # Create the figure that will be populated with the heatmap and colorbar
+        # as subplots.
+        figure = go.Figure(
+            layout=go.Layout(
+                title=go.layout.Title(
+                    text=map_title(
                         config,
                         design_variable,
                         climate_regime,
                         historical_dataset_id,
                         future_dataset_id,
                     ),
-                    "font": dict(size=13, color="grey"),
-                    "xaxis": dict(
-                        zeroline=False,
-                        range=[rlon.values[icxmin], rlon.values[icxmax]],
-                        showgrid=False,  # thin lines in the background
-                        visible=False,  # numbers below
+                    font=go.layout.title.Font(
+                        color="#000000",
+                        family="Helvetica",
+                        size=16,
                     ),
-                    "yaxis": dict(
-                        zeroline=False,
-                        range=[rlat.values[icymin], rlat.values[icymax]],
-                        showgrid=False,  # thin lines in the background
-                        visible=False,
-                    ),
-                    "xaxis_showgrid": False,
-                    "yaxis_showgrid": False,
-                    "hoverlabel": dict(
-                        bgcolor="white", font_size=16, font_family="Rockwell"
-                    ),
-                    "hoverdistance": 5,
-                    "hovermode": "closest",
-                    # width is unspecified; it is therefore adaptive to window
-                    "height": 750,
-                    "showlegend": False,
-                    "legend_orientation": "v",
-                    "scrollZoom": True,
-                    "uirevision": "None",
-                },
-            },
-            colorbar,
+                    x=0.5,
+                    xanchor="center",
+                    y=0.9,
+                    yanchor="top"
+                ),
+                font=dict(size=13, color="black"),
+                hoverlabel=dict(
+                    bgcolor="white", font_size=16, font_family="Rockwell"
+                ),
+                hoverdistance=5,
+                hovermode="closest",
+                # width is unspecified; it is therefore adaptive to window
+                height=750,
+                showlegend=False,
+                legend_orientation="v",
+                # scrollZoom=True,
+                uirevision="None",
+            ),
         )
+        # TODO: From config
+        colorbar_column_width = 0.03
+        figure.set_subplots(
+            rows=1,
+            cols=2,
+            column_widths=[1-colorbar_column_width, colorbar_column_width],
+            # TODO: From config
+            horizontal_spacing=0.02,
+            specs=[
+                [{}, dict(t=0.1, b=0.1)],
+            ],
+        )
+
+        # Add map traces to lefthand column of figure
+        map_location = dict(row=1, col=1)
+        for m in maps:
+            figure.add_trace(m, **map_location)
+        figure.update_xaxes(
+            go.layout.XAxis(
+                zeroline=False,
+                range=[rlon.values[icxmin], rlon.values[icxmax]],
+                showgrid=False,
+                visible=False,
+            ),
+            **map_location,
+        )
+        figure.update_yaxes(
+            go.layout.YAxis(
+                zeroline=False,
+                range=[rlat.values[icymin], rlat.values[icymax]],
+                showgrid=False,
+                visible=False,
+            ),
+            **map_location,
+        )
+
+        # Add colorbar trace to righthand column of figure
+        colorbar_location = dict(row=1, col=2)
+        figure.add_trace(colorbar["trace"], **colorbar_location)
+        figure.update_xaxes(colorbar["xaxis"], **colorbar_location)
+        figure.update_yaxes(colorbar["yaxis"], **colorbar_location)
+
+        return figure
 
     @app.callback(
         Output("viewport-ds", "children"),
