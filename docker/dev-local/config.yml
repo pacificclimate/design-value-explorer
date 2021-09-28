@@ -805,6 +805,71 @@ dvs:
 
 
 map:
+    layout:
+        main:
+            # These parameters are passed into the argument `layout` of the
+            # `Figure` that contains the map proper and the colorbar.
+            # For information on these parameters, see
+            # https://plotly.com/python-api-reference/generated/plotly.graph_objects.Layout.html
+            # Do not specify `title` here.
+            font:
+                size: 13
+                color: "black"
+            hoverlabel:
+                bgcolor: "white"
+                font_size: 16
+                font_family: "Helvetica"
+            hoverdistance: 5
+            hovermode: "closest"
+            # width is unspecified; it is therefore adaptive to window
+            height: 750
+        title:
+            # These parameters are passed into the argument `layout.title`
+            # of the `Figure` that contains the map proper and the colorbar.
+            # For information on these parameters, see
+            # https://plotly.com/python-api-reference/generated/plotly.graph_objects.layout.html#plotly.graph_objects.layout.Title
+            # Do not specify `text` here.
+            font:
+                color: black
+                family: Helvetica
+                size: 16
+            x: 0.5
+            xanchor: "center"
+            y: 0.9
+            yanchor: "top"
+        subplots:
+            # These configurations define how the two subplots -- the maps
+            # proper and the colorbar -- are laid out in the larger figure
+            # they appear in.
+            layout:
+                # These parameters are passed into `Figure.set_subplots`.
+                # They define the grid of subplots.
+                # For information on these parameters, see
+                # https://plotly.com/python-api-reference/generated/plotly.graph_objects.Figure.html ,
+                # `set_subplots()`.
+                rows: 1
+                cols: 2
+                column_widths: [0.97, 0.03]
+                horizontal_spacing: 0.02  # spacing between columns
+                specs:
+                    # Row 1
+                    -
+                        # Column 1
+                        - {}
+                        # Column 2
+                        - t: 0.1  # top padding
+                          b: 0.1  # bottom padding
+            maps:
+                # Extra information about the map subplot
+                location:
+                    row: 1
+                    col: 1
+            colorbar:
+                # Extra information about the colorbar subplot
+                location:
+                    row: 1
+                    col: 2
+
     colour_maps:
         ['viridis', 'plasma', 'inferno', 'magma', 'cividis',
         'Greys', 'Purples', 'Blues', 'Greens',

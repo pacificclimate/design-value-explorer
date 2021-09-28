@@ -143,7 +143,7 @@ def add(app, config):
         if not dv_has_climate_regime(config, design_variable, climate_regime):
             raise PreventUpdate
 
-        # This list is the set of overlaid figures that comprise the map.
+        # This list is the set of overlaid traces that comprise the map.
         # It is built up incrementally depending on the values of the inputs.
         maps = []
 
@@ -353,39 +353,17 @@ def add(app, config):
                         historical_dataset_id,
                         future_dataset_id,
                     ),
-                    font=go.layout.title.Font(
-                        color="#000000", family="Helvetica", size=16
-                    ),
-                    x=0.5,
-                    xanchor="center",
-                    y=0.9,
-                    yanchor="top",
+                    **config["map"]["layout"]["title"],
                 ),
-                font=dict(size=13, color="black"),
-                hoverlabel=dict(
-                    bgcolor="white", font_size=16, font_family="Rockwell"
-                ),
-                hoverdistance=5,
-                hovermode="closest",
-                # width is unspecified; it is therefore adaptive to window
-                height=750,
                 showlegend=False,
                 uirevision="None",
+                **config["map"]["layout"]["main"],
             )
         )
-        # TODO: From config
-        colorbar_column_width = 0.03
-        figure.set_subplots(
-            rows=1,
-            cols=2,
-            column_widths=[1 - colorbar_column_width, colorbar_column_width],
-            # TODO: From config
-            horizontal_spacing=0.02,
-            specs=[[{}, dict(t=0.1, b=0.1)]],
-        )
+        figure.set_subplots(**config["map"]["layout"]["subplots"]["layout"])
 
-        # Add map traces to lefthand column of figure
-        map_location = dict(row=1, col=1)
+        # Add map traces to figure
+        map_location = config["map"]["layout"]["subplots"]["maps"]["location"]
         for m in maps:
             figure.add_trace(m, **map_location)
         figure.update_xaxes(
@@ -407,8 +385,8 @@ def add(app, config):
             **map_location,
         )
 
-        # Add colorbar trace to righthand column of figure
-        colorbar_location = dict(row=1, col=2)
+        # Add colorbar trace to figure
+        colorbar_location = config["map"]["layout"]["subplots"]["colorbar"]["location"]
         figure.add_trace(colorbar["trace"], **colorbar_location)
         figure.update_xaxes(colorbar["xaxis"], **colorbar_location)
         figure.update_yaxes(colorbar["yaxis"], **colorbar_location)
