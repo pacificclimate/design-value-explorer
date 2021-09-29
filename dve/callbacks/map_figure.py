@@ -63,10 +63,7 @@ def add(app, config):
     )
 
     @app.callback(
-        [
-            Output("map_main_graph", "figure"),
-            Output("map_colorscale_graph", "figure"),
-        ],
+        Output("map_main_graph", "figure"),
         [
             # Tab selection
             Input("main_tabs", "active_tab"),
@@ -146,9 +143,9 @@ def add(app, config):
         if not dv_has_climate_regime(config, design_variable, climate_regime):
             raise PreventUpdate
 
-        # This list of figures is returned by this function. It is built up
-        # incrementally depending on the values of the inputs.
-        figures = []
+        # The list `maps` is the set of overlaid traces that comprise the map.
+        # It is built up incrementally depending on the values of the inputs.
+        maps = []
 
         roundto = dv_roundto(config, design_variable, climate_regime)
         if color_scale_type == "linear":
@@ -199,12 +196,12 @@ def add(app, config):
                 lambda dvds, ds: (ds.rlon, ds.rlat, ds[dvds.dv_name])
             )
 
-        # Figure: Lon-lat overlay
+        # Trace: Lon-lat overlay
         if show_grid:
             lonlat_overlay_config = config["map"]["lonlat_overlay"]
 
             with timing("create lon-lat graticule", log=timing_log):
-                figures += lonlat_overlay(
+                maps += lonlat_overlay(
                     # It's not clear why the grid sizes should be taken from the
                     # dataset, but that's how the code works. Ick.
                     rlon_grid_size=rlon.size,
@@ -224,8 +221,8 @@ def add(app, config):
                     lat_max=lonlat_overlay_config["lat"]["max"],
                 )
 
-        # Figure: Canada map
-        figures += [
+        # Trace: Canada map
+        maps += [
             go.Scattergl(
                 x=canada_x,
                 y=canada_y,
@@ -237,7 +234,7 @@ def add(app, config):
             )
         ]
 
-        # Figure: Heatmap (raster)
+        # Trace: Heatmap (raster)
 
         # Index values for clipping data to Canada bounds
         icxmin = find_nearest_index(rlon.values, cx_min)
@@ -260,7 +257,7 @@ def add(app, config):
                 ds_arr[~mask] = np.nan
 
         with timing("create heatmap", log=timing_log):
-            figures.append(
+            maps.append(
                 go.Heatmap(
                     z=ds_arr,
                     x=rlon.values[icxmin:icxmax],
@@ -278,7 +275,7 @@ def add(app, config):
                 )
             )
 
-        # Figure: Stations
+        # Trace: Stations
         if show_stations and dv_has_climate_regime(
             config, design_variable, "historical"
         ):
@@ -294,7 +291,7 @@ def add(app, config):
             )
             with timing("coord_prep for stations", log=timing_log):
                 df = coord_prep(df, stations_column)
-            figures.append(
+            maps.append(
                 go.Scattergl(
                     x=df.rlon,
                     y=df.rlat,
@@ -344,47 +341,57 @@ def add(app, config):
             ],
         )
 
-        return (
-            {
-                "data": figures,
-                "layout": {
-                    "title": map_title(
+        # Create the figure that will be populated with the heatmap and colorbar
+        # as subplots.
+        figure = go.Figure(
+            layout=go.Layout(
+                title=go.layout.Title(
+                    text=map_title(
                         config,
                         design_variable,
                         climate_regime,
                         historical_dataset_id,
                         future_dataset_id,
                     ),
-                    "font": dict(size=13, color="grey"),
-                    "xaxis": dict(
-                        zeroline=False,
-                        range=[rlon.values[icxmin], rlon.values[icxmax]],
-                        showgrid=False,  # thin lines in the background
-                        visible=False,  # numbers below
-                    ),
-                    "yaxis": dict(
-                        zeroline=False,
-                        range=[rlat.values[icymin], rlat.values[icymax]],
-                        showgrid=False,  # thin lines in the background
-                        visible=False,
-                    ),
-                    "xaxis_showgrid": False,
-                    "yaxis_showgrid": False,
-                    "hoverlabel": dict(
-                        bgcolor="white", font_size=16, font_family="Rockwell"
-                    ),
-                    "hoverdistance": 5,
-                    "hovermode": "closest",
-                    # width is unspecified; it is therefore adaptive to window
-                    "height": 750,
-                    "showlegend": False,
-                    "legend_orientation": "v",
-                    "scrollZoom": True,
-                    "uirevision": "None",
-                },
-            },
-            colorbar,
+                    **config["map"]["layout"]["title"],
+                ),
+                showlegend=False,
+                uirevision="None",
+                **config["map"]["layout"]["main"],
+            ),
         )
+        figure.set_subplots(**config["map"]["layout"]["subplots"]["layout"])
+
+        # Add map traces to figure
+        map_location = config["map"]["layout"]["subplots"]["maps"]["location"]
+        for m in maps:
+            figure.add_trace(m, **map_location)
+        figure.update_xaxes(
+            go.layout.XAxis(
+                zeroline=False,
+                range=[rlon.values[icxmin], rlon.values[icxmax]],
+                showgrid=False,
+                visible=False,
+            ),
+            **map_location,
+        )
+        figure.update_yaxes(
+            go.layout.YAxis(
+                zeroline=False,
+                range=[rlat.values[icymin], rlat.values[icymax]],
+                showgrid=False,
+                visible=False,
+            ),
+            **map_location,
+        )
+
+        # Add colorbar trace to figure
+        colorbar_location = config["map"]["layout"]["subplots"]["colorbar"]["location"]
+        figure.add_trace(colorbar["trace"], **colorbar_location)
+        figure.update_xaxes(colorbar["xaxis"], **colorbar_location)
+        figure.update_yaxes(colorbar["yaxis"], **colorbar_location)
+
+        return figure
 
     @app.callback(
         Output("viewport-ds", "children"),
