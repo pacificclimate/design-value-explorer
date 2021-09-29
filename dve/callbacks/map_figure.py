@@ -358,7 +358,7 @@ def add(app, config):
                 showlegend=False,
                 uirevision="None",
                 **config["map"]["layout"]["main"],
-            )
+            ),
         )
         figure.set_subplots(**config["map"]["layout"]["subplots"]["layout"])
 

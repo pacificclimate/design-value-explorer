@@ -812,6 +812,7 @@ map:
             # For information on these parameters, see
             # https://plotly.com/python-api-reference/generated/plotly.graph_objects.Layout.html
             # Do not specify `title` here.
+            plot_bgcolor: rgb(229, 236, 246)
             font:
                 size: 13
                 color: "black"
