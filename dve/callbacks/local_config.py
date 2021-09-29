@@ -60,15 +60,10 @@ def add(app, config):
     # These variables define the UI elements that mutually set and are set by
     # local configuration. To add a new UI element whose state is maintained in
     # local storage, add a new item to a list.
-    simple_ui_elements = config["local_config"]["simple_ui_elements"]
-    per_dv_cr_ui_elements = config["local_config"]["per_dv_cr_ui_elements"]
-    updatable_ui_elements = simple_ui_elements + per_dv_cr_ui_elements
+    updatable_ui_elements = config["local_config"]["ui_elements"]
 
     # Helpers
-    simple_ui_elements_no_update = (dash.no_update,) * len(simple_ui_elements)
-    per_dv_cr_ui_elements_no_update = (dash.no_update,) * len(
-        per_dv_cr_ui_elements
-    )
+    ui_elements_no_update = (dash.no_update,) * len(updatable_ui_elements)
 
     @app.callback(
         Output("local_config", "data"),
@@ -107,18 +102,11 @@ def add(app, config):
                     else global_value,
                 )
 
-            for e in simple_ui_elements:
-                update_result(
-                    expanded_path(
-                        e,
-                        design_variable=design_variable,
-                        climate_regime=climate_regime,
-                    )
-                )
-
-            for e in per_dv_cr_ui_elements:
-                for dv in config["ui"]["dvs"]:
-                    for cr in ("historical", "future"):
+            for e in updatable_ui_elements:
+                dvs = config["ui"]["dvs"] if "{design_variable}" in e["path"] else (None,)
+                crs = ("historical", "future") if "{climate_regime}" in e["path"] else (None,)
+                for dv in dvs:
+                    for cr in crs:
                         update_result(
                             expanded_path(
                                 e, design_variable=dv, climate_regime=cr
@@ -133,8 +121,7 @@ def add(app, config):
             logger.debug(f"initializing local_config from config")
             return (
                 init_local_config(preserve_local=False),
-                *simple_ui_elements_no_update,
-                *per_dv_cr_ui_elements_no_update,
+                *ui_elements_no_update,
             )
 
         # If the local configuration is out of date, update it from the global
@@ -145,8 +132,7 @@ def add(app, config):
             logger.debug(f"updating local_config from config")
             return (
                 init_local_config(preserve_local=True),
-                *simple_ui_elements_no_update,
-                *per_dv_cr_ui_elements_no_update,
+                *ui_elements_no_update,
             )
 
         # Strictly speaking, the callback could be triggered by any combination
@@ -190,7 +176,6 @@ def add(app, config):
             logger.debug("updating colour scale options")
             return (
                 dash.no_update,
-                *simple_ui_elements_no_update,
                 *(
                     path_get(
                         local_config,
@@ -200,7 +185,7 @@ def add(app, config):
                             climate_regime=climate_regime,
                         ),
                     )
-                    for e in per_dv_cr_ui_elements
+                    for e in updatable_ui_elements
                 ),
             )
 
@@ -224,6 +209,5 @@ def add(app, config):
                 )
         return (
             local_config_output,
-            *simple_ui_elements_no_update,
-            *per_dv_cr_ui_elements_no_update,
+            *ui_elements_no_update,
         )

@@ -911,8 +911,8 @@ units:
         nice: °C-day
 
 local_config:
-    version: 7
-    simple_ui_elements:
+    version: 8
+    ui_elements:
       - id: "apply_mask"
         prop: "on"
         path: "ui.controls.mask.on"
@@ -925,7 +925,6 @@ local_config:
       - id: "num_colors"
         prop: "value"
         path: "ui.controls.num-colours.value"
-    per_dv_cr_ui_elements:
       - id: "color_map"
         prop: "value"
         path: "dvs.{design_variable}.{climate_regime}.colour_map"
