@@ -71,6 +71,9 @@ def main(config):
                         lg=6,
                         xxl=4,
                     ),
+                    dbc.Col(
+                        html.A()
+                    )
                 ]
             ),
         ]
@@ -337,6 +340,22 @@ def main(config):
             ],
         )
 
+    def help_tab():
+        """
+        Tab for software usage documentation.
+        """
+        return dbc.Tab(
+            tab_id="help-tab",
+            label=config["ui"]["labels"]["main_tabs"]["help-tab"],
+            children=[
+                dbc.Row(
+                    dbc.Col(
+                        dcc.Markdown(config["help"])
+                    )
+                )
+            ]
+        )
+
     def internal_data():
         """
         Layout components for storing/sharing data between callbacks (and callback
@@ -361,7 +380,7 @@ def main(config):
                 dbc.Col(
                     dbc.Tabs(
                         id="main_tabs",
-                        children=[map_tab(), table_C2_tab()],
+                        children=[map_tab(), table_C2_tab(), help_tab()],
                         active_tab=config["ui"]["controls"]["main_tabs"][
                             "active-tab"
                         ],
