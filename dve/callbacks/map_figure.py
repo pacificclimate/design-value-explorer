@@ -143,7 +143,7 @@ def add(app, config):
         if not dv_has_climate_regime(config, design_variable, climate_regime):
             raise PreventUpdate
 
-        # This list is the set of overlaid traces that comprise the map.
+        # The list `maps` is the set of overlaid traces that comprise the map.
         # It is built up incrementally depending on the values of the inputs.
         maps = []
 
@@ -196,7 +196,7 @@ def add(app, config):
                 lambda dvds, ds: (ds.rlon, ds.rlat, ds[dvds.dv_name])
             )
 
-        # Figure: Lon-lat overlay
+        # Trace: Lon-lat overlay
         if show_grid:
             lonlat_overlay_config = config["map"]["lonlat_overlay"]
 
@@ -221,7 +221,7 @@ def add(app, config):
                     lat_max=lonlat_overlay_config["lat"]["max"],
                 )
 
-        # Figure: Canada map
+        # Trace: Canada map
         maps += [
             go.Scattergl(
                 x=canada_x,
@@ -234,7 +234,7 @@ def add(app, config):
             )
         ]
 
-        # Figure: Heatmap (raster)
+        # Trace: Heatmap (raster)
 
         # Index values for clipping data to Canada bounds
         icxmin = find_nearest_index(rlon.values, cx_min)
@@ -275,7 +275,7 @@ def add(app, config):
                 )
             )
 
-        # Figure: Stations
+        # Trace: Stations
         if show_stations and dv_has_climate_regime(
             config, design_variable, "historical"
         ):
