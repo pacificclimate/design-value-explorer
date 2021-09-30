@@ -49,18 +49,41 @@ from dve.dict_utils import path_get, path_set
 
 logger = logging.getLogger("dve")
 
+
 # Helper
-def expanded_path(ui_element, **kwargs):
-    """Expands the path in `ui_element` by substituting interpolated
-    values."""
-    return ui_element["path"].format(**kwargs)
+def expanded_path(path, **kwargs):
+    """Expands a path by substituting interpolated values."""
+    return path.format(**kwargs)
 
 
 def add(app, config):
     # These variables define the UI elements that mutually set and are set by
     # local configuration. To add a new UI element whose state is maintained in
     # local storage, add a new item to a list.
-    updatable_ui_elements = config["local_config"]["ui_elements"]
+    updatable_ui_elements = [
+        {"id": "apply_mask", "prop": "on", "get": "ui.controls.mask.on"},
+        {
+            "id": "show_stations",
+            "prop": "on",
+            "get": "ui.controls.stations.on",
+        },
+        {"id": "show_grid", "prop": "on", "get": "ui.controls.grid.on"},
+        {
+            "id": "num_colors",
+            "prop": "value",
+            "get": "ui.controls.num-colours.value",
+        },
+        {
+            "id": "color_map",
+            "prop": "value",
+            "get": "dvs.{design_variable}.{climate_regime}.colour_map",
+        },
+        {
+            "id": "color_scale_type",
+            "prop": "value",
+            "get": "dvs.{design_variable}.{climate_regime}.scale.default",
+        },
+    ]
 
     # Helpers
     ui_elements_no_update = (dash.no_update,) * len(updatable_ui_elements)
@@ -92,25 +115,38 @@ def add(app, config):
             v_path = "local_config.version"
             path_set(result, v_path, path_get(config, v_path))
 
-            def update_result(path):
-                global_value = path_get(config, path)
+            def update_result(get_path, put_path):
+                global_value = path_get(config, get_path)
                 path_set(
                     result,
-                    path,
-                    path_get(local_config, path, default=global_value)
+                    put_path,
+                    path_get(local_config, get_path, default=global_value)
                     if preserve_local
                     else global_value,
                 )
 
             for e in updatable_ui_elements:
-                dvs = config["ui"]["dvs"] if "{design_variable}" in e["path"] else (None,)
-                crs = ("historical", "future") if "{climate_regime}" in e["path"] else (None,)
+                get_path = e["get"]
+                put_path = e.get("put", get_path)
+                dvs = (
+                    config["ui"]["dvs"]
+                    if "{design_variable}" in put_path
+                    else (None,)
+                )
+                crs = (
+                    ("historical", "future")
+                    if "{climate_regime}" in put_path
+                    else (None,)
+                )
                 for dv in dvs:
                     for cr in crs:
                         update_result(
                             expanded_path(
-                                e, design_variable=dv, climate_regime=cr
-                            )
+                                get_path, design_variable=dv, climate_regime=cr
+                            ),
+                            expanded_path(
+                                put_path, design_variable=dv, climate_regime=cr
+                            ),
                         )
 
             return result
@@ -152,6 +188,7 @@ def add(app, config):
             #  it should create an infinite loop of updates, but Dash apparently
             #  prevents that.) I suspect there is a different and better way to
             #  structure this callback. This does work.
+            # TODO: Place in separate callbacks
             logger.debug("updating UI elements from local config")
             return (
                 dash.no_update,
@@ -159,7 +196,7 @@ def add(app, config):
                     path_get(
                         local_config,
                         expanded_path(
-                            e,
+                            e["get"],
                             design_variable=design_variable,
                             climate_regime=climate_regime,
                         ),
@@ -172,6 +209,7 @@ def add(app, config):
         # callback. Therefore update the Colour Scale options UI elements from
         # local configuration and don't update the local config or the Overlay
         # Options UI elements.
+        # TODO: Place in separate callback
         if triggered_by(("design_variable.", "climate_regime."), ctx):
             logger.debug("updating colour scale options")
             return (
@@ -180,7 +218,7 @@ def add(app, config):
                     path_get(
                         local_config,
                         expanded_path(
-                            e,
+                            e["get"],
                             design_variable=design_variable,
                             climate_regime=climate_regime,
                         ),
@@ -198,16 +236,15 @@ def add(app, config):
             updatable_ui_elements, updatable_ui_inputs
         ):
             if triggered_by(f'{element["id"]}.', ctx):
+                get_path = element["get"]
+                put_path = element.get("put", get_path)
                 path_set(
                     local_config_output,
                     expanded_path(
-                        element,
+                        put_path,
                         design_variable=design_variable,
                         climate_regime=climate_regime,
                     ),
                     input_value,
                 )
-        return (
-            local_config_output,
-            *ui_elements_no_update,
-        )
+        return (local_config_output, *ui_elements_no_update)
