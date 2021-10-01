@@ -911,7 +911,7 @@ units:
         nice: °C-day
 
 local_config:
-    version: 8
+    version: 9
     ui_elements:
       - id: "apply_mask"
         prop: "on"
