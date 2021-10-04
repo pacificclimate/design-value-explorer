@@ -93,27 +93,7 @@ def add(app, config):
     # These variables define the UI elements that mutually set and are set by
     # local configuration. To add a new UI element whose state is maintained in
     # local storage, add a new item to a list.
-    updatable_ui_elements = [
-        {"id": "apply_mask", "prop": "on", "global": "ui.controls.mask.on"},
-        {"id": "show_stations", "prop": "on", "global": "ui.controls.stations.on"},
-        {"id": "show_grid", "prop": "on", "global": "ui.controls.grid.on"},
-        {
-            "id": "num_colors",
-            "prop": "value",
-            "global": "ui.controls.num-colours.value",
-            "local": "dvs.{design_variable}.{climate_regime}.num_colours",
-        },
-        {
-            "id": "color_map",
-            "prop": "value",
-            "global": "dvs.{design_variable}.{climate_regime}.colour_map",
-        },
-        {
-            "id": "color_scale_type",
-            "prop": "value",
-            "global": "dvs.{design_variable}.{climate_regime}.scale.default",
-        },
-    ]
+    updatable_ui_elements = path_get(config, "local_config.ui_elements")
 
     @app.callback(
         Output("local_config", "data"),
