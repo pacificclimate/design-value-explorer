@@ -65,6 +65,7 @@ logger = logging.getLogger("dve")
 
 # Helpers
 
+
 def global_path(element, **kwargs):
     """
     Return the path for the value of a UI element in the global config.
@@ -90,12 +91,12 @@ def local_path(element, **kwargs):
 
 
 def show_stations(config, climate_regime=None, **kwargs):
-    return climate_regime == "historical" and path_get(config, "ui.controls.stations.on")
+    return climate_regime == "historical" and path_get(
+        config, "ui.controls.stations.on"
+    )
 
 
-default_value_function = {
-    "show_stations": show_stations,
-}
+default_value_function = {"show_stations": show_stations}
 
 
 def add(app, config):
@@ -132,13 +133,13 @@ def add(app, config):
             v_path = "local_config.version"
             path_set(result, v_path, path_get(config, v_path))
 
-            # TODO: Move this outside
             def update_result(element, **kwargs):
                 gpath = global_path(e, **kwargs)
-                if gpath.startswith(function_delimiter):
-                    global_value = default_value_function[gpath[1:]](config, **kwargs)
-                else:
-                    global_value = path_get(config, gpath)
+                global_value = (
+                    default_value_function[gpath[1:]](config, **kwargs)
+                    if gpath.startswith(function_delimiter)
+                    else path_get(config, gpath)
+                )
                 lpath = local_path(element, **kwargs)
                 local_value = (
                     path_get(local_config, lpath, default=global_value)
@@ -161,7 +162,6 @@ def add(app, config):
                 )
                 for dv in dvs:
                     for cr in crs:
-                        # TODO: Inline?
                         update_result(e, design_variable=dv, climate_regime=cr)
 
             return result
