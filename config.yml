@@ -911,25 +911,27 @@ units:
         nice: °C-day
 
 local_config:
-    version: 7
-    simple_ui_elements:
+    version: 11
+    function_delimiter: "@"
+    ui_elements:
       - id: "apply_mask"
         prop: "on"
-        path: "ui.controls.mask.on"
+        global: "ui.controls.mask.on"
       - id: "show_stations"
         prop: "on"
-        path: "ui.controls.stations.on"
+        global: "@show_stations"
+        local: "ui.controls.stations.{climate_regime}.on"
       - id: "show_grid"
         prop: "on"
-        path: "ui.controls.grid.on"
+        global: "ui.controls.grid.on"
       - id: "num_colors"
         prop: "value"
-        path: "ui.controls.num-colours.value"
-    per_dv_cr_ui_elements:
+        global: "ui.controls.num-colours.value"
+        local: "dvs.{design_variable}.{climate_regime}.num_colours"
       - id: "color_map"
         prop: "value"
-        path: "dvs.{design_variable}.{climate_regime}.colour_map"
+        global: "dvs.{design_variable}.{climate_regime}.colour_map"
       - id: "color_scale_type"
         prop: "value"
-        path: "dvs.{design_variable}.{climate_regime}.scale.default"
+        global: "dvs.{design_variable}.{climate_regime}.scale.default"
 
