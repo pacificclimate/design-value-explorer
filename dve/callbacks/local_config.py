@@ -134,7 +134,7 @@ def add(app, config):
             path_set(result, v_path, path_get(config, v_path))
 
             def update_result(element, **kwargs):
-                gpath = global_path(e, **kwargs)
+                gpath = global_path(element, **kwargs)
                 global_value = (
                     default_value_function[gpath[1:]](config, **kwargs)
                     if gpath.startswith(function_delimiter)
