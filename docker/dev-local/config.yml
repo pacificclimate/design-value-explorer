@@ -911,14 +911,16 @@ units:
         nice: °C-day
 
 local_config:
-    version: 10
+    version: 11
+    function_delimiter: "@"
     ui_elements:
       - id: "apply_mask"
         prop: "on"
         global: "ui.controls.mask.on"
       - id: "show_stations"
         prop: "on"
-        global: "ui.controls.stations.on"
+        global: "@show_stations"
+        local: "ui.controls.stations.{climate_regime}.on"
       - id: "show_grid"
         prop: "on"
         global: "ui.controls.grid.on"

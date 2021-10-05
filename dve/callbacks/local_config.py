@@ -65,6 +65,7 @@ logger = logging.getLogger("dve")
 
 # Helpers
 
+
 def global_path(element, **kwargs):
     """
     Return the path for the value of a UI element in the global config.
@@ -89,11 +90,21 @@ def local_path(element, **kwargs):
     return raw.format(**kwargs)
 
 
+def show_stations(config, climate_regime=None, **kwargs):
+    return climate_regime == "historical" and path_get(
+        config, "ui.controls.stations.on"
+    )
+
+
+default_value_function = {"show_stations": show_stations}
+
+
 def add(app, config):
     # These variables define the UI elements that mutually set and are set by
     # local configuration. To add a new UI element whose state is maintained in
     # local storage, add a new item to a list.
     updatable_ui_elements = path_get(config, "local_config.ui_elements")
+    function_delimiter = path_get(config, "local_config.function_delimiter")
 
     @app.callback(
         Output("local_config", "data"),
@@ -122,15 +133,20 @@ def add(app, config):
             v_path = "local_config.version"
             path_set(result, v_path, path_get(config, v_path))
 
-            def update_result(gpath, lpath):
-                global_value = path_get(config, gpath)
-                path_set(
-                    result,
-                    lpath,
-                    path_get(local_config, gpath, default=global_value)
-                    if preserve_local
-                    else global_value,
+            def update_result(element, **kwargs):
+                gpath = global_path(element, **kwargs)
+                global_value = (
+                    default_value_function[gpath[1:]](config, **kwargs)
+                    if gpath.startswith(function_delimiter)
+                    else path_get(config, gpath)
                 )
+                lpath = local_path(element, **kwargs)
+                local_value = (
+                    path_get(local_config, lpath, default=global_value)
+                    if preserve_local
+                    else global_value
+                )
+                path_set(result, lpath, local_value)
 
             for e in updatable_ui_elements:
                 raw_put_path = local_path(e)
@@ -146,10 +162,7 @@ def add(app, config):
                 )
                 for dv in dvs:
                     for cr in crs:
-                        update_result(
-                            global_path(e, design_variable=dv, climate_regime=cr),
-                            local_path(e, design_variable=dv, climate_regime=cr),
-                        )
+                        update_result(e, design_variable=dv, climate_regime=cr)
 
             return result
 
