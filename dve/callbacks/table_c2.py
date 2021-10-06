@@ -3,7 +3,7 @@ import logging
 import dash
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
-import dash_table
+from dash import dash_table
 from flask_caching import Cache
 
 import pandas
