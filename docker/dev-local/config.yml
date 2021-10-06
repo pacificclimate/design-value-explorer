@@ -931,5 +931,3 @@ local_config:
       - id: "color_scale_type"
         prop: "value"
         global: "dvs.{design_variable}.{climate_regime}.scale.default"
-        
-        
