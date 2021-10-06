@@ -77,9 +77,13 @@ def add(app, config):
         minimum = round_to_multiple(np.nanmin(field), roundto, "down")
         maximum = round_to_multiple(np.nanmax(field), roundto, "up")
         num_steps = 20
-        step = (maximum - minimum) / (num_steps + 1)
+        step = (maximum - minimum) / num_steps
         marks = {
-            str(x): str(x) for x in (minimum, (minimum + maximum) / 2, maximum)
+            str(x): str(x)
+            for x in (
+                round_to_multiple(minimum + k * step, roundto)
+                for k in range(0, num_steps+1, 4)
+            )
         }
         default_value = (minimum, maximum)
         return (minimum, maximum, step, marks, default_value)
