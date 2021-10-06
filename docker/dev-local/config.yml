@@ -55,9 +55,6 @@ ui:
             handleLabel:
                 showCurrentValue: true
                 label: " "
-                style:
-                    font-size: "0.8em"
-                    color: black
             marks:
                 "5": "5"
                 "100": "100"

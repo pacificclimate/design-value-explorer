@@ -179,7 +179,7 @@ def main(config):
                 daq.Slider(
                     id="num_colors", **config["ui"]["controls"]["num-colours"]
                 ),
-                style={"padding-top": "2em"},
+                style={"padding-top": "3em"},
             ),
             "range": Loading(
                 html.Div(
