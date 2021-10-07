@@ -55,12 +55,9 @@ ui:
             handleLabel:
                 showCurrentValue: true
                 label: " "
-                style:
-                    font-size: "0.8em"
-                    color: black
             marks:
-                5: "5"
-                100: "100"
+                "5": "5"
+                "100": "100"
         colourbar-range: {}
     ticks:
         max-num: 11
@@ -934,4 +931,3 @@ local_config:
       - id: "color_scale_type"
         prop: "value"
         global: "dvs.{design_variable}.{climate_regime}.scale.default"
-

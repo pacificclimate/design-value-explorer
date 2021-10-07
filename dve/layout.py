@@ -1,6 +1,6 @@
-import dash_html_components as html
+from dash import html
 import dash_bootstrap_components as dbc
-import dash_core_components as dcc
+from dash import dcc
 import dash_daq as daq
 from dve.config import dv_label
 
@@ -57,14 +57,23 @@ def main(config):
             dbc.Row(dbc.Col(html.H1("Design Value Explorer"))),
             dbc.Row(
                 [
-                    dbc.Col(html.Label("Design Variable"), width=1),
+                    dbc.Col(
+                        html.Label("Design Variable"),
+                        xs=12,
+                        md=3,
+                        lg=2,
+                        xxl=1,
+                    ),
                     dbc.Col(
                         dcc.Dropdown(
                             id="design_variable",
                             options=dd_options,
                             **config["ui"]["controls"]["design-value-id"],
                         ),
-                        width=4,
+                        xs=12,
+                        md=9,
+                        lg=6,
+                        xxl=4,
                     ),
                 ]
             ),
@@ -93,7 +102,7 @@ def main(config):
 
         return [
             # Section title
-            dbc.Row(dbc.Col(html.H5(cfg["title"])), className="mt-2"),
+            dbc.Row(dbc.Col(html.H5(cfg["title"]))),
             # Control titles
             dbc.Row(
                 [
@@ -170,7 +179,7 @@ def main(config):
                 daq.Slider(
                     id="num_colors", **config["ui"]["controls"]["num-colours"]
                 ),
-                style={"padding-top": "2em"},
+                style={"padding-top": "3em"},
             ),
             "range": Loading(
                 html.Div(
@@ -186,7 +195,7 @@ def main(config):
 
         return [
             # Section title
-            dbc.Row(dbc.Col(html.H5(cfg["title"])), className="mt-5"),
+            dbc.Row(dbc.Col(html.H5(cfg["title"]))),
             # Control titles
             dbc.Row(
                 [
@@ -234,7 +243,7 @@ def main(config):
                             style={"font-size": "0.8em"},
                         ),
                     ]
-                )
+                ),
             ),
             dbc.Row(
                 [
@@ -292,27 +301,33 @@ def main(config):
                 dbc.Row(
                     [
                         dbc.Col(
+                            overlay_options(),
+                            xxl={"size": 6, "order": 1},
+                            xs=12,
+                            className="pt-3 pb-3"
+                        ),
+                        dbc.Col(
+                            colourbar_options(),
+                            xxl={"size": 6, "order": 1},
+                            xs=12,
+                            className="pt-3 pb-3"
+                        ),
+                        dbc.Col(
                             Loading(
                                 dcc.Graph(
                                     id="map_main_graph",
                                     config=config["ui"]["graph"],
                                 )
                             ),
-                            lg=7,
-                            md=12,
-                            sm=12,
+                            xxl={"size": 7, "order": 3},
                             xs=12,
+                            className="border-top"
                         ),
                         dbc.Col(
-                            [
-                                *overlay_options(),
-                                *colourbar_options(),
-                                *user_graph_interaction(),
-                            ],
-                            lg=5,
-                            md=12,
-                            sm=12,
+                            user_graph_interaction(),
+                            xxl={"size": 5, "order": 3},
                             xs=12,
+                            className="pt-3 border-top"
                         ),
                     ],
                     align="start",

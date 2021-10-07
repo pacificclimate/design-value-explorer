@@ -4,7 +4,7 @@ import functools
 import dash
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
-import dash_html_components as html
+from dash import html
 import dash_bootstrap_components as dbc
 
 from dve.config import dv_has_climate_regime

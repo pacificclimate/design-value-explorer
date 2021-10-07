@@ -45,19 +45,15 @@ def add(app, config):
         return f"Range: {sigfigs(range[0])} to {sigfigs(range[1])}"
 
     @app.callback(
-        [
-            Output("color_scale_data_range", "min"),
-            Output("color_scale_data_range", "max"),
-            Output("color_scale_data_range", "step"),
-            Output("color_scale_data_range", "marks"),
-            Output("color_scale_data_range", "value"),
-        ],
-        [
-            Input("design_variable", "value"),
-            Input("climate_regime", "value"),
-            # Input("historical_dataset_id", "value"),
-            Input("future_dataset_id", "value"),
-        ],
+        Output("color_scale_data_range", "min"),
+        Output("color_scale_data_range", "max"),
+        Output("color_scale_data_range", "step"),
+        Output("color_scale_data_range", "marks"),
+        Output("color_scale_data_range", "value"),
+        Input("design_variable", "value"),
+        Input("climate_regime", "value"),
+        # Input("historical_dataset_id", "value"),
+        Input("future_dataset_id", "value"),
     )
     def update_slider(
         design_variable,
@@ -81,7 +77,13 @@ def add(app, config):
         minimum = round_to_multiple(np.nanmin(field), roundto, "down")
         maximum = round_to_multiple(np.nanmax(field), roundto, "up")
         num_steps = 20
-        step = (maximum - minimum) / (num_steps + 1)
-        marks = {x: str(x) for x in (minimum, (minimum + maximum) / 2, maximum)}
+        step = (maximum - minimum) / num_steps
+        marks = {
+            str(x): str(x)
+            for x in (
+                round_to_multiple(minimum + k * step, roundto)
+                for k in range(0, num_steps+1, 4)
+            )
+        }
         default_value = (minimum, maximum)
         return (minimum, maximum, step, marks, default_value)
