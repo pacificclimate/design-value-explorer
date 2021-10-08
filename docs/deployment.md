@@ -52,11 +52,16 @@ parameters include:
 - Configuration of local preferences storage (key `local_config`)
 - A miscellany of other values
 
-Filepaths are not absolute, and use `resource_pkgs.resource_filename`
+Notes:
+
+1. Filepaths are not absolute, and use `resource_pkgs.resource_filename`
 set within `dve/` as a reference. This is not a desirable practice and
 will 
 [change](https://github.com/pacificclimate/dash-dv-explorer/issues/111) 
 to absolute, direct filepaths at some point.
+
+2. See the module docstring for module `dve/callbacks/local_preferences. py`
+for details on how to configure local preferences. 
 
 ## Deploying locally for development
 

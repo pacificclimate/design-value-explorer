@@ -23,6 +23,48 @@ In addition, per-DV/Period UI elements are set to the local preference value
 when either DV or Period is changed. This means
 that the app remembers a user's preferences for how to view each dataset.
 
+Local preferences handling is configured in `config.yml` under the key
+`local_preferences`. This object contains the following items:
+
+- `version`: Local preferences version number. Increment this number whenever
+the configuration of local preferences is changed. This causes the app to
+reload/update preferences.
+
+- `function_delimiter`: A character that signifies that a `global` item in a
+`ui_elements` is a function rather than a path. See below for details.
+
+- `ui_elements`: list containing definitions for each UI element whose setting
+is managed as a local preference. "UI element" in this context really means
+"Dash Input/Output object", and is identified as in Dash callback definitions
+by its component id and component property. Each list element contains the
+following items:
+
+    - `id`: Component id; addresses a Dash layout element
+    - `prop` Component property name
+    - `global`: Path or function name (indicated by prefix with value of
+    `function_delimiter` item) from which to retrieve the default value for
+    this preference.
+    - `local`: Path in local preferences in which to store preference value. 
+    Optional; if absent, the value of `global` is used.
+    
+A "path" as used above means a dot-delimited sequence of dict selectors that
+address an item in a nested dict. For example, the string `ui.controls.mask.on`
+addresses an item `d["ui"]["controls"]["mask"]["on"]` in dict `d`.
+
+Path strings, both `local` and `global`, can contain variable substitutions. For 
+example, `dvs.{design_variable}.{climate_regime}.colour_map`. Supported
+substitution variables are
+
+- `design_variable`
+- `climate_regime` (selected by Period selector in UI)
+
+Other variables remain unsubstituted in the path string.
+
+Local and global paths for a given UI element need not be the same. Indeed,
+this is exploited so that a single default for all design variables and climate
+regimes (periods) can be managed per dv and period. See, for example, the
+configuration for `num_colours.value`.
+
 Implementation notes:
 
 - Local preferences are stored using a `dcc.Store` layout element with
