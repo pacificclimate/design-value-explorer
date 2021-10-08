@@ -15,7 +15,7 @@ https://luciopaiva.com/markdown-toc/).
 DVE is deployed in production using Docker. All installation related to
 production deployments is encapsulated in the production Docker infrastructure.
 For more details, see
-[Deploying a production instance](docs/deployment.md#deploying-a-production-instance).
+[Deploying a production instance](deployment.md#deploying-a-production-instance).
 
 ## For development (using Docker)
 

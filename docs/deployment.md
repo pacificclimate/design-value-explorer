@@ -69,11 +69,9 @@ for details on how to configure local preferences.
 
 Using Docker for development is an expedient to avoid refactoring
 the code to
-[simplify its relationship to climpyrical](https://github.
-com/pacificclimate/dash-dv-explorer/issues/100)
+[simplify its relationship to climpyrical](https://github. com/pacificclimate/dash-dv-explorer/issues/100)
 and
-[improve the way data files are addressed](https://github.
-com/pacificclimate/dash-dv-explorer/issues/111).
+[improve the way data files are addressed](https://github. com/pacificclimate/dash-dv-explorer/issues/111).
 The avoidance of code effort comes at some significant cost in Docker
 complication, a cost which in the initial phases of this project was
 worth the benefit, but which now outweighs it.
@@ -115,22 +113,25 @@ commands can be run, including running tests and running the app.
 
    Do each of the following things *once per workstation*.
 
-  1. Configure Docker user namespace mapping.
+   1. Configure Docker user namespace mapping.
 
-    1. Clone [`pdp-docker`](https://github.com/pacificclimate/pdp-docker).
+      1. Clone [`pdp-docker`](https://github.
+         com/pacificclimate/pdp-docker).
 
-    1. Follow the instructions in the `pdp-docker` documentation:
+      1. Follow the instructions in the `pdp-docker` documentation:
        [Setting up Docker namespace remapping (with recommended parameters)](https://github.com/pacificclimate/pdp-docker#setting-up-docker-namespace-remapping-with-recommended-parameters).
 
-    1. Grant permissions on the downloads directory:
+      1. Grant permissions on the downloads directory:
 
         ```
         setfacl -m "g:dockremap1000:rwx" docker/dev-local/downloads/ 
         ``` 
 
-  1. Update the development config (`docker/dev-local/config.yml`) as needed.
+   1. Update the development config (`docker/dev-local/config.yml`) as 
+      needed.
 
-  1. Copy any large datasets (e.g., reconstructions) to your local codebase
+   1. Copy any large datasets (e.g., reconstructions) to your local 
+      codebase
      (typically under `local-data/`). This cuts app startup time from minutes
      to seconds. App startup is incurred every time you make a change to the
      codebase and want to see the results.
