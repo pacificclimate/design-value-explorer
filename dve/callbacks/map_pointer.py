@@ -180,8 +180,11 @@ def add(app, config):
         # historical_dataset_id,
         future_dataset_id,
     ):
-        if hover_data is None:
-            return None
+        # Ignore if no hover data or if not hovering over map (curve # 1).
+        if hover_data is None or hover_data["points"][0]["curveNumber"] != 1:
+            return dash.no_update
+
+        logger.debug(f"hover_data {hover_data}")
 
         historical_dataset_id = "reconstruction"
 
