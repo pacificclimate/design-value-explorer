@@ -20,7 +20,7 @@ logger = logging.getLogger("dve")
 def add(app, config):
     @app.callback(
         Output("color_scale_type", "options"),
-        [Input("design_variable", "value"), Input("climate_regime", "value")],
+        Input("design_variable", "value"), Input("climate_regime", "value"),
     )
     def update_scale_ctrl_options(design_variable, climate_regime):
         options = [
@@ -39,7 +39,7 @@ def add(app, config):
 
     @app.callback(
         Output("colorscale_options_label_range", "children"),
-        [Input("color_scale_data_range", "value")],
+        Input("color_scale_data_range", "value"),
     )
     def update_colourbar_range_label(range):
         return f"Range: {sigfigs(range[0])} to {sigfigs(range[1])}"

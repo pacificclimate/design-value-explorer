@@ -132,8 +132,8 @@ def add(app, config):
 
 
     @app.callback(
-        [Output("table-C2-title", "children"), Output("table-C2", "children")],
-        [Input("main_tabs", "active_tab"), Input("design_variable", "value")],
+        Output("table-C2-title", "children"), Output("table-C2", "children"),
+        Input("main_tabs", "active_tab"), Input("design_variable", "value"),
     )
     def update_tablec2(main_tabs_active_tab, design_variable):
         # Do not update if the tab is not selected

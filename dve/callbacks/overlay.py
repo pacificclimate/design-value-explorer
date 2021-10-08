@@ -12,11 +12,9 @@ logger = logging.getLogger("dve")
 
 def add(app, config):
     @app.callback(
-        [
-            Output("climate_regime", "options"),
-            Output("climate_regime", "value"),
-        ],
-        [Input("design_variable", "value")],
+        Output("climate_regime", "options"),
+        Output("climate_regime", "value"),
+        Input("design_variable", "value"),
     )
     def update_dataset_ctrl_value(design_variable):
         """
