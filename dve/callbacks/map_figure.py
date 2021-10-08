@@ -356,7 +356,7 @@ def add(app, config):
                 showlegend=False,
                 uirevision="None",
                 **config["map"]["layout"]["main"],
-            ),
+            )
         )
         figure.set_subplots(**config["map"]["layout"]["subplots"]["layout"])
 
@@ -384,7 +384,9 @@ def add(app, config):
         )
 
         # Add colorbar trace to figure
-        colorbar_location = config["map"]["layout"]["subplots"]["colorbar"]["location"]
+        colorbar_location = config["map"]["layout"]["subplots"]["colorbar"][
+            "location"
+        ]
         figure.add_trace(colorbar["trace"], **colorbar_location)
         figure.update_xaxes(colorbar["xaxis"], **colorbar_location)
         figure.update_yaxes(colorbar["yaxis"], **colorbar_location)

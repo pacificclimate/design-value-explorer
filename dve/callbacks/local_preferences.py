@@ -147,7 +147,9 @@ def add(app, config):
     # local preferences. To add a new UI element whose state is maintained in
     # local storage, add a new item to a list.
     updatable_ui_elements = path_get(config, "local_preferences.ui_elements")
-    function_delimiter = path_get(config, "local_preferences.function_delimiter")
+    function_delimiter = path_get(
+        config, "local_preferences.function_delimiter"
+    )
 
     @app.callback(
         Output("local_preferences", "data"),
@@ -168,7 +170,9 @@ def add(app, config):
             design_variable,
             climate_regime,
         ) = args
-        logger.debug(f"update_local_preferences local_preferences_ts={local_preferences_ts}")
+        logger.debug(
+            f"update_local_preferences local_preferences_ts={local_preferences_ts}"
+        )
 
         # Helper
         def init_local_preferences(preserve_local=True):
@@ -272,7 +276,10 @@ def add(app, config):
         """
 
         def callback(
-            local_preferences_ts, design_variable, climate_regime, local_preferences
+            local_preferences_ts,
+            design_variable,
+            climate_regime,
+            local_preferences,
         ):
             if not local_preferences_ts or local_preferences_ts < 0:
                 return dash.no_update

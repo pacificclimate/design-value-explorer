@@ -20,7 +20,8 @@ logger = logging.getLogger("dve")
 def add(app, config):
     @app.callback(
         Output("color_scale_type", "options"),
-        Input("design_variable", "value"), Input("climate_regime", "value"),
+        Input("design_variable", "value"),
+        Input("climate_regime", "value"),
     )
     def update_scale_ctrl_options(design_variable, climate_regime):
         options = [
@@ -82,7 +83,7 @@ def add(app, config):
             str(x): str(x)
             for x in (
                 round_to_multiple(minimum + k * step, roundto)
-                for k in range(0, num_steps+1, 4)
+                for k in range(0, num_steps + 1, 4)
             )
         }
         default_value = (minimum, maximum)

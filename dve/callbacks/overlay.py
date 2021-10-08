@@ -37,8 +37,7 @@ def add(app, config):
         return climate_regime != "future"
 
     @app.callback(
-        Output("show_stations", "disabled"),
-        Input("climate_regime", "value"),
+        Output("show_stations", "disabled"), Input("climate_regime", "value")
     )
     def update_stations_ctrl_disable(climate_regime):
         return climate_regime == "future"

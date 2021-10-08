@@ -171,10 +171,7 @@ def add(app, config):
         Input("future_dataset_id", "value"),
     )
     def display_hover_info(
-        hover_data,
-        design_variable,
-        climate_regime,
-        future_dataset_id,
+        hover_data, design_variable, climate_regime, future_dataset_id
     ):
         # Ignore if no hover data or if not hovering over map (curve # 1).
         if hover_data is None or hover_data["points"][0]["curveNumber"] != 1:
