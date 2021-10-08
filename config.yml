@@ -907,7 +907,7 @@ units:
     degC-day:
         nice: °C-day
 
-local_config:
+local_preferences:
     version: 11
     function_delimiter: "@"
     ui_elements:

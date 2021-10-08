@@ -357,7 +357,7 @@ def main(config):
             html.Div(
                 id="viewport-ds", style={"display": "none"}, children="null"
             ),
-            dcc.Store(id="local_config", storage_type="local"),
+            dcc.Store(id="local_preferences", storage_type="local"),
         ]
 
     return dbc.Container(
