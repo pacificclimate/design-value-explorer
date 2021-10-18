@@ -69,10 +69,9 @@ for details on how to configure local preferences.
 
 Using Docker for development is an expedient to avoid refactoring
 the code to
-[simplify its relationship to climpyrical](https://github. com/pacificclimate/dash-dv-explorer/issues/100)
-and
-[improve the way data files are addressed](https://github. com/pacificclimate/dash-dv-explorer/issues/111).
-The avoidance of code effort comes at some significant cost in Docker
+[simplify its relationship to climpyrical](https://github.com/pacificclimate/dash-dv-explorer/issues/100) and
+[improve the way data files are addressed](https://github.com/pacificclimate/dash-dv-explorer/issues/111). 
+Avoiding the refactoring comes at some significant cost in Docker
 complication, a cost which in the initial phases of this project was
 worth the benefit, but which now outweighs it.
 
@@ -115,8 +114,7 @@ commands can be run, including running tests and running the app.
 
    1. Configure Docker user namespace mapping.
 
-      1. Clone [`pdp-docker`](https://github.
-         com/pacificclimate/pdp-docker).
+      1. Clone [`pdp-docker`](https://github.com/pacificclimate/pdp-docker).
 
       1. Follow the instructions in the `pdp-docker` documentation:
        [Setting up Docker namespace remapping (with recommended parameters)](https://github.com/pacificclimate/pdp-docker#setting-up-docker-namespace-remapping-with-recommended-parameters).
