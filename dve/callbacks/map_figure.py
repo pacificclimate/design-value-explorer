@@ -64,26 +64,24 @@ def add(app, config):
 
     @app.callback(
         Output("map_main_graph", "figure"),
-        [
-            # Tab selection
-            Input("main_tabs", "active_tab"),
-            # DV selection
-            Input("design_variable", "value"),
-            # Overlay options
-            Input("climate_regime", "value"),
-            # Input("historical_dataset_id", "value"),
-            Input("future_dataset_id", "value"),
-            Input("apply_mask", "on"),
-            Input("show_stations", "on"),
-            Input("show_grid", "on"),
-            # Colour scale options
-            Input("color_map", "value"),
-            Input("color_scale_type", "value"),
-            Input("num_colors", "value"),
-            Input("color_scale_data_range", "value"),
-            # Client-side state
-            Input("viewport-ds", "children"),
-        ],
+        # Tab selection
+        Input("main_tabs", "active_tab"),
+        # DV selection
+        Input("design_variable", "value"),
+        # Overlay options
+        Input("climate_regime", "value"),
+        # Input("historical_dataset_id", "value"),
+        Input("future_dataset_id", "value"),
+        Input("apply_mask", "on"),
+        Input("show_stations", "on"),
+        Input("show_grid", "on"),
+        # Colour scale options
+        Input("color_map", "value"),
+        Input("color_scale_type", "value"),
+        Input("num_colors", "value"),
+        Input("color_scale_data_range", "value"),
+        # Client-side state
+        Input("viewport-ds", "children"),
     )
     def update_map(
         # Tab selection
@@ -358,7 +356,7 @@ def add(app, config):
                 showlegend=False,
                 uirevision="None",
                 **config["map"]["layout"]["main"],
-            ),
+            )
         )
         figure.set_subplots(**config["map"]["layout"]["subplots"]["layout"])
 
@@ -386,7 +384,9 @@ def add(app, config):
         )
 
         # Add colorbar trace to figure
-        colorbar_location = config["map"]["layout"]["subplots"]["colorbar"]["location"]
+        colorbar_location = config["map"]["layout"]["subplots"]["colorbar"][
+            "location"
+        ]
         figure.add_trace(colorbar["trace"], **colorbar_location)
         figure.update_xaxes(colorbar["xaxis"], **colorbar_location)
         figure.update_yaxes(colorbar["yaxis"], **colorbar_location)

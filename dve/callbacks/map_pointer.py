@@ -165,23 +165,19 @@ def add(app, config):
 
     @app.callback(
         Output("map_hover_info", "children"),
-        [
-            Input("map_main_graph", "hoverData"),
-            Input("design_variable", "value"),
-            Input("climate_regime", "value"),
-            # Input("historical_dataset_id", "value"),
-            Input("future_dataset_id", "value"),
-        ],
+        Input("map_main_graph", "hoverData"),
+        Input("design_variable", "value"),
+        Input("climate_regime", "value"),
+        Input("future_dataset_id", "value"),
     )
     def display_hover_info(
-        hover_data,
-        design_variable,
-        climate_regime,
-        # historical_dataset_id,
-        future_dataset_id,
+        hover_data, design_variable, climate_regime, future_dataset_id
     ):
-        if hover_data is None:
-            return None
+        # Ignore if no hover data or if not hovering over map (curve # 1).
+        if hover_data is None or hover_data["points"][0]["curveNumber"] != 1:
+            return dash.no_update
+
+        logger.debug(f"hover_data {hover_data}")
 
         historical_dataset_id = "reconstruction"
 
@@ -211,13 +207,11 @@ def add(app, config):
     #   properties on a static download link established in layout.py.
     @app.callback(
         Output("data-download-header", "children"),
-        [
-            Input("map_main_graph", "clickData"),
-            Input("design_variable", "value"),
-            Input("climate_regime", "value"),
-            # Input("historical_dataset_id", "value"),
-            Input("future_dataset_id", "value"),
-        ],
+        Input("map_main_graph", "clickData"),
+        Input("design_variable", "value"),
+        Input("climate_regime", "value"),
+        # Input("historical_dataset_id", "value"),
+        Input("future_dataset_id", "value"),
     )
     def display_download_button(
         click_data,

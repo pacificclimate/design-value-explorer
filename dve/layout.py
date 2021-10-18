@@ -58,11 +58,7 @@ def main(config):
             dbc.Row(
                 [
                     dbc.Col(
-                        html.Label("Design Variable"),
-                        xs=12,
-                        md=3,
-                        lg=2,
-                        xxl=1,
+                        html.Label("Design Variable"), xs=12, md=3, lg=2, xxl=1
                     ),
                     dbc.Col(
                         dcc.Dropdown(
@@ -243,7 +239,7 @@ def main(config):
                             style={"font-size": "0.8em"},
                         ),
                     ]
-                ),
+                )
             ),
             dbc.Row(
                 [
@@ -304,13 +300,13 @@ def main(config):
                             overlay_options(),
                             xxl={"size": 6, "order": 1},
                             xs=12,
-                            className="pt-3 pb-3"
+                            className="pt-3 pb-3",
                         ),
                         dbc.Col(
                             colourbar_options(),
                             xxl={"size": 6, "order": 1},
                             xs=12,
-                            className="pt-3 pb-3"
+                            className="pt-3 pb-3",
                         ),
                         dbc.Col(
                             Loading(
@@ -321,13 +317,13 @@ def main(config):
                             ),
                             xxl={"size": 7, "order": 3},
                             xs=12,
-                            className="border-top"
+                            className="border-top",
                         ),
                         dbc.Col(
                             user_graph_interaction(),
                             xxl={"size": 5, "order": 3},
                             xs=12,
-                            className="pt-3 border-top"
+                            className="pt-3 border-top",
                         ),
                     ],
                     align="start",
@@ -357,7 +353,7 @@ def main(config):
             html.Div(
                 id="viewport-ds", style={"display": "none"}, children="null"
             ),
-            dcc.Store(id="local_config", storage_type="local"),
+            dcc.Store(id="local_preferences", storage_type="local"),
         ]
 
     return dbc.Container(
