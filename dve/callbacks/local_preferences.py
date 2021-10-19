@@ -147,9 +147,7 @@ def add(app, config):
     # local preferences. To add a new UI element whose state is maintained in
     # local storage, add a new item to a list.
     updatable_ui_elements = path_get(config, "local_preferences.ui_elements")
-    function_delimiter = path_get(
-        config, "local_preferences.function_delimiter"
-    )
+    function_prefix = path_get(config, "local_preferences.function_prefix")
 
     @app.callback(
         Output("local_preferences", "data"),
@@ -184,7 +182,7 @@ def add(app, config):
                 gpath = global_path(element, **kwargs)
                 global_value = (
                     default_value_function[gpath[1:]](config, **kwargs)
-                    if gpath.startswith(function_delimiter)
+                    if gpath.startswith(function_prefix)
                     else path_get(config, gpath)
                 )
                 lpath = local_path(element, **kwargs)

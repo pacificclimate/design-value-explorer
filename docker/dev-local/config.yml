@@ -909,7 +909,7 @@ units:
 
 local_preferences:
     version: 11
-    function_delimiter: "@"
+    function_prefix: "@"
     ui_elements:
       - id: "apply_mask"
         prop: "on"
