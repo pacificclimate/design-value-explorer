@@ -33,7 +33,6 @@ from dve.processing import coord_prep
 from dve.math_utils import round_to_multiple, sigfigs
 from dve.timing import timing
 
-from climpyrical.data import read_data
 from climpyrical.gridding import find_nearest_index
 from climpyrical.mask import stratify_coords
 
@@ -55,13 +54,6 @@ def add(app, config):
     cy_min = min(value for value in canada_y if value is not None)
     cy_max = max(value for value in canada_y if value is not None)
 
-    native_mask = (
-        read_data(resource_filename("dve", config["paths"]["native_mask"]))[
-            "sftlf"
-        ]
-        >= 1.0
-    )
-
     @app.callback(
         Output("map_main_graph", "figure"),
         # Tab selection
@@ -72,7 +64,6 @@ def add(app, config):
         Input("climate_regime", "value"),
         # Input("historical_dataset_id", "value"),
         Input("future_dataset_id", "value"),
-        Input("apply_mask", "on"),
         Input("show_stations", "on"),
         Input("show_grid", "on"),
         # Colour scale options
@@ -90,9 +81,7 @@ def add(app, config):
         design_variable,
         # Overlay options
         climate_regime,
-        # historical_dataset_id,
         future_dataset_id,
-        apply_mask,
         show_stations,
         show_grid,
         # Colour scale options
@@ -248,11 +237,6 @@ def add(app, config):
         #     for i in range(icxmax - icxmin):
         #         for j in range(icymax - icymin):
         #             x = ds_arr[j,i]
-
-        if historical_dataset_id == "model" and apply_mask:
-            with timing("apply masking to dataset", log=timing_log):
-                mask = native_mask[icymin:icymax, icxmin:icxmax]
-                ds_arr[~mask] = np.nan
 
         with timing("create heatmap", log=timing_log):
             maps.append(
