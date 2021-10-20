@@ -350,7 +350,10 @@ def main(config):
             children=[
                 dbc.Row(
                     dbc.Col(
-                        dcc.Markdown(config["help"])
+                        dcc.Markdown(
+                            config["help"],
+                            dangerously_allow_html=True,
+                        )
                     )
                 )
             ]
