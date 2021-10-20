@@ -102,11 +102,9 @@ ui:
             title: Overlay Options
             columns:
                 - title: Period
-                  width: 3
+                  width: 4
                 - title: Global Warming
-                  width: 3
-                - title: Mask
-                  width: 2
+                  width: 4
                 - title: Stations
                   width: 2
                 - title: Grid
@@ -168,16 +166,8 @@ ui:
         # a bit of its behaviour.
         displayModeBar: true
 
-# Parameterize the pipeline
-# The pipeline will iterate through each parent tree
-# in dvs and provide the associated parameters
-
-# Which notebooks to use in the pipeline
 paths:
-    mask_path: data/masks/canada_mask_rp.nc
-    north_mask_path: data/masks/canada_mask_north_rp.nc
     canada_vector: data/vectors/canada_final.shp
-    native_mask: data/masks/land_mask_CanRCM4_sftlf.nc
     total_table_c2: data/tables/combined_dv_tablec2.csv
 
 dvs:
@@ -908,13 +898,10 @@ units:
         nice: °C-day
 
 local_preferences:
-    version: 12
+    version: 13
     path_separator: ";"
     function_prefix: "@"
     ui_elements:
-      - id: apply_mask
-        prop: "on"
-        global: ui;controls;mask;on
       - id: show_stations
         prop: "on"
         global: "@show_stations"
