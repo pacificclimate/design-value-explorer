@@ -147,9 +147,8 @@ def add(app, config):
     # local preferences. To add a new UI element whose state is maintained in
     # local storage, add a new item to a list.
     updatable_ui_elements = path_get(config, "local_preferences.ui_elements")
-    function_delimiter = path_get(
-        config, "local_preferences.function_delimiter"
-    )
+    path_separator = path_get(config, "local_preferences.path_separator")
+    function_prefix = path_get(config, "local_preferences.function_prefix")
 
     @app.callback(
         Output("local_preferences", "data"),
@@ -184,16 +183,16 @@ def add(app, config):
                 gpath = global_path(element, **kwargs)
                 global_value = (
                     default_value_function[gpath[1:]](config, **kwargs)
-                    if gpath.startswith(function_delimiter)
-                    else path_get(config, gpath)
+                    if gpath.startswith(function_prefix)
+                    else path_get(config, gpath, separator=path_separator)
                 )
                 lpath = local_path(element, **kwargs)
                 local_value = (
-                    path_get(local_preferences, lpath, default=global_value)
+                    path_get(local_preferences, lpath, default=global_value, separator=path_separator)
                     if preserve_local
                     else global_value
                 )
-                path_set(result, lpath, local_value)
+                path_set(result, lpath, local_value, separator=path_separator)
 
             for e in updatable_ui_elements:
                 raw_put_path = local_path(e)
@@ -252,6 +251,7 @@ def add(app, config):
                         climate_regime=climate_regime,
                     ),
                     input_value,
+                    separator=path_separator,
                 )
         return local_preferences_output if change else dash.no_update
 
@@ -295,6 +295,7 @@ def add(app, config):
                     design_variable=design_variable,
                     climate_regime=climate_regime,
                 ),
+                separator=path_separator,
             )
 
         return callback

@@ -908,26 +908,27 @@ units:
         nice: °C-day
 
 local_preferences:
-    version: 11
-    function_delimiter: "@"
+    version: 12
+    path_separator: ";"
+    function_prefix: "@"
     ui_elements:
-      - id: "apply_mask"
+      - id: apply_mask
         prop: "on"
-        global: "ui.controls.mask.on"
-      - id: "show_stations"
+        global: ui;controls;mask;on
+      - id: show_stations
         prop: "on"
         global: "@show_stations"
-        local: "ui.controls.stations.{climate_regime}.on"
-      - id: "show_grid"
+        local: ui;controls;stations;{climate_regime};on
+      - id: show_grid
         prop: "on"
-        global: "ui.controls.grid.on"
-      - id: "num_colors"
-        prop: "value"
-        global: "ui.controls.num-colours.value"
-        local: "dvs.{design_variable}.{climate_regime}.num_colours"
-      - id: "color_map"
-        prop: "value"
-        global: "dvs.{design_variable}.{climate_regime}.colour_map"
-      - id: "color_scale_type"
-        prop: "value"
-        global: "dvs.{design_variable}.{climate_regime}.scale.default"
+        global: ui.controls.grid.on
+      - id: num_colors
+        prop: value
+        global: ui;controls;num-colours;value
+        local: dvs;{design_variable};{climate_regime};num_colours
+      - id: color_map
+        prop: value
+        global: dvs;{design_variable};{climate_regime};colour_map
+      - id: color_scale_type
+        prop: value
+        global: dvs;{design_variable};{climate_regime};scale;default
