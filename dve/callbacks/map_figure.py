@@ -344,6 +344,18 @@ def add(app, config):
         )
         figure.set_subplots(**config["map"]["layout"]["subplots"]["layout"])
 
+        # Add colorbar trace to figure. Do this first so that the colourbar
+        # traces have the first (3) curve numbers, as reported by the
+        # `hoverData` and `clickData` properties of the map component. This
+        # makes it possible to consistently respond only to hovers/clicks on
+        # the map traces.
+        colorbar_location = config["map"]["layout"]["subplots"]["colorbar"][
+            "location"
+        ]
+        figure.add_trace(colorbar["trace"], **colorbar_location)
+        figure.update_xaxes(colorbar["xaxis"], **colorbar_location)
+        figure.update_yaxes(colorbar["yaxis"], **colorbar_location)
+
         # Add map traces to figure
         map_location = config["map"]["layout"]["subplots"]["maps"]["location"]
         for m in maps:
@@ -366,14 +378,6 @@ def add(app, config):
             ),
             **map_location,
         )
-
-        # Add colorbar trace to figure
-        colorbar_location = config["map"]["layout"]["subplots"]["colorbar"][
-            "location"
-        ]
-        figure.add_trace(colorbar["trace"], **colorbar_location)
-        figure.update_xaxes(colorbar["xaxis"], **colorbar_location)
-        figure.update_yaxes(colorbar["yaxis"], **colorbar_location)
 
         return figure
 

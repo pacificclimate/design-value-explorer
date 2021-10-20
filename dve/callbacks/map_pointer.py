@@ -173,11 +173,12 @@ def add(app, config):
     def display_hover_info(
         hover_data, design_variable, climate_regime, future_dataset_id
     ):
-        # Ignore if no hover data or if not hovering over map (curve # 1).
-        if hover_data is None or hover_data["points"][0]["curveNumber"] != 1:
-            return dash.no_update
+        # logger.debug(f"hover_data {hover_data}")
 
-        logger.debug(f"hover_data {hover_data}")
+        # Ignore if no hover data or if not hovering over map. Map curves are
+        # numbered > 1 due to the order they are added as traces to the figure.
+        if hover_data is None or hover_data["points"][0]["curveNumber"] <= 1:
+            return dash.no_update
 
         historical_dataset_id = "reconstruction"
 
@@ -225,8 +226,12 @@ def add(app, config):
         two parts: Download button and data display. Unfortunately this is
         repetitive but no other solution is known.
         """
-        if click_data is None:
-            return None
+        # logger.debug(f"click_data {click_data}")
+
+        # Ignore if no click data or if not clicking on map. Map curves are
+        # numbered > 1 due to the order they are added as traces to the figure.
+        if click_data is None or click_data["points"][0]["curveNumber"] <= 1:
+            return dash.no_update
 
         historical_dataset_id = "reconstruction"
 
@@ -274,9 +279,12 @@ def add(app, config):
         two parts: Download button and data display. Unfortunately this is
         repetitive but no other solution is known.
         """
-        # On startup
-        if click_data is None:
-            return None
+        # logger.debug(f"click_data {click_data}")
+
+        # Ignore if no click data or if not clicking on map. Map curves are
+        # numbered > 1 due to the order they are added as traces to the figure.
+        if click_data is None or click_data["points"][0]["curveNumber"] <= 1:
+            return dash.no_update
 
         historical_dataset_id = "reconstruction"
 
