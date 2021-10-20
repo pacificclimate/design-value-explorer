@@ -9,7 +9,7 @@ nor the accompanying notions of signin etc.)
 
 Local preferences include:
 
-- Simple options (e.g., Mask, Stations, Grid), which are independent
+- Simple options (e.g., Stations, Grid), which are independent
   of DV and Period
 - Per-DV/Period options (Colour Map, Scale, Num Colours)
 

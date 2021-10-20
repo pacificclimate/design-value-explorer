@@ -128,10 +128,6 @@ def main(config):
                                 style={"margin-top": "4em"},
                             ),
                             daq.BooleanSwitch(
-                                id="apply_mask",
-                                **config["ui"]["controls"]["mask"],
-                            ),
-                            daq.BooleanSwitch(
                                 id="show_stations",
                                 **config["ui"]["controls"]["stations"],
                             ),
