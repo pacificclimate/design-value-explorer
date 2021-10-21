@@ -3,6 +3,16 @@ import logging
 from dve.app import make_app
 
 
+logger = logging.getLogger("dve")
+formatter = logging.Formatter(
+    "%(asctime)s.%(msecs)03d %(levelname)s [%(module)s.%(funcName)s]: %(message)s", datefmt='%Y-%m-%d %H:%M:%S'
+)
+handler = logging.StreamHandler()
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
+
+
 # Create app
 app = make_app()
 # Expose Flask server for deployment with Gunicorn
@@ -11,13 +21,6 @@ server = app.server
 
 if __name__ == "__main__":
     # Set up logging
-    logger = logging.getLogger("dve")
-    formatter = logging.Formatter(
-        "%(asctime)s.%(msecs)03d %(levelname)s [%(module)s.%(funcName)s]: %(message)s", datefmt='%Y-%m-%d %H:%M:%S'
-    )
-    handler = logging.StreamHandler()
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
     log_level_choices = "NOTSET DEBUG INFO WARNING ERROR CRITICAL".split()
 
     parser = ArgumentParser(
