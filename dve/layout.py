@@ -352,8 +352,15 @@ def main(config):
                         dbc.Tab(
                             tab_id=f"help_tab-{index}",
                             label=tab["label"],
-                            children=dcc.Markdown(
-                                tab["content"], dangerously_allow_html=True
+                            children=dbc.Row(
+                                dbc.Col(
+                                    dcc.Markdown(
+                                        tab["content"],
+                                        dangerously_allow_html=True,
+                                    ),
+                                    xs=12,
+                                    xl=6,
+                                )
                             ),
                             className="pt-3",
                         )
