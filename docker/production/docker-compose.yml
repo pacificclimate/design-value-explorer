@@ -16,7 +16,11 @@ services:
         source: ./config.yml
         target: /opt/dockremap/config.yml
         read_only: true
-        
+      - type: bind
+        source: ../../config/
+        target: /opt/dockremap/config/
+        read_only: true
+
         # Data files
 #      - type: bind
 #        source: /storage/data/projects/comp_support/dv-explorer/data/
