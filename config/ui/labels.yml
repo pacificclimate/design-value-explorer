@@ -1,0 +1,58 @@
+main_tabs:
+  map-tab: Map
+  table-tab: Table C-2
+overlay-options:
+  title: Overlay Options
+  columns:
+    - title: Period
+      width: 4
+    - title: Global Warming
+      width: 4
+    - title: Stations
+      width: 2
+    - title: Grid
+      width: 2
+colorscale-options:
+  title: Colour Scale Options
+  columns:
+    color-map:
+      title: Colour Map
+      width: 3
+    scale:
+      title: Scale
+      width: 2
+    num-colors:
+      title: Num. Colours
+      width: 3
+    range:
+      title: Range (loading)
+      width: 4
+  column-order:
+    - color-map
+    - scale
+    - num-colors
+    - range
+climate_regime:
+  # Labels for the two climate regime selections
+  historical:
+    short: Historical
+    long: Historical design values
+  future:
+    short: Future
+    long: Future change relative to 1986-2016
+historical_dataset:
+  model: Model
+  reconstruction: Reconstruction
+future_change_factors:
+  short: "{value}{separator}{units}"
+  short_nice: "{}°C"      # deprecated
+  short_ascii: "{} degC"  # deprecated
+  long: "{}°C above 1986-2016"
+map:
+  title: "{dv} • {climate_regime}{dataset}"
+download_table:
+  dv: Design value
+  units: Units
+table_C2:
+  title: "Design values for {} at Table C2 locations"
+  no_station_data: "Variable {} does not have historical data"

@@ -1,0 +1,5 @@
+degC:
+  separator: false
+  nice: °C
+degC-day:
+  nice: °C-day

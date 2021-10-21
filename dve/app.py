@@ -38,7 +38,6 @@ def make_app(config_filepath="config.yml"):
     with open(config_filepath, "r") as config_file:
         config = yaml.load(config_file)
     logger.debug(f"Configuration loaded.")
-    logger.debug(f'config["test"]: {config["test"]}')
 
     dve.config.validate(config)
 

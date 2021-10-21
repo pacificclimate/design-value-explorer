@@ -1,0 +1,618 @@
+DRWP5:
+  description: Driving rain wind pressure, 1/5
+  future:
+    datasets:
+      '0.5': data/change_factors/driving_rain_wind_pressures_q5yr/D0.5C/DRWP5_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/driving_rain_wind_pressures_q5yr/D1.0C/DRWP5_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/driving_rain_wind_pressures_q5yr/D1.5C/DRWP5_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/driving_rain_wind_pressures_q5yr/D2.0C/DRWP5_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/driving_rain_wind_pressures_q5yr/D2.0C/DRWP5_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/driving_rain_wind_pressures_q5yr/D3.0C/DRWP5_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/driving_rain_wind_pressures_q5yr/D3.0C/DRWP5_CanRCM4_ensmean_CF_DT3.0.nc
+    units: ratio
+    roundto: 0.001
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/drwp_CanRCM4-LE_ens15_1951-2016_rl5_ensmean.nc
+      reconstruction: data/reconstructions/DRWP5_reconstruction.nc
+      stations:
+        column: DRWP-RL5 (Pa)
+        path: data/station_inputs/drwp_rl5_for_maps.csv
+      table_C2: data/tables/DRWP5_TableC2.csv
+    units: kPa
+    roundto: 10
+    colour_map: terrain_r
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+HDD:
+  description: "Heating degree days above 18 \xB0C"
+  future:
+    datasets:
+      '0.5': data/change_factors/degree_days_below_18/D0.5C/HDD_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/degree_days_below_18/D1.0C/HDD_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/degree_days_below_18/D1.5C/HDD_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/degree_days_below_18/D2.0C/HDD_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/degree_days_below_18/D2.0C/HDD_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/degree_days_below_18/D3.0C/HDD_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/degree_days_below_18/D3.0C/HDD_CanRCM4_ensmean_CF_DT3.0.nc
+    units: degC-day
+    roundto: 10
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 2
+  historical:
+    datasets:
+      model: data/model_inputs/hdd_CanRCM4-LE_ens35_1951-2016_ann_ensmean.nc
+      reconstruction: data/reconstructions/HDD_reconstruction.nc
+      stations:
+        column: HDD (degC-day)
+        path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
+      table_C2: data/tables/HDD_TableC2.csv
+    units: degC-day
+    roundto: 10
+    colour_map: RdBu
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+IDFCF:
+  description: IDF future change factor
+  future:
+    datasets:
+      '0.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2016_DT0.5_Reconstruction.nc
+      '1.0': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2028_DT1.0_Reconstruction.nc
+      '1.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2039_DT1.5_Reconstruction.nc
+      '2.0': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2049_DT2.0_Reconstruction.nc
+      '2.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2059_DT2.5_Reconstruction.nc
+      '3.0': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2068_DT3.0_Reconstruction.nc
+      '3.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2077_DT3.5_Reconstruction.nc
+    units: ratio
+    roundto: 0.001
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+MI:
+  description: Moisture index
+  future:
+    datasets:
+      '0.5': data/change_factors/foo/D0.5C/MI_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/foo/D1.0C/MI_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/foo/D1.5C/MI_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/foo/D2.0C/MI_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/foo/D2.0C/MI_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/foo/D3.0C/MI_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/foo/D3.0C/MI_CanRCM4_ensmean_CF_DT3.0.nc
+    units: ratio
+    roundto: 0.001
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/moisture_index_CanRCM4-LE_ens15_1951-2016_ensmean.nc
+      reconstruction: data/reconstructions/MI_reconstruction.nc
+      stations:
+        column: moisture_index
+        path: data/station_inputs/moisture_index_for_maps.csv
+      table_C2: data/tables/MI_TableC2.csv
+    units: ''
+    roundto: null
+    colour_map: terrain_r
+    scale:
+      default: logarithmic
+    colorbar:
+      sigfigs: 3
+PAnn:
+  description: Annual total precipitation
+  future:
+    datasets:
+      '0.5': data/change_factors/annual_total_precipitation/D0.5C/PAnn_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/annual_total_precipitation/D1.0C/PAnn_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/annual_total_precipitation/D1.5C/PAnn_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/annual_total_precipitation/D2.0C/PAnn_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/annual_total_precipitation/D2.0C/PAnn_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/annual_total_precipitation/D3.0C/PAnn_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/annual_total_precipitation/D3.0C/PAnn_CanRCM4_ensmean_CF_DT3.0.nc
+    units: ratio
+    roundto: 0.001
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/pr_CanRCM4-LE_ens35_1951-2016_ann_sum_ensmean.nc
+      reconstruction: data/reconstructions/PAnn_reconstruction.nc
+      stations:
+        column: annual_pr (mm)
+        path: data/station_inputs/pr_annual_mean_doy_MSC_25yr_for_maps.csv
+      table_C2: data/tables/PAnn_TableC2.csv
+    units: mm
+    roundto: 5
+    colour_map: PuBuGn
+    scale:
+      default: logarithmic
+    colorbar:
+      sigfigs: 3
+R15m10:
+  description: 15-min rainfall, 1/10
+  future:
+    datasets:
+      '0.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2016_DT0.5_Reconstruction.nc
+      '1.0': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2028_DT1.0_Reconstruction.nc
+      '1.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2039_DT1.5_Reconstruction.nc
+      '2.0': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2049_DT2.0_Reconstruction.nc
+      '2.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2059_DT2.5_Reconstruction.nc
+      '3.0': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2068_DT3.0_Reconstruction.nc
+      '3.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2077_DT3.5_Reconstruction.nc
+    units: ratio
+    roundto: 0.001
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/rain_CanRCM4-LE_ens15_1951-2016_max1hr_rl10_gum_lm_ensmean.nc
+      reconstruction: data/reconstructions/R15m10_reconstruction.nc
+      stations:
+        column: Gum-LM RL10 (mm)
+        path: data/station_inputs/15min_rain_rl10_for_maps.csv
+      table_C2: data/tables/R15m10_TableC2.csv
+    units: mm
+    roundto: 1
+    colour_map: PuBuGn
+    scale:
+      default: logarithmic
+    colorbar:
+      sigfigs: 3
+R1d50:
+  description: 1-day rainfall, 1/50
+  future:
+    datasets:
+      '0.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2016_DT0.5_Reconstruction.nc
+      '1.0': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2028_DT1.0_Reconstruction.nc
+      '1.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2039_DT1.5_Reconstruction.nc
+      '2.0': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2049_DT2.0_Reconstruction.nc
+      '2.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2059_DT2.5_Reconstruction.nc
+      '3.0': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2068_DT3.0_Reconstruction.nc
+      '3.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2077_DT3.5_Reconstruction.nc
+    units: ratio
+    roundto: 0.001
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/rain_CanRCM4-LE_ens35_1951-2016_max1day_rl50_gum_lm_ensmean.nc
+      reconstruction: data/reconstructions/R1d50_reconstruction.nc
+      stations:
+        column: 1day rain RL50 (mm)
+        path: data/station_inputs/1day_rain_rl50_for_maps.csv
+      table_C2: data/tables/R1d50_TableC2.csv
+    units: mm
+    roundto: 1
+    colour_map: PuBuGn
+    scale:
+      default: logarithmic
+    colorbar:
+      sigfigs: 3
+RAnn:
+  description: Annual total rainfall
+  future:
+    datasets:
+      '0.5': data/change_factors/annual_rain/D0.5C/RAnn_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/annual_rain/D1.0C/RAnn_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/annual_rain/D1.5C/RAnn_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/annual_rain/D2.0C/RAnn_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/annual_rain/D2.0C/RAnn_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/annual_rain/D3.0C/RAnn_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/annual_rain/D3.0C/RAnn_CanRCM4_ensmean_CF_DT3.0.nc
+    units: ratio
+    roundto: 0.001
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/rain_CanRCM4-LE_ens35_1951-2016_ann_sum_ensmean.nc
+      reconstruction: data/reconstructions/RAnn_reconstruction.nc
+      stations:
+        column: annual_rain (mm)
+        path: data/station_inputs/rain_annual_mean_doy_MSC_25yr_for_maps.csv
+      table_C2: data/tables/RAnn_TableC2.csv
+    units: mm
+    roundto: 5
+    colour_map: PuBuGn
+    scale:
+      default: logarithmic
+    colorbar:
+      sigfigs: 3
+RHann:
+  description: Annual mean relative humidity
+  future:
+    datasets:
+      '0.5': data/change_factors/annual_relative_humidity/D0.5C/RHann_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/annual_relative_humidity/D1.0C/RHann_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/annual_relative_humidity/D1.5C/RHann_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/annual_relative_humidity/D2.0C/RHann_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/annual_relative_humidity/D2.0C/RHann_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/annual_relative_humidity/D3.0C/RHann_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/annual_relative_humidity/D3.0C/RHann_CanRCM4_ensmean_CF_DT3.0.nc
+    units: ratio
+    roundto: 0.001
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 4
+  historical:
+    datasets:
+      model: data/model_inputs/hurs_CanRCM4-LE_ens15_1951-2016_ensmean.nc
+      reconstruction: data/reconstructions/RHann_reconstruction.nc
+      stations:
+        column: mean RH (%)
+        path: data/station_inputs/rh_annual_mean_10yr_for_maps.csv
+      table_C2: data/tables/RHann_TableC2.csv
+    units: '%'
+    roundto: 1
+    colour_map: terrain_r
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+RL50:
+  description: Annual maximum rain-on-snow, 1/50
+  future:
+    datasets:
+      '0.5': data/change_factors/rain_q50yr/D0.5C/RL50_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/rain_q50yr/D1.0C/RL50_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/rain_q50yr/D1.5C/RL50_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/rain_q50yr/D2.0C/RL50_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/rain_q50yr/D2.0C/RL50_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/rain_q50yr/D3.0C/RL50_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/rain_q50yr/D3.0C/RL50_CanRCM4_ensmean_CF_DT3.0.nc
+    units: ratio
+    roundto: 0.001
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/snw_rain_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
+      reconstruction: data/reconstructions/RL50_reconstruction.nc
+      stations:
+        column: RL50 (kPa)
+        path: data/station_inputs/sl50_rl50_for_maps.csv
+      table_C2: data/tables/RL50_TableC2.csv
+    units: kPa
+    roundto: 0.1
+    colour_map: terrain_r
+    scale:
+      default: logarithmic
+    colorbar:
+      sigfigs: 3
+SL50:
+  description: Annual maximum snow load, 1/50
+  future:
+    datasets:
+      '0.5': data/change_factors/snow_q50yr/D0.5C/SL50_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/snow_q50yr/D1.0C/SL50_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/snow_q50yr/D1.5C/SL50_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/snow_q50yr/D2.0C/SL50_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/snow_q50yr/D2.0C/SL50_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/snow_q50yr/D3.0C/SL50_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/snow_q50yr/D3.0C/SL50_CanRCM4_ensmean_CF_DT3.0.nc
+    units: ratio
+    roundto: 0.001
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/snw_CanRCM4-LE_ens35_1951-2016_max_rl50_load_ensmean.nc
+      reconstruction: data/reconstructions/SL50_reconstruction.nc
+      stations:
+        column: SL50 (kPa)
+        path: data/station_inputs/sl50_rl50_for_maps.csv
+      table_C2: data/tables/SL50_TableC2.csv
+    units: kPa
+    roundto: 0.1
+    colour_map: terrain_r
+    scale:
+      default: logarithmic
+    colorbar:
+      sigfigs: 3
+TJan1.0:
+  description: January temperature 1%
+  future:
+    datasets:
+      '0.5': data/change_factors/january_1%_dry/D0.5C/TJan1.0_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/january_1%_dry/D1.0C/TJan1.0_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/january_1%_dry/D1.5C/TJan1.0_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/january_1%_dry/D2.0C/TJan1.0_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/january_1%_dry/D2.0C/TJan1.0_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/january_1%_dry/D3.0C/TJan1.0_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/january_1%_dry/D3.0C/TJan1.0_CanRCM4_ensmean_CF_DT3.0.nc
+    units: degC
+    roundto: 1
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan1.0p_ensmean.nc
+      reconstruction: data/reconstructions/TJan1.0_reconstruction.nc
+      stations:
+        column: TJan1.0 (degC)
+        path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
+      table_C2: data/tables/TJan1.0_TableC2.csv
+    units: degC
+    roundto: 1
+    colour_map: RdBu_r
+    scale:
+      default: linear
+      disable_logarithmic: True
+    colorbar:
+      sigfigs: 3
+TJan2.5:
+  description: January temperature 2.5%
+  future:
+    datasets:
+      '0.5': data/change_factors/january_2.5%_dry/D0.5C/TJan2.5_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/january_2.5%_dry/D1.0C/TJan2.5_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/january_2.5%_dry/D1.5C/TJan2.5_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/january_2.5%_dry/D2.0C/TJan2.5_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/january_2.5%_dry/D2.0C/TJan2.5_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/january_2.5%_dry/D3.0C/TJan2.5_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/january_2.5%_dry/D3.0C/TJan2.5_CanRCM4_ensmean_CF_DT3.0.nc
+    units: degC
+    roundto: 1
+    colour_map: jet
+    scale:
+      default: linear
+      disable_logarithmic: True
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jan2.5p_ensmean.nc
+      reconstruction: data/reconstructions/TJan2.5_reconstruction.nc
+      stations:
+        column: TJan2.5 (degC)
+        path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
+      table_C2: data/tables/TJan2.5_TableC2.csv
+    units: degC
+    roundto: 1
+    colour_map: RdBu_r
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+TJul97.5:
+  description: July temperature 97.5%
+  future:
+    datasets:
+      '0.5': data/change_factors/july_2.5%_dry/D0.5C/TJul2.5_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/july_2.5%_dry/D1.0C/TJul2.5_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/july_2.5%_dry/D1.5C/TJul2.5_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/july_2.5%_dry/D2.0C/TJul2.5_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/july_2.5%_dry/D2.0C/TJul2.5_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/july_2.5%_dry/D3.0C/TJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/july_2.5%_dry/D3.0C/TJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
+    units: degC
+    roundto: 1
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
+      reconstruction: data/reconstructions/TJul97.5_reconstruction.nc
+      stations:
+        column: TJul2.5 (degC)
+        path: data/station_inputs/julT97.5p_allstations_v3_min8yr_for_maps.csv
+      table_C2: data/tables/TJul97.5_TableC2.csv
+    units: degC
+    roundto: 1
+    colour_map: RdBu_r
+    scale:
+      default: linear
+      disable_logarithmic: True
+    colorbar:
+      sigfigs: 3
+Tmax:
+  description: Annual maximum daily temperature
+  future:
+    datasets:
+      '0.5': data/change_factors/maximum_mean_daily_temperature/D0.5C/Tmax_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/maximum_mean_daily_temperature/D1.0C/Tmax_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/maximum_mean_daily_temperature/D1.5C/Tmax_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/maximum_mean_daily_temperature/D2.0C/Tmax_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/maximum_mean_daily_temperature/D2.0C/Tmax_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/maximum_mean_daily_temperature/D3.0C/Tmax_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/maximum_mean_daily_temperature/D3.0C/Tmax_CanRCM4_ensmean_CF_DT3.0.nc
+    units: degC
+    roundto: 1
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_max_ensmean.nc
+      reconstruction: data/reconstructions/Tmax_reconstruction.nc
+      stations:
+        column: Tmax (degC)
+        path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
+      table_C2: data/tables/Tmax_TableC2.csv
+    units: degC
+    roundto: 1
+    colour_map: RdBu_r
+    scale:
+      default: linear
+      disable_logarithmic: True
+    colorbar:
+      sigfigs: 3
+Tmin:
+  description: Annual minimum daily temperature
+  future:
+    datasets:
+      '0.5': data/change_factors/minimum_mean_daily_temperature/D0.5C/Tmin_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/minimum_mean_daily_temperature/D1.0C/Tmin_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/minimum_mean_daily_temperature/D1.5C/Tmin_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/minimum_mean_daily_temperature/D2.0C/Tmin_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/minimum_mean_daily_temperature/D2.0C/Tmin_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/minimum_mean_daily_temperature/D3.0C/Tmin_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/minimum_mean_daily_temperature/D3.0C/Tmin_CanRCM4_ensmean_CF_DT3.0.nc
+    units: degC
+    roundto: 1
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/tas_CanRCM4-LE_ens35_1951-2016_ann_min_ensmean.nc
+      reconstruction: data/reconstructions/Tmin_reconstruction.nc
+      stations:
+        column: Tmin (degC)
+        path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
+      table_C2: data/tables/Tmin_TableC2.csv
+    units: degC
+    roundto: 1
+    colour_map: RdBu_r
+    scale:
+      default: linear
+      disable_logarithmic: True
+    colorbar:
+      sigfigs: 3
+TwJul97.5:
+  description: July wet-bulb temperature 97.5%
+  future:
+    datasets:
+      '0.5': data/change_factors/july_2.5%_wet/D0.5C/TwJul2.5_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/july_2.5%_wet/D1.0C/TwJul2.5_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/july_2.5%_wet/D1.5C/TwJul2.5_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/july_2.5%_wet/D2.0C/TwJul2.5_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/july_2.5%_wet/D2.0C/TwJul2.5_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/july_2.5%_wet/D3.0C/TwJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/july_2.5%_wet/D3.0C/TwJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
+    units: degC
+    roundto: 1
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/twb_CanRCM4-LE_ens35_1951-2016_1hr_jul97.5p_ensmean.nc
+      reconstruction: data/reconstructions/TwJul97.5_reconstruction.nc
+      stations:
+        column: TwJul2.5 (degC)
+        path: data/station_inputs/julTwb97.5p_allstations_v3_for_maps.csv
+      table_C2: data/tables/TwJul97.5_TableC2.csv
+    units: degC
+    roundto: 1
+    colour_map: RdBu_r
+    scale:
+      default: linear
+      disable_logarithmic: True
+    colorbar:
+      sigfigs: 3
+WP10:
+  description: Annual maximum wind pressure, 1/10
+  future:
+    datasets:
+      '0.5': data/change_factors/hourly_wind_pressures_q10wp/D0.5C/WP10_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/hourly_wind_pressures_q10wp/D1.0C/WP10_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/hourly_wind_pressures_q10wp/D1.5C/WP10_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/hourly_wind_pressures_q10wp/D2.0C/WP10_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/hourly_wind_pressures_q10wp/D2.0C/WP10_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/hourly_wind_pressures_q10wp/D3.0C/WP10_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/hourly_wind_pressures_q10wp/D3.0C/WP10_CanRCM4_ensmean_CF_DT3.0.nc
+    units: ratio
+    roundto: 0.001
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/wpress_CanRCM4-LE_ens35_1951-2016_max_rl10_kpa_ensmean.nc
+      reconstruction: data/reconstructions/WP10_reconstruction.nc
+      stations:
+        column: WP10 (kPa)
+        path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
+      table_C2: data/tables/WP10_TableC2.csv
+    units: kPa
+    roundto: 0.1
+    colour_map: terrain_r
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+WP50:
+  description: Annual maximum wind pressure, 1/50
+  future:
+    datasets:
+      '0.5': data/change_factors/hourly_wind_pressures_q50wp/D0.5C/WP50_CanRCM4_ensmean_CF_DT0.5.nc
+      '1.0': data/change_factors/hourly_wind_pressures_q50wp/D1.0C/WP50_CanRCM4_ensmean_CF_DT1.0.nc
+      '1.5': data/change_factors/hourly_wind_pressures_q50wp/D1.5C/WP50_CanRCM4_ensmean_CF_DT1.5.nc
+      '2.0': data/change_factors/hourly_wind_pressures_q50wp/D2.0C/WP50_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/hourly_wind_pressures_q50wp/D2.0C/WP50_CanRCM4_ensmean_CF_DT2.0.nc
+      '3.0': data/change_factors/hourly_wind_pressures_q50wp/D3.0C/WP50_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/hourly_wind_pressures_q50wp/D3.0C/WP50_CanRCM4_ensmean_CF_DT3.0.nc
+    units: ratio
+    roundto: 0.001
+    colour_map: jet
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
+  historical:
+    datasets:
+      model: data/model_inputs/wpress_CanRCM4-LE_ens35_1951-2016_max_rl50_kpa_ensmean.nc
+      reconstruction: data/reconstructions/WP50_reconstruction.nc
+      stations:
+        column: WP50 (kPa)
+        path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
+      table_C2: data/tables/WP50_TableC2.csv
+    units: kPa
+    roundto: 0.1
+    colour_map: terrain_r
+    scale:
+      default: linear
+    colorbar:
+      sigfigs: 3
