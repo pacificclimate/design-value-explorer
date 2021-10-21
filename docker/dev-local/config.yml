@@ -919,3 +919,5 @@ local_preferences:
       - id: color_scale_type
         prop: value
         global: dvs;{design_variable};{climate_regime};scale;default
+
+test: !include config/test.yml
