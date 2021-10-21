@@ -71,9 +71,7 @@ def main(config):
                         lg=6,
                         xxl=4,
                     ),
-                    dbc.Col(
-                        html.A()
-                    )
+                    dbc.Col(html.A()),
                 ]
             ),
         ]
@@ -348,15 +346,23 @@ def main(config):
             tab_id="help-tab",
             label=config["ui"]["labels"]["main_tabs"]["help-tab"],
             children=[
-                dbc.Row(
-                    dbc.Col(
-                        dcc.Markdown(
-                            config["help"],
-                            dangerously_allow_html=True,
+                dbc.Tabs(
+                    id="help_tabs",
+                    children=[
+                        dbc.Tab(
+                            tab_id=f"help_tab-{index}",
+                            label=tab["label"],
+                            children=dcc.Markdown(
+                                tab["content"], dangerously_allow_html=True
+                            ),
+                            className="pt-3",
                         )
-                    )
+                        for index, tab in enumerate(config["help"])
+                    ],
+                    className="pt-3",
+                    **config["ui"]["controls"]["help_tabs"],
                 )
-            ]
+            ],
         )
 
     def internal_data():
@@ -384,9 +390,7 @@ def main(config):
                     dbc.Tabs(
                         id="main_tabs",
                         children=[map_tab(), table_C2_tab(), help_tab()],
-                        active_tab=config["ui"]["controls"]["main_tabs"][
-                            "active-tab"
-                        ],
+                        **config["ui"]["controls"]["main_tabs"],
                     )
                 ),
                 style={"margin-top": "1em"},
