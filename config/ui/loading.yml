@@ -1,0 +1,5 @@
+# This property is provided as keyword args to dcc.Loading and controls
+# the appearance of the loading spinners.
+type: dot
+color: gray
+# debug: true

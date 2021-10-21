@@ -137,7 +137,7 @@ commands can be run, including running tests and running the app.
 1. **Build the image**
 
    The image need only be (re)built when the project is first cloned and when
-   `requirements.txt` changes. To build the image:
+   `Pipenv` changes. To build the image:
 
     ```
     docker-compose -f docker/dev-local/docker-compose.yml build

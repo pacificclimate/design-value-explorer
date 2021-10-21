@@ -1,4 +1,5 @@
 import yaml
+from yamlinclude import YamlIncludeConstructor
 
 import dve
 import dve.config
@@ -23,6 +24,11 @@ import logging
 
 logger = logging.getLogger("dve")
 
+# Add !include tag processor to PyYAML loader
+YamlIncludeConstructor.add_to_loader_class(
+    loader_class=yaml.FullLoader, base_dir='.'
+)
+
 
 # TODO: This "app factory" needs to be refactored.
 
@@ -31,7 +37,7 @@ def make_app(config_filepath="config.yml"):
     logger.debug("Loading configuration")
     with open(config_filepath, "r") as config_file:
         config = yaml.load(config_file)
-    logger.debug(f"Configuration loaded. {config}")
+    logger.debug(f"Configuration loaded.")
 
     dve.config.validate(config)
 
