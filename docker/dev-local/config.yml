@@ -50,4 +50,10 @@ units: !include config/units.yml
 
 local_preferences: !include config/local_preferences.yml
 
-help: Help
+help:
+    - label: Introduction
+      content: !include config/help/intro.yml
+    - label: Map tab
+      content: !include config/help/map.yml
+    - label: Table C-2 tab
+      content: !include config/help/table_C2.yml

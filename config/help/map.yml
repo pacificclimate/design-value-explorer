@@ -1,0 +1,237 @@
+|
+  The **Map** tab presents values of the selected design variable in a
+  map-like format. We say "map-like" advisedly; this is not a web mapping
+  application like
+  Google Maps with a fixed map projection. Instead, it is a graph
+  with longitude and latitude as the
+  horizontal and vertical axes respectively. Its appearance is approximately
+  an orthographic projection, but its aspect ratio changes with the size
+  of the display window it is in and with the region selected when
+  zooming in. If you select a region with an aspect ratio far from 4:3,
+  its appearance will be somewhat strange, although still accurate
+  to the data.
+
+  The content of the map is controlled by two sets of controls:
+  - **Overlay Options**: Controls what layers (overlays) are displayed,
+    including which of the available historical and future DV rasters.
+  - **Colour Scale Options**: Controls how the selected raster is displayed
+    as a coloured heatmap.
+
+  ## Overlay Options
+
+  "Overlay options" refers to the overlays or layers presented in the
+  map display. The overlays available are:
+
+  - Geographic boundaries (always present) of major features of Canada.
+  - Raster (always present) of interpolated historical
+    values or future projected values, presented as a heatmap, which is to
+    say presented with the value of each raster cell represented by a
+    colour defined by the colour scale you select.
+  - Station design values (for historical data only), presented as circle
+    markers on the map with the value of the design variable at that
+    station represented by a colour as for the raster.
+  - Lon-lat reference grid.
+
+  ### Raster
+
+  To display a raster of interpolated historical data:
+  1. Click the **Historical design values** radio
+     button under **Period** in the **Overlay Options** section.
+
+  To display a raster of future projected data:
+  1. Click the **Future change relative to 1986-2016** radio button under
+     **Period** in the **Overlay Options** section.
+  2. Select the level of global warming in the
+     dropdown under **Global Warming** in the **Overlay Options** section.
+
+  For information on controlling the colour scale applied to the rasters,
+  see Colour Scale Options below.
+
+  For information on extracting data from the raster, see Extracting Data
+  From the Map below.
+
+  ### Station locations
+
+  Stations are the fundamental source of data (observations) for design
+  values based on historical data. To see the stations displayed as
+  circular markers on the map:
+
+  1. Slide the **Stations** switch to the right ("on" position).
+
+  For information on controlling the colour scale applied to the station
+  markers, see Colour Scale Options below.
+
+  ### Lon-lat grid
+
+  A grid marking longitude and latitude can be overlaid on the map.
+  The grid adjusts its spacing depending on how far in our out the map
+  is zoomed.
+
+  To display the lon-lat grid:
+
+  1. Slide the **Grid** switch to the right ("on" position).
+
+  ## Colour Scale Options
+
+  Colour scale options control how the raster and station data
+  values are displayed as colour in the map.
+
+  How it works:
+  - Choose a _colour map_. This determines the fundamental set of
+    colours used to build the colour scale.
+  - Choose a _scale_. This determines whether the colour scale is
+    linear or logarithmic, meaning whether adjacent colours in the
+    resulting colour scale represent values that advance linearly or
+    geometrically. This is analogous to linear or logarithmic scales in
+    numerical graph axes.
+  - Choose a _number of colours_. This determines how many different
+    colours are in the resulting colour scale.
+  - Choose a _data range_. This determines what range of data values are
+    represented as colour scale colours. Data values outside this range
+    are represented as transparent.
+  - A _colour scale_ is formed using the above information. This is a set
+    of discrete, _uniformly spaced_ (see note below) value intervals that
+    span the _data range_. The number of intervals is set by _number of
+    colours_. That same number of colours are interpolated from the _colour
+    map_ and assigned in sequence to each successive interval. Data
+    values are coloured according to which value interval they fall into.
+    Data values below/above the _data range_ minimum/maximum are
+    represented as the lowest/highest value colour.
+    Missing data values are represented as transparent.
+  - _Uniform spacing_: For a linear scale, uniform spacing means colour
+    intervals that are linearly spaced between minimum and maximum. For a
+    logarithmic scale, uniform spacing means colour intervals that are
+    geometrically spaced between minimum and maximum (equivalently, the
+    data values and intervals are transformed to their logarithms, and the
+    logarithms are linearly spaced).
+
+  ### Notes
+
+  The boundaries of the data intervals in the colour scale are
+  _uniformly spaced_ (see above) between the range minimum and
+  maximum values, and fall on whatever arbitrary values this yields.
+  Exceptions to this rule are:
+
+  1. "Targeted" boundary value:
+     - For future datasets (which contain _relative change_ values),
+     - a target of 0 (for absolute change) or 1 (for ratio change) is
+       selected,
+     - if the target value lies in the selected data range;
+       otherwise no target is selected.
+
+     Why have targets? Because a target makes it easy to distinguish
+     the "no change" condition by colour, particularly with a small
+     number of colours in the colour scale.
+
+     If a target is selected, boundary values are shifted by the minimum
+     possible amount so
+     that one boundary value is exactly the target value. This may
+     require adding an extra interval (with the same uniform spacing)
+     to the beginning or end of the scale to cover the full data range.
+  2. Logarithmic scale with zero minimum value: A logarithmic scale
+     cannot represent a zero value. In this case, the minimum value is
+     adjusted to be a fixed fraction (typically 1/100) of the maximum
+     value.
+
+  ### Colour Map
+
+  Select the fundamental colour set for the colour scale. Many colour
+  maps are interpolated between two or three fixed colours.
+  Some colour maps are not  interpolations.
+  Names for interpolated colour maps usually indicate the
+  colours involved. Names for others are more abstract. Names ending in
+  "_r" have the same colours as the base colour map, but reversed in order.
+
+  ### Scale
+
+  Select linear or logarithmic colour mapping. Some selections of Design
+  Value and Period do not permit logarithmic scales; in this case the
+  selector is disabled and the scale is fixed at linear.
+
+  ### Num. Colours
+
+  Select the number of colours in the colour scale by dragging the
+  pointer. Smaller numbers of colours give a contour effect in the map
+  display, which can be useful to identify particular values of interest.
+  Larger numbers of colours give a continuous gradient effect.
+
+  ### Range
+
+  Select the range of data values to be coloured.
+  Data values below/above the data range minimum/maximum are
+  represented as the lowest/highest value colour.
+  Missing data values are represented as transparent.
+
+  ## Map display
+
+  The map display is a Plotly Graph, which comes equipped with tools for
+  zooming, panning, and taking a PNG image snapshot of
+  the display. For information on these tools, which appear in the
+  "modebar" at the top right of the display, see
+
+  <a href="https://plotly.com/chart-studio-help/getting-to-know-the-plotly-modebar/" target="_blank">
+  An Introduction to Chart Studio Modebar
+  </a>.
+
+  In addition to the map proper, the map display contains a title and a
+  colour bar.
+
+  ### Map title
+
+  Includes the design variable, units, and historical/future indicator.
+
+  ### Colour bar
+
+  The colour bar provides a reference for the colour scale in use, with
+  annotations that show data values for selected points between the data
+  range minimum and maximum. When the number of colours selected is 10 or
+  fewer, the annotations are placed at the colour interval boundaries.
+  When the number of colours exceeds 10, 11 annotations are placed
+  uniformly spaced (see note above) between the range minimum and maximum.
+
+  Hover over the colour bar to show the midpoint value of the interval
+  represented by the colour. This can be useful when the number of
+  colours is large and you wish to get an idea of the value represented
+  by a particular colour. (Alternatively, you can hover over a point on
+  the map to see the precise value of the raster cell under the pointer.
+  See Extracting data from the map display for details.)
+
+  ## Extracting data from the map display
+
+  The map display is interactive and provides detailed information about the
+  values when the pointer is hovered or clicked on the map. This information
+  can be downloaded as a CSV file.
+
+  ### Hover: Single Design Value and location
+
+  When you hover the pointer over the map:
+
+  - A popup displays the value of the currently selected design
+    variable in the cell over which the pointer hovers.
+  - A table in the **Data from map pointer** area displays the
+    latitude and longitude of the cell over which the pointer hovers.
+
+  These values update continuously as you move the pointer. If there is no
+  data under the pointer (wherever the map background colour shows through),
+  the values are not updated.
+
+  ### Click: All Design Values and location
+
+  When you click the pointer on the map, two tables in the
+  **Data from map pointer** area show:
+
+  - The location of cell on which you clicked.
+  - The values of all Design Variables at the location on which you clicked.
+
+  Values are updated only when you click on a cell.
+
+  ### Downloading click data
+
+  When you have clicked on a cell to display location and Design Variable
+  values, you can download this information as a (single) CSV file.
+
+  1. Click the **Download this data** button.
+  2. A **Save as file** dialog pops up.
+  3. Select the location and filename for the file in which to save the data.
+  4. Click **Save**.
+  5. The data is saved in a CSV file and the dialog closes.

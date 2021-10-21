@@ -1,0 +1,33 @@
+|
+  This page contains information on how to use the application's user
+  interface. For information on interpreting values and on the science and
+  methods behind the data presented in Design Value Explorer, see XXX.
+
+  ## Overview
+
+  Design Value Explorer (DVE) enables you to view and download design values
+  from both historical and future projected data sets.
+
+  - For historical datasets, there are both observations (station data at
+    specific locations) and interpolated rasters covering most of Canada.
+
+  - Future projected datasets are rasters covering most of Canada. Each
+    future projected dataset is characterized by a global warming level
+    in °C above baseline (e.g., 2.0 °C).
+
+  ## Main tabs
+
+  DVE presents this data in two ways: As a map and in "Table C-2" format,
+  under the **Map** and **Table C-2** tabs respectively.
+
+  - The map always shows the rasters (historical or future), and can show an
+    overlay of station observations for historical datasets.
+
+  - Table C-2 always shows both historical and future projected datasets at
+    a set of station locations across Canada.
+
+  ## Design Variable selection
+
+  DVE displays data for exactly one design variable at a time. Select the
+  DV of interest with the **Design Variable** drop-down. This selection
+  applies to both the **Map** tab and the **Table C-2** tab.
