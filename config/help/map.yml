@@ -12,6 +12,7 @@
   to the data.
 
   The content of the map is controlled by two sets of controls:
+
   - **Overlay Options**: Controls what layers (overlays) are displayed,
     including which of the available historical and future DV rasters.
   - **Colour Scale Options**: Controls how the selected raster is displayed
@@ -35,10 +36,12 @@
   ### Raster
 
   To display a raster of interpolated historical data:
+
   1. Click the **Historical design values** radio
      button under **Period** in the **Overlay Options** section.
 
   To display a raster of future projected data:
+
   1. Click the **Future change relative to 1986-2016** radio button under
      **Period** in the **Overlay Options** section.
   2. Select the level of global warming in the
