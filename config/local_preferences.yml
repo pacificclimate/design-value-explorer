@@ -1,4 +1,4 @@
-version: 14
+version: 15
 path_separator: ";"
 function_prefix: "@"
 ui_elements:
@@ -8,6 +8,9 @@ ui_elements:
   - id: help_tabs
     prop: active_tab
     global: ui;controls;help_tabs;active_tab
+  - id: about_tabs
+    prop: active_tab
+    global: ui;controls;about_tabs;active_tab
   - id: show_stations
     prop: "on"
     global: "@show_stations"

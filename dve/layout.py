@@ -414,6 +414,7 @@ def main(config):
             tab_id="about-tab",
             label=config["ui"]["labels"]["main_tabs"]["about-tab"],
             children=dbc.Tabs(
+                id="about_tabs",
                 children=[
                     dbc.Tab(
                         tab_id=f"about_tab-{index}",
