@@ -1,6 +1,7 @@
 main_tabs:
   map-tab: Map
   table-tab: Table C-2
+  help-tab: Help
 overlay-options:
   title: Overlay Options
   columns:
