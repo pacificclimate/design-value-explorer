@@ -18,3 +18,7 @@ table_C2: !include config/table_C2.yml
 units: !include config/units.yml
 
 local_preferences: !include config/local_preferences.yml
+
+help: !include config/help.yml
+
+about: !include config/about.yml
