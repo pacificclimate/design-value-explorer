@@ -364,7 +364,7 @@ def main(config):
                             ),
                             className="pt-3",
                         )
-                        for index, tab in enumerate(config["help"])
+                        for index, tab in enumerate(config["help"]["tabs"])
                     ],
                     className="pt-3",
                     **config["ui"]["controls"]["help_tabs"],
