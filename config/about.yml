@@ -1,0 +1,63 @@
+tabs:
+  - label: Design Value Explorer
+    cards:
+      - header: Description
+        body: |
+          Design Value Explorer presents maps and tables giving values for
+          design variables at locations across Canada based on historical and
+          projected future climate.
+
+      - header: Version
+        body: |
+          TBD
+
+      - header: Author
+        body: '[Pacific Climate Impacts Consortium (PCIC)](https://pacificclimate.org/)'
+
+      - header: Terms of Use
+        body: Please see PCIC's [terms of use](https://pacificclimate.org/terms-of-use).
+
+      - header: ?? No Warranty
+        color: warning
+        body: |
+          The data in this tool are provided by the Pacific Climate Impacts Consortium with an open licence on an
+          “AS IS” basis without any warranty or representation, express or implied, as to its accuracy or completeness.
+          Any reliance you place upon the information contained here is your sole responsibility and strictly at
+          your own risk. In no event will the Pacific Climate Impacts Consortium be liable for any loss or damage
+          whatsoever, including, without limitation, indirect or consequential loss or damage, arising from reliance
+          upon the data or derived information.
+
+  - label: Credits
+    cards:
+      - header: Development
+        body: |
+          Sponsors?
+
+      - header: ?? Data
+        body: TBD
+
+  - label: Contact
+    cards:
+      - header: Feedback on Application
+        body: |
+          Please address questions and suggestions on the functioning of this
+          tool (the application proper) to [Computational Support Group](mailto:climate@uvic.ca).
+      - header: Scientific Questions
+        body: |
+          Please address questions about science and interpretation of the
+          data presented in this tool to [Regional Climate Impacts](mailto:climate@uvic.ca)..
+      - header: Pacific Climate Impacts Consortium
+        body: See [PCIC Contact page](https://pacificclimate.org/contact-us).
+
+  - label: Team
+    cards:
+      - header: '[Charles Curry](https://pacificclimate.org/about-pcic/people/charles-curry)'
+        body: Climate science lead.
+      - header: '[James Hiebert](https://pacificclimate.org/about-pcic/people/james-hiebert)'
+        body: Development team lead.
+      - header: '[Rod Glover](https://pacificclimate.org/about-pcic/people/rod-glover)'
+        body: Developer.
+      - header: '[Matthew Benstead](https://pacificclimate.org/about-pcic/people/matthew-benstead)'
+        body: System administrator. Deployment and security.
+      - header: Nic Annau
+        body: Original developer.

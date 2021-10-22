@@ -5,6 +5,43 @@ import dash_daq as daq
 from dve.config import dv_label
 
 
+def Markdown(source):
+    return dcc.Markdown(source, dangerously_allow_html=True)
+
+
+def compact(iterable):
+    return list(filter(None, iterable))
+
+
+def card_item(card):
+    color = card.get("color")
+    title = card.get("title")
+    header = card.get("header")
+    body = card.get("body")
+    return dbc.Card(
+        color=color,
+        children=compact(
+            (
+                header and dbc.CardHeader(Markdown(header)),
+                title and html.H4(Markdown(title), className="card-title"),
+                body and dbc.CardBody(Markdown(body)),
+            )
+        ),
+    )
+
+
+def card_set(cards, row_args={}, col_args={}):
+    return dbc.Row(
+        [
+            dbc.Col(
+                card_item(card),
+                **col_args
+            ) for card in cards
+        ],
+        **row_args
+    )
+
+
 scale_ctrl_options = [
     {"label": "Linear", "value": "linear"},
     {"label": "Logarithmic", "value": "logarithmic"},
@@ -372,6 +409,28 @@ def main(config):
             ],
         )
 
+    def about_tab():
+        return dbc.Tab(
+            tab_id="about-tab",
+            label=config["ui"]["labels"]["main_tabs"]["about-tab"],
+            children=dbc.Tabs(
+                children=[
+                    dbc.Tab(
+                        tab_id=f"about_tab-{index}",
+                        label=tab["label"],
+                        children=card_set(
+                            tab["cards"],
+                            col_args=dict(xs=12, md=6, xxl=4, className="mb-3"),
+                        ),
+                        className="pt-3",
+                    )
+                    for index, tab in enumerate(config["about"]["tabs"])
+                ],
+                className="pt-3",
+                **config["ui"]["controls"]["about_tabs"],
+            ),
+        )
+
     def internal_data():
         """
         Layout components for storing/sharing data between callbacks (and callback
@@ -396,7 +455,12 @@ def main(config):
                 dbc.Col(
                     dbc.Tabs(
                         id="main_tabs",
-                        children=[map_tab(), table_C2_tab(), help_tab()],
+                        children=[
+                            map_tab(),
+                            table_C2_tab(),
+                            help_tab(),
+                            about_tab(),
+                        ],
                         **config["ui"]["controls"]["main_tabs"],
                     )
                 ),
