@@ -26,5 +26,6 @@ jobs:
           username: ${{ secrets.pcicdevops_at_dockerhub_username }}
           password: ${{ secrets.pcicdevops_at_dockerhub_password }}
           dockerfile: ./docker/production/Dockerfile
+          build_args: DVE_VERSION=${{ env.DVE_VERSION }}
           repository: pcic/dash-dv-explorer
           tag_with_ref: true

@@ -25,6 +25,14 @@ EXPOSE 5000
 
 ENV NAME Explorer
 
+# Move the Docker build arg DVE_VERSION into an
+# environment variable of the same name, for consumption
+# by the app. This is a long way around to getting the
+# Git SHA and tag into the version number, but we don't
+# run the image in a context where Git is available.
+ARG DVE_VERSION
+ENV DVE_VERSION $DVE_VERSION
+
 CMD pipenv run gunicorn \
     --config /app/docker/production/gunicorn.conf \
     --log-config /app/docker/production/logging.conf \
