@@ -1,5 +1,31 @@
 # News / Release Notes
 
+## 2.0.0
+
+Draft production candidate.
+
+Feature updates:
+- [Add About tab](https://github.com/pacificclimate/dash-dv-explorer/pull/195)
+- [Add Help tab](https://github.com/pacificclimate/dash-dv-explorer/pull/193)
+- [Remove Masks control](https://github.com/pacificclimate/dash-dv-explorer/pull/191)
+- [Revise layout](https://github.
+  com/pacificclimate/dash-dv-explorer/pull/186) - New layout; better 
+  adaptive layout.
+- [Turn off and disable Station ctrl for future datasets](https://github.com/pacificclimate/dash-dv-explorer/pull/185)
+- [Put map and colorbar in single Graph object](https://github.com/pacificclimate/dash-dv-explorer/pull/182)
+- [Establish local preferences](https://github.com/pacificclimate/dash-dv-explorer/pull/179)
+- [Fix config for scale](https://github.com/pacificclimate/dash-dv-explorer/pull/178)
+- [Use separate color mapping for future vs historical](https://github.com/pacificclimate/dash-dv-explorer/pull/177)
+
+Technical updates:
+- [Refactor config files with YAML !includes](https://github.com/pacificclimate/dash-dv-explorer/pull/192)
+- [Fix local preferences for DVs with ids containing "."](https://github.com/pacificclimate/dash-dv-explorer/pull/189)
+- [Code and documentation cleanup](https://github.com/pacificclimate/dash-dv-explorer/pull/187)
+- [Refactor local config](https://github.com/pacificclimate/dash-dv-explorer/pull/184)
+- [Refactor config file](https://github.com/pacificclimate/dash-dv-explorer/pull/175)
+
+**2021-Sep-21**
+
 ## 1.4.4
 
 **2021-Sep-21**
