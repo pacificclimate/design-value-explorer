@@ -8,8 +8,7 @@ tabs:
           projected future climate.
 
       - header: Version
-        body: |
-          TBD
+        body: '{DVE_VERSION}'
 
       - header: Author
         body: '[Pacific Climate Impacts Consortium (PCIC)](https://pacificclimate.org/)'
@@ -17,7 +16,7 @@ tabs:
       - header: Terms of Use
         body: Please see PCIC's [terms of use](https://pacificclimate.org/terms-of-use).
 
-      - header: ?? No Warranty
+      - header: No Warranty
         color: warning
         body: |
           The data in this tool are provided by the Pacific Climate Impacts Consortium with an open licence on an
@@ -30,10 +29,9 @@ tabs:
   - label: Credits
     cards:
       - header: Development
-        body: |
-          Sponsors?
+        body: TBD
 
-      - header: ?? Data
+      - header: Data
         body: TBD
 
   - label: Contact
@@ -60,4 +58,4 @@ tabs:
       - header: '[Matthew Benstead](https://pacificclimate.org/about-pcic/people/matthew-benstead)'
         body: System administrator. Deployment and security.
       - header: Nic Annau
-        body: Original developer.
+        body: Developer of DVE initial version and of Climpyrical.
