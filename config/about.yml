@@ -39,11 +39,11 @@ tabs:
       - header: Feedback on Application
         body: |
           Please address questions and suggestions on the functioning of this
-          tool (the application proper) to [Computational Support Group](mailto:climate@uvic.ca).
+          tool (the application proper) to [PCIC Support](mailto:pcic.support@uvic.ca).
       - header: Scientific Questions
         body: |
           Please address questions about science and interpretation of the
-          data presented in this tool to [Regional Climate Impacts](mailto:climate@uvic.ca)..
+          data presented in this tool to [Regional Climate Impacts](mailto:climate@uvic.ca).
       - header: Pacific Climate Impacts Consortium
         body: See [PCIC Contact page](https://pacificclimate.org/contact-us).
 

@@ -387,14 +387,7 @@ def main(config):
                             tab_id=f"help_tab-{index}",
                             label=tab["label"],
                             children=dbc.Row(
-                                dbc.Col(
-                                    interpret(
-                                        tab["content"],
-                                        dangerously_allow_html=True,
-                                    ),
-                                    xs=12,
-                                    xl=6,
-                                )
+                                dbc.Col(interpret(tab["content"]), xs=12, xl=6)
                             ),
                             className="pt-3",
                         )
