@@ -17,7 +17,7 @@ ui_elements:
     local: ui;controls;stations;{climate_regime};on
   - id: show_grid
     prop: "on"
-    global: ui.controls.grid.on
+    global: ui;controls;grid;on
   - id: num_colors
     prop: value
     global: ui;controls;num-colours;value
