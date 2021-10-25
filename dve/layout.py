@@ -1,3 +1,4 @@
+import os
 from dash import html
 import dash_bootstrap_components as dbc
 from dash import dcc
@@ -5,8 +6,10 @@ import dash_daq as daq
 from dve.config import dv_label
 
 
-def Markdown(source):
-    return dcc.Markdown(source, dangerously_allow_html=True)
+def interpret(source):
+    return dcc.Markdown(
+        source.format(**os.environ), dangerously_allow_html=True
+    )
 
 
 def compact(iterable):
@@ -22,9 +25,9 @@ def card_item(card):
         color=color,
         children=compact(
             (
-                header and dbc.CardHeader(Markdown(header)),
-                title and html.H4(Markdown(title), className="card-title"),
-                body and dbc.CardBody(Markdown(body)),
+                header and dbc.CardHeader(interpret(header)),
+                title and html.H4(interpret(title), className="card-title"),
+                body and dbc.CardBody(interpret(body)),
             )
         ),
     )
@@ -32,13 +35,7 @@ def card_item(card):
 
 def card_set(cards, row_args={}, col_args={}):
     return dbc.Row(
-        [
-            dbc.Col(
-                card_item(card),
-                **col_args
-            ) for card in cards
-        ],
-        **row_args
+        [dbc.Col(card_item(card), **col_args) for card in cards], **row_args
     )
 
 
@@ -391,7 +388,7 @@ def main(config):
                             label=tab["label"],
                             children=dbc.Row(
                                 dbc.Col(
-                                    dcc.Markdown(
+                                    interpret(
                                         tab["content"],
                                         dangerously_allow_html=True,
                                     ),
