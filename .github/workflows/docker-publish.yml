@@ -14,11 +14,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
+
+      - name: Export version env var
+        run: |
+          git fetch --prune --unshallow
+          echo "DVE_VERSION=$(git describe --tags --abbrev=0) ($(git rev-parse --abbrev-ref HEAD):$(git log -1 --format=%h))" >> $GITHUB_ENV
+
       - name: Publish to Registry
         uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.pcicdevops_at_dockerhub_username }}
           password: ${{ secrets.pcicdevops_at_dockerhub_password }}
           dockerfile: ./docker/production/Dockerfile
+          build_args: DVE_VERSION=${{ env.DVE_VERSION }}
           repository: pcic/dash-dv-explorer
           tag_with_ref: true

@@ -1,4 +1,4 @@
-version: 14
+version: 15
 path_separator: ";"
 function_prefix: "@"
 ui_elements:
@@ -8,13 +8,16 @@ ui_elements:
   - id: help_tabs
     prop: active_tab
     global: ui;controls;help_tabs;active_tab
+  - id: about_tabs
+    prop: active_tab
+    global: ui;controls;about_tabs;active_tab
   - id: show_stations
     prop: "on"
     global: "@show_stations"
     local: ui;controls;stations;{climate_regime};on
   - id: show_grid
     prop: "on"
-    global: ui.controls.grid.on
+    global: ui;controls;grid;on
   - id: num_colors
     prop: value
     global: ui;controls;num-colours;value

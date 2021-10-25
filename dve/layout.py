@@ -1,8 +1,42 @@
+import os
 from dash import html
 import dash_bootstrap_components as dbc
 from dash import dcc
 import dash_daq as daq
 from dve.config import dv_label
+
+
+def interpret(source):
+    return dcc.Markdown(
+        source.format(**os.environ), dangerously_allow_html=True
+    )
+
+
+def compact(iterable):
+    return list(filter(None, iterable))
+
+
+def card_item(card):
+    color = card.get("color")
+    title = card.get("title")
+    header = card.get("header")
+    body = card.get("body")
+    return dbc.Card(
+        color=color,
+        children=compact(
+            (
+                header and dbc.CardHeader(interpret(header)),
+                title and html.H4(interpret(title), className="card-title"),
+                body and dbc.CardBody(interpret(body)),
+            )
+        ),
+    )
+
+
+def card_set(cards, row_args={}, col_args={}):
+    return dbc.Row(
+        [dbc.Col(card_item(card), **col_args) for card in cards], **row_args
+    )
 
 
 scale_ctrl_options = [
@@ -353,23 +387,39 @@ def main(config):
                             tab_id=f"help_tab-{index}",
                             label=tab["label"],
                             children=dbc.Row(
-                                dbc.Col(
-                                    dcc.Markdown(
-                                        tab["content"],
-                                        dangerously_allow_html=True,
-                                    ),
-                                    xs=12,
-                                    xl=6,
-                                )
+                                dbc.Col(interpret(tab["content"]), xs=12, xl=6)
                             ),
                             className="pt-3",
                         )
-                        for index, tab in enumerate(config["help"])
+                        for index, tab in enumerate(config["help"]["tabs"])
                     ],
                     className="pt-3",
                     **config["ui"]["controls"]["help_tabs"],
                 )
             ],
+        )
+
+    def about_tab():
+        return dbc.Tab(
+            tab_id="about-tab",
+            label=config["ui"]["labels"]["main_tabs"]["about-tab"],
+            children=dbc.Tabs(
+                id="about_tabs",
+                children=[
+                    dbc.Tab(
+                        tab_id=f"about_tab-{index}",
+                        label=tab["label"],
+                        children=card_set(
+                            tab["cards"],
+                            col_args=dict(xs=12, md=6, xxl=4, className="mb-3"),
+                        ),
+                        className="pt-3",
+                    )
+                    for index, tab in enumerate(config["about"]["tabs"])
+                ],
+                className="pt-3",
+                **config["ui"]["controls"]["about_tabs"],
+            ),
         )
 
     def internal_data():
@@ -396,7 +446,12 @@ def main(config):
                 dbc.Col(
                     dbc.Tabs(
                         id="main_tabs",
-                        children=[map_tab(), table_C2_tab(), help_tab()],
+                        children=[
+                            map_tab(),
+                            table_C2_tab(),
+                            help_tab(),
+                            about_tab(),
+                        ],
                         **config["ui"]["controls"]["main_tabs"],
                     )
                 ),
