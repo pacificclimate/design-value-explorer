@@ -6,9 +6,9 @@ DRWP5:
       '1.0': data/change_factors/driving_rain_wind_pressures_q5yr/D1.0C/DRWP5_CanRCM4_ensmean_CF_DT1.0.nc
       '1.5': data/change_factors/driving_rain_wind_pressures_q5yr/D1.5C/DRWP5_CanRCM4_ensmean_CF_DT1.5.nc
       '2.0': data/change_factors/driving_rain_wind_pressures_q5yr/D2.0C/DRWP5_CanRCM4_ensmean_CF_DT2.0.nc
-      '2.5': data/change_factors/driving_rain_wind_pressures_q5yr/D2.0C/DRWP5_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/driving_rain_wind_pressures_q5yr/D2.5C/DRWP5_CanRCM4_ensmean_CF_DT2.5.nc
       '3.0': data/change_factors/driving_rain_wind_pressures_q5yr/D3.0C/DRWP5_CanRCM4_ensmean_CF_DT3.0.nc
-      '3.5': data/change_factors/driving_rain_wind_pressures_q5yr/D3.0C/DRWP5_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/driving_rain_wind_pressures_q5yr/D3.5C/DRWP5_CanRCM4_ensmean_CF_DT3.5.nc
     units: ratio
     roundto: 0.001
     colour_map: jet
@@ -39,9 +39,9 @@ HDD:
       '1.0': data/change_factors/degree_days_below_18/D1.0C/HDD_CanRCM4_ensmean_CF_DT1.0.nc
       '1.5': data/change_factors/degree_days_below_18/D1.5C/HDD_CanRCM4_ensmean_CF_DT1.5.nc
       '2.0': data/change_factors/degree_days_below_18/D2.0C/HDD_CanRCM4_ensmean_CF_DT2.0.nc
-      '2.5': data/change_factors/degree_days_below_18/D2.0C/HDD_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/degree_days_below_18/D2.5C/HDD_CanRCM4_ensmean_CF_DT2.5.nc
       '3.0': data/change_factors/degree_days_below_18/D3.0C/HDD_CanRCM4_ensmean_CF_DT3.0.nc
-      '3.5': data/change_factors/degree_days_below_18/D3.0C/HDD_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/degree_days_below_18/D3.5C/HDD_CanRCM4_ensmean_CF_DT3.5.nc
     units: degC-day
     roundto: 10
     colour_map: jet
@@ -90,9 +90,9 @@ MI:
       '1.0': data/change_factors/foo/D1.0C/MI_CanRCM4_ensmean_CF_DT1.0.nc
       '1.5': data/change_factors/foo/D1.5C/MI_CanRCM4_ensmean_CF_DT1.5.nc
       '2.0': data/change_factors/foo/D2.0C/MI_CanRCM4_ensmean_CF_DT2.0.nc
-      '2.5': data/change_factors/foo/D2.0C/MI_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/foo/D2.5C/MI_CanRCM4_ensmean_CF_DT2.5.nc
       '3.0': data/change_factors/foo/D3.0C/MI_CanRCM4_ensmean_CF_DT3.0.nc
-      '3.5': data/change_factors/foo/D3.0C/MI_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/foo/D3.5C/MI_CanRCM4_ensmean_CF_DT3.5.nc
     units: ratio
     roundto: 0.001
     colour_map: jet
@@ -123,9 +123,9 @@ PAnn:
       '1.0': data/change_factors/annual_total_precipitation/D1.0C/PAnn_CanRCM4_ensmean_CF_DT1.0.nc
       '1.5': data/change_factors/annual_total_precipitation/D1.5C/PAnn_CanRCM4_ensmean_CF_DT1.5.nc
       '2.0': data/change_factors/annual_total_precipitation/D2.0C/PAnn_CanRCM4_ensmean_CF_DT2.0.nc
-      '2.5': data/change_factors/annual_total_precipitation/D2.0C/PAnn_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/annual_total_precipitation/D2.5C/PAnn_CanRCM4_ensmean_CF_DT2.5.nc
       '3.0': data/change_factors/annual_total_precipitation/D3.0C/PAnn_CanRCM4_ensmean_CF_DT3.0.nc
-      '3.5': data/change_factors/annual_total_precipitation/D3.0C/PAnn_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/annual_total_precipitation/D3.5C/PAnn_CanRCM4_ensmean_CF_DT3.5.nc
     units: ratio
     roundto: 0.001
     colour_map: jet
@@ -222,9 +222,9 @@ RAnn:
       '1.0': data/change_factors/annual_rain/D1.0C/RAnn_CanRCM4_ensmean_CF_DT1.0.nc
       '1.5': data/change_factors/annual_rain/D1.5C/RAnn_CanRCM4_ensmean_CF_DT1.5.nc
       '2.0': data/change_factors/annual_rain/D2.0C/RAnn_CanRCM4_ensmean_CF_DT2.0.nc
-      '2.5': data/change_factors/annual_rain/D2.0C/RAnn_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/annual_rain/D2.5C/RAnn_CanRCM4_ensmean_CF_DT2.5.nc
       '3.0': data/change_factors/annual_rain/D3.0C/RAnn_CanRCM4_ensmean_CF_DT3.0.nc
-      '3.5': data/change_factors/annual_rain/D3.0C/RAnn_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/annual_rain/D3.5C/RAnn_CanRCM4_ensmean_CF_DT3.5.nc
     units: ratio
     roundto: 0.001
     colour_map: jet
@@ -255,9 +255,9 @@ RHann:
       '1.0': data/change_factors/annual_relative_humidity/D1.0C/RHann_CanRCM4_ensmean_CF_DT1.0.nc
       '1.5': data/change_factors/annual_relative_humidity/D1.5C/RHann_CanRCM4_ensmean_CF_DT1.5.nc
       '2.0': data/change_factors/annual_relative_humidity/D2.0C/RHann_CanRCM4_ensmean_CF_DT2.0.nc
-      '2.5': data/change_factors/annual_relative_humidity/D2.0C/RHann_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/annual_relative_humidity/D2.5C/RHann_CanRCM4_ensmean_CF_DT2.5.nc
       '3.0': data/change_factors/annual_relative_humidity/D3.0C/RHann_CanRCM4_ensmean_CF_DT3.0.nc
-      '3.5': data/change_factors/annual_relative_humidity/D3.0C/RHann_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/annual_relative_humidity/D3.5C/RHann_CanRCM4_ensmean_CF_DT3.5.nc
     units: ratio
     roundto: 0.001
     colour_map: jet
@@ -288,9 +288,9 @@ RL50:
       '1.0': data/change_factors/rain_q50yr/D1.0C/RL50_CanRCM4_ensmean_CF_DT1.0.nc
       '1.5': data/change_factors/rain_q50yr/D1.5C/RL50_CanRCM4_ensmean_CF_DT1.5.nc
       '2.0': data/change_factors/rain_q50yr/D2.0C/RL50_CanRCM4_ensmean_CF_DT2.0.nc
-      '2.5': data/change_factors/rain_q50yr/D2.0C/RL50_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/rain_q50yr/D2.5C/RL50_CanRCM4_ensmean_CF_DT2.5.nc
       '3.0': data/change_factors/rain_q50yr/D3.0C/RL50_CanRCM4_ensmean_CF_DT3.0.nc
-      '3.5': data/change_factors/rain_q50yr/D3.0C/RL50_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/rain_q50yr/D3.5C/RL50_CanRCM4_ensmean_CF_DT3.5.nc
     units: ratio
     roundto: 0.001
     colour_map: jet
@@ -321,9 +321,9 @@ SL50:
       '1.0': data/change_factors/snow_q50yr/D1.0C/SL50_CanRCM4_ensmean_CF_DT1.0.nc
       '1.5': data/change_factors/snow_q50yr/D1.5C/SL50_CanRCM4_ensmean_CF_DT1.5.nc
       '2.0': data/change_factors/snow_q50yr/D2.0C/SL50_CanRCM4_ensmean_CF_DT2.0.nc
-      '2.5': data/change_factors/snow_q50yr/D2.0C/SL50_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/snow_q50yr/D2.5C/SL50_CanRCM4_ensmean_CF_DT2.5.nc
       '3.0': data/change_factors/snow_q50yr/D3.0C/SL50_CanRCM4_ensmean_CF_DT3.0.nc
-      '3.5': data/change_factors/snow_q50yr/D3.0C/SL50_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/snow_q50yr/D3.5C/SL50_CanRCM4_ensmean_CF_DT3.5.nc
     units: ratio
     roundto: 0.001
     colour_map: jet
@@ -456,9 +456,9 @@ Tmax:
       '1.0': data/change_factors/maximum_mean_daily_temperature/D1.0C/Tmax_CanRCM4_ensmean_CF_DT1.0.nc
       '1.5': data/change_factors/maximum_mean_daily_temperature/D1.5C/Tmax_CanRCM4_ensmean_CF_DT1.5.nc
       '2.0': data/change_factors/maximum_mean_daily_temperature/D2.0C/Tmax_CanRCM4_ensmean_CF_DT2.0.nc
-      '2.5': data/change_factors/maximum_mean_daily_temperature/D2.0C/Tmax_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/maximum_mean_daily_temperature/D2.5C/Tmax_CanRCM4_ensmean_CF_DT2.5.nc
       '3.0': data/change_factors/maximum_mean_daily_temperature/D3.0C/Tmax_CanRCM4_ensmean_CF_DT3.0.nc
-      '3.5': data/change_factors/maximum_mean_daily_temperature/D3.0C/Tmax_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/maximum_mean_daily_temperature/D3.5C/Tmax_CanRCM4_ensmean_CF_DT3.5.nc
     units: degC
     roundto: 1
     colour_map: jet
@@ -490,9 +490,9 @@ Tmin:
       '1.0': data/change_factors/minimum_mean_daily_temperature/D1.0C/Tmin_CanRCM4_ensmean_CF_DT1.0.nc
       '1.5': data/change_factors/minimum_mean_daily_temperature/D1.5C/Tmin_CanRCM4_ensmean_CF_DT1.5.nc
       '2.0': data/change_factors/minimum_mean_daily_temperature/D2.0C/Tmin_CanRCM4_ensmean_CF_DT2.0.nc
-      '2.5': data/change_factors/minimum_mean_daily_temperature/D2.0C/Tmin_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/minimum_mean_daily_temperature/D2.5C/Tmin_CanRCM4_ensmean_CF_DT2.5.nc
       '3.0': data/change_factors/minimum_mean_daily_temperature/D3.0C/Tmin_CanRCM4_ensmean_CF_DT3.0.nc
-      '3.5': data/change_factors/minimum_mean_daily_temperature/D3.0C/Tmin_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/minimum_mean_daily_temperature/D3.5C/Tmin_CanRCM4_ensmean_CF_DT3.5.nc
     units: degC
     roundto: 1
     colour_map: jet
@@ -558,9 +558,9 @@ WP10:
       '1.0': data/change_factors/hourly_wind_pressures_q10wp/D1.0C/WP10_CanRCM4_ensmean_CF_DT1.0.nc
       '1.5': data/change_factors/hourly_wind_pressures_q10wp/D1.5C/WP10_CanRCM4_ensmean_CF_DT1.5.nc
       '2.0': data/change_factors/hourly_wind_pressures_q10wp/D2.0C/WP10_CanRCM4_ensmean_CF_DT2.0.nc
-      '2.5': data/change_factors/hourly_wind_pressures_q10wp/D2.0C/WP10_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/hourly_wind_pressures_q10wp/D2.5C/WP10_CanRCM4_ensmean_CF_DT2.5.nc
       '3.0': data/change_factors/hourly_wind_pressures_q10wp/D3.0C/WP10_CanRCM4_ensmean_CF_DT3.0.nc
-      '3.5': data/change_factors/hourly_wind_pressures_q10wp/D3.0C/WP10_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/hourly_wind_pressures_q10wp/D3.5C/WP10_CanRCM4_ensmean_CF_DT3.5.nc
     units: ratio
     roundto: 0.001
     colour_map: jet
@@ -591,9 +591,9 @@ WP50:
       '1.0': data/change_factors/hourly_wind_pressures_q50wp/D1.0C/WP50_CanRCM4_ensmean_CF_DT1.0.nc
       '1.5': data/change_factors/hourly_wind_pressures_q50wp/D1.5C/WP50_CanRCM4_ensmean_CF_DT1.5.nc
       '2.0': data/change_factors/hourly_wind_pressures_q50wp/D2.0C/WP50_CanRCM4_ensmean_CF_DT2.0.nc
-      '2.5': data/change_factors/hourly_wind_pressures_q50wp/D2.0C/WP50_CanRCM4_ensmean_CF_DT2.0.nc
+      '2.5': data/change_factors/hourly_wind_pressures_q50wp/D2.5C/WP50_CanRCM4_ensmean_CF_DT2.5.nc
       '3.0': data/change_factors/hourly_wind_pressures_q50wp/D3.0C/WP50_CanRCM4_ensmean_CF_DT3.0.nc
-      '3.5': data/change_factors/hourly_wind_pressures_q50wp/D3.0C/WP50_CanRCM4_ensmean_CF_DT3.0.nc
+      '3.5': data/change_factors/hourly_wind_pressures_q50wp/D3.5C/WP50_CanRCM4_ensmean_CF_DT3.5.nc
     units: ratio
     roundto: 0.001
     colour_map: jet
