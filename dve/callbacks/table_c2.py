@@ -11,7 +11,10 @@ import pandas
 from climpyrical.gridding import transform_coords
 
 from dve.config import (
-    dv_has_climate_regime, future_change_factor_label, dv_roundto, dv_units,
+    dv_has_climate_regime,
+    future_change_factor_label,
+    dv_roundto,
+    dv_units,
 )
 from dve.data import get_data
 from dve.config import dv_label
@@ -46,7 +49,9 @@ def add(app, config):
 
         pcic_revised_hx_value_col_id = f"{design_variable} ({historical_units})"
 
-        column_units_suffix = f" ({future_units})" if future_units != "ratio" else " "
+        column_units_suffix = (
+            f" ({future_units})" if future_units != "ratio" else " "
+        )
         cf_value_col_ids = [
             f"CF_{future_dataset_id}C{column_units_suffix}"
             for future_dataset_id in future_dataset_ids
@@ -54,17 +59,18 @@ def add(app, config):
 
         try:
             display_dataset = historical_dataset[
-                ["Location", "prov", "Longitude", "Latitude",
-                 nbcc_hx_value_col_id,
-                 pcic_revised_hx_value_col_id,
-                 *cf_value_col_ids,
-                 ]
+                [
+                    "Location",
+                    "prov",
+                    "Longitude",
+                    "Latitude",
+                    nbcc_hx_value_col_id,
+                    pcic_revised_hx_value_col_id,
+                    *cf_value_col_ids,
+                ]
             ]
         except KeyError as e:
-            return (
-                title,
-                f"An error occurred reading Table C2: {str(e)}"
-            )
+            return (title, f"An error occurred reading Table C2: {str(e)}")
 
         # Round CF values according to config
         for col_id in cf_value_col_ids:
@@ -79,22 +85,28 @@ def add(app, config):
             "prov": {"name": ["", "Province"], "type": "text"},
             "Longitude": {"name": ["", "Longitude"], "type": "numeric"},
             "Latitude": {"name": ["", "Latitude"], "type": "numeric"},
-            pcic_revised_hx_value_col_id: {"name": [historical_name_and_units, "PCIC"], "type": "numeric"},
+            pcic_revised_hx_value_col_id: {
+                "name": [historical_name_and_units, "PCIC"],
+                "type": "numeric",
+            },
             nbcc_hx_value_col_id: {
                 "name": [historical_name_and_units, "NBCC 2015"],
                 "type": "numeric",
             },
-            ** {
+            **{
                 cf_value_col_id: {
                     "name": [
-                        dv_label(config, design_variable, climate_regime="future"),
+                        dv_label(
+                            config, design_variable, climate_regime="future"
+                        ),
                         f"CF {future_change_factor_label(config, future_dataset_id)}",
                     ],
                     "type": "numeric",
                 }
-                for cf_value_col_id, future_dataset_id in
-                zip(cf_value_col_ids, future_dataset_ids)
-            }
+                for cf_value_col_id, future_dataset_id in zip(
+                    cf_value_col_ids, future_dataset_ids
+                )
+            },
         }
 
         return (
