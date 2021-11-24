@@ -3,7 +3,7 @@ import logging
 import dash
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
-from dash import dash_table
+from dash import dash_table, dcc
 from flask_caching import Cache
 
 import pandas
@@ -11,10 +11,8 @@ import pandas
 from climpyrical.gridding import transform_coords
 
 from dve.config import (
-    dv_has_climate_regime,
-    future_change_factor_label,
-    dv_roundto,
-    dv_units,
+    dv_has_climate_regime, future_change_factor_label, dv_roundto, dv_units,
+    file_exists, filepath_for,
 )
 from dve.data import get_data
 from dve.config import dv_label
@@ -40,6 +38,25 @@ def add(app, config):
         title = config["ui"]["labels"]["table_C2"]["title"].format(
             historical_name_and_units
         )
+
+        # Show error message if configured data file does not exist.
+        if not file_exists(
+            filepath_for(
+                config,
+                design_variable,
+                climate_regime="historical",
+                historical_dataset_id="table",
+            )
+        ):
+            return (
+                title,
+                dcc.Markdown(
+                    "Error: Data is not available for this table. "
+                    "Please report this error to the "
+                    "application contact given "
+                    "in the **About > Contact** tab."
+                )
+            )
 
         historical_dataset = get_data(
             config, design_variable, "historical", historical_dataset_id="table"

@@ -5,22 +5,29 @@ cases are centralized here.
 """
 
 import os.path
+import logging
 from pkg_resources import resource_filename
 from dve.dict_utils import path_get
 
 
-def validate_filepath(filepath):
+logger = logging.getLogger("dve")
+
+
+def file_exists(filepath):
     filepath = resource_filename("dve", filepath)
-    if not os.path.isfile(filepath):
-        raise ValueError(f"'{filepath}' does not exist or is not a file")
+    return os.path.isfile(filepath)
+
+
+def validate_filepath(filepath):
+    if not file_exists(filepath):
+        logger.warning(f"'{filepath}' does not exist or is not a file")
 
 
 def validate(config):
     """
     Validate a configuration. Specifically:
-    - Check that all filepaths in use exist
-
-    Raise a descriptive exception if validation fails.
+    - Check that all filepaths specified in config exist. Log a warning message
+      for those which do not exist.
     """
     for filepath in config["paths"].values():
         validate_filepath(filepath)

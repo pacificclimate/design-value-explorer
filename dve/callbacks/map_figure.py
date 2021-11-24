@@ -18,6 +18,9 @@ from dve.config import (
     map_title,
     dv_historical_stations_column,
     dv_colour_bar_sigfigs,
+    dv_name,
+    file_exists,
+    filepath_for,
 )
 from dve.data import get_data
 from dve.colorbar import (
@@ -39,6 +42,25 @@ from climpyrical.mask import stratify_coords
 
 logger = logging.getLogger("dve")
 timing_log = logger.info  # Set to None to not log timing
+
+
+def message_figure(message):
+    """Return a figure containing only a text message"""
+    return go.Figure(
+        layout=go.Layout(
+            xaxis=go.layout.XAxis(visible=False),
+            yaxis=go.layout.YAxis(visible=False),
+            annotations=[
+                go.layout.Annotation(
+                    text=message,
+                    xref="paper",
+                    yref="paper",
+                    showarrow=False,
+                    font=go.layout.annotation.Font(size=16),
+                )
+            ],
+        )
+    )
 
 
 def add(app, config):
@@ -105,8 +127,9 @@ def add(app, config):
         if ctx.triggered and ctx.triggered[0]["prop_id"].startswith(
             "viewport-ds"
         ):
-            # Do not update if viewport has changed but lat-lon grid is not shown.
-            # Changing lat-lon grid for vp change is only reason to update.
+            # Do not update if viewport has changed but lat-lon grid is not
+            # shown. Changing lat-lon grid for vp change is only reason to
+            # update.
             if not show_grid:
                 raise PreventUpdate
 
@@ -125,10 +148,40 @@ def add(app, config):
                 ):
                     raise PreventUpdate
 
-        # Do not update if design values for requested climate regime do not
+        # Show message if design values for requested climate regime do not
         # exist.
         if not dv_has_climate_regime(config, design_variable, climate_regime):
-            raise PreventUpdate
+            return message_figure(
+                f"No {climate_regime} data is available for "
+                f"{dv_name(design_variable)}. This is an intentional omission."
+            )
+
+        # Show error message if configured data file does not exist.
+        if not file_exists(
+            filepath_for(
+                config,
+                design_variable,
+                climate_regime,
+                historical_dataset_id,
+                future_dataset_id,
+            )
+        ):
+            title = map_title(
+                config,
+                design_variable,
+                climate_regime,
+                historical_dataset_id,
+                future_dataset_id,
+            )
+            return message_figure(
+                f"Error: Data is not available for <br>"
+                f"<b>{title}</b> <br><br>"
+                f"Please report this error to the "
+                f"application contact given "
+                f"in the <b>About > Contact</b> tab."
+            )
+
+        # Build the maps figure.
 
         # The list `maps` is the set of overlaid traces that comprise the map.
         # It is built up incrementally depending on the values of the inputs.
