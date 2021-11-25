@@ -82,6 +82,17 @@ IDFCF:
       default: linear
     colorbar:
       sigfigs: 3
+  historical:
+    datasets:
+      table_C2: data/tables/IDF_CFs_TableC2.csv
+    units: ratio
+    roundto: 0.001
+    # The following items are irrelevant, since IDFCF has no historical rasters
+    # but if items are absent, errors occur in the callbacks. This is the cheap
+    # and easy way to prevent the errors.
+    colour_map: RdBu
+    scale:
+      default: linear
 MI:
   description: Moisture index
   future:
