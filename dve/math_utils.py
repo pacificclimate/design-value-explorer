@@ -19,6 +19,8 @@ def nearest(values, value):
 
 def round_to_multiple(value, multiple, direction="nearest"):
     """Return multiple of `multiple` nearest to `value`."""
+    if math.isnan(value):
+        return value
     try:
         f = {"down": math.floor, "nearest": round, "up": math.ceil}[direction]
     except KeyError:

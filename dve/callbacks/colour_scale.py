@@ -1,14 +1,13 @@
 import logging
 
 from dash.dependencies import Input, Output, State
-from dash.exceptions import PreventUpdate
 
 import numpy as np
 
 from dve.config import (
-    dv_has_climate_regime,
     dv_roundto,
     dv_colour_scale_disable_logarithmic,
+    filepath_for,
 )
 from dve.data import get_data
 import dve.layout
@@ -62,14 +61,26 @@ def add(app, config):
         # historical_dataset_id,
         future_dataset_id,
     ):
-        if not dv_has_climate_regime(config, design_variable, climate_regime):
-            raise PreventUpdate
+        historical_dataset_id = "reconstruction"
+
+        # Return a dummy setup there is no raster data file defined for this DV.
+        if (
+            filepath_for(
+                config,
+                design_variable,
+                climate_regime,
+                historical_dataset_id=historical_dataset_id,
+                future_dataset_id=future_dataset_id,
+            )
+            is None
+        ):
+            return (0, 0, 1, {}, (0, 0))
 
         data = get_data(
             config,
             design_variable,
             climate_regime,
-            historical_dataset_id="reconstruction",
+            historical_dataset_id=historical_dataset_id,
             future_dataset_id=future_dataset_id,
         )
         field = data.dv_values()

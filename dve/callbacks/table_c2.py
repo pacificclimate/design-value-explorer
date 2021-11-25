@@ -1,19 +1,12 @@
 import logging
 
-import dash
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
-from dash import dash_table
-from flask_caching import Cache
-
-import pandas
-
-from climpyrical.gridding import transform_coords
+from dash import dash_table, dcc
 
 from dve.config import (
-    dv_has_climate_regime,
-    future_change_factor_label,
-    dv_roundto,
+    dv_has_climate_regime, future_change_factor_label, dv_roundto, dv_units,
+    file_exists, filepath_for,
 )
 from dve.data import get_data
 from dve.config import dv_label
@@ -26,83 +19,113 @@ timing_log = logger.info
 
 
 def add(app, config):
-    cache = Cache(
-        app.server,
-        config={"CACHE_TYPE": "filesystem", "CACHE_DIR": "table-c2-cache"},
-    )
-
-    @cache.memoize(timeout=config["table_C2"]["cache_timeout"])
     def make_data_table(design_variable):
-        logger.info(f"Table C2 cache miss: {design_variable}")
-
-        name_and_units = dv_label(
+        historical_name_and_units = dv_label(
             config, design_variable, climate_regime="historical"
         )
+        historical_units, future_units = (
+            dv_units(config, design_variable, climate_regime, nice=False)
+            for climate_regime in ("historical", "future")
+        )
+        future_dataset_ids = config["ui"]["future_change_factors"]
 
         title = config["ui"]["labels"]["table_C2"]["title"].format(
-            name_and_units
+            historical_name_and_units
         )
+
+        # Show error message if configured data file does not exist.
+        if not file_exists(
+            filepath_for(
+                config,
+                design_variable,
+                climate_regime="historical",
+                historical_dataset_id="table",
+            )
+        ):
+            return (
+                title,
+                dcc.Markdown(
+                    "Error: Data is not available for this table. "
+                    "Please report this error to the "
+                    "application contact given "
+                    "in the **About > Contact** tab."
+                )
+            )
 
         historical_dataset = get_data(
             config, design_variable, "historical", historical_dataset_id="table"
         ).data_frame()
 
-        display_dataset = historical_dataset[
-            ["Location", "Prov", "lon", "lat", "NBCC 2015", "PCIC"]
-        ]
-        display_dataset["PCIC"] = display_dataset["PCIC"].apply(
-            lambda x: round_to_multiple(
-                x, dv_roundto(config, design_variable, "historical")
-            )
+        nbcc_hx_value_col_id = f"{design_variable} (NBCC)"
+
+        pcic_revised_hx_value_col_id = f"{design_variable} ({historical_units})"
+
+        column_units_suffix = (
+            f" ({future_units})" if future_units != "ratio" else " "
         )
+        cf_value_col_ids = [
+            f"CF_{future_dataset_id}C{column_units_suffix}"
+            for future_dataset_id in future_dataset_ids
+        ]
 
-        column_info = {
-            "Location": {"name": ["", "Location"], "type": "text"},
-            "Prov": {"name": ["", "Province"], "type": "text"},
-            "lon": {"name": ["", "Longitude"], "type": "numeric"},
-            "lat": {"name": ["", "Latitude"], "type": "numeric"},
-            "PCIC": {"name": [name_and_units, "PCIC"], "type": "numeric"},
-            "NBCC 2015": {
-                "name": [name_and_units, "NBCC 2015"],
-                "type": "numeric",
-            },
-        }
+        try:
+            display_dataset = historical_dataset[
+                [
+                    "Location",
+                    "prov",
+                    "Longitude",
+                    "Latitude",
+                    nbcc_hx_value_col_id,
+                    pcic_revised_hx_value_col_id,
+                    *cf_value_col_ids,
+                ]
+            ]
+        except KeyError as e:
+            return (title, f"An error occurred reading Table C2: {str(e)}")
 
-        for future_dataset_id in config["ui"]["future_change_factors"]:
-            future_dataset = get_data(
-                config,
-                design_variable,
-                "future",
-                future_dataset_id=future_dataset_id,
-            )
-            rlons, rlats = transform_coords(
-                display_dataset["lon"].values, display_dataset["lat"].values
-            )
-            column_id = f"CF{future_dataset_id}"
-            display_dataset[column_id] = pandas.Series(
-                data=map(
-                    lambda coords: round_to_multiple(
-                        future_dataset.data_at_rlonlat(*coords)[2],
-                        dv_roundto(config, design_variable, "future"),
-                    ),
-                    zip(rlons, rlats),
+        # Round CF values according to config
+        for col_id in cf_value_col_ids:
+            display_dataset[col_id] = display_dataset[col_id].apply(
+                lambda x: round_to_multiple(
+                    x, dv_roundto(config, design_variable, "future")
                 )
             )
 
-            column_info[column_id] = {
-                "name": [
-                    dv_label(config, design_variable, climate_regime="future"),
-                    f"CF ({future_change_factor_label(config, future_dataset_id)})",
-                ],
+        column_info = {
+            "Location": {"name": ["", "Location"], "type": "text"},
+            "prov": {"name": ["", "Province"], "type": "text"},
+            "Longitude": {"name": ["", "Longitude"], "type": "numeric"},
+            "Latitude": {"name": ["", "Latitude"], "type": "numeric"},
+            pcic_revised_hx_value_col_id: {
+                "name": [historical_name_and_units, "PCIC"],
                 "type": "numeric",
-            }
+            },
+            nbcc_hx_value_col_id: {
+                "name": [historical_name_and_units, "NBCC 2015"],
+                "type": "numeric",
+            },
+            **{
+                cf_value_col_id: {
+                    "name": [
+                        dv_label(
+                            config, design_variable, climate_regime="future"
+                        ),
+                        f"CF {future_change_factor_label(config, future_dataset_id)}",
+                    ],
+                    "type": "numeric",
+                }
+                for cf_value_col_id, future_dataset_id in zip(
+                    cf_value_col_ids, future_dataset_ids
+                )
+            },
+        }
 
         return (
             title,
             dash_table.DataTable(
                 columns=[
-                    {"id": id, **column_info[id]}
-                    for id in display_dataset.columns
+                    {"id": id_, **column_info[id_]}
+                    for id_ in display_dataset.columns
                 ],
                 style_table={
                     # "width": "100%",

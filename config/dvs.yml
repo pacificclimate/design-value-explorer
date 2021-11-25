@@ -23,7 +23,7 @@ DRWP5:
       stations:
         column: DRWP-RL5 (Pa)
         path: data/station_inputs/drwp_rl5_for_maps.csv
-      table_C2: data/tables/DRWP5_TableC2.csv
+      table_C2: data/tables/DRWP5_hist_CFs_TableC2.csv
     units: kPa
     roundto: 10
     colour_map: terrain_r
@@ -56,7 +56,7 @@ HDD:
       stations:
         column: HDD (degC-day)
         path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
-      table_C2: data/tables/HDD_TableC2.csv
+      table_C2: data/tables/HDD_hist_CFs_TableC2.csv
     units: degC-day
     roundto: 10
     colour_map: RdBu
@@ -82,24 +82,19 @@ IDFCF:
       default: linear
     colorbar:
       sigfigs: 3
-MI:
-  description: Moisture index
-  future:
+  historical:
     datasets:
-      '0.5': data/change_factors/foo/D0.5C/MI_CanRCM4_ensmean_CF_DT0.5.nc
-      '1.0': data/change_factors/foo/D1.0C/MI_CanRCM4_ensmean_CF_DT1.0.nc
-      '1.5': data/change_factors/foo/D1.5C/MI_CanRCM4_ensmean_CF_DT1.5.nc
-      '2.0': data/change_factors/foo/D2.0C/MI_CanRCM4_ensmean_CF_DT2.0.nc
-      '2.5': data/change_factors/foo/D2.5C/MI_CanRCM4_ensmean_CF_DT2.5.nc
-      '3.0': data/change_factors/foo/D3.0C/MI_CanRCM4_ensmean_CF_DT3.0.nc
-      '3.5': data/change_factors/foo/D3.5C/MI_CanRCM4_ensmean_CF_DT3.5.nc
+      table_C2: data/tables/IDF_CFs_TableC2.csv
     units: ratio
     roundto: 0.001
-    colour_map: jet
+    # The following items are irrelevant, since IDFCF has no historical rasters
+    # but if items are absent, errors occur in the callbacks. This is the cheap
+    # and easy way to prevent the errors.
+    colour_map: RdBu
     scale:
       default: linear
-    colorbar:
-      sigfigs: 3
+MI:
+  description: Moisture index
   historical:
     datasets:
       model: data/model_inputs/moisture_index_CanRCM4-LE_ens15_1951-2016_ensmean.nc
@@ -107,9 +102,9 @@ MI:
       stations:
         column: moisture_index
         path: data/station_inputs/moisture_index_for_maps.csv
-      table_C2: data/tables/MI_TableC2.csv
+      table_C2: data/tables/MI_hist_TableC2.csv
     units: ''
-    roundto: null
+    roundto: 0.001
     colour_map: terrain_r
     scale:
       default: logarithmic
@@ -140,7 +135,7 @@ PAnn:
       stations:
         column: annual_pr (mm)
         path: data/station_inputs/pr_annual_mean_doy_MSC_25yr_for_maps.csv
-      table_C2: data/tables/PAnn_TableC2.csv
+      table_C2: data/tables/PAnn_hist_CFs_TableC2.csv
     units: mm
     roundto: 5
     colour_map: PuBuGn
@@ -173,7 +168,7 @@ R15m10:
       stations:
         column: Gum-LM RL10 (mm)
         path: data/station_inputs/15min_rain_rl10_for_maps.csv
-      table_C2: data/tables/R15m10_TableC2.csv
+      table_C2: data/tables/R15m10_hist_CFs_TableC2.csv
     units: mm
     roundto: 1
     colour_map: PuBuGn
@@ -206,7 +201,7 @@ R1d50:
       stations:
         column: 1day rain RL50 (mm)
         path: data/station_inputs/1day_rain_rl50_for_maps.csv
-      table_C2: data/tables/R1d50_TableC2.csv
+      table_C2: data/tables/R1d50_hist_CFs_TableC2.csv
     units: mm
     roundto: 1
     colour_map: PuBuGn
@@ -239,7 +234,7 @@ RAnn:
       stations:
         column: annual_rain (mm)
         path: data/station_inputs/rain_annual_mean_doy_MSC_25yr_for_maps.csv
-      table_C2: data/tables/RAnn_TableC2.csv
+      table_C2: data/tables/RAnn_hist_CFs_TableC2.csv
     units: mm
     roundto: 5
     colour_map: PuBuGn
@@ -247,7 +242,7 @@ RAnn:
       default: logarithmic
     colorbar:
       sigfigs: 3
-RHann:
+RHAnn:
   description: Annual mean relative humidity
   future:
     datasets:
@@ -272,7 +267,7 @@ RHann:
       stations:
         column: mean RH (%)
         path: data/station_inputs/rh_annual_mean_10yr_for_maps.csv
-      table_C2: data/tables/RHann_TableC2.csv
+      table_C2: data/tables/RHAnn_hist_CFs_TableC2.csv
     units: '%'
     roundto: 1
     colour_map: terrain_r
@@ -305,7 +300,7 @@ RL50:
       stations:
         column: RL50 (kPa)
         path: data/station_inputs/sl50_rl50_for_maps.csv
-      table_C2: data/tables/RL50_TableC2.csv
+      table_C2: data/tables/RL50_hist_CFs_TableC2.csv
     units: kPa
     roundto: 0.1
     colour_map: terrain_r
@@ -338,7 +333,7 @@ SL50:
       stations:
         column: SL50 (kPa)
         path: data/station_inputs/sl50_rl50_for_maps.csv
-      table_C2: data/tables/SL50_TableC2.csv
+      table_C2: data/tables/SL50_hist_CFs_TableC2.csv
     units: kPa
     roundto: 0.1
     colour_map: terrain_r
@@ -371,7 +366,7 @@ TJan1.0:
       stations:
         column: TJan1.0 (degC)
         path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
-      table_C2: data/tables/TJan1.0_TableC2.csv
+      table_C2: data/tables/TJan1.0_hist_CFs_TableC2.csv
     units: degC
     roundto: 1
     colour_map: RdBu_r
@@ -406,7 +401,7 @@ TJan2.5:
       stations:
         column: TJan2.5 (degC)
         path: data/station_inputs/janT2.5p_T1.0p_allstations_v3_min8yr_for_maps.csv
-      table_C2: data/tables/TJan2.5_TableC2.csv
+      table_C2: data/tables/TJan2.5_hist_CFs_TableC2.csv
     units: degC
     roundto: 1
     colour_map: RdBu_r
@@ -439,7 +434,7 @@ TJul97.5:
       stations:
         column: TJul2.5 (degC)
         path: data/station_inputs/julT97.5p_allstations_v3_min8yr_for_maps.csv
-      table_C2: data/tables/TJul97.5_TableC2.csv
+      table_C2: data/tables/TJul97.5_hist_CFs_TableC2.csv
     units: degC
     roundto: 1
     colour_map: RdBu_r
@@ -473,7 +468,7 @@ Tmax:
       stations:
         column: Tmax (degC)
         path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
-      table_C2: data/tables/Tmax_TableC2.csv
+      table_C2: data/tables/Tmax_hist_CFs_TableC2.csv
     units: degC
     roundto: 1
     colour_map: RdBu_r
@@ -507,7 +502,7 @@ Tmin:
       stations:
         column: Tmin (degC)
         path: data/station_inputs/hdd_Tmax_Tmin_allstations_v3_for_maps.csv
-      table_C2: data/tables/Tmin_TableC2.csv
+      table_C2: data/tables/Tmin_hist_CFs_TableC2.csv
     units: degC
     roundto: 1
     colour_map: RdBu_r
@@ -541,7 +536,7 @@ TwJul97.5:
       stations:
         column: TwJul2.5 (degC)
         path: data/station_inputs/julTwb97.5p_allstations_v3_for_maps.csv
-      table_C2: data/tables/TwJul97.5_TableC2.csv
+      table_C2: data/tables/TwJul97.5_hist_CFs_TableC2.csv
     units: degC
     roundto: 1
     colour_map: RdBu_r
@@ -575,7 +570,7 @@ WP10:
       stations:
         column: WP10 (kPa)
         path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
-      table_C2: data/tables/WP10_TableC2.csv
+      table_C2: data/tables/WP10_hist_CFs_TableC2.csv
     units: kPa
     roundto: 0.1
     colour_map: terrain_r
@@ -608,7 +603,7 @@ WP50:
       stations:
         column: WP50 (kPa)
         path: data/station_inputs/wpress_stations_rl10_rl50_for_maps.csv
-      table_C2: data/tables/WP50_TableC2.csv
+      table_C2: data/tables/WP50_hist_CFs_TableC2.csv
     units: kPa
     roundto: 0.1
     colour_map: terrain_r
