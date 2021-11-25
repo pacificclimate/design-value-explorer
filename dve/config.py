@@ -23,6 +23,15 @@ def validate_filepath(filepath):
         logger.warning(f"'{filepath}' does not exist or is not a file")
 
 
+def validate_config(config, cfg_path, log=logger.warning, **kwargs):
+    # logger.debug(f"Validating '{cfg_path}'")
+    filepath = path_get(config, cfg_path, **kwargs)
+    if filepath is None:
+        log(f"Expected config at '{cfg_path}' is not present.")
+    else:
+        validate_filepath(filepath)
+
+
 def validate(config):
     """
     Validate a configuration. Specifically:
@@ -34,19 +43,25 @@ def validate(config):
 
     for design_variable in config["ui"]["dvs"]:
 
+        # Validate historical filepaths, if present
         if dv_has_climate_regime(config, design_variable, "historical"):
-            datasets = config["dvs"][design_variable]["historical"]["datasets"]
-            for path in (
+            cfg_base_path = f"dvs/{design_variable}/historical/datasets"
+            for cfg_ext_path in (
                 "model",
                 "reconstruction",
-                ["stations", "path"],
+                "stations/path",
                 "table_C2",
             ):
-                validate_filepath(path_get(datasets, path))
+                validate_config(
+                    config, f"{cfg_base_path}/{cfg_ext_path}", separator="/"
+                )
 
-        datasets = config["dvs"][design_variable]["future"]["datasets"]
-        for key in config["ui"]["future_change_factors"]:
-            validate_filepath(datasets[key])
+        # Validate future filepaths. These must always be present.
+        cfg_base_path = f"dvs/{design_variable}/future/datasets"
+        for cfg_ext_path in config["ui"]["future_change_factors"]:
+            validate_config(
+                config, f"{cfg_base_path}/{cfg_ext_path}", log=logger.error, separator="/"
+            )
 
 
 def filepath_for(
@@ -56,20 +71,23 @@ def filepath_for(
     historical_dataset_id=None,
     future_dataset_id=None,
 ):
+    root_path = f"dvs/{design_variable}/{climate_regime}/datasets"
+
     if climate_regime == "historical":
-        path = {
-            "stations": ["stations", "path"],
+        ext_path = {
+            "stations": "stations/path",
             "table": "table_C2",
             "model": "model",
             "reconstruction": "reconstruction",
         }[historical_dataset_id]
-        return path_get(
-            config["dvs"][design_variable]["historical"]["datasets"], path
-        )
+    else:
+        ext_path = future_dataset_id
 
-    return config["dvs"][design_variable]["future"]["datasets"][
-        future_dataset_id
-    ]
+    return path_get(config, f"{root_path}/{ext_path}", separator='/')
+
+
+def filepath_defined(*args, **kwargs):
+    return filepath_for(*args, **kwargs) is not None
 
 
 def dv_has_climate_regime(config, design_variable, climate_regime):
