@@ -1,5 +1,15 @@
 # News / Release Notes
 
+## 2.1.0
+
+**2021-Nov-25**
+
+Draft production candidate.
+
+Updates:
+- [Use precomputed CFs in Table C2](https://github.com/pacificclimate/dash-dv-explorer/pull/198)
+- [Fix CF file paths for 2.5, 3.5](https://github.com/pacificclimate/dash-dv-explorer/pull/197)
+
 ## 2.0.0
 
 **2021-Oct-25**
