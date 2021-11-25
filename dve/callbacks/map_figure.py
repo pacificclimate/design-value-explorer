@@ -148,24 +148,25 @@ def add(app, config):
                 ):
                     raise PreventUpdate
 
-        # Show message if design values for requested climate regime do not
+        raster_filepath = filepath_for(
+            config,
+            design_variable,
+            climate_regime,
+            historical_dataset_id,
+            future_dataset_id,
+        )
+
+        # Show info message if design values for requested climate regime do not
         # exist.
-        if not dv_has_climate_regime(config, design_variable, climate_regime):
+        if raster_filepath is None:
             return message_figure(
                 f"No {climate_regime} data is available for "
-                f"{dv_name(design_variable)}. This is an intentional omission."
+                f"{dv_name(config, design_variable)}. "
+                f"This is an intentional omission."
             )
 
         # Show error message if configured data file does not exist.
-        if not file_exists(
-            filepath_for(
-                config,
-                design_variable,
-                climate_regime,
-                historical_dataset_id,
-                future_dataset_id,
-            )
-        ):
+        if not file_exists(raster_filepath):
             title = map_title(
                 config,
                 design_variable,
