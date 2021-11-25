@@ -247,7 +247,7 @@ RAnn:
       default: logarithmic
     colorbar:
       sigfigs: 3
-RHann:
+RHAnn:
   description: Annual mean relative humidity
   future:
     datasets:
@@ -272,7 +272,7 @@ RHann:
       stations:
         column: mean RH (%)
         path: data/station_inputs/rh_annual_mean_10yr_for_maps.csv
-      table_C2: data/tables/RHann_hist_CFs_TableC2.csv
+      table_C2: data/tables/RHAnn_hist_CFs_TableC2.csv
     units: '%'
     roundto: 1
     colour_map: terrain_r
