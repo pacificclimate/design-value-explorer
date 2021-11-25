@@ -95,22 +95,6 @@ IDFCF:
       default: linear
 MI:
   description: Moisture index
-  future:
-    datasets:
-      '0.5': data/change_factors/foo/D0.5C/MI_CanRCM4_ensmean_CF_DT0.5.nc
-      '1.0': data/change_factors/foo/D1.0C/MI_CanRCM4_ensmean_CF_DT1.0.nc
-      '1.5': data/change_factors/foo/D1.5C/MI_CanRCM4_ensmean_CF_DT1.5.nc
-      '2.0': data/change_factors/foo/D2.0C/MI_CanRCM4_ensmean_CF_DT2.0.nc
-      '2.5': data/change_factors/foo/D2.5C/MI_CanRCM4_ensmean_CF_DT2.5.nc
-      '3.0': data/change_factors/foo/D3.0C/MI_CanRCM4_ensmean_CF_DT3.0.nc
-      '3.5': data/change_factors/foo/D3.5C/MI_CanRCM4_ensmean_CF_DT3.5.nc
-    units: ratio
-    roundto: 0.001
-    colour_map: jet
-    scale:
-      default: linear
-    colorbar:
-      sigfigs: 3
   historical:
     datasets:
       model: data/model_inputs/moisture_index_CanRCM4-LE_ens15_1951-2016_ensmean.nc
@@ -118,9 +102,9 @@ MI:
       stations:
         column: moisture_index
         path: data/station_inputs/moisture_index_for_maps.csv
-#      table_C2: data/tables/MI_hist_CFs_TableC2.csv
+      table_C2: data/tables/MI_hist_TableC2.csv
     units: ''
-    roundto: null
+    roundto: 0.001
     colour_map: terrain_r
     scale:
       default: logarithmic
