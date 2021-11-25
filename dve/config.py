@@ -24,7 +24,11 @@ def validate_filepath(filepath):
 
 
 def validate_config(config, cfg_path, log=logger.warning, **kwargs):
-    # logger.debug(f"Validating '{cfg_path}'")
+    """
+    Validate the config addressed by `cfg_path`. If there is nothing at the
+    specified path in the config object, log this fact. Otherwise validate
+    the filepath found at that path.
+    """
     filepath = path_get(config, cfg_path, **kwargs)
     if filepath is None:
         log(f"Expected config at '{cfg_path}' is not present.")
@@ -60,7 +64,10 @@ def validate(config):
         cfg_base_path = f"dvs/{design_variable}/future/datasets"
         for cfg_ext_path in config["ui"]["future_change_factors"]:
             validate_config(
-                config, f"{cfg_base_path}/{cfg_ext_path}", log=logger.error, separator="/"
+                config,
+                f"{cfg_base_path}/{cfg_ext_path}",
+                log=logger.error,
+                separator="/",
             )
 
 
@@ -83,7 +90,7 @@ def filepath_for(
     else:
         ext_path = future_dataset_id
 
-    return path_get(config, f"{root_path}/{ext_path}", separator='/')
+    return path_get(config, f"{root_path}/{ext_path}", separator="/")
 
 
 def filepath_defined(*args, **kwargs):

@@ -1,12 +1,10 @@
 import logging
 
 from dash.dependencies import Input, Output, State
-from dash.exceptions import PreventUpdate
 
 import numpy as np
 
 from dve.config import (
-    dv_has_climate_regime,
     dv_roundto,
     dv_colour_scale_disable_logarithmic,
     filepath_for,

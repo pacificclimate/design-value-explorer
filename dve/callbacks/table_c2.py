@@ -1,14 +1,8 @@
 import logging
 
-import dash
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 from dash import dash_table, dcc
-from flask_caching import Cache
-
-import pandas
-
-from climpyrical.gridding import transform_coords
 
 from dve.config import (
     dv_has_climate_regime, future_change_factor_label, dv_roundto, dv_units,

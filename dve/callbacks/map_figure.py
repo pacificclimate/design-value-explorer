@@ -9,7 +9,6 @@ from dash.exceptions import PreventUpdate
 import plotly.graph_objects as go
 
 import geopandas as gpd
-import numpy as np
 
 from dve.config import (
     dv_has_climate_regime,
