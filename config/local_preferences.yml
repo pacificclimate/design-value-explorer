@@ -1,6 +1,8 @@
+# For documentation of this config, see dve/callbacks/local_preferences.py
+
 version: 16
 path_separator: ";"
-function_prefix: "@"
+function_marker: "@"
 ui_elements:
   - selector: main_tabs.active_tab
     paths:
