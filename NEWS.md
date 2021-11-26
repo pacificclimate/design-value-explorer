@@ -1,5 +1,12 @@
 # News / Release Notes
 
+## 2.1.2
+
+**2021-Nov-25**
+
+Draft production candidate. 
+Bumps local_preferences version to force update which prevents errors.
+
 ## 2.1.1
 
 **2021-Nov-25**
