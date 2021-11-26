@@ -87,14 +87,23 @@ IDFCF:
       table_C2: data/tables/IDF_CFs_TableC2.csv
     units: ratio
     roundto: 0.001
-    # The following items are irrelevant, since IDFCF has no historical rasters
-    # but if items are absent, errors occur in the callbacks. This is the cheap
-    # and easy way to prevent the errors.
+    # The following items are irrelevant, since IDFCF has no historical rasters.
+    # But if these items are absent, errors occur in the callbacks. This is the
+    # cheap and easy way to prevent the errors.
     colour_map: RdBu
     scale:
       default: linear
 MI:
   description: Moisture index
+  future:
+    # The following are irrelevant, since MI has no future data of any kind.
+    # But if these items are absent, errors occur in the callbacks. This is the
+    # cheap and easy way to prevent the errors.
+    units: ratio
+    roundto: 0.001
+    colour_map: jet
+    scale:
+      default: linear
   historical:
     datasets:
       model: data/model_inputs/moisture_index_CanRCM4-LE_ens15_1951-2016_ensmean.nc
