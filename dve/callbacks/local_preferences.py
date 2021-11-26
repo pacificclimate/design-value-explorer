@@ -115,7 +115,7 @@ def global_path(element, **kwargs):
     Return it raw (unsubstituted) if no kwargs are supplied, otherwise,
     substitute (string.format) the supplied kwargs in the raw path.
     """
-    raw = element["global"]
+    raw = element["paths"]["global"]
     if len(kwargs) == 0:
         return raw
     return raw.format(**kwargs)
@@ -127,7 +127,8 @@ def local_path(element, **kwargs):
     Return it raw (unsubstituted) if no kwargs are supplied, otherwise,
     substitute (string.format) the supplied kwargs in the raw path.
     """
-    raw = element.get("local", element["global"])
+    paths = element["paths"]
+    raw = paths.get("local", paths["global"])
     if len(kwargs) == 0:
         return raw
     return raw.format(**kwargs)
@@ -150,10 +151,12 @@ def add(app, config):
     path_separator = path_get(config, "local_preferences.path_separator")
     function_prefix = path_get(config, "local_preferences.function_prefix")
 
+    # TODO: Use flexible callback signature
+    logger.debug("Registering local prefs update callback")
     @app.callback(
         Output("local_preferences", "data"),
         Input("local_preferences", "modified_timestamp"),
-        *(Input(e["id"], e["prop"]) for e in updatable_ui_elements),
+        *(Input(*e["selector"].split(".")) for e in updatable_ui_elements),
         State("local_preferences", "data"),
         State("design_variable", "value"),
         State("climate_regime", "value"),
@@ -235,13 +238,13 @@ def add(app, config):
 
         # Otherwise, one or more UI elements caused the change. Save those
         # in local_preferences.
-        logger.debug("updating local preferences from UI change")
         local_preferences_output = local_preferences
         change = False
         for element, input_value in zip(
             updatable_ui_elements, updatable_ui_inputs
         ):
-            if triggered_by(f'{element["id"]}.', ctx):
+            if triggered_by(f'{element["selector"]}', ctx):
+                # logger.debug(f"local prefs change in {ctx.triggered}")
                 change = True
                 path_set(
                     local_preferences_output,
@@ -253,6 +256,8 @@ def add(app, config):
                     input_value,
                     separator=path_separator,
                 )
+        if change:
+            logger.debug(f"update local preferences from UI\n{local_preferences_output}")
         return local_preferences_output if change else dash.no_update
 
     # We wish to register callbacks programmatically, specifically, one for
@@ -276,13 +281,13 @@ def add(app, config):
         """
 
         def callback(
+            per_ui_inputs,
             local_preferences_ts,
-            design_variable,
-            climate_regime,
             local_preferences,
         ):
             if not local_preferences_ts or local_preferences_ts < 0:
                 return dash.no_update
+            logger.debug(f"update UI from local prefs: {ui_element}")
             # if not any(
             #     v in local_path(ui_element)
             #     for v in ("design_variable", "climate_regime")
@@ -292,8 +297,7 @@ def add(app, config):
                 local_preferences,
                 local_path(
                     ui_element,
-                    design_variable=design_variable,
-                    climate_regime=climate_regime,
+                    **per_ui_inputs,
                 ),
                 separator=path_separator,
             )
@@ -302,10 +306,20 @@ def add(app, config):
 
     # Register callback for each UI element.
     for ui_element in updatable_ui_elements:
+        output_selector = ui_element["selector"].split(".")
+        logger.debug(
+            f"Registering UI update callback for {ui_element}\n"
+            f"output selector: {output_selector}")
+        output = Output(*output_selector)
+        per_ui_inputs = {
+            name: Input(*selector.split("."))
+            for name, selector in ui_element.get("inputs", {}).items()
+        }
         app.callback(
-            Output(ui_element["id"], ui_element["prop"]),
-            Input("local_preferences", "modified_timestamp"),
-            Input("design_variable", "value"),
-            Input("climate_regime", "value"),
-            State("local_preferences", "data"),
+            output=output,
+            inputs=dict(
+                per_ui_inputs=per_ui_inputs,
+                local_preferences_ts=Input("local_preferences", "modified_timestamp"),
+                local_preferences=State("local_preferences", "data"),
+            )
         )(make_ui_update_callback(ui_element))
