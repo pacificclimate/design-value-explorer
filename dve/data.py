@@ -26,7 +26,7 @@ TODO: Determine whether data access, which is read-only, needs thread locking.
 TODO: `DvXrDataset`, `PdCsvDataset` have a very common structure. Factor this
   out into a base class factory.
 """
-
+import math
 import os
 import functools
 from collections import namedtuple
@@ -40,7 +40,7 @@ import xarray
 
 from climpyrical.data import check_valid_data, check_valid_keys
 
-from dve.config import filepath_for
+from dve.config import filepath_for, file_exists
 from dve.map_utils import rlonlat_to_rindices, rindices_to_lonlat
 from dve.timing import timing
 
@@ -336,15 +336,16 @@ def get_data_object(
     description = f"get_data {(design_variable, climate_regime, historical_dataset_id, future_dataset_id)}"
 
     with timing(description, log=timing_log):
-        return load_file(
-            filepath_for(
-                config,
-                design_variable,
-                climate_regime,
-                historical_dataset_id,
-                future_dataset_id,
-            )
+        filepath = filepath_for(
+            config,
+            design_variable,
+            climate_regime,
+            historical_dataset_id,
+            future_dataset_id,
         )
+        if filepath is None or not file_exists(filepath):
+            return None
+        return load_file(filepath)
 
 
 def dv_value(
@@ -367,5 +368,7 @@ def dv_value(
         historical_dataset_id,
         future_dataset_id,
     )
+    if dataset is None:
+        return math.nan
     data = dataset.data_at_rlonlat(rlon, rlat)
     return data[2]
