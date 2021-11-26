@@ -8,7 +8,7 @@ from dve.config import (
     dv_has_climate_regime, future_change_factor_label, dv_roundto, dv_units,
     file_exists, filepath_for,
 )
-from dve.data import get_data
+from dve.data import get_data_object
 from dve.config import dv_label
 from dve.math_utils import round_to_multiple
 from dve.timing import timing
@@ -52,7 +52,7 @@ def add(app, config):
                 )
             )
 
-        historical_dataset = get_data(
+        historical_dataset = get_data_object(
             config, design_variable, "historical", historical_dataset_id="table"
         ).data_frame()
 

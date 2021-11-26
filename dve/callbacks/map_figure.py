@@ -21,7 +21,7 @@ from dve.config import (
     file_exists,
     filepath_for,
 )
-from dve.data import get_data
+from dve.data import get_data_object
 from dve.colorbar import (
     discrete_colorscale,
     colorscale_colors,
@@ -224,7 +224,7 @@ def add(app, config):
         # logger.debug(f"colorscale = {colorscale}")
 
         logger.debug("update_ds: get raster dataset")
-        raster_dataset = get_data(
+        raster_dataset = get_data_object(
             config,
             design_variable,
             climate_regime,
@@ -315,7 +315,7 @@ def add(app, config):
             config, design_variable, "historical"
         ):
             logger.debug("update_ds: get station dataset")
-            df = get_data(
+            df = get_data_object(
                 config,
                 design_variable,
                 "historical",

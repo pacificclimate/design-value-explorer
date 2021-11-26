@@ -8,7 +8,7 @@ from dash import html
 import dash_bootstrap_components as dbc
 
 from dve.config import dv_has_climate_regime
-from dve.data import get_data
+from dve.data import get_data_object
 from dve.download_utils import (
     download_filename,
     download_url,
@@ -151,7 +151,7 @@ def add(app, config):
         historical_dataset_id,
         future_dataset_id,
     ):
-        dataset = get_data(
+        dataset = get_data_object(
             config,
             design_variable,
             climate_regime,

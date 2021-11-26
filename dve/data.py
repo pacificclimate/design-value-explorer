@@ -322,7 +322,7 @@ def load_file(path):
     raise ValueError(f"Unrecognized file type in path '{path}'")
 
 
-def get_data(
+def get_data_object(
     config,
     design_variable,
     climate_regime,
@@ -360,7 +360,7 @@ def dv_value(
     Get a design variable value for a specified lonlat in rotated pole
     coordinates.
     """
-    dataset = get_data(
+    dataset = get_data_object(
         config,
         design_variable,
         climate_regime,
