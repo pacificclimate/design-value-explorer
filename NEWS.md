@@ -1,5 +1,16 @@
 # News / Release Notes
 
+## 2.1.1
+
+**2021-Nov-25**
+
+Draft production candidate. Bugfix update.
+
+Updates:
+- [Handle unitless DVs](https://github.com/pacificclimate/dash-dv-explorer/pull/204)
+- [Fix errors creating map-click download table](https://github.com/pacificclimate/dash-dv-explorer/pull/203)
+- [Fix errors in callbacks for MI, future](https://github.com/pacificclimate/dash-dv-explorer/pull/200)
+
 ## 2.1.0
 
 **2021-Nov-25**
