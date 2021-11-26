@@ -6,7 +6,7 @@ from dash import dash_table, dcc
 
 from dve.config import (
     dv_has_climate_regime, future_change_factor_label, dv_roundto, dv_units,
-    file_exists, filepath_for,
+    file_exists, filepath_for, units_suffix,
 )
 from dve.data import get_data_object
 from dve.config import dv_label
