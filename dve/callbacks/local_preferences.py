@@ -30,35 +30,42 @@ Local preferences handling is configured in `config.yml` under the key
 the configuration of local preferences is changed. This causes the app to
 reload/update preferences.
 
-- `function_delimiter`: A character that signifies that a `global` item in a
+- `function_marker`: A character that signifies that a `global` item in a
 `ui_elements` is a function rather than a path. See below for details.
 
 - `ui_elements`: list containing definitions for each UI element whose setting
 is managed as a local preference. "UI element" in this context really means
-"Dash Input/Output object", and is identified as in Dash callback definitions
+"Dash Input/Output target", and is identified as in Dash callback definitions
 by its component id and component property. Each list element contains the
 following items:
 
-    - `id`: Component id; addresses a Dash layout element
-    - `prop` Component property name
-    - `global`: Path or function name (indicated by prefix with value of
-    `function_delimiter` item) from which to retrieve the default value for
-    this preference.
-    - `local`: Path in local preferences in which to store preference value. 
-    Optional; if absent, the value of `global` is used.
+    - `selector`: Addresses a Dash callback Input/Output target; format is
+      `<component_id>.<component_property>`
+
+    - `inputs`: A dict of key-value pairs of the form `<name>: <target>`,
+       where `<target>` identifies a callback Input (see above), and
+       `<name>` is the identifier that the value of this Input will be
+       assigned to and which may be used as an interpolated variable in the
+       paths below.
+       Optional: if omitted, only fixed, default are used by the callback.
+
+    - `paths`: Dict containing paths addressing local prefs and/or global
+       config values. (See note below regarding meaning and usage of path
+       strings.) Keys:
+        - `global`: Path or function name (indicated by prefix with value of
+          `function_marker` item) from which to retrieve the default value for
+          this preference.
+        - `local`: Path in local preferences in which to store preference value.
+           Optional; if absent, the value of `global` is used.
     
 A "path" as used above means a dot-delimited sequence of dict selectors that
 address an item in a nested dict. For example, the string `ui.controls.mask.on`
 addresses an item `d["ui"]["controls"]["mask"]["on"]` in dict `d`.
 
-Path strings, both `local` and `global`, can contain variable substitutions. For 
-example, `dvs.{design_variable}.{climate_regime}.colour_map`. Supported
-substitution variables are
-
-- `design_variable`
-- `climate_regime` (selected by Period selector in UI)
-
-Other variables remain unsubstituted in the path string.
+Path strings, both `local` and `global`, can contain variable interpolations.
+For example, `dvs.{design_variable}.{climate_regime}.colour_map`. Variables
+named in the `inputs` property are available for interpolation in these strings.
+Other variables remain unsubstituted in a path string.
 
 Local and global paths for a given UI element need not be the same. Indeed,
 this is exploited so that a single default for all design variables and climate
@@ -115,7 +122,7 @@ def global_path(element, **kwargs):
     Return it raw (unsubstituted) if no kwargs are supplied, otherwise,
     substitute (string.format) the supplied kwargs in the raw path.
     """
-    raw = element["global"]
+    raw = element["paths"]["global"]
     if len(kwargs) == 0:
         return raw
     return raw.format(**kwargs)
@@ -127,7 +134,8 @@ def local_path(element, **kwargs):
     Return it raw (unsubstituted) if no kwargs are supplied, otherwise,
     substitute (string.format) the supplied kwargs in the raw path.
     """
-    raw = element.get("local", element["global"])
+    paths = element["paths"]
+    raw = paths.get("local", paths["global"])
     if len(kwargs) == 0:
         return raw
     return raw.format(**kwargs)
@@ -148,12 +156,13 @@ def add(app, config):
     # local storage, add a new item to a list.
     updatable_ui_elements = path_get(config, "local_preferences.ui_elements")
     path_separator = path_get(config, "local_preferences.path_separator")
-    function_prefix = path_get(config, "local_preferences.function_prefix")
+    function_marker = path_get(config, "local_preferences.function_marker")
 
+    # TODO: Use flexible callback signature to simplify args unpacking
     @app.callback(
         Output("local_preferences", "data"),
         Input("local_preferences", "modified_timestamp"),
-        *(Input(e["id"], e["prop"]) for e in updatable_ui_elements),
+        *(Input(*e["selector"].split(".")) for e in updatable_ui_elements),
         State("local_preferences", "data"),
         State("design_variable", "value"),
         State("climate_regime", "value"),
@@ -169,9 +178,6 @@ def add(app, config):
             design_variable,
             climate_regime,
         ) = args
-        logger.debug(
-            f"update_local_preferences local_preferences_ts={local_preferences_ts}"
-        )
 
         # Helper
         def init_local_preferences(preserve_local=True):
@@ -183,7 +189,7 @@ def add(app, config):
                 gpath = global_path(element, **kwargs)
                 global_value = (
                     default_value_function[gpath[1:]](config, **kwargs)
-                    if gpath.startswith(function_prefix)
+                    if gpath.startswith(function_marker)
                     else path_get(config, gpath, separator=path_separator)
                 )
                 lpath = local_path(element, **kwargs)
@@ -219,7 +225,7 @@ def add(app, config):
             or local_preferences_ts < 0
             or local_preferences is None
         ):
-            logger.debug(f"initializing local_preferences from config")
+            logger.debug(f"Initializing local_preferences from config")
             return init_local_preferences(preserve_local=False)
 
         # If the local preferences is out of date, update it from the global
@@ -228,20 +234,19 @@ def add(app, config):
         if path_get(local_preferences, "local_preferences.version") != path_get(
             config, "local_preferences.version"
         ):
-            logger.debug(f"updating local_preferences from config")
+            logger.debug(f"Updating local_preferences from new config")
             return init_local_preferences(preserve_local=True)
 
         ctx = dash.callback_context
 
         # Otherwise, one or more UI elements caused the change. Save those
         # in local_preferences.
-        logger.debug("updating local preferences from UI change")
         local_preferences_output = local_preferences
         change = False
         for element, input_value in zip(
             updatable_ui_elements, updatable_ui_inputs
         ):
-            if triggered_by(f'{element["id"]}.', ctx):
+            if triggered_by(f'{element["selector"]}', ctx):
                 change = True
                 path_set(
                     local_preferences_output,
@@ -276,24 +281,17 @@ def add(app, config):
         """
 
         def callback(
+            per_ui_inputs,
             local_preferences_ts,
-            design_variable,
-            climate_regime,
             local_preferences,
         ):
             if not local_preferences_ts or local_preferences_ts < 0:
                 return dash.no_update
-            # if not any(
-            #     v in local_path(ui_element)
-            #     for v in ("design_variable", "climate_regime")
-            # ):
-            #     return dash.no_update
             return path_get(
                 local_preferences,
                 local_path(
                     ui_element,
-                    design_variable=design_variable,
-                    climate_regime=climate_regime,
+                    **per_ui_inputs,
                 ),
                 separator=path_separator,
             )
@@ -302,10 +300,16 @@ def add(app, config):
 
     # Register callback for each UI element.
     for ui_element in updatable_ui_elements:
+        output = Output(*(ui_element["selector"].split(".")))
+        per_ui_inputs = {
+            name: Input(*selector.split("."))
+            for name, selector in ui_element.get("inputs", {}).items()
+        }
         app.callback(
-            Output(ui_element["id"], ui_element["prop"]),
-            Input("local_preferences", "modified_timestamp"),
-            Input("design_variable", "value"),
-            Input("climate_regime", "value"),
-            State("local_preferences", "data"),
+            output=output,
+            inputs=dict(
+                per_ui_inputs=per_ui_inputs,
+                local_preferences_ts=Input("local_preferences", "modified_timestamp"),
+                local_preferences=State("local_preferences", "data"),
+            )
         )(make_ui_update_callback(ui_element))
