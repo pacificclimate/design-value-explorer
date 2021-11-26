@@ -48,8 +48,12 @@ def validate(config):
     for design_variable in config["ui"]["dvs"]:
 
         # Validate historical filepaths, if present
-        if dv_has_climate_regime(config, design_variable, "historical"):
-            cfg_base_path = f"dvs/{design_variable}/historical/datasets"
+        cfg_base_path = f"dvs/{design_variable}/historical/datasets"
+        if path_get(config, cfg_base_path, separator="/") is None:
+            logger.info(
+                f"No historical datasets specified for {design_variable}"
+            )
+        else:
             for cfg_ext_path in (
                 "model",
                 "reconstruction",
@@ -60,15 +64,15 @@ def validate(config):
                     config, f"{cfg_base_path}/{cfg_ext_path}", separator="/"
                 )
 
-        # Validate future filepaths. These must always be present.
+        # Validate future filepaths, if present.
         cfg_base_path = f"dvs/{design_variable}/future/datasets"
-        for cfg_ext_path in config["ui"]["future_change_factors"]:
-            validate_config(
-                config,
-                f"{cfg_base_path}/{cfg_ext_path}",
-                log=logger.error,
-                separator="/",
-            )
+        if path_get(config, cfg_base_path, separator="/") is None:
+            logger.info(f"No future datasets specified for {design_variable}")
+        else:
+            for cfg_ext_path in config["ui"]["future_change_factors"]:
+                validate_config(
+                    config, f"{cfg_base_path}/{cfg_ext_path}", separator="/",
+                )
 
 
 def filepath_for(
