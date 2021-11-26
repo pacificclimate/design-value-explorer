@@ -9,7 +9,7 @@ from dve.config import (
     dv_colour_scale_disable_logarithmic,
     filepath_for,
 )
-from dve.data import get_data
+from dve.data import get_data_object
 import dve.layout
 from dve.math_utils import sigfigs, round_to_multiple
 
@@ -76,7 +76,7 @@ def add(app, config):
         ):
             return (0, 0, 1, {}, (0, 0))
 
-        data = get_data(
+        data = get_data_object(
             config,
             design_variable,
             climate_regime,
