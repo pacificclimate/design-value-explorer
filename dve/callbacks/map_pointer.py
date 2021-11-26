@@ -1,5 +1,6 @@
 import logging
 import functools
+import math
 
 import dash
 from dash.dependencies import Input, Output, State
@@ -100,7 +101,7 @@ def map_pointer_table(
                                     dv_roundto(
                                         config, design_variable, climate_regime
                                     ),
-                                ),
+                                ) if not math.isnan(data_value) else "n/a",
                                 style={
                                     "color": "red"
                                     if design_variable == selected_dv
