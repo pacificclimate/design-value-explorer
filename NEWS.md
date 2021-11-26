@@ -1,5 +1,11 @@
 # News / Release Notes
 
+## 2.1.3
+
+**2021-Nov-26**
+
+Draft production candidate. Fixes double-update problem.
+
 ## 2.1.2
 
 **2021-Nov-25**
