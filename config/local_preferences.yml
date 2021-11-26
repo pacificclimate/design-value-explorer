@@ -1,9 +1,15 @@
 # For documentation of this config, see dve/callbacks/local_preferences.py
 
-version: 16
+version: 17
 path_separator: ";"
 function_marker: "@"
 ui_elements:
+  # Adding this local pref causes the double-update problem to occur.
+  # This is diagnostic, of course, but no time to pursue it. TODO.
+  # - selector: design_variable.value
+  #    paths:
+  #      global: ui;controls;design-value-id;value
+
   - selector: main_tabs.active_tab
     paths:
       global: ui;controls;main_tabs;active_tab
