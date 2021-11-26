@@ -1,4 +1,4 @@
-version: 15
+version: 16
 path_separator: ";"
 function_prefix: "@"
 ui_elements:
