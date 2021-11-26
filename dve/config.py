@@ -128,6 +128,12 @@ def nice_units(config, units):
         return units, " "
 
 
+def units_suffix(units, pattern=" ({units})"):
+    if units is None or units == "":
+        return ""
+    return pattern.format(units=units)
+
+
 def dv_units(config, design_variable, climate_regime, nice=True):
     """
     Return the units of a given design variable, for historical or future
@@ -155,7 +161,7 @@ def dv_label(
         else ""
     )
     units = (
-        f" ({dv_units(config, design_variable, climate_regime)})"
+        units_suffix(dv_units(config, design_variable, climate_regime))
         if with_units
         else ""
     )
