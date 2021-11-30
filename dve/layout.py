@@ -121,7 +121,9 @@ def main(app, config):
             dbc.Row(
                 [
                     dbc.Col(
-                        html.Label("Design Variable"), xs=12, md=3, lg=2, xxl=1
+                        html.Label("Design Variable"),
+                        xs=12, md=3, lg=2, xxl=1,
+                        className="align-self-center",
                     ),
                     dbc.Col(
                         dcc.Dropdown(
@@ -133,6 +135,7 @@ def main(app, config):
                         md=9,
                         lg=6,
                         xxl=4,
+                        className="align-self-center",
                     ),
                     dbc.Col(html.A()),
                 ]
