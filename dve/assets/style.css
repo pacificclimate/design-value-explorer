@@ -1,0 +1,12 @@
+#climate_regime label {
+    margin: 0.75em 0 !important;
+    position: relative;
+}
+
+#climate_regime label input {
+    margin-right: 0.5em;
+}
+
+#global_warming label {
+    margin: 0.5em 0;
+}

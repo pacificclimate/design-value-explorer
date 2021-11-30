@@ -185,14 +185,18 @@ def main(app, config):
                                 **config["ui"]["controls"]["climate-regime"],
                             ),
                             html.Div(
-                                dcc.Dropdown(
-                                    id="future_dataset_id",
-                                    options=future_dataset_ctrl_options,
-                                    **config["ui"]["controls"][
-                                        "future-dataset"
-                                    ],
-                                ),
-                                style={"margin-top": "4em"},
+                                id="global_warming",
+                                children=[
+                                    html.Label("Historical"),
+                                    dcc.Dropdown(
+                                        id="future_dataset_id",
+                                        options=future_dataset_ctrl_options,
+                                        **config["ui"]["controls"][
+                                            "future-dataset"
+                                        ],
+                                    )
+                                ],
+                                style={},
                             ),
                             daq.BooleanSwitch(
                                 id="show_stations",
