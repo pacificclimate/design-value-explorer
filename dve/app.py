@@ -56,7 +56,7 @@ def get_app(config):
     app.config.suppress_callback_exceptions = True
 
     # Add layout
-    app.layout = dve.layout.main(config)
+    app.layout = dve.layout.main(app, config)
 
     # Add callbacks
     dve.callbacks.local_preferences.add(app, config)

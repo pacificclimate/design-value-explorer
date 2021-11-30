@@ -55,7 +55,7 @@ def climate_regime_ctrl_options(config, which="long"):
     ]
 
 
-def main(config):
+def main(app, config):
     """
     Top-level layout component. `app.layout` should be set to what this function
     returns.
@@ -88,7 +88,36 @@ def main(config):
             for design_variable in config["ui"]["dvs"]
         ]
         return [
-            dbc.Row(dbc.Col(html.H1("Design Value Explorer"))),
+            dbc.Row(
+                [
+                    dbc.Col(
+                        html.A(
+                            html.Img(
+                                src=app.get_asset_url('pcic-logo.png'),
+                            ),
+                            href="https://pacificclimate.org/",
+                            target="_blank",
+                            title="Pacific Climate Impacts Consortium website",
+                        ),
+                        xs=6,
+                        className="align-self-center text-end",
+                    ),
+                    dbc.Col(
+                        html.A(
+                            "Design Value Explorer",
+                            href=app.get_relative_path("/"),
+                            style={
+                                "font-size": "2em",
+                                "color": "inherit",
+                                "text-decoration": "none",
+                            }
+                        ),
+                        xs=6,
+                        className="align-self-center text-start",
+                    ),
+                ],
+                className="pb-1 mb-3 border-bottom",
+            ),
             dbc.Row(
                 [
                     dbc.Col(
