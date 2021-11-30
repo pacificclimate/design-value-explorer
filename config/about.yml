@@ -26,6 +26,10 @@ tabs:
           whatsoever, including, without limitation, indirect or consequential loss or damage, arising from reliance
           upon the data or derived information.
 
+      - header: Methods
+        body: |
+          [Methods used to derive design values](https://pacificclimate.org/)
+
   - label: Credits
     cards:
       - header: Development
@@ -44,8 +48,6 @@ tabs:
         body: |
           Please address questions about science and interpretation of the
           data presented in this tool to [Regional Climate Impacts](mailto:climate@uvic.ca).
-      - header: Pacific Climate Impacts Consortium
-        body: See [PCIC Contact page](https://pacificclimate.org/contact-us).
 
   - label: Team
     cards:
@@ -54,7 +56,7 @@ tabs:
       - header: '[James Hiebert](https://pacificclimate.org/about-pcic/people/james-hiebert)'
         body: Development team lead.
       - header: '[Rod Glover](https://pacificclimate.org/about-pcic/people/rod-glover)'
-        body: Developer.
+        body: Frontend development lead.
       - header: '[Matthew Benstead](https://pacificclimate.org/about-pcic/people/matthew-benstead)'
         body: System administrator. Deployment and security.
       - header: Nic Annau
