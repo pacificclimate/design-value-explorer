@@ -55,7 +55,7 @@ def climate_regime_ctrl_options(config, which="long"):
     ]
 
 
-def main(config):
+def main(app, config):
     """
     Top-level layout component. `app.layout` should be set to what this function
     returns.
@@ -88,11 +88,42 @@ def main(config):
             for design_variable in config["ui"]["dvs"]
         ]
         return [
-            dbc.Row(dbc.Col(html.H1("Design Value Explorer"))),
             dbc.Row(
                 [
                     dbc.Col(
-                        html.Label("Design Variable"), xs=12, md=3, lg=2, xxl=1
+                        html.A(
+                            html.Img(
+                                src=app.get_asset_url('pcic-logo.png'),
+                            ),
+                            href="https://pacificclimate.org/",
+                            target="_blank",
+                            title="Pacific Climate Impacts Consortium website",
+                        ),
+                        xs=6,
+                        className="align-self-center text-end",
+                    ),
+                    dbc.Col(
+                        html.A(
+                            "Design Value Explorer",
+                            href=app.get_relative_path("/"),
+                            style={
+                                "font-size": "2em",
+                                "color": "inherit",
+                                "text-decoration": "none",
+                            }
+                        ),
+                        xs=6,
+                        className="align-self-center text-start",
+                    ),
+                ],
+                className="pb-1 mb-3 border-bottom",
+            ),
+            dbc.Row(
+                [
+                    dbc.Col(
+                        html.Label("Design Variable"),
+                        xs=12, md=3, lg=2, xxl=1,
+                        className="align-self-center",
                     ),
                     dbc.Col(
                         dcc.Dropdown(
@@ -104,6 +135,7 @@ def main(config):
                         md=9,
                         lg=6,
                         xxl=4,
+                        className="align-self-center",
                     ),
                     dbc.Col(html.A()),
                 ]
@@ -153,14 +185,18 @@ def main(config):
                                 **config["ui"]["controls"]["climate-regime"],
                             ),
                             html.Div(
-                                dcc.Dropdown(
-                                    id="future_dataset_id",
-                                    options=future_dataset_ctrl_options,
-                                    **config["ui"]["controls"][
-                                        "future-dataset"
-                                    ],
-                                ),
-                                style={"margin-top": "4em"},
+                                id="global_warming",
+                                children=[
+                                    html.Label("Historical"),
+                                    dcc.Dropdown(
+                                        id="future_dataset_id",
+                                        options=future_dataset_ctrl_options,
+                                        **config["ui"]["controls"][
+                                            "future-dataset"
+                                        ],
+                                    )
+                                ],
+                                style={},
                             ),
                             daq.BooleanSwitch(
                                 id="show_stations",
