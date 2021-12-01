@@ -425,7 +425,7 @@ def main(app, config):
                             children=dbc.Row(
                                 dbc.Col(interpret(tab["content"]), xs=12, xl=6)
                             ),
-                            className="pt-3",
+                            className="help_tab pt-3",
                         )
                         for index, tab in enumerate(config["help"]["tabs"])
                     ],
@@ -449,7 +449,7 @@ def main(app, config):
                             tab["cards"],
                             col_args=dict(xs=12, md=6, xxl=4, className="mb-3"),
                         ),
-                        className="pt-3",
+                        className="about_tab pt-3",
                     )
                     for index, tab in enumerate(config["about"]["tabs"])
                 ],

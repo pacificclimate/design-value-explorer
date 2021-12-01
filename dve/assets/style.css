@@ -10,3 +10,16 @@
 #global_warming label {
     margin: 0.5em 0;
 }
+
+.about_tab table,
+.help_tab table
+{
+    margin-bottom: 1rem;
+}
+
+.about_tab td, .about_tab th,
+.help_tab td, .help_tab th
+{
+    border: 1px solid lightgray;
+    padding: 0 0.5em;
+}
