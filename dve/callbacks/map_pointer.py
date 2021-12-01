@@ -8,7 +8,7 @@ from dash.exceptions import PreventUpdate
 from dash import html
 import dash_bootstrap_components as dbc
 
-from dve.config import dv_has_climate_regime
+from dve.config import dv_has_climate_regime, filepath_for
 from dve.data import get_data_object
 from dve.download_utils import (
     download_filename,
@@ -142,6 +142,9 @@ def value_table(*items):
     )
 
 
+historical_dataset_id = "reconstruction"
+
+
 def add(app, config):
     @functools.lru_cache(maxsize=10)
     def download_info(
@@ -181,8 +184,26 @@ def add(app, config):
         if hover_data is None or hover_data["points"][0]["curveNumber"] <= 1:
             return dash.no_update
 
-        historical_dataset_id = "reconstruction"
+        # Ignore if there is no data for the current design variable,
+        # climate regime and dataset (future GW, if future).
+        raster_filepath = filepath_for(
+            config,
+            design_variable,
+            climate_regime,
+            historical_dataset_id,
+            future_dataset_id,
+        )
+        if raster_filepath is None:
+            return None
 
+        # Clear if only the DV selection has changed
+        ctx = dash.callback_context
+        if ctx.triggered and ctx.triggered[0]["prop_id"].startswith(
+            "design_variable"
+        ):
+            return None
+
+        # TODO: This is likely irrelevant now -- see clear if no data.
         if not dv_has_climate_regime(config, design_variable, climate_regime):
             raise PreventUpdate
 
@@ -234,8 +255,26 @@ def add(app, config):
         if click_data is None or click_data["points"][0]["curveNumber"] <= 1:
             return dash.no_update
 
-        historical_dataset_id = "reconstruction"
+        # Ignore if there is no data for the current design variable,
+        # climate regime and dataset (future GW, if future).
+        raster_filepath = filepath_for(
+            config,
+            design_variable,
+            climate_regime,
+            historical_dataset_id,
+            future_dataset_id,
+        )
+        if raster_filepath is None:
+            return None
 
+        # Clear if only the DV selection has changed
+        ctx = dash.callback_context
+        if ctx.triggered and ctx.triggered[0]["prop_id"].startswith(
+            "design_variable"
+        ):
+            return None
+
+        # TODO: This is likely irrelevant now -- see clear if no data.
         if not dv_has_climate_regime(config, design_variable, climate_regime):
             raise PreventUpdate
 
@@ -287,15 +326,26 @@ def add(app, config):
         if click_data is None or click_data["points"][0]["curveNumber"] <= 1:
             return dash.no_update
 
-        historical_dataset_id = "reconstruction"
+        # Clear if there is no data for the current design variable,
+        # climate regime and dataset (future GW, if future).
+        raster_filepath = filepath_for(
+            config,
+            design_variable,
+            climate_regime,
+            historical_dataset_id,
+            future_dataset_id,
+        )
+        if raster_filepath is None:
+            return None
 
-        # If only the DV selection has changed, don't update.
+        # Clear if only the DV selection has changed
         ctx = dash.callback_context
         if ctx.triggered and ctx.triggered[0]["prop_id"].startswith(
             "design_variable"
         ):
-            raise PreventUpdate
+            return None
 
+        # TODO: This is likely irrelevant now -- see clear if no data.
         # If the selected DV doesn't cover the selected climate regime,
         # don't update.
         if not dv_has_climate_regime(config, design_variable, climate_regime):
