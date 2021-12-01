@@ -7,12 +7,13 @@
   the change factors (CF), relative to the reference period, at the specified
   levels of global warming.
 
-  - For temperature-based variables, the CFs are additive and in units of
-    the original variable.
-  - For all other variables, the CFs are multiplicative factors.
+  - For temperature-based variables, the change factors are additive and
+    in units of the original variable.
+  - For all other variables, the change factors are multiplicative and
+    hence unitless.
 
   There are some gaps in the Tables in this version of DVE:
 
-  - Future CFs for MI are not available at this time.
-  - IDFCF, RHAnn, Tmax and Tmin are not part of the NBCC, but were produced
-    for the DVE.
+  - Future change factors for MI are not available at this time.
+  - Design variables IDFCF, RHAnn, Tmax and Tmin are not part of the NBCC,
+    but were produced for the DVE.

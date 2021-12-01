@@ -57,7 +57,7 @@
 
   The following options are managed as preferences:
 
-  | Tab | Option | Associated with |
+  | On tab | Option | Associated with |
   | ----- | --- | --- |
   | -     | Main tab selection | - |
   | Map   | Period | - |
@@ -70,5 +70,7 @@
   | Help  | Secondary tab selection | - |
   | About | Secondary tab selection | - |
 
-  Note: The associations for each option (particularly Map options) have
-  been selected with with maximum utility for viewing the data in mind.
+  Note: The associations for each option have
+  been selected for maximum utility in viewing data. This means, for example,
+  that Overlay Options are not associated with DV and Period, but Colour Scale
+  Options are.
