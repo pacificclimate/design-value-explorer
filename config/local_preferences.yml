@@ -1,6 +1,6 @@
 # For documentation of this config, see dve/callbacks/local_preferences.py
 
-version: 17
+version: 19
 path_separator: ";"
 function_marker: "@"
 ui_elements:
@@ -21,6 +21,14 @@ ui_elements:
   - selector: about_tabs.active_tab
     paths:
       global: ui;controls;about_tabs;active_tab
+
+  - selector: climate_regime.value
+    paths:
+      global: ui;controls;climate-regime;value
+
+  - selector: future_dataset_id.value
+    paths:
+      global: ui;controls;future-dataset;value
 
   - selector: show_stations.on
     inputs:
