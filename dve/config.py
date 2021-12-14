@@ -117,6 +117,10 @@ def dv_name(config, design_variable):
     return design_variable
 
 
+def dv_tier(config, design_variable):
+    return config["dvs"][design_variable]["tier"]
+
+
 def nice_units(config, units):
     try:
         definition = config["units"][units]
@@ -248,6 +252,7 @@ def map_title(
         dv=dv_label(
             config, design_variable, climate_regime, with_description=True
         ),
+        tier=dv_tier(config, design_variable),
         climate_regime=climate_regime_label(
             config, climate_regime, which="short"
         ),

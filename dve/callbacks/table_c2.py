@@ -5,8 +5,8 @@ from dash.exceptions import PreventUpdate
 from dash import dash_table, dcc
 
 from dve.config import (
-    dv_has_climate_regime, future_change_factor_label, dv_roundto, dv_units,
-    file_exists, filepath_for, units_suffix,
+    dv_has_climate_regime, future_change_factor_label, dv_roundto, dv_name,
+    dv_units, file_exists, filepath_for, units_suffix, dv_tier,
 )
 from dve.data import get_data_object
 from dve.config import dv_label
@@ -20,6 +20,7 @@ timing_log = logger.info
 
 def add(app, config):
     def make_data_table(design_variable):
+        name = dv_name(config, design_variable)
         historical_name_and_units = dv_label(
             config, design_variable, climate_regime="historical"
         )
@@ -30,7 +31,9 @@ def add(app, config):
         future_dataset_ids = config["ui"]["future_change_factors"]
 
         title = config["ui"]["labels"]["table_C2"]["title"].format(
-            historical_name_and_units
+            name=name,
+            tier=dv_tier(config, design_variable),
+            name_and_units=historical_name_and_units,
         )
 
         # Show error message if configured data file does not exist.
