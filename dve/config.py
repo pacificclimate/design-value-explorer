@@ -248,7 +248,7 @@ def map_title(
         nice=True,
     )
     dataset = "" if climate_regime == "historical" else f" ({dl})"
-    return config["ui"]["labels"]["map"]["title"].format(
+    return config["ui"]["labels"]["map"]["title"][climate_regime].format(
         dv=dv_label(
             config, design_variable, climate_regime, with_description=True
         ),
