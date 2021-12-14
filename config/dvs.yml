@@ -1,5 +1,6 @@
 DRWP5:
   description: Driving rain wind pressure, 1/5
+  tier: 3
   future:
     datasets:
       '0.5': data/change_factors/driving_rain_wind_pressures_q5yr/D0.5C/DRWP5_CanRCM4_ensmean_CF_DT0.5.nc
@@ -33,6 +34,7 @@ DRWP5:
       sigfigs: 3
 HDD:
   description: "Heating degree days above 18 \xB0C"
+  tier: 1
   future:
     datasets:
       '0.5': data/change_factors/degree_days_below_18/D0.5C/HDD_CanRCM4_ensmean_CF_DT0.5.nc
@@ -66,6 +68,7 @@ HDD:
       sigfigs: 3
 IDFCF:
   description: IDF future change factor
+  tier: 2
   future:
     datasets:
       '0.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2016_DT0.5_Reconstruction.nc
@@ -95,6 +98,7 @@ IDFCF:
       default: linear
 MI:
   description: Moisture index
+  tier: 3
   future:
     # The following are irrelevant, since MI has no future data of any kind.
     # But if these items are absent, errors occur in the callbacks. This is the
@@ -121,6 +125,7 @@ MI:
       sigfigs: 3
 PAnn:
   description: Annual total precipitation
+  tier: 2
   future:
     datasets:
       '0.5': data/change_factors/annual_total_precipitation/D0.5C/PAnn_CanRCM4_ensmean_CF_DT0.5.nc
@@ -154,6 +159,7 @@ PAnn:
       sigfigs: 3
 R15m10:
   description: 15-min rainfall, 1/10
+  tier: 2
   future:
     datasets:
       '0.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2016_DT0.5_Reconstruction.nc
@@ -187,6 +193,7 @@ R15m10:
       sigfigs: 3
 R1d50:
   description: 1-day rainfall, 1/50
+  tier: 2
   future:
     datasets:
       '0.5': data/change_factors/IDF_scale_factors/scalef_CanRCM4-LE_2016_DT0.5_Reconstruction.nc
@@ -220,6 +227,7 @@ R1d50:
       sigfigs: 3
 RAnn:
   description: Annual total rainfall
+  tier: 2
   future:
     datasets:
       '0.5': data/change_factors/annual_rain/D0.5C/RAnn_CanRCM4_ensmean_CF_DT0.5.nc
@@ -253,6 +261,7 @@ RAnn:
       sigfigs: 3
 RHAnn:
   description: Annual mean relative humidity
+  tier: 3
   future:
     datasets:
       '0.5': data/change_factors/annual_relative_humidity/D0.5C/RHann_CanRCM4_ensmean_CF_DT0.5.nc
@@ -286,6 +295,7 @@ RHAnn:
       sigfigs: 3
 RL50:
   description: Annual maximum rain-on-snow, 1/50
+  tier: 3
   future:
     datasets:
       '0.5': data/change_factors/rain_q50yr/D0.5C/RL50_CanRCM4_ensmean_CF_DT0.5.nc
@@ -319,6 +329,7 @@ RL50:
       sigfigs: 3
 SL50:
   description: Annual maximum snow load, 1/50
+  tier: 3
   future:
     datasets:
       '0.5': data/change_factors/snow_q50yr/D0.5C/SL50_CanRCM4_ensmean_CF_DT0.5.nc
@@ -352,6 +363,7 @@ SL50:
       sigfigs: 3
 TJan1.0:
   description: January temperature 1%
+  tier: 1
   future:
     datasets:
       '0.5': data/change_factors/january_1%_dry/D0.5C/TJan1.0_CanRCM4_ensmean_CF_DT0.5.nc
@@ -386,6 +398,7 @@ TJan1.0:
       sigfigs: 3
 TJan2.5:
   description: January temperature 2.5%
+  tier: 1
   future:
     datasets:
       '0.5': data/change_factors/january_2.5%_dry/D0.5C/TJan2.5_CanRCM4_ensmean_CF_DT0.5.nc
@@ -420,6 +433,7 @@ TJan2.5:
       sigfigs: 3
 TJul97.5:
   description: July temperature 97.5%
+  tier: 1
   future:
     datasets:
       '0.5': data/change_factors/july_2.5%_dry/D0.5C/TJul2.5_CanRCM4_ensmean_CF_DT0.5.nc
@@ -454,6 +468,7 @@ TJul97.5:
       sigfigs: 3
 Tmax:
   description: Annual maximum daily temperature
+  tier: 1
   future:
     datasets:
       '0.5': data/change_factors/maximum_mean_daily_temperature/D0.5C/Tmax_CanRCM4_ensmean_CF_DT0.5.nc
@@ -488,6 +503,7 @@ Tmax:
       sigfigs: 3
 Tmin:
   description: Annual minimum daily temperature
+  tier: 1
   future:
     datasets:
       '0.5': data/change_factors/minimum_mean_daily_temperature/D0.5C/Tmin_CanRCM4_ensmean_CF_DT0.5.nc
@@ -522,6 +538,7 @@ Tmin:
       sigfigs: 3
 TwJul97.5:
   description: July wet-bulb temperature 97.5%
+  tier: 1
   future:
     datasets:
       '0.5': data/change_factors/july_2.5%_wet/D0.5C/TwJul2.5_CanRCM4_ensmean_CF_DT0.5.nc
@@ -556,6 +573,7 @@ TwJul97.5:
       sigfigs: 3
 WP10:
   description: Annual maximum wind pressure, 1/10
+  tier: 3
   future:
     datasets:
       '0.5': data/change_factors/hourly_wind_pressures_q10wp/D0.5C/WP10_CanRCM4_ensmean_CF_DT0.5.nc
@@ -589,6 +607,7 @@ WP10:
       sigfigs: 3
 WP50:
   description: Annual maximum wind pressure, 1/50
+  tier: 3
   future:
     datasets:
       '0.5': data/change_factors/hourly_wind_pressures_q50wp/D0.5C/WP50_CanRCM4_ensmean_CF_DT0.5.nc
