@@ -158,10 +158,14 @@ def add(app, config):
         # Show info message if design values for requested climate regime do not
         # exist.
         if raster_filepath is None:
+            what = {
+                "historical": "historical values",
+                "future": "future projections",
+            }[climate_regime]
             return message_figure(
-                f"No {climate_regime} data is available for "
-                f"{dv_name(config, design_variable)}. "
-                f"This is an intentional omission."
+                f"No {what} are available for "
+                f"{dv_name(config, design_variable)} "
+                f"at this time."
             )
 
         # Show error message if configured data file does not exist.

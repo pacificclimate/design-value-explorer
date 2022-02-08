@@ -3,18 +3,59 @@ tabs:
     cards:
       - header: Description
         body: |
-          Design Value Explorer presents maps and tables giving values for
-          design variables at locations across Canada based on historical and
-          projected future climate.
+          Design Value Explorer provides revised climatic design data relevant 
+          to the National Building Code of Canada (NBCC 2015, Table C-2) and 
+          the Canadian Highway Bridge Design Code (CHBDC/ CSA S6 2014, 
+          Annex A3.1) that has not yet been reviewed and accepted for 
+          inclusion into updates to these codes, and thus should only be 
+          considered as advisory information. Design decisions should always 
+          be made following the appropriate codes and standards. It is 
+          important to note that it remains the responsibility of the users 
+          of these climatic data to determine whether it is suitable for their 
+          particular purpose. In many instances, new methods were developed 
+          to quality control the underlying raw data and also to make the 
+          best use of these data to calculate design values. State-of-the-art 
+          regional climate model simulations were used both to aid in the 
+          interpolation of historical design values, and also to derive 
+          future changes in these elements. This future-looking information 
+          comes with an associated uncertainty, as fully described for each 
+          design value element in ECCC’s recent Climate Resilient Buildings 
+          and Core Public Infrastructure report (Cannon et al., 2020), 
+          which should be consulted for further guidance. 
 
-      - header: Version
-        body: '{DVE_VERSION}'
+          In brief, Tier 1 variables are those for which there is generally 
+          high or very high confidence in the future projections for a given 
+          level of global warming. These variables reflect the well-understood 
+          thermal response of the climate to external radiative forcing of 
+          the Earth system, and include:
+            - heating degree days
+            - hourly design temperatures (January 2.5% dry bulb, January 1% dry bulb, July 2.5% dry bulb, and July 2.5% wet bulb)
+            - maximum and minimum mean daily air temperatures
+          
+          Tier 2 variables are those for which there is generally medium 
+          confidence in the future projections for a given level of global 
+          warming, and include:
+            - annual total precipitation and annual total rainfall
+            - annual maximum 1-day rain (50-yr return period)
+            - annual maximum 15-min rainfall (10-yr return period)
+            - IDF CFs
+          
+          Tier 3 variables are those for which there is low or very low 
+          confidence in the future projections for a given level of global 
+          warming, and include:
+            - annual mean relative humidity
+            - annual maximum hourly wind pressures (10, 25, 50, and 100-yr return periods)
+            - annual maximum driving rain wind pressures (5-yr return period)
+            - annual maximum snow load & rain-on-snow load (50-yr return period)
+            - moisture index
+            
+          Reference
+          
+          Cannon, A. J., et al. 2020: _Climate-resilient buildings and core 
+          public infrastructure 2020: An assessment of the impact of climate 
+          change on climatic design data in Canada._
+          https://publications.gc.ca/site/eng/9.893021/publication.html
 
-      - header: Author
-        body: '[Pacific Climate Impacts Consortium (PCIC)](https://pacificclimate.org/)'
-
-      - header: Terms of Use
-        body: Please see PCIC's [terms of use](https://pacificclimate.org/terms-of-use).
 
       - header: No Warranty
         color: warning
@@ -25,6 +66,19 @@ tabs:
           your own risk. In no event will the Pacific Climate Impacts Consortium be liable for any loss or damage
           whatsoever, including, without limitation, indirect or consequential loss or damage, arising from reliance
           upon the data or derived information.
+
+      - header: Version
+        body: '{DVE_VERSION}'
+
+      - header: Author
+        body: '[Pacific Climate Impacts Consortium (PCIC)](https://pacificclimate.org/)'
+
+      - header: Terms of Use
+        body: Please see PCIC's [terms of use](https://pacificclimate.org/terms-of-use).
+
+      - header: Methods
+        body: |
+          [Methods used to derive design values](https://pacificclimate.org/)
 
   - label: Credits
     cards:
@@ -44,8 +98,6 @@ tabs:
         body: |
           Please address questions about science and interpretation of the
           data presented in this tool to [Regional Climate Impacts](mailto:climate@uvic.ca).
-      - header: Pacific Climate Impacts Consortium
-        body: See [PCIC Contact page](https://pacificclimate.org/contact-us).
 
   - label: Team
     cards:
@@ -54,7 +106,7 @@ tabs:
       - header: '[James Hiebert](https://pacificclimate.org/about-pcic/people/james-hiebert)'
         body: Development team lead.
       - header: '[Rod Glover](https://pacificclimate.org/about-pcic/people/rod-glover)'
-        body: Developer.
+        body: Frontend development lead.
       - header: '[Matthew Benstead](https://pacificclimate.org/about-pcic/people/matthew-benstead)'
         body: System administrator. Deployment and security.
       - header: Nic Annau

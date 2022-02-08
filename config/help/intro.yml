@@ -1,33 +1,76 @@
 |
-  This page contains information on how to use the application's user
+  The Help tab contains information on how to use the application's user
   interface. For information on interpreting values and on the science and
   methods behind the data presented in Design Value Explorer, see XXX.
 
   ## Overview
 
-  Design Value Explorer (DVE) enables you to view and download design values
-  from both historical and future projected data sets.
+  Design Value Explorer (DVE) enables enables users to access historical
+  design variables across Canada, in either map or table form, examine
+  projected future change in design variables, and download maps and tables.
 
-  - For historical datasets, there are both observations (station data at
-    specific locations) and interpolated rasters covering most of Canada.
+  - For the historical period, there are both observations (station data at
+    specific locations) and interpolated rasters covering all of Canada.
 
-  - Future projected datasets are rasters covering most of Canada. Each
-    future projected dataset is characterized by a global warming level
+  - For future periods, projections are rasters covering most of Canada. Each
+    future projection is characterized by a global warming level
     in °C above baseline (e.g., 2.0 °C).
 
   ## Main tabs
 
-  DVE presents this data in two ways: As a map and in "Table C-2" format,
+  DVE presents the design data in two ways: As maps and in tabular format,
   under the **Map** and **Table C-2** tabs respectively.
 
-  - The map always shows the rasters (historical or future), and can show an
-    overlay of station observations for historical datasets.
+  - The Map tab shows the interpolated rasters (historical or future), with the
+    option of overlaying station observations for the historical period.
 
-  - Table C-2 always shows both historical and future projected datasets at
-    a set of station locations across Canada.
+  - The Table C-2 tab presents both historical and future projected design values
+    at a set of standard locations compiled in the National Building Code of
+    Canada.
+
+  The **Help** and **About** tabs contain supplementary information
+  about DVE.
 
   ## Design Variable selection
 
-  DVE displays data for exactly one design variable at a time. Select the
-  DV of interest with the **Design Variable** drop-down. This selection
-  applies to both the **Map** tab and the **Table C-2** tab.
+  For both tabs, DVE displays data for one design variable at a time, which is
+  selected from the Design Variable drop-down menu.
+
+  ## Local storage of your preferences
+
+  DVE "remembers" the value of various options you select. In this way,
+  it builds up a local database of your preferences for viewing the data.
+  (This preference information is stored locally in your browser. There is
+  no way for DVE to know who you are apart from the browser you are using.)
+
+  For example, when you select a Colour Map for
+  a map display, DVE stores that selection in association with the currently
+  selected Design Variable and Period. Whenever you select that particular
+  combination of DV and Period again, the stored Colour Map for that
+  combination is set.
+
+  All options start out with default settings. As you use the app,
+  default settings are replaced by your preferences.
+
+  Preference storage persists between sessions with DVE, so your preferences
+  persist even if you close the DVE browser window or refresh the page.
+
+  The following options are managed as preferences:
+
+  | On tab | Option | Associated with |
+  | ----- | --- | --- |
+  | -     | Main tab selection | - |
+  | Map   | Period | - |
+  | Map   | Global Warming | - |
+  | Map   | Stations | - |
+  | Map   | Grid | - |
+  | Map   | Colour Map | Design Variable; Period |
+  | Map   | Scale | Design Variable; Period |
+  | Map   | Num. Colours | Design Variable; Period |
+  | Help  | Secondary tab selection | - |
+  | About | Secondary tab selection | - |
+
+  Note: The associations for each option have
+  been selected for maximum utility in viewing data. This means, for example,
+  that Overlay Options are not associated with DV and Period, but Colour Scale
+  Options are.

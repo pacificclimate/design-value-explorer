@@ -22,6 +22,8 @@ def card_item(card):
     header = card.get("header")
     body = card.get("body")
     return dbc.Card(
+        className="me-3 mb-3 float-start",
+        style={"width": "30%"},
         color=color,
         children=compact(
             (
@@ -34,6 +36,9 @@ def card_item(card):
 
 
 def card_set(cards, row_args={}, col_args={}):
+    return dbc.Row(
+        dbc.Col([card_item(card) for card in cards]), **row_args
+    )
     return dbc.Row(
         [dbc.Col(card_item(card), **col_args) for card in cards], **row_args
     )
@@ -425,7 +430,7 @@ def main(app, config):
                             children=dbc.Row(
                                 dbc.Col(interpret(tab["content"]), xs=12, xl=6)
                             ),
-                            className="pt-3",
+                            className="help_tab pt-3",
                         )
                         for index, tab in enumerate(config["help"]["tabs"])
                     ],
@@ -449,7 +454,7 @@ def main(app, config):
                             tab["cards"],
                             col_args=dict(xs=12, md=6, xxl=4, className="mb-3"),
                         ),
-                        className="pt-3",
+                        className="about_tab pt-3",
                     )
                     for index, tab in enumerate(config["about"]["tabs"])
                 ],
