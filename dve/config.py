@@ -117,6 +117,10 @@ def dv_name(config, design_variable):
     return design_variable
 
 
+def dv_tier(config, design_variable):
+    return config["dvs"][design_variable]["tier"]
+
+
 def nice_units(config, units):
     try:
         definition = config["units"][units]
@@ -244,10 +248,11 @@ def map_title(
         nice=True,
     )
     dataset = "" if climate_regime == "historical" else f" ({dl})"
-    return config["ui"]["labels"]["map"]["title"].format(
+    return config["ui"]["labels"]["map"]["title"][climate_regime].format(
         dv=dv_label(
             config, design_variable, climate_regime, with_description=True
         ),
+        tier=dv_tier(config, design_variable),
         climate_regime=climate_regime_label(
             config, climate_regime, which="short"
         ),

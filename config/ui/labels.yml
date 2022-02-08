@@ -51,10 +51,14 @@ future_change_factors:
   short_ascii: "{} degC"  # deprecated
   long: "{}°C above 1986-2016"
 map:
-  title: "{dv} • {climate_regime}{dataset}"
+  title:
+    historical: "{dv} • {climate_regime}{dataset}"
+    future: "{dv} • Tier {tier} variable • {climate_regime}{dataset}"
 download_table:
   dv: Design value
   units: Units
 table_C2:
-  title: "Design values for {} at Table C2 locations"
+  title: |
+    Design values for {name_and_units} at Table C-2 locations. 
+    For future projections, {name} is a Tier {tier} variable.
   no_station_data: "Variable {} does not have historical data"
