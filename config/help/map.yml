@@ -56,10 +56,10 @@
        units are indicated as "ratio".
 
   For information on controlling the colour scale applied to the rasters,
-  see Colour Scale Options below.
+  see _Colour Scale Options_ section below.
 
-  For information on extracting data from the raster, see Extracting Data
-  From the Map below.
+  For information on extracting data from the raster, see _Extracting Data
+  From the Map_ section below.
 
   ### Station locations
 
@@ -68,7 +68,7 @@
   **Stations** switch to the right ("on" position).
 
   For information on controlling the colour scale applied to the station
-  markers, see Colour Scale Options below.
+  markers, see _Colour Scale Options_ section below.
 
   ### Longitude-latitude grid
 
@@ -86,14 +86,15 @@
   values are displayed as colour in the map.
 
   Summary:
-  - Colour Map determines the fundamental set of
+  - **Colour Map** determines the fundamental set of
   colours used to build the colour scale.
-  - Scale determines whether data values are mapped to the colour scale
+  - **Scale** determines whether data values are mapped to the colour scale
   linearly or logarithmically.
-  - Number of Colours determines how many different
+  - **Num. Colours** determines how many different
     colours are in the resulting colour scale.
-  - Data Range determines what range of data values are
-    represented as colour scale colours.
+  - **Range** determines what range of data values are
+    represented as colour scale colours. Values outside this range are
+    represented as transparent.
 
   ### Notes
 
