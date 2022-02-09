@@ -25,7 +25,7 @@ DRWP5:
         column: DRWP-RL5 (Pa)
         path: data/station_inputs/drwp_rl5_for_maps.csv
       table_C2: data/tables/DRWP5_hist_CFs_TableC2.csv
-    units: kPa
+    units: Pa
     roundto: 10
     colour_map: terrain_r
     scale:
@@ -374,7 +374,7 @@ TJan1.0:
       '3.0': data/change_factors/january_1%_dry/D3.0C/TJan1.0_CanRCM4_ensmean_CF_DT3.0.nc
       '3.5': data/change_factors/january_1%_dry/D3.0C/TJan1.0_CanRCM4_ensmean_CF_DT3.0.nc
     units: degC
-    roundto: 1
+    roundto: 0.1
     colour_map: jet
     scale:
       default: linear
@@ -409,7 +409,7 @@ TJan2.5:
       '3.0': data/change_factors/january_2.5%_dry/D3.0C/TJan2.5_CanRCM4_ensmean_CF_DT3.0.nc
       '3.5': data/change_factors/january_2.5%_dry/D3.0C/TJan2.5_CanRCM4_ensmean_CF_DT3.0.nc
     units: degC
-    roundto: 1
+    roundto: 0.1
     colour_map: jet
     scale:
       default: linear
@@ -444,7 +444,7 @@ TJul97.5:
       '3.0': data/change_factors/july_2.5%_dry/D3.0C/TJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
       '3.5': data/change_factors/july_2.5%_dry/D3.0C/TJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
     units: degC
-    roundto: 1
+    roundto: 0.1
     colour_map: jet
     scale:
       default: linear
@@ -479,7 +479,7 @@ Tmax:
       '3.0': data/change_factors/maximum_mean_daily_temperature/D3.0C/Tmax_CanRCM4_ensmean_CF_DT3.0.nc
       '3.5': data/change_factors/maximum_mean_daily_temperature/D3.5C/Tmax_CanRCM4_ensmean_CF_DT3.5.nc
     units: degC
-    roundto: 1
+    roundto: 0.1
     colour_map: jet
     scale:
       default: linear
@@ -514,7 +514,7 @@ Tmin:
       '3.0': data/change_factors/minimum_mean_daily_temperature/D3.0C/Tmin_CanRCM4_ensmean_CF_DT3.0.nc
       '3.5': data/change_factors/minimum_mean_daily_temperature/D3.5C/Tmin_CanRCM4_ensmean_CF_DT3.5.nc
     units: degC
-    roundto: 1
+    roundto: 0.1
     colour_map: jet
     scale:
       default: linear
@@ -549,7 +549,7 @@ TwJul97.5:
       '3.0': data/change_factors/july_2.5%_wet/D3.0C/TwJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
       '3.5': data/change_factors/july_2.5%_wet/D3.0C/TwJul2.5_CanRCM4_ensmean_CF_DT3.0.nc
     units: degC
-    roundto: 1
+    roundto: 0.1
     colour_map: jet
     scale:
       default: linear
