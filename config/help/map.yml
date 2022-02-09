@@ -203,3 +203,10 @@
   When you have clicked on a cell to display location and Design Variable
   values, you can download this information as a (single) CSV file by
   clicking the **Download this data** button.
+
+  ## Other notes
+
+  1. The **Data from map pointer** table shows a lot of information, and its
+     text is accordingly small. If you are having trouble reading the text,
+     you can use your browser's Zoom In/Out feature (Ctrl+ / Ctrl- keys in
+     Firefox and Chrome browsers) to adjust the text size.
