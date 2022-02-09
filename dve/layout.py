@@ -192,7 +192,7 @@ def main(app, config):
                             html.Div(
                                 id="global_warming",
                                 children=[
-                                    html.Label("Historical"),
+                                    html.Label("Historical", style={}),
                                     dcc.Dropdown(
                                         id="future_dataset_id",
                                         options=future_dataset_ctrl_options,
@@ -201,7 +201,7 @@ def main(app, config):
                                         ],
                                     )
                                 ],
-                                style={},
+                                **config["ui"]["controls"]["global_warming"],
                             ),
                             daq.BooleanSwitch(
                                 id="show_stations",
