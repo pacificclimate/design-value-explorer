@@ -5,7 +5,7 @@
   projection. It is a rectangular graph that has the approximate appearance 
   of a map.
 
-  The aspect ratio of map is affected by two things:
+  The aspect ratio of the map graph is affected by two things:
   - The width of the browser window in which the app is running. You can adjust
     the aspect ratio of the graph by reszing the browser window.
   - Whether and how the graph's built-in zoom feature is used. If you zoom in by 
@@ -14,7 +14,7 @@
     in a very distorted looking map. If this is not suitable, zoom back out and
     choose a different rectangle.
 
-  The content of the map is controlled by two sets of controls:
+  The content of the map graph is controlled by two sets of controls:
 
   - **Overlay Options**: Controls what layers (overlays) are displayed,
     including which of the available historical and future DV rasters.
@@ -42,7 +42,7 @@
   2. The map displays the selected design value field. The map title indicates
      the units of the design values.
 
-  To display a raster of future projected data:
+  To display a raster of future projected change data:
 
   1. Click the **Future change relative to 1986-2016** radio button under
      **Period** in the **Overlay Options** section.
