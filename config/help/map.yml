@@ -1,10 +1,18 @@
 |
-  The Map tab displays the selected design value in a
-  map form. The display resembles a Lambert azimuthal projection,
-  but the aspect ratio changes depending on the browser used and, of course,
-  whether and how the zoom feature is activated.
-  Keep in mind that this is not a web mapping
-  application like Google Maps with a fixed map projection.
+  The **Map** tab displays the selected design value in a map form. 
+  
+  **Important**: The map display is _not_ a web map with a fixed, well-defined 
+  projection. It is a rectangular graph that has the approximate appearance 
+  of a map.
+
+  The aspect ratio of map is affected by two things:
+  - The width of the browser window in which the app is running. You can adjust
+    the aspect ratio of the graph by reszing the browser window.
+  - Whether and how the graph's built-in zoom feature is used. If you zoom in by 
+    clicking on the graph and dragging a rectangle, that rectangle, regardless
+    of aspect ratio, fills the entire graph display area. This can result
+    in a very distorted looking map. If this is not suitable, zoom back out and
+    choose a different rectangle.
 
   The content of the map is controlled by two sets of controls:
 
