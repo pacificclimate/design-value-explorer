@@ -130,7 +130,10 @@ tabs:
           upon the data or derived information.
 
       - header: Version
-        body: '{DVE_VERSION}'
+        body: |
+          **Design Value Explorer {DVE_VERSION_TAG_ONLY}**
+          
+          {DVE_VERSION}
 
       - header: Version Notes
         body: |
