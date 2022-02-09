@@ -33,7 +33,7 @@ DRWP5:
     colorbar:
       sigfigs: 3
 HDD:
-  description: "Heating degree days above 18 \xB0C"
+  description: "Heating degree days below 18 \xB0C"
   tier: 1
   future:
     datasets:
