@@ -1,6 +1,6 @@
 |
-  The Map tab displays the selected design value in
-  map form. The display resemble a Lambert azimuthal projection,
+  The Map tab displays the selected design value in a
+  map form. The display resembles a Lambert azimuthal projection,
   but the aspect ratio changes depending on the browser used and, of course,
   whether and how the zoom feature is activated.
   Keep in mind that this is not a web mapping

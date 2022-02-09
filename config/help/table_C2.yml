@@ -12,8 +12,9 @@
   - For all other variables, the change factors are multiplicative and
     hence unitless.
 
-  There are some gaps in the Tables in this version of DVE:
+  Also note that in this version of DVE:
 
-  - Future change factors for MI are not available at this time.
+  - Future change factors for the Moisture Index, MI, are not available at 
+    this time.
   - Design variables IDFCF, RHAnn, Tmax and Tmin are not part of the NBCC,
-    but were produced for the DVE.
+    but are provided in the Canadian Highway Bridge Design Code.

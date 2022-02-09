@@ -23,7 +23,7 @@ tabs:
           and Core Public Infrastructure report (Cannon et al., 2020), 
           which should be consulted for further guidance. 
 
-          In brief, Tier 1 variables are those for which there is generally 
+          In brief, **Tier 1** variables are those for which there is generally 
           high or very high confidence in the future projections for a given 
           level of global warming. These variables reflect the well-understood 
           thermal response of the climate to external radiative forcing of 
@@ -32,7 +32,7 @@ tabs:
             - hourly design temperatures (January 2.5% dry bulb, January 1% dry bulb, July 2.5% dry bulb, and July 2.5% wet bulb)
             - maximum and minimum mean daily air temperatures
           
-          Tier 2 variables are those for which there is generally medium 
+          **Tier 2** variables are those for which there is generally medium 
           confidence in the future projections for a given level of global 
           warming, and include:
             - annual total precipitation and annual total rainfall
@@ -40,7 +40,7 @@ tabs:
             - annual maximum 15-min rainfall (10-yr return period)
             - IDF CFs
           
-          Tier 3 variables are those for which there is low or very low 
+          **Tier 3** variables are those for which there is low or very low 
           confidence in the future projections for a given level of global 
           warming, and include:
             - annual mean relative humidity
@@ -48,7 +48,69 @@ tabs:
             - annual maximum driving rain wind pressures (5-yr return period)
             - annual maximum snow load & rain-on-snow load (50-yr return period)
             - moisture index
-            
+          
+          Future projections in DVE are presented at specified global warming 
+          levels in °C above a baseline period (1986-2016). 
+          
+          The approximate year at which a specified level of global warming 
+          is reached, according to an ensemble of Earth System Models (CMIP5) 
+          running several alternative emissions scenarios, is provided 
+          in the following table, from Cannon et al. (2020):
+          
+          <table>
+            <tr>
+              <th>Global ∆T</th>
+              <th>RCP8.5</th>
+              <th>RCP6.0</th>
+              <th>RCP4.5</th>
+              <th>RCP2.6</th>
+            </tr>
+            <tr>
+              <th>0.5°C</th>
+              <td align="center" colspan="4">2023</td>
+            </tr>
+            <tr>
+              <th>1.0°C</th>
+              <td align="center">2035</td>
+              <td align="center" colspan="2">2046</td>
+              <td align="center">-</td>
+            </tr>
+            <tr>
+              <th>1.5°C</th>
+              <td align="center">2047</td>
+              <td align="center" colspan="2">2070</td>
+              <td align="center">-</td>
+            </tr>
+            <tr>
+              <th>2.0°C</th>
+              <td align="center">2059</td>
+              <td align="center">2087</td>
+              <td align="center">-</td>
+              <td align="center">-</td>
+            </tr>
+            <tr>
+              <th>2.5°C</th>
+              <td align="center">2069</td>
+              <td align="center">-</td>
+              <td align="center">-</td>
+              <td align="center">-</td>
+            </tr>
+            <tr>
+              <th>3.0°C</th>
+              <td align="center">2080</td>
+              <td align="center">-</td>
+              <td align="center">-</td>
+              <td align="center">-</td>
+            </tr>
+            <tr>
+              <th>3.5°C</th>
+              <td align="center">2090</td>
+              <td align="center">-</td>
+              <td align="center">-</td>
+              <td align="center">-</td>
+            </tr>
+          </table>
+  
           Reference
           
           Cannon, A. J., et al. 2020: _Climate-resilient buildings and core 
@@ -70,6 +132,20 @@ tabs:
       - header: Version
         body: '{DVE_VERSION}'
 
+      - header: Version Notes
+        body: |
+          Note that in in this version of DVE:
+          - The nominal resolution of the interpolation is 4.5 km, true at 60°N.
+          - Future change factors for the Moisture Index, MI, are not 
+            available at this time.
+          - RHAnn, Tmax and Tmin are not part of the NBCC, but are provided 
+            in the Canadian Highway Bridge Design Code.
+          - For projected change factors, only central estimates are provided, 
+            not ranges as is the norm for climate model projections. 
+            Future versions of DVE may include ranges of projected change 
+            factors.
+
+
       - header: Author
         body: '[Pacific Climate Impacts Consortium (PCIC)](https://pacificclimate.org/)'
 
@@ -83,10 +159,18 @@ tabs:
   - label: Credits
     cards:
       - header: Development
-        body: TBD
+        body: |
+          Development of this version of DVE was made possible through funding 
+          and support provided by 
+          Infrastructure Canada and the National Research Council, and also 
+          benefited from collaborative research with the Climate Research 
+          Division of Environment and Climate Change Canada. 
 
       - header: Data
-        body: TBD
+        body: |
+          PCIC gratefully acknowledges Environment and Climate Change Canada, 
+          and specifically the Meteorological Service of Canada, for the 
+          provision of the underlying station data on which DVE is based.
 
   - label: Contact
     cards:
