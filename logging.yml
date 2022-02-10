@@ -25,9 +25,9 @@ handlers:
 loggers:
   dve:
     level: DEBUG
-    handlers: [console]
+    handlers: [console,file]
     propagate: no
 
 root:
   level: DEBUG
-  handlers: [console]
+  handlers: [console,file]

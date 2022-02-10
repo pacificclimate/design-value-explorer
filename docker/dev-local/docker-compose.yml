@@ -18,14 +18,18 @@ services:
         source: ../..
         target: /codebase
 
-      # Logging configuration
+      # Logging
       - type: bind
         source: ../../logging.yml
         target: /opt/dockremap/logging.yml
         read_only: true
-
-      # App configuration for dev (base config file is in dev-local dir)
       - type: bind
+        source: ../../dve_log.txt
+        target: /opt/dockremap/dve_log.txt
+
+      # App configuration for dev
+      - type: bind
+        # NB: base config file is in dev-local dir
         source: ./config.yml
         target: /opt/dockremap/config.yml
         read_only: true

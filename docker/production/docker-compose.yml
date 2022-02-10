@@ -11,11 +11,14 @@ services:
     ports:
       - "30020:5000"
     volumes:
-      # Logging configuration
+      # Logging
       - type: bind
         source: ../../logging.yml
         target: /opt/dockremap/logging.yml
         read_only: true
+      - type: bind
+        source: ../../dve_log.txt
+        target: /opt/dockremap/dve_log.txt
 
       # App configuration
       - type: bind
