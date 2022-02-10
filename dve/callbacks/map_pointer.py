@@ -33,7 +33,7 @@ from dve.map_utils import (
 from dve.math_utils import round_to_multiple
 
 
-logger = logging.getLogger("dve")
+logger = logging.getLogger(__name__)
 
 
 # TODO: Place somewhere else (layout.components)?

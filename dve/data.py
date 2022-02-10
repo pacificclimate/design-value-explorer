@@ -45,7 +45,7 @@ from dve.map_utils import rlonlat_to_rindices, rindices_to_lonlat
 from dve.timing import timing
 
 
-logger = logging.getLogger("dve")
+logger = logging.getLogger(__name__)
 timing_log = logger.info  # Set to None to not log timing
 
 

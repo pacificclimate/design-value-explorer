@@ -110,7 +110,7 @@ from dash.dependencies import Input, Output, State
 from dve.callbacks.utils import triggered_by
 from dve.dict_utils import path_get, path_set
 
-logger = logging.getLogger("dve")
+logger = logging.getLogger(__name__)
 
 
 # Helpers

@@ -39,7 +39,7 @@ from climpyrical.gridding import find_nearest_index
 from climpyrical.mask import stratify_coords
 
 
-logger = logging.getLogger("dve")
+logger = logging.getLogger(__name__)
 timing_log = logger.info  # Set to None to not log timing
 
 

@@ -2,7 +2,7 @@ import logging
 from dash.dependencies import Input, Output
 
 
-logger = logging.getLogger("dve")
+logger = logging.getLogger(__name__)
 
 
 def add(app, config):

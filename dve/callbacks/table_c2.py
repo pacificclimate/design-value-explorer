@@ -14,7 +14,7 @@ from dve.math_utils import round_to_multiple
 from dve.timing import timing
 
 
-logger = logging.getLogger("dve")
+logger = logging.getLogger(__name__)
 timing_log = logger.info
 
 
