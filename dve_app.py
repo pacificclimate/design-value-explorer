@@ -1,16 +1,15 @@
 from argparse import ArgumentParser
-import logging
+import logging.config
+import yaml
 from dve.app import make_app
 
 
+# Set up logging. Logging config is not in main app configuration.
+logging_config_filepath="logging.yml"
+with open(logging_config_filepath, "r") as logging_config_file:
+    logging_config = yaml.safe_load(logging_config_file)
+logging.config.dictConfig(logging_config)
 logger = logging.getLogger("dve")
-formatter = logging.Formatter(
-    "%(asctime)s.%(msecs)03d %(levelname)s [%(module)s.%(funcName)s]: %(message)s", datefmt='%Y-%m-%d %H:%M:%S'
-)
-handler = logging.StreamHandler()
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-logger.setLevel(logging.DEBUG)
 
 
 # Create app
@@ -33,6 +32,7 @@ if __name__ == "__main__":
         action="store_true",
         help="Run in debug mode",
     )
+    # TODO: Possibly remove; logging config is now in `logging.yml`.
     parser.add_argument(
         "-l",
         "--loglevel",

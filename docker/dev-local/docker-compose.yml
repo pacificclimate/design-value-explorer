@@ -18,7 +18,13 @@ services:
         source: ../..
         target: /codebase
 
-      # Development configuration
+      # Logging configuration
+      - type: bind
+        source: ../../logging.yml
+        target: /opt/dockremap/logging.yml
+        read_only: true
+
+      # App configuration for dev (base config file is in dev-local dir)
       - type: bind
         source: ./config.yml
         target: /opt/dockremap/config.yml
@@ -58,4 +64,3 @@ services:
       - type: bind
         source: ./downloads
         target: /downloads
-
