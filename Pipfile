@@ -12,6 +12,7 @@ cftime = "==1.5.2"
 click = "==8.0.3"
 click-plugins = "==1.1.1"
 cligj = "==0.7.2"
+climpyrical = {git = "https://github.com/pacificclimate/climpyrical.git", editable = true}
 cycler = "==0.11.0"
 Cython = "==0.29.27"
 dash = "==2.0.0"
@@ -73,14 +74,10 @@ wcwidth = "==0.2.5"
 Werkzeug = "==2.0.3"
 xarray = "==0.21.1"
 zipp = "==3.7.0"
-
+python-json-logger = "2.0.2"
 
 [dev-packages]
 pytest = "*"
 
 [requires]
 python_version = "3.8"
-
-[packages.climpyrical]
-git = "https://github.com/pacificclimate/climpyrical.git"
-editable = true
