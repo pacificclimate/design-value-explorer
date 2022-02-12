@@ -1,4 +1,4 @@
-# Deployment
+# Deployment for local development and for production
 
 - [Configuration](#configuration)
    - [Environment variables](#environment-variables)

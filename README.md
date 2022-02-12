@@ -8,8 +8,9 @@ Plotly/Dash for interactive visualization of design value fields.
 ## Documentation
 
 - [Installation](docs/installation.md)
-- [Deployment](docs/deployment.md)
+- [Deployment for local development and for production](docs/deployment.md)
 - [Testing](docs/testing.md)
+- [Dev notes](docs/dev-notes.md)
 
 ## Changelog
 
