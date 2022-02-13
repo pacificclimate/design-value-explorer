@@ -21,21 +21,37 @@ def timing(
     description,
     log=None,
     multiplier=1000,
-    start_message="{description}: start",
-    end_message="{description}: elapsed time {elapsed} ms",
+    units="ms",
+    # Requirement: `multiplier` * `units` = `1 s`
+    start_message="Timing [{description}]: start",
+    end_message="Timing [{description}]: end; elapsed {elapsed} {units}",
 ):
     if log is None:
         yield
         return
     start = perf_counter() * multiplier
     if start_message is not None:
-        log(start_message.format(description=description, start=start))
+        log(
+            start_message.format(
+                description=description, start=start, units=units
+            )
+        )
     yield
     end = perf_counter() * multiplier
     elapsed = end - start
     if end_message is not None:
         log(
             end_message.format(
-                description=description, start=start, end=end, elapsed=elapsed
-            )
+                description=description,
+                start=start,
+                end=end,
+                elapsed=elapsed,
+                units=units,
+            ),
+            extra={
+                "item": "timing",
+                "description": description,
+                "elapsed": elapsed,
+                "units": units,
+            },
         )
