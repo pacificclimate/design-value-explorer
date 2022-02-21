@@ -235,6 +235,7 @@ def add(app, config):
     #   properties on a static download link established in layout.py.
     @app.callback(
         Output("data-download-header", "children"),
+        Input("main_tabs", "active_tab"),
         Input("map_main_graph", "clickData"),
         Input("design_variable", "value"),
         Input("climate_regime", "value"),
@@ -242,6 +243,7 @@ def add(app, config):
         Input("future_dataset_id", "value"),
     )
     def display_download_button(
+        main_tabs_active_tab,
         click_data,
         design_variable,
         climate_regime,
@@ -254,6 +256,10 @@ def add(app, config):
         repetitive but no other solution is known.
         """
         # logger.debug(f"click_data {click_data}")
+
+        # Do not update if the tab is not selected
+        if main_tabs_active_tab != "map-tab":
+            return dash.no_update
 
         # Ignore if no click data or if not clicking on map. Map curves are
         # numbered > 1 due to the order they are added as traces to the figure.
@@ -304,15 +310,15 @@ def add(app, config):
 
     @app.callback(
         Output("map_click_info", "children"),
-        [
-            Input("map_main_graph", "clickData"),
-            Input("design_variable", "value"),
-            Input("climate_regime", "value"),
-            # Input("historical_dataset_id", "value"),
-            Input("future_dataset_id", "value"),
-        ],
+        Input("main_tabs", "active_tab"),
+        Input("map_main_graph", "clickData"),
+        Input("design_variable", "value"),
+        Input("climate_regime", "value"),
+        # Input("historical_dataset_id", "value"),
+        Input("future_dataset_id", "value"),
     )
     def display_click_info(
+        main_tabs_active_tab,
         click_data,
         design_variable,
         climate_regime,
@@ -326,9 +332,14 @@ def add(app, config):
         """
         # logger.debug(f"click_data {click_data}")
 
-        # Ignore if no click data or if not clicking on map. Map curves are
-        # numbered > 1 due to the order they are added as traces to the figure.
         with timing("Display click info", log=timing_log_info):
+            # Do not update if the tab is not selected
+            if main_tabs_active_tab != "map-tab":
+                return dash.no_update
+
+            # Ignore if no click data or if not clicking on map. Map curves are
+            # numbered > 1 due to the order they are added as traces to the
+            # figure.
             if (
                 click_data is None
                 or click_data["points"][0]["curveNumber"] <= 1
