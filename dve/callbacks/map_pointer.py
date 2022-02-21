@@ -31,9 +31,12 @@ from dve.map_utils import (
     pointer_value,
 )
 from dve.math_utils import round_to_multiple
+from dve.timing import timing
 
 
 logger = logging.getLogger(__name__)
+timing_log_info = logger.info
+timing_log_debug = logger.debug  # Set to None to not log debug timing
 
 
 # TODO: Place somewhere else (layout.components)?
@@ -101,7 +104,9 @@ def map_pointer_table(
                                     dv_roundto(
                                         config, design_variable, climate_regime
                                     ),
-                                ) if not math.isnan(data_value) else "n/a",
+                                )
+                                if not math.isnan(data_value)
+                                else "n/a",
                                 style={
                                     "color": "red"
                                     if design_variable == selected_dv
@@ -323,60 +328,68 @@ def add(app, config):
 
         # Ignore if no click data or if not clicking on map. Map curves are
         # numbered > 1 due to the order they are added as traces to the figure.
-        if click_data is None or click_data["points"][0]["curveNumber"] <= 1:
-            return dash.no_update
+        with timing("Display click info", log=timing_log_info):
+            if (
+                click_data is None
+                or click_data["points"][0]["curveNumber"] <= 1
+            ):
+                return dash.no_update
 
-        # Clear if there is no data for the current design variable,
-        # climate regime and dataset (future GW, if future).
-        raster_filepath = filepath_for(
-            config,
-            design_variable,
-            climate_regime,
-            historical_dataset_id,
-            future_dataset_id,
-        )
-        if raster_filepath is None:
-            return None
+            # Clear if there is no data for the current design variable,
+            # climate regime and dataset (future GW, if future).
+            raster_filepath = filepath_for(
+                config,
+                design_variable,
+                climate_regime,
+                historical_dataset_id,
+                future_dataset_id,
+            )
+            if raster_filepath is None:
+                return None
 
-        # Clear if only the DV selection has changed
-        ctx = dash.callback_context
-        if ctx.triggered and ctx.triggered[0]["prop_id"].startswith(
-            "design_variable"
-        ):
-            return None
+            # Clear if only the DV selection has changed
+            ctx = dash.callback_context
+            if ctx.triggered and ctx.triggered[0]["prop_id"].startswith(
+                "design_variable"
+            ):
+                return None
 
-        # TODO: This is likely irrelevant now -- see clear if no data.
-        # If the selected DV doesn't cover the selected climate regime,
-        # don't update.
-        if not dv_has_climate_regime(config, design_variable, climate_regime):
-            raise PreventUpdate
+            # TODO: This is likely irrelevant now -- see clear if no data.
+            # If the selected DV doesn't cover the selected climate regime,
+            # don't update.
+            if not dv_has_climate_regime(
+                config, design_variable, climate_regime
+            ):
+                raise PreventUpdate
 
-        rlon, rlat = pointer_rlonlat(click_data)
-        lon, lat, url, filename = download_info(
-            rlon,
-            rlat,
-            design_variable,
-            climate_regime,
-            historical_dataset_id,
-            future_dataset_id,
-        )
-        download_data = get_download_data(
-            rlon,
-            rlat,
-            config,
-            climate_regime,
-            historical_dataset_id,
-            future_dataset_id,
-        )
+            rlon, rlat = pointer_rlonlat(click_data)
+            lon, lat, url, filename = download_info(
+                rlon,
+                rlat,
+                design_variable,
+                climate_regime,
+                historical_dataset_id,
+                future_dataset_id,
+            )
+            download_data = get_download_data(
+                rlon,
+                rlat,
+                config,
+                climate_regime,
+                historical_dataset_id,
+                future_dataset_id,
+            )
 
-        # Create data file for download
-        create_download_file(lon, lat, config, climate_regime, *download_data)
+            # Create data file for download
+            create_download_file(
+                lon, lat, config, climate_regime, *download_data
+            )
 
-        return [
-            value_table(
-                ("Lat", round(lat, 6)),
-                ("Lon", round(lon, 6)),
-                # (f"Z ({design_variable_ctrl}) ({source})", round(z, 6)),
-            ),
-            map_pointer_table(config, climate_regime, *download_data),
-        ]
+            return [
+                value_table(
+                    ("Lat", round(lat, 6)),
+                    ("Lon", round(lon, 6)),
+                    # (f"Z ({design_variable_ctrl}) ({source})", round(z, 6)),
+                ),
+                map_pointer_table(config, climate_regime, *download_data),
+            ]
