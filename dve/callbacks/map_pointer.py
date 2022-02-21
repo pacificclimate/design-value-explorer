@@ -4,7 +4,6 @@ import math
 
 import dash
 from dash.dependencies import Input, Output, State
-from dash.exceptions import PreventUpdate
 from dash import html
 import dash_bootstrap_components as dbc
 
@@ -210,7 +209,7 @@ def add(app, config):
 
         # TODO: This is likely irrelevant now -- see clear if no data.
         if not dv_has_climate_regime(config, design_variable, climate_regime):
-            raise PreventUpdate
+            return dash.no_update
 
         rlon, rlat = pointer_rlonlat(hover_data)
 
@@ -287,7 +286,7 @@ def add(app, config):
 
         # TODO: This is likely irrelevant now -- see clear if no data.
         if not dv_has_climate_regime(config, design_variable, climate_regime):
-            raise PreventUpdate
+            return dash.no_update
 
         rlon, rlat = pointer_rlonlat(click_data)
         lon, lat, url, filename = download_info(
@@ -371,7 +370,7 @@ def add(app, config):
             if not dv_has_climate_regime(
                 config, design_variable, climate_regime
             ):
-                raise PreventUpdate
+                return dash.no_update
 
             rlon, rlat = pointer_rlonlat(click_data)
             lon, lat, url, filename = download_info(

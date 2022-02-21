@@ -1,7 +1,7 @@
 import logging
 
+import dash
 from dash.dependencies import Input, Output, State
-from dash.exceptions import PreventUpdate
 from dash import dash_table, dcc
 
 from dve.config import (
@@ -179,7 +179,7 @@ def add(app, config):
     def update_tablec2(main_tabs_active_tab, design_variable):
         # Do not update if the tab is not selected
         if main_tabs_active_tab != "table-tab":
-            raise PreventUpdate
+            return dash.no_update
 
         # Show "No data" if there is no data for this variable
         if not dv_has_climate_regime(config, design_variable, "historical"):

@@ -5,7 +5,6 @@ import math
 
 import dash
 from dash.dependencies import Input, Output, State
-from dash.exceptions import PreventUpdate
 import plotly.graph_objects as go
 
 import geopandas as gpd
@@ -117,7 +116,7 @@ def add(app, config):
         with timing("Update map", log=timing_log_info):
             # Do not update if the tab is not selected
             if main_tabs_active_tab != "map-tab":
-                raise PreventUpdate
+                return dash.no_update
 
             historical_dataset_id = "reconstruction"
 
@@ -132,7 +131,7 @@ def add(app, config):
                 # shown. Changing lat-lon grid for vp change is only reason to
                 # update.
                 if not show_grid:
-                    raise PreventUpdate
+                    return dash.no_update
 
                 # Do not update if viewport dimensions have not changed.
                 # Grid covers entirety of Canada, and only changes when vp dims
@@ -147,7 +146,7 @@ def add(app, config):
                         vp_prev["y_max"] - vp_prev["y_min"],
                         vp_curr["y_max"] - vp_curr["y_min"],
                     ):
-                        raise PreventUpdate
+                        return dash.no_update
 
             raster_filepath = filepath_for(
                 config,
@@ -479,4 +478,4 @@ def add(app, config):
                 }
                 return json.dumps(viewport)
 
-        raise PreventUpdate
+        return dash.no_update
