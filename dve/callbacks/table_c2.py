@@ -104,7 +104,7 @@ def add(app, config):
                 "type": "numeric",
             },
             nbcc_hx_value_col_id: {
-                "name": [historical_name_and_units, "NBCC 2015"],
+                "name": [historical_name_and_units, "NBCC"],
                 "type": "numeric",
             },
             **{
