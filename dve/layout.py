@@ -193,7 +193,7 @@ def main(app, config):
                             html.Div(
                                 id="global_warming",
                                 children=[
-                                    html.Label("Historical", style={}),
+                                    html.Div(style={"height": "2.5em"}),
                                     dcc.Dropdown(
                                         id="future_dataset_id",
                                         options=future_dataset_ctrl_options,
