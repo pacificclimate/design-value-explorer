@@ -1,59 +1,57 @@
 |
   The Help tab contains information on how to use the application's user
   interface. For information on interpreting values and on the science and
-  methods behind the data presented in Design Value Explorer, see
-  _a forthcoming document to which a link will be supplied_.
-
+  methods behind the data presented in Design Value Explorer, see the
+  document
+  [_Design Value Explorer: Methodology and Background Information_](http://pacificclimate.org/sites/default/files/DVE_methods_final.pdf).
+  
   ## Overview
-
-  Design Value Explorer (DVE) enables enables users to access historical
+  
+  Design Value Explorer (DVE) enables users to access historical
   design variables across Canada, in either map or table form, examine
   projected future change in design variables, and download maps and tables.
 
-  - For the Historical period, Canada-wide maps were created from the optimal 
-    interpolation of station observations using a regional climate model, 
+  - For the Historical period, Canada-wide maps were created from the optimal
+    interpolation of station observations using a regional climate model,
     with the option of overlaying the station values.
-
-  - For Future periods, change maps were created from a regional climate 
-  model, covering most of Canada (up to 75°N). Each future projection is 
-  characterized by a global warming level in °C above a baseline period 
-  (1986-2016). 
-
+  
+  - For Future periods, change maps were created from a regional climate
+    model, covering most of Canada (up to 75°N). Each future projection is
+    characterized by a global warming level in °C above a baseline period
+    (1986-2016).
+  
   ## Main tabs
 
   DVE presents the design data in two ways: As maps and in tabular format,
-  under the **Map** and **Table C-2** tabs respectively.
-
+    under the **Map** and **Table C-2** tabs respectively.
+  
   - The **Map** tab shows the interpolated rasters (historical or future), with the
     option of overlaying station observations for the historical period.
-
+  
   - The **Table C-2** tab presents both historical and future projected design values
     at a set of standard locations compiled in the National Building Code of
     Canada.
-
-  - The **Help** and **About** tabs contain supplementary information
-  about DVE.
-
-  ## Design Variable selection
-
-  For both tabs, DVE displays data for one design variable at a time, which is
-  selected from the Design Variable drop-down menu.
-
+  
+  - For both tabs, DVE displays data for one design variable at a time, which is
+    selected from the Design Variable drop-down menu.
+  
+  - The **Help** and **About** tabs contain supplementary information about DVE.
+  
   ## Local storage of your preferences
-
+  
   DVE "remembers" the value of various options you select. In this way,
   it builds up a local database of your preferences for viewing the data.
   (This preference information is stored locally in your browser. There is
   no way for DVE to know who you are apart from the browser you are using.)
-
+  
   For example, when you select a Colour Map for
   a map display, DVE stores that selection in association with the currently
   selected Design Variable and Period. Whenever you select that particular
   combination of DV and Period again, the stored Colour Map for that
   combination is set.
-
+  
   All options start out with default settings. As you use the app,
   default settings are replaced by your preferences.
-
+  
   Preference storage persists between sessions with DVE, so your preferences
   persist even if you close the DVE browser window or refresh the page.
