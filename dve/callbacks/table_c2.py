@@ -102,10 +102,16 @@ def add(app, config):
             pcic_revised_hx_value_col_id: {
                 "name": [historical_name_and_units, "PCIC"],
                 "type": "numeric",
+                "format": {
+                    "nully": "n/a",
+                },
             },
             nbcc_hx_value_col_id: {
                 "name": [historical_name_and_units, "NBCC"],
                 "type": "numeric",
+                "format": {
+                    "nully": "n/a",
+                },
             },
             **{
                 cf_value_col_id: {
@@ -116,6 +122,9 @@ def add(app, config):
                         f"CF {future_change_factor_label(config, future_dataset_id)}",
                     ],
                     "type": "numeric",
+                    "format": {
+                        "nully": "n/a",
+                    },
                 }
                 for cf_value_col_id, future_dataset_id in zip(
                     cf_value_col_ids, future_dataset_ids
