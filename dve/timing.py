@@ -33,7 +33,10 @@ def timing(
     if start_message is not None:
         log(
             start_message.format(
-                description=description, start=start, units=units
+                description=description,
+                start=start,
+                units=units,
+                extra={"item": ["timing", "start"], "description": description},
             )
         )
     yield
@@ -49,7 +52,7 @@ def timing(
                 units=units,
             ),
             extra={
-                "item": "timing",
+                "item": ["timing", "end"],
                 "description": description,
                 "elapsed": elapsed,
                 "units": units,
