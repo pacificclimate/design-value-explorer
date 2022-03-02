@@ -89,9 +89,9 @@ building and running this image is in `docker/dev-local`.
 
 The image is normally built locally. (Because of this, there is no automated
 build for the dev-local image as there is for the production image.) The image
-installs the dependencies listed in `requirements.txt`, but does not install
-`dash-dev-explorer`. The image need only be rebuilt when project dependencies
-(`requirements.txt`) change.
+installs the dependencies listed in `Pipfile` and `Pipfile.lock`, but does not 
+install `dash-dev-explorer`. The image need only be rebuilt when project 
+dependencies (`Pipfile`, `Pipfile.lock`) change.
 
 After building, the image is run locally, and the
 local codebase for `dash-dv-explorer` is mounted to it.

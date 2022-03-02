@@ -1,153 +1,23 @@
 |
-  The Map tab displays the selected design value in
-  map form. The display resemble a Lambert azimuthal projection,
-  but the aspect ratio changes depending on the browser used and, of course,
-  whether and how the zoom feature is activated.
-  Keep in mind that this is not a web mapping
-  application like Google Maps with a fixed map projection.
-
-  The content of the map is controlled by two sets of controls:
-
-  - **Overlay Options**: Controls what layers (overlays) are displayed,
-    including which of the available historical and future DV rasters.
-  - **Colour Scale Options**: Controls how the selected raster is displayed
-    as a coloured heatmap.
-
-  ## Overlay Options
-
-  "Overlay" refers to the overlays or layers presented in the
-  map display.
-
-  - Geographic boundaries and colour raster are always present.
-  - Station design values (for historical data only) can be overlaid.
-    They are presented as circle
-    markers on the map with the value of the design variable at that
-    station represented by a colour as for the raster.
-  - A longitude-latitude reference grid can be overlaid.
-
-  ### Raster
-
-  To display a raster of interpolated historical data:
-
-  1. Click the **Historical design values** radio
-     button under **Period** in the **Overlay Options** section.
-  2. The map displays the selected design value field. The map title indicates
-     the units of the design values.
-
-  To display a raster of future projected data:
-
-  1. Click the **Future change relative to 1986-2016** radio button under
-     **Period** in the **Overlay Options** section.
-  2. Select the level of global warming in the
-     dropdown under **Global Warming** in the **Overlay Options** section.
-  3. The map displays the changes from the historical period at the chosen
-     Global Warming level.
-     - For temperature-based variables, change values are
-       additive and in units of the original variable.
-     - For other variables, change values are multiplicative factors and their
-       units are indicated as "ratio".
-
-  For information on controlling the colour scale applied to the rasters,
-  see Colour Scale Options below.
-
-  For information on extracting data from the raster, see Extracting Data
-  From the Map below.
-
-  ### Station locations
-
-  Stations are the fundamental source of data for historical design values.
-  To see the stations displayed as circular markers on the map, slide the
-  **Stations** switch to the right ("on" position).
-
-  For information on controlling the colour scale applied to the station
-  markers, see Colour Scale Options below.
-
-  ### Longitude-latitude grid
-
-  A grid marking longitude and latitude can be overlaid on the map.
-
-  To display the longitude-latitude grid, slide the **Grid** switch to the
-  right ("on" position).
-
-  The grid adjusts its spacing depending on how far in or out the map
-  is zoomed.
-
-  ## Colour Scale Options
-
-  Colour scale options control how the raster and station data
-  values are displayed as colour in the map.
-
-  Summary:
-  - Colour Map determines the fundamental set of
-  colours used to build the colour scale.
-  - Scale determines whether data values are mapped to the colour scale
-  linearly or logarithmically.
-  - Number of Colours determines how many different
-    colours are in the resulting colour scale.
-  - Data Range determines what range of data values are
-    represented as colour scale colours.
-
-  ### Notes
-
-  The boundaries of the data intervals in the colour scale are
-  uniformly spaced (linearly or logarithmically) between the range minimum and
-  maximum values. Additionally:
-
-  1. "Targeted" boundary value: A target makes it easy to distinguish
-     the "no change" condition by colour, particularly with a small
-     number of colours.
-     - For future datasets (which contain _relative change_ values),
-     - a target of 0 (for absolute change) or 1 (for ratio change) is
-       selected,
-     - if the target value lies in the selected data range;
-       otherwise no target is selected.
-
-  2. Logarithmic scale with zero minimum data value: The minimum value is
-     adjusted to a fixed fraction (typically 1/100) of the maximum value.
-
-  ### Colour Map
-
-  Select the fundamental colour set for the colour scale. Many colour
-  maps are interpolated between two or three fixed colours.
-  Some colour maps are not  interpolations.
-  Names for interpolated colour maps usually indicate the
-  colours involved. Names for others are more abstract. Names ending in
-  "_r" have the same colours as the base colour map, but reversed in order.
-
-  ### Scale
-
-  Select Linear or Logarithmic colour mapping. Some selections of Design
-  Value and Period do not permit logarithmic scales; in this case the
-  selector is disabled and the scale is fixed at linear.
-
-  ### Num. Colours
-
-  Select the number of colours in the colour scale by dragging the
-  pointer. Smaller numbers of colours give a contour effect,
-  which can be useful to identify particular values of interest.
-  Larger numbers of colours give a continuous gradient effect.
-
-  ### Range
-
-  Select the range of data values to be coloured.
-  Data values below/above the data range minimum/maximum are
-  represented as the lowest/highest value colour.
-  Missing data values are represented as transparent, which means that the
-  map background colour shows through.
+  The **Map** tab displays the selected design value in the form of a 
+  Canada-wide map.
+  Here is an explanation of the various controls available to customize 
+  the map.
 
   ## Map display
 
-  The map display is a Plotly Graph, which comes equipped with tools for
-  zooming, panning, and taking a PNG image snapshot of
-  the display. For information on these tools, which appear in the
-  "modebar" at the top right of the display, see
+  **Note**: The underlying projection for the maps is a rotated polar stereographic grid,
+  but the appearance of any given map is affected by the browser settings; see below for details. 
 
-  <a href="https://plotly.com/chart-studio-help/getting-to-know-the-plotly-modebar/" target="_blank">
-  An Introduction to Chart Studio Modebar
-  </a>.
+  The map display is a Plotly Graph, which comes equipped with tools for zooming, panning,
+  and taking a PNG image snapshot of the display. For information on these tools, which appear
+  in the "modebar" at the top right of the display, see:
 
-  In addition to the map proper, the map display contains a title and a
-  colour bar.
+    <a href="https://plotly.com/chart-studio-help/getting-to-know-the-plotly-modebar/" target="_blank">
+    An Introduction to Chart Studio Modebar
+    </a>.
+
+  In addition to the map itself, the map display contains a title and a colour bar.
 
   ### Map title
 
@@ -155,19 +25,109 @@
 
   ### Colour bar
 
-  The colour bar provides a reference for the colour scale in use, with
-  annotations that show data values for selected points between the data
-  range minimum and maximum. When the number of colours selected is 10 or
-  fewer, the annotations are placed at the colour interval boundaries.
-  When the number of colours exceeds 10, 11 annotations are placed
-  uniformly spaced (see note above) between the range minimum and maximum.
+  The colour bar uses the selected colour scale, with annotations showing values
+  uniformly spaced over the range. When the number of colours selected is 10 or
+  fewer, the annotations are placed at the colour interval boundaries. Otherwise,
+  11 annotations are placed uniformly across the range. 
 
-  Hover over the colour bar to show the midpoint value of the interval
-  represented by the colour. This can be useful when the number of
+  Hover the pointer over the colour bar to show the midpoint value of the
+  interval represented by the colour. This can be useful when the number of
   colours is large and you wish to get an idea of the value represented
-  by a particular colour. (Alternatively, you can hover over a point on
-  the map to see the precise value of the raster cell under the pointer.
-  See Extracting data from the map display for details.)
+  by a particular colour.
+
+  ### Map aspect ratio and zoom capability
+
+  The aspect ratio of the map is affected by the width of the browser window in which
+  DVE is running. Therefore, you can adjust the aspect ratio by resizing the browser window
+  and/or using your browser's zoom in/out feature (Ctrl+ / Ctrl- keys in Windows,
+  Command+ / Command- in MacOS, in Firefox and Chrome browsers).
+
+  The zoom feature is engaged by clicking on the map, dragging a rectangle, and releasing.
+  The selected region now fills the entire map display. In some cases, this can result in a
+  distorted map appearance, since the original aspect ratio is not maintained. Resizing the
+  browser or using its zoom feature, as mentioned above, should improve the appearance. 
+  Alternatively, exit zoom mode (by double-clicking on the map) and choose a different rectangle.
+
+  ## Overlay Options
+
+  "Overlay" refers to the various layers comprising the map.
+
+  - A colour map of Canada is always displayed.
+  - Station design values (for historical data only) can be overlaid.
+  - A longitude-latitude reference grid can be overlaid.
+
+  ### Mapping options
+
+  To display a map of interpolated historical data:
+
+  1. Click the **Historical design values** radio button under **Period** in the **Overlay Options**
+     section.
+  2. The map displays the selected design value field, along with its units.
+
+  To display a map of future projected changes:
+
+  1. Click the **Future change relative to 1986-2016** radio button under **Period** in the
+     **Overlay Options** section.
+  2. Select the level of **Global Warming** in the corresponding dropdown menu in the Overlay Options
+     section.
+  3. The map displays the changes from the reference period at the chosen Global Warming level.
+     - For temperature-based variables, changes are additive in units of the original variable.
+     - For other variables, changes are multiplicative factors with units indicated as "ratio".
+
+  ### Station locations
+
+  Stations are the fundamental source of data for historical design values.
+  To see the stations displayed as circular markers on the map, slide the
+  **Stations** switch to the right ("on" position).
+  The value of the design variable at the station is indicated using the same
+  colour scale as used for the map.
+
+  ### Longitude-latitude grid
+
+  To overlay the longitude-latitude grid, slide the **Grid** switch to the
+  right ("on" position). The grid spacing is automatically adjusted in zoom mode.
+
+  ## Colour Scale Options
+
+  The Colour Scale Options control how the map and station data values are displayed.
+
+  - **Colour Map** determines the fundamental set of
+    colours used to build the colour scale.
+  - **Scale** determines whether data are mapped to the colour scale
+    linearly or logarithmically.
+  - **Num. Colours** specifies the number of colours in the colour scale.
+  - **Range** determines what range of values are represented as colours.
+
+  ### Colour Map
+
+  Select the fundamental colour set. Many colour maps are interpolated between two
+  or three fixed colours, while others are more heterogeneous. 
+  Names for interpolated colour maps usually indicate thecolours involved.
+  Names ending in "_r" have the same colours as the base colour map, but in reverse order.
+
+  ### Scale
+
+  Select Linear or Logarithmic colour mapping. Some selections of **Design Variable**
+  and **Period** do not permit logarithmic scales; in this case the
+  selector is disabled and the scale is fixed to linear. The 
+  data intervals in the colour scale are uniformly spaced (linearly or logarithmically)
+  over the range. Finally, for design value fields with minima near zero, the
+  minimum value is adjusted to a fixed fraction (typically 1/100) of the maximum value.
+
+  ### Num. Colours
+
+  Select the number of colours in the scale by dragging the
+  pointer. A small number of colours gives a contour effect,
+  which can be useful to identify particular values of interest.
+  A larger number of colours gives a continuous gradient effect.
+
+  ### Range
+
+  Select the range of data values to be coloured. 
+  Data values below/above the field minimum/maximum are represented as the
+  lowest/highest value colour. Missing data values are represented as transparent,
+  which means that the map background colour shows through. The maximum range is
+  fixed by the field values, but the user can narrow this range if desired.
 
   ## Extracting data from the map display
 
@@ -175,31 +135,38 @@
   values when the pointer is hovered or clicked on the map. This information
   can be downloaded as a CSV file.
 
-  ### Hover: Single Design Value and location
+  ### Hover: Single design value and location
 
   When you hover the pointer over the map:
 
-  - A popup displays the value of the currently selected design
-    variable in the cell over which the pointer hovers.
-  - A table in the **Data from map pointer** area displays the
-    latitude and longitude of the cell over which the pointer hovers.
+  - a popup displays the design value at the current pointer location.
+  - a table in the **Data from map pointer** area displays the
+    latitude and longitude of the current pointer location. These values update
+    continuously as the pointer is moved, unless there is no data under the pointer.
 
-  These values update continuously as you move the pointer. If there is no
-  data under the pointer (wherever the map background colour shows through),
-  the values are not updated.
-
-  ### Click: All Design Values and location
+  ### Click: All design values and location
 
   When you click the pointer on the map, two tables in the
   **Data from map pointer** area show:
 
-  - The location of cell on which you clicked.
-  - The values of all Design Variables at the location on which you clicked.
+  - the location of the cell on which you clicked.
+  - the values of all Design Variables at that location. 
 
   Values are updated only when you click on a cell.
 
+  **Note**: The **Data from map pointer** table shows a lot of information, and its text may 
+  appear too small. To enlarge the text, you can use your browser's Zoom In/Out feature
+  (Ctrl+ / Ctrl- keys in Windows, Command+ / Command- in MacOS, in Firefox and Chrome
+  browsers) to adjust the text size.
+
   ### Downloading click data
 
-  When you have clicked on a cell to display location and Design Variable
-  values, you can download this information as a (single) CSV file by
-  clicking the **Download this data** button.
+  When you have clicked on a cell to display the location and design values, you can download
+  this information as a (single) CSV file by clicking the **Download this data** button.
+
+  ### Output to PNG
+
+  Click on the camera icon in the modebar to download the displayed map as a PNG file. Note
+  that the output reflects exactly what appears on the screen, including the overlays, size
+  and aspect ratio. The latter can be adjusted using your browser's Zoom In/Out feature
+  (Ctrl+ / Ctrl- keys in Windows, Command+ / Command- in MacOS, in Firefox and Chrome browsers).

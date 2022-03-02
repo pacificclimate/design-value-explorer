@@ -7,6 +7,7 @@ from dve.config import dv_label
 
 
 def interpret(source):
+    os.environ['DVE_VERSION_TAG_ONLY'] = os.environ['DVE_VERSION'].split()[0]
     return dcc.Markdown(
         source.format(**os.environ), dangerously_allow_html=True
     )
@@ -192,7 +193,7 @@ def main(app, config):
                             html.Div(
                                 id="global_warming",
                                 children=[
-                                    html.Label("Historical"),
+                                    html.Div(style={"height": "2.5em"}),
                                     dcc.Dropdown(
                                         id="future_dataset_id",
                                         options=future_dataset_ctrl_options,
@@ -201,7 +202,7 @@ def main(app, config):
                                         ],
                                     )
                                 ],
-                                style={},
+                                **config["ui"]["controls"]["global_warming"],
                             ),
                             daq.BooleanSwitch(
                                 id="show_stations",

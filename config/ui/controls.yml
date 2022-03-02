@@ -17,10 +17,14 @@ climate-regime:
   value: historical   # Initial setting
   labelStyle:
     display: block
+    font-size: 1.2em
     margin-top: "1em"
 historical-dataset:
   value: reconstruction   # Initial setting
   clearable: false
+global_warming:
+  style:
+    font-size: 1.2em
 future-dataset:
   value: "0.5"    # Initial setting
   disabled: true
@@ -45,9 +49,13 @@ grid:
     width: "50px"
 colour-map:
   value: None   # Immediately overridden
+  style:
+    font-size: 1.1em
 scale:
   value: logarithmic
   clearable: false
+  style:
+    font-size: 1.1em
 num-colours:
   min: 5
   max: 100
