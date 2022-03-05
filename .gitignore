@@ -2,3 +2,6 @@ dve/data/
 venv*
 .idea
 local-data
+.cache
+.pytest_cache
+dve.egg-info
