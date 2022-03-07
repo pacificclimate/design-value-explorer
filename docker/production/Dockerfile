@@ -35,4 +35,4 @@ ENV DVE_VERSION $DVE_VERSION
 
 CMD pipenv run gunicorn \
     --config /app/docker/production/gunicorn.conf \
-    dve_app:server
+    'dve_app:make_wsgi_app()'

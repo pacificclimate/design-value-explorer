@@ -4,22 +4,11 @@ import yaml
 from dve.app import make_app
 
 
-# Set up logging. Logging config is not in main app configuration.
-logging_config_filepath="logging.yml"
-with open(logging_config_filepath, "r") as logging_config_file:
-    logging_config = yaml.safe_load(logging_config_file)
-logging.config.dictConfig(logging_config)
-logger = logging.getLogger("dve")
-
-
-# Create app
-app = make_app()
-# Expose Flask server for deployment with Gunicorn
-server = app.server
-
-
 if __name__ == "__main__":
-    # Set up logging
+    # Set up development HTTP server logging. This affects only the logging
+    # done by this server, not by the app, and not by the production server,
+    # which is run using Gunicorn which has its own logging configuration.
+    # See notes above re. logging.
     log_level_choices = "NOTSET DEBUG INFO WARNING ERROR CRITICAL".split()
 
     parser = ArgumentParser(
@@ -42,9 +31,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     loglevel = args.loglevel or ("DEBUG" if args.debug else "INFO")
-    logger.setLevel(getattr(logging, loglevel))
-
-    logger.debug("Running app on development server")
+    app = make_app()
     app.run_server(
         host='0.0.0.0',
         port=5000,

@@ -20,8 +20,8 @@ services:
 
       # Logging
       - type: bind
-        source: ../../logging.yml
-        target: /opt/dockremap/logging.yml
+        source: ../../app-logging.yml
+        target: /opt/dockremap/app-logging.yml
         read_only: true
       - type: bind
         source: ../../dve_log.txt
@@ -30,8 +30,8 @@ services:
       # App configuration for dev
       - type: bind
         # NB: base config file is in dev-local dir
-        source: ./config.yml
-        target: /opt/dockremap/config.yml
+        source: ./app-config.yml
+        target: /opt/dockremap/app-config.yml
         read_only: true
       - type: bind
         source: ../../config/
