@@ -1,7 +1,5 @@
 from argparse import ArgumentParser
-import logging.config
-import yaml
-from dve.app import make_app
+from dve.app import make_app, make_wsgi_app
 
 
 if __name__ == "__main__":
