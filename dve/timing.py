@@ -36,7 +36,7 @@ def timing(
                 description=description,
                 start=start,
                 units=units,
-                extra={"item": ["timing", "start"], "description": description},
+                extra={"item": "timing:start", "description": description},
             )
         )
     yield
@@ -52,7 +52,7 @@ def timing(
                 units=units,
             ),
             extra={
-                "item": ["timing", "end"],
+                "item": "timing:end",
                 "description": description,
                 "elapsed": elapsed,
                 "units": units,
