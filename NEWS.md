@@ -1,5 +1,17 @@
 # News / Release Notes
 
+## 2.2.0
+
+Initial production release.
+
+Updates:
+- [Log key performance indicators](https://github.com/pacificclimate/dash-dv-explorer/pull/223)
+- [Documentation and presentation updates](https://github.com/pacificclimate/dash-dv-explorer/pull/217)
+- [Fix Pipfile](https://github.com/pacificclimate/dash-dv-explorer/pull/220)
+- [Update graph and table titles with Tier info](https://github.com/pacificclimate/dash-dv-explorer/pull/216)
+- [Update documentation; improve behaviour on no data](https://github.com/pacificclimate/dash-dv-explorer/pull/211)
+- [Add logo and favicon; improve layout](https://github.com/pacificclimate/dash-dv-explorer/pull/210)
+
 ## 2.1.3
 
 **2021-Nov-26**
