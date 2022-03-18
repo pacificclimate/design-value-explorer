@@ -8,7 +8,7 @@ import numpy as np
 
 from dve.math_utils import nearest
 
-logger = logging.getLogger("dve")
+logger = logging.getLogger(__name__)
 
 
 # The map can be displayed with either a linear or logarithmic colorscale.

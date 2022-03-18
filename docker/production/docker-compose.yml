@@ -11,10 +11,29 @@ services:
     ports:
       - "30020:5000"
     volumes:
-      # Configuration
+      # Gunicorn
       - type: bind
-        source: ./config.yml
-        target: /opt/dockremap/config.yml
+        source: ./gunicorn.conf
+        target: /app/docker/production/gunicorn.conf
+        read_only: true
+      - type: bind
+        source: ./gunicorn-logging.conf
+        target: /app/docker/production/gunicorn-logging.conf
+        read_only: true
+
+      # App logging
+      - type: bind
+        source: ../../app-logging.yml
+        target: /opt/dockremap/app-logging.yml
+        read_only: true
+      - type: bind
+        source: ../../dve_log.txt
+        target: /opt/dockremap/dve_log.txt
+
+      # App configuration
+      - type: bind
+        source: ./app-config.yml
+        target: /opt/dockremap/app-config.yml
         read_only: true
       - type: bind
         source: ../../config/
@@ -22,29 +41,28 @@ services:
         read_only: true
 
         # Data files
-#      - type: bind
-#        source: /storage/data/projects/comp_support/dv-explorer/data/
-#        target: /opt/dockremap/dve/data/
-#        read_only: true
       - type: bind
         source: /storage/data/projects/comp_support/dv-explorer/data/model_inputs/
-        target: /opt/dockremap/dve/data/model_inputs/
+        target: /app/dve/data/model_inputs/
         read_only: true
       - type: bind
-        source: /storage/data/projects/comp_support/dv-explorer/data/reconstructions/
-        target: /opt/dockremap/dve/data/reconstructions/
+        source: ../../local-data/reconstructions/
+#        source: /storage/data/projects/comp_support/dv-explorer/data/reconstructions/
+        target: /app/dve/data/reconstructions/
         read_only: true
       - type: bind
         source: /storage/data/projects/comp_support/dv-explorer/data/station_inputs/
-        target: /opt/dockremap/dve/data/station_inputs/
+        target: /app/dve/data/station_inputs/
         read_only: true
       - type: bind
-        source: /storage/data/projects/comp_support/dv-explorer/data/tables/
-        target: /opt/dockremap/dve/data/tables/
+        source: ../../local-data/tables/
+#        source: /storage/data/projects/comp_support/dv-explorer/data/tables_2022_02/
+        target: /app/dve/data/tables/
         read_only: true
       - type: bind
-        source: /storage/data/projects/nrc/CanRCM4_large_ensemble/design_values/change_factors/
-        target: /opt/dockremap/dve/data/change_factors/
+        source: ../../local-data/change_factors/
+#        source: /storage/data/projects/nrc/CanRCM4_large_ensemble/design_values/change_factors/
+        target: /app/dve/data/change_factors/
         read_only: true
 
         # Download files: presently are permanent so best stored in an
@@ -54,7 +72,7 @@ services:
         source: ./downloads
         target: /downloads
 
-networks:
-  default:
-    external:
-      name: pcicbr0
+#networks:
+#  default:
+#    external:
+#      name: pcicbr0

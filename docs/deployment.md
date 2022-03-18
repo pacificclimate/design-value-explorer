@@ -116,7 +116,7 @@ commands can be run, including running tests and running the app.
 
       1. Clone [`pdp-docker`](https://github.com/pacificclimate/pdp-docker).
 
-      1. Follow the instructions in the `pdp-docker` documentation:
+      2. Follow the instructions in the `pdp-docker` documentation:
        [Setting up Docker namespace remapping (with recommended parameters)](https://github.com/pacificclimate/pdp-docker#setting-up-docker-namespace-remapping-with-recommended-parameters).
 
       1. Grant permissions on the downloads directory:
@@ -125,10 +125,24 @@ commands can be run, including running tests and running the app.
         setfacl -m "g:dockremap1000:rwx" docker/dev-local/downloads/ 
         ``` 
 
-   1. Update the development config (`docker/dev-local/config.yml`) as 
+      4. Create and grant permissions on the DVE log file:
+
+        ```
+        touch dve_log.txt
+        setfacl -m "g:dockremap1000:rw" dve_log.txt 
+        ``` 
+      
+        Why is this necessary? This file is mounted to the `dve-dev-local` 
+        Docker container. A file mount that does not exist is automatically 
+        created by Docker, but it creates a directory, not a file. A file 
+        must be 
+        created in advance, and given suitable permissions if it is to be 
+        written to.
+
+   3. Update the development config (`docker/dev-local/config.yml`) as 
       needed.
 
-   1. Copy any large datasets (e.g., reconstructions) to your local 
+   4. Copy any large datasets (e.g., reconstructions) to your local 
       codebase
      (typically under `local-data/`). This cuts app startup time from minutes
      to seconds. App startup is incurred every time you make a change to the
@@ -175,7 +189,7 @@ commands can be run, including running tests and running the app.
    From the container bash prompt:
 
     ```
-    pipenv run python /codebase/dve_app.py --debug
+    pipenv run python /codebase/dve.py --debug
     ```
 
    The `--debug` option does two things: Runs the server with `debug=True`, and

@@ -1,26 +1,12 @@
 from argparse import ArgumentParser
-import logging
-from dve.app import make_app
-
-
-logger = logging.getLogger("dve")
-formatter = logging.Formatter(
-    "%(asctime)s.%(msecs)03d %(levelname)s [%(module)s.%(funcName)s]: %(message)s", datefmt='%Y-%m-%d %H:%M:%S'
-)
-handler = logging.StreamHandler()
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-logger.setLevel(logging.DEBUG)
-
-
-# Create app
-app = make_app()
-# Expose Flask server for deployment with Gunicorn
-server = app.server
+from dve.app import make_app, make_wsgi_app
 
 
 if __name__ == "__main__":
-    # Set up logging
+    # Set up development HTTP server logging. This affects only the logging
+    # done by this server, not by the app, and not by the production server,
+    # which is run using Gunicorn which has its own logging configuration.
+    # See notes above re. logging.
     log_level_choices = "NOTSET DEBUG INFO WARNING ERROR CRITICAL".split()
 
     parser = ArgumentParser(
@@ -33,6 +19,7 @@ if __name__ == "__main__":
         action="store_true",
         help="Run in debug mode",
     )
+    # TODO: Possibly remove; logging config is now in `logging.yml`.
     parser.add_argument(
         "-l",
         "--loglevel",
@@ -42,9 +29,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     loglevel = args.loglevel or ("DEBUG" if args.debug else "INFO")
-    logger.setLevel(getattr(logging, loglevel))
-
-    logger.debug("Running app on development server")
+    app = make_app()
     app.run_server(
         host='0.0.0.0',
         port=5000,

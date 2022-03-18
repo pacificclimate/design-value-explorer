@@ -8,7 +8,7 @@ import logging
 import numpy as np
 
 
-logger = logging.getLogger("dve")
+logger = logging.getLogger(__name__)
 
 source_crs = {"init": "epsg:4326"}
 target_crs = {

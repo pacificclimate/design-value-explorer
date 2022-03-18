@@ -1,0 +1,28 @@
+version: 1
+
+formatters:
+  generic:
+    format: '%(asctime)s [%(process)d] [%(levelname)s] %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+    
+handler:
+  console:
+    class: logging.StreamHandler
+    formatter: generic
+    stream: ext://sys.stdout
+  
+loggers:
+  gunicorn.access:
+    level: INFO
+    handlers: [console]
+    propagate: 0
+    qualname: gunicorn.access
+  gunicorn.error:
+    level: INFO
+    handlers: [console]
+    propagate: 0
+    qualname: gunicorn.error
+  
+root:
+  level: INFO
+  handlers: [console]

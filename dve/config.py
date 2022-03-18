@@ -10,7 +10,7 @@ from pkg_resources import resource_filename
 from dve.dict_utils import path_get
 
 
-logger = logging.getLogger("dve")
+logger = logging.getLogger(__name__)
 
 
 def file_exists(filepath):

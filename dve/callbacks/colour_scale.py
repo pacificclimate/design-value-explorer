@@ -13,7 +13,7 @@ from dve.data import get_data_object
 import dve.layout
 from dve.math_utils import sigfigs, round_to_multiple
 
-logger = logging.getLogger("dve")
+logger = logging.getLogger(__name__)
 
 
 def add(app, config):
