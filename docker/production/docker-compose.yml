@@ -1,13 +1,10 @@
-version: '3.2'
+version: '2.3'
 services:
   dv-explorer-prod:
-    build:
-      context: ../..
-      dockerfile: ./docker/production/Dockerfile
     image: pcic/dash-dv-explorer
-    container_name: dv-explorer-prod
+    container_name: design-value-explorer
     env_file:
-      - .env
+      - env.env
     ports:
       - "30020:5000"
     volumes:
@@ -24,20 +21,17 @@ services:
       # App logging
       - type: bind
         source: ../../app-logging.yml
-        target: /opt/dockremap/app-logging.yml
+        target: /app/app-logging.yml
         read_only: true
-      - type: bind
-        source: ../../dve_log.txt
-        target: /opt/dockremap/dve_log.txt
 
       # App configuration
       - type: bind
         source: ./app-config.yml
-        target: /opt/dockremap/app-config.yml
+        target: /app/app-config.yml
         read_only: true
       - type: bind
         source: ../../config/
-        target: /opt/dockremap/config/
+        target: /app/config/
         read_only: true
 
         # Data files
@@ -46,8 +40,7 @@ services:
         target: /app/dve/data/model_inputs/
         read_only: true
       - type: bind
-        source: ../../local-data/reconstructions/
-#        source: /storage/data/projects/comp_support/dv-explorer/data/reconstructions/
+        source:  /storage/data/projects/comp_support/dv-explorer/data/reconstructions/
         target: /app/dve/data/reconstructions/
         read_only: true
       - type: bind
@@ -55,13 +48,11 @@ services:
         target: /app/dve/data/station_inputs/
         read_only: true
       - type: bind
-        source: ../../local-data/tables/
-#        source: /storage/data/projects/comp_support/dv-explorer/data/tables_2022_02/
+        source:  /storage/data/projects/comp_support/dv-explorer/data/tables_2022_02/
         target: /app/dve/data/tables/
         read_only: true
       - type: bind
-        source: ../../local-data/change_factors/
-#        source: /storage/data/projects/nrc/CanRCM4_large_ensemble/design_values/change_factors/
+        source: /storage/data/projects/nrc/CanRCM4_large_ensemble/design_values/change_factors/
         target: /app/dve/data/change_factors/
         read_only: true
 
@@ -72,7 +63,14 @@ services:
         source: ./downloads
         target: /downloads
 
-#networks:
-#  default:
-#    external:
-#      name: pcicbr0
+    tmpfs:
+      - /downloads/by-location:size=200M,uid=1000
+
+    mem_limit: 8g
+    memswap_limit: 8g
+    restart: "unless-stopped"
+
+networks:
+  default:
+    external:
+      name: pcicbr0
