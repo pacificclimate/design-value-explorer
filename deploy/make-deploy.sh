@@ -44,7 +44,7 @@ if ! cd "$repo_dir"; then
   exit 1
 fi
 if ! git fetch origin "$tag"; then
-  echo "Error: Tag '$tag' does not exist in project repo."
+  echo "Error: Ref '$tag' does not exist in project repo."
   exit 1
 fi
 git checkout "$tag"
