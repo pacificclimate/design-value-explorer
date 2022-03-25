@@ -1,15 +1,12 @@
-version: '3.2'
+version: '2.3'
 services:
-  dv-explorer-prod:
-    build:
-      context: ../..
-      dockerfile: ./docker/production/Dockerfile
-    image: pcic/dash-dv-explorer
-    container_name: dv-explorer-prod
+  design-value-explorer-prod:
+    image: pcic/design-value-explorer:deploy-scripts
+    container_name: design-value-explorer
     env_file:
-      - .env
+      - env.env
     ports:
-      - "30020:5000"
+      - "30504:5000"
     volumes:
       # Gunicorn
       - type: bind
@@ -24,55 +21,49 @@ services:
       # App logging
       - type: bind
         source: ../../app-logging.yml
-        target: /opt/dockremap/app-logging.yml
+        target: /app/app-logging.yml
         read_only: true
-      - type: bind
-        source: ../../dve_log.txt
-        target: /opt/dockremap/dve_log.txt
 
       # App configuration
       - type: bind
-        source: ./app-config.yml
-        target: /opt/dockremap/app-config.yml
+        source: ../../app-config.yml
+        target: /app/app-config.yml
         read_only: true
       - type: bind
         source: ../../config/
-        target: /opt/dockremap/config/
+        target: /app/config/
         read_only: true
 
         # Data files
       - type: bind
-        source: /storage/data/projects/comp_support/dv-explorer/data/model_inputs/
+        source: /storage/data/projects/comp_support/design-value-explorer/data/model_inputs/
         target: /app/dve/data/model_inputs/
         read_only: true
       - type: bind
-        source: ../../local-data/reconstructions/
-#        source: /storage/data/projects/comp_support/dv-explorer/data/reconstructions/
+        source:  /storage/data/projects/comp_support/design-value-explorer/data/reconstructions/
         target: /app/dve/data/reconstructions/
         read_only: true
       - type: bind
-        source: /storage/data/projects/comp_support/dv-explorer/data/station_inputs/
+        source: /storage/data/projects/comp_support/design-value-explorer/data/station_inputs/
         target: /app/dve/data/station_inputs/
         read_only: true
       - type: bind
-        source: ../../local-data/tables/
-#        source: /storage/data/projects/comp_support/dv-explorer/data/tables_2022_02/
+        source:  /storage/data/projects/comp_support/design-value-explorer/data/tables_2022_02/
         target: /app/dve/data/tables/
         read_only: true
       - type: bind
-        source: ../../local-data/change_factors/
-#        source: /storage/data/projects/nrc/CanRCM4_large_ensemble/design_values/change_factors/
+        source: /storage/data/projects/nrc/CanRCM4_large_ensemble/design_values/change_factors/
         target: /app/dve/data/change_factors/
         read_only: true
 
-        # Download files: presently are permanent so best stored in an
-        # external mount where old ones can be deleted periodically.
-        # TODO: Remove after upgrading to use temporary files
-      - type: bind
-        source: ./downloads
-        target: /downloads
+    tmpfs:
+      - /downloads/by-location:size=200M,uid=1000
 
-#networks:
-#  default:
-#    external:
-#      name: pcicbr0
+    mem_limit: 8g
+    memswap_limit: 8g
+    restart: "unless-stopped"
+
+networks:
+  default:
+    external:
+      name: pcicbr0
