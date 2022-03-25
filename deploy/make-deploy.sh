@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 # make-deploy assumes the following and *only* the following about the
 # directories and files it is run from:
 #
