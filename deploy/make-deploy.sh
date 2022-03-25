@@ -48,6 +48,7 @@ if ! git fetch origin "$tag"; then
   exit 1
 fi
 git checkout "$tag"
+git pull
 cd ..
 
 # Create the new deployment directory
