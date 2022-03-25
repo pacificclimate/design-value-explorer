@@ -44,7 +44,7 @@ services:
         # are using to support development. The development config (mounted
         # above) should reflect what files are mounted here.
       - type: bind
-        source: /storage/data/projects/comp_support/dv-explorer/data/model_inputs/
+        source: /storage/data/projects/comp_support/design-value-explorer/data/model_inputs/
         target: /codebase/dve/data/model_inputs/
         read_only: true
       - type: bind
@@ -56,7 +56,7 @@ services:
         target: /codebase/dve/data/change_factors/
         read_only: true
       - type: bind
-        source: /storage/data/projects/comp_support/dv-explorer/data/station_inputs/
+        source: /storage/data/projects/comp_support/design-value-explorer/data/station_inputs/
         target: /codebase/dve/data/station_inputs/
         read_only: true
       - type: bind
