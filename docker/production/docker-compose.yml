@@ -1,7 +1,7 @@
 version: '2.3'
 services:
   design-value-explorer-prod:
-    image: pcic/dash-design-value-explorer
+    image: pcic/dash-design-value-explorer:deploy-scripts
     container_name: design-value-explorer
     env_file:
       - env.env
