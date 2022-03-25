@@ -1,7 +1,7 @@
 version: '2.3'
 services:
   design-value-explorer-prod:
-    image: pcic/design-value-explorer:deploy-scripts
+    image: pcic/design-value-explorer:2.3.0
     container_name: design-value-explorer
     env_file:
       - env.env

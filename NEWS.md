@@ -1,5 +1,10 @@
 # News / Release Notes
 
+## 2.3.0
+
+Updates:
+- [Add deployment automation](https://github.com/pacificclimate/dash-dv-explorer/pull/227)
+
 ## 2.2.0
 
 Initial production release.
