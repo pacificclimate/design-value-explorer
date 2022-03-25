@@ -22,10 +22,12 @@ To create a versioned release:
 
 1. Increment `__version__` in `setup.py`
 2. Summarize the changes from the last release in `NEWS.md`
-3. Commit these changes, tag the release, then push it all:
+3. IMPORTANT: Update the image tag in `docker/production/docker-compose.yml` to 
+   the new version.
+4. Commit these changes, tag the release, then push it all:
 
   ```bash
-git add setup.py NEWS.md
+git add setup.py NEWS.md docker/production/docker-compose.yml
 git commit -m"Bump to version x.x.x"
 git tag -a -m"x.x.x" x.x.x
 git push --follow-tags
