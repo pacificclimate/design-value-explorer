@@ -224,22 +224,28 @@ the WSGI container.
 
 ### Overview
 
-1. A production Docker image, `pcic/dash-dv-explorer` is automatically built
+1. Creation of a deployment directory has been automated. The automation 
+   creates a directory that:
+
+   1. contains all the necessary artifacts for deployment (needing minimal 
+      tweaking) using Docker Compose; and
+   2. follows the standards for the structure of such directories that we 
+      recently established for deployments.
+
+   See below for details on how to use the automation.
+
+2. A production Docker image, `pcic/dash-dv-explorer` is automatically built
    on Dockerhub.
-
-1. All production-related Docker infrastructure is in the repo under
+3. All production-related Docker infrastructure is in the repo under
    `docker/production`.
-
-1. Data files are mounted to the docker container.
-
-1. A live-updatable configuration file can be mounted to the container.
-   The `docker-compose.yml` contains a mount for this already, for a
-   file at  `docker/production/config.yml`. You may wish to change this.
-
-1. The usual `docker-compose` commands can be used to start, stop, and restart
+4. The following things are mounted to the Docker container and can be 
+   updated locally as needed (requiring a restart of the container):
+   1. Data files.
+   2. App configuration files.
+   3. App and Gunicorn logging configuration files.
+5. The usual `docker-compose` commands can be used to start, stop, and restart
    the container.
-
-1. Proxying:
+6. Proxying:
   - Dash applications apparently know the domain they are proxied from.
     (Guessing this is via an HTTP header.)
   - They do not know the base URL path used by the proxy, so this must be
@@ -250,28 +256,81 @@ the WSGI container.
 
 Details follow.
 
-### Prepare
+### Establish top-level deployment directory
 
-1. Pull the desired version of `pcic/dash-dv-explorer` from Dockerhub.
-1. Update (your copy of) `docker-compose.yml` to reflect the version
-   of the image you want to run.
-1. Update (your copy of) `.env`:
-  1. IMPORTANT: Set `DASH_URL_BASE_PATHNAME` to the base path of the proxied
-     URL. It must begin and end with `/`, e.g., `/design-value-explorer/`.
-  1. Set the `GUNICORN_*` parameters as desired.
-1. Update (your copy of) the configuration file if necessary.
+IMPORTANT: You will not have to do this, because it is a do-once procedure that 
+has already been done. But it is worth recording.
 
-### Start the container
+1. In a suitable location (at present `/storage/data/projects/comp_support/`)
+   create a project deployment directory named `design-value-explorer/`.
+2. In the project deployment directory, clone the project Git repository into 
+   `repo`:
+   ```
+   cd design-value-explorer
+   git clone https://github.com/pacificclimate/dash-dv-explorer.git repo
+   ```
 
-```
-docker-compose -f docker/production/docker-compose.yml up -d
-```
+### Create a new deployment
 
-The container name is `dv-explorer-prod`. It immediately starts the application.
+Each time you wish to deploy a new release, make a new deployment (directory):
 
-### Stop the container
+1. Determine what identifier tags the version you wish to deploy. 
+   1. The identifier can be a tag (e.g., "2.3.0"), a branch name 
+      (e.g., "i999-fix-all-bugs"), or even a commit SHA. 
+   2. The identifier *must* be a valid ref in the Git repository.
+   3. The identifier must refer to a commit coming after version (tag) 2.3.0.
+      Otherwise, the deployment automation scripts will not be present.
+   4. The identifier determines the name of the deployment directory and 
+      what commit from the repo is used to obtain the deployment artifacts. 
+2. From the project deployment root directory, run 
+   `repo/deploy/make-deploy.sh prod <identifier>`.
+   1. When it asks `Update deployment artifacts? [y,n]`, answer `y`.
+   2. The script creates a deployment directory named `prod/<identifier>/`  
+      and populates it with the necessary deployment artifacts 
+      (configuration files, `docker-compose.yml`, etc.) copied from the 
+      version of DVE identified by `<identifier>`. 
+   3. These files are *copies* and can safely be modified and will not be 
+      affected by other activities in the repo (e.g., subsequent deployments)
+      . This directory is a permanent, unchanging record of the deployment.
+3. Modify the deployment artifacts in the new directory 
+   (`prod/<identifier>/`) as required. The project repo should generally be 
+   up to date with typical or in-use configuration, but you _will_ need to do 
+   the following:
+   1. Verify and update if necessary the tag of the image for this 
+      deployment. This should be the same as the `<identifier>` you selected 
+      above, and some day I will think about automating this too.
 
-```
-docker-compose -f docker/production/docker-compose.yml down
-```
+   You _may_ need to do the following:
+
+   1. Modify the logging configuration(s).
+   2. Modify the data file mounts.
+   3. Map a different port on the Docker container. 
+   4. There are no secrets in the environment variables, but an 
+      update would necessarily be required if secrets are 
+      added in future.
+4. Coordinate with IT as necessary for the new release.
+
+### Stop the current services
+
+1. From the date of this writing forward, there should be a similar deployment 
+   directory for the current version. 
+2. Find that version's identifier. Down the 
+   old version using Docker Compose:
+   ```
+   cd prod/<previous version identifier>
+   docker-compose -f docker/production/docker-compose.yml down
+   ```
+### Start the new services
+
+1. Use Docker Compose to manage the new service:
+   ```
+   cd prod/<new version identifier>
+   docker-compose -f docker/production/docker-compose.yml up -d
+   docker-compose -f docker/production/docker-compose.yml down
+   docker-compose -f docker/production/docker-compose.yml logs -f
+   docker-compose -f docker/production/docker-compose.yml ps
+   ```
+   etc.
+
+Note: The container name is `design-value-explorer`.
 
