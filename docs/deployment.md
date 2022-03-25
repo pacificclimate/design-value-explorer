@@ -234,8 +234,8 @@ the WSGI container.
 
    See below for details on how to use the automation.
 
-2. A production Docker image, `pcic/dash-dv-explorer` is automatically built
-   on Dockerhub.
+2. A production Docker image, `pcic/design-value-explorer` is automatically 
+   built on Dockerhub.
 3. All production-related Docker infrastructure is in the repo under
    `docker/production`.
 4. The following things are mounted to the Docker container and can be 
