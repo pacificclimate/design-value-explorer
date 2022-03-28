@@ -19,9 +19,9 @@ script_dir="$(dirname ${BASH_SOURCE[0]})"
 repo_dir="$(cd $script_dir/..; pwd)"
 base_dir="$(cd $script_dir/../..; pwd)"
 
-echo "script_dir=$script_dir"
-echo "repo_dir=$repo_dir"
-echo "base_dir=$base_dir"
+#echo "script_dir=$script_dir"
+#echo "repo_dir=$repo_dir"
+#echo "base_dir=$base_dir"
 
 mode=$1
 if ! echo "$mode" | grep -E -q '(dev|prod)'; then
@@ -47,6 +47,10 @@ if ! git fetch origin "$tag"; then
   echo "Error: Ref '$tag' does not exist in project repo."
   exit 1
 fi
+# TODO: An error occurs(ed) at the git checkout step when the repo had been
+#   left with a branch checked out that no longer had an upstream branch
+#   (it had been deleted). IIRC, it wants to merge instead of just do a clean
+#   checkout. Find out how to do this without an error in this case.
 git checkout "$tag"
 git pull
 cd ..
