@@ -217,8 +217,8 @@ tabs:
         body: Development team lead.
       - header: '[Rod Glover](https://pacificclimate.org/about-pcic/people/rod-glover)'
         body: Frontend development lead.
-      - header: '[Matthew Benstead](https://pacificclimate.org/about-pcic/people/matthew-benstead)'
-        body: System administrator. Deployment and security.
+      - header: '[Tom Kunkel](https://pacificclimate.org/about-pcic/people/tom-kunkel)'
+        body: System administration.
       - header: Nic Annau
         body: |
           Developer of hybrid spatial mapping software and initial version 
