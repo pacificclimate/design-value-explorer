@@ -3,12 +3,15 @@
 
 # Design Value Explorer
 
-Plotly/Dash for interactive visualization of design value fields.
+Web application for visualizing and downloading design value fields and 
+tables.
 
 ## Documentation
 
 - [Installation](docs/installation.md)
-- [Deployment for local development and for production](docs/deployment.md)
+- [Configuration](docs/configuration.md)
+- [Deployment for local development](docs/deployment-dev.md)
+- [Deployment for production](docs/deployment-prod.md)
 - [Testing](docs/testing.md)
 - [Dev notes](docs/dev-notes.md)
 
