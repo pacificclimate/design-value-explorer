@@ -71,7 +71,7 @@ def validate(config):
         else:
             for cfg_ext_path in config["ui"]["future_change_factors"]:
                 validate_config(
-                    config, f"{cfg_base_path}/{cfg_ext_path}", separator="/",
+                    config, f"{cfg_base_path}/{cfg_ext_path}", separator="/"
                 )
 
 
@@ -210,11 +210,19 @@ def historical_dataset_label(config, dataset_id):
     return config["ui"]["labels"]["historical_dataset"][dataset_id]
 
 
+def interpolation_value_label(config):
+    return config["ui"]["labels"]["interpolation"]
+
+
 def future_change_factor_label(config, dataset_id, which="short", nice=True):
     units, separator = nice_units(config, "degC") if nice else ("degC", " ")
     return config["ui"]["labels"]["future_change_factors"][which].format(
         value=dataset_id, separator=separator, units=units
     )
+
+
+def download_table_label(config, column):
+    return config["ui"]["labels"]["download_table"][column]
 
 
 def dataset_label(
@@ -257,4 +265,114 @@ def map_title(
             config, climate_regime, which="short"
         ),
         dataset=dataset,
+    )
+
+
+def climate_regime_ctrl_options(config, which="long"):
+    return [
+        {
+            "label": config["ui"]["labels"]["climate_regime"][cr][which],
+            "value": cr,
+        }
+        for cr in ("historical", "future")
+    ]
+
+
+def overlay_options_section_title(config):
+    return config["ui"]["labels"]["overlay-options"]["title"]
+
+
+def overlay_options_control_columns(config):
+    columns = config["ui"]["labels"]["overlay-options"]["columns"]
+    return [(column["title"], column["width"]) for column in columns]
+
+
+def overlay_options_stations_label(config):
+    # TODO: This will need some fixing for multilang; poss do like
+    #  colorscale-options
+    return "(HISTORICAL ONLY)"
+
+
+def color_map_ctrl_options(config):
+    return [{"value": x, "label": x} for x in config["map"]["colour_maps"]]
+
+
+def scale_ctrl_options(config):
+    # TODO: Put into config
+    return [
+        {"label": "Linear", "value": "linear"},
+        {"label": "Logarithmic", "value": "logarithmic"},
+    ]
+
+
+def colourbar_options_section_title(config):
+    return config["ui"]["labels"]["colorscale-options"]["title"]
+
+
+def color_bar_options_ctrl_title(config, col_key):
+    return (
+        config["ui"]["labels"]["colorscale-options"]["columns"][col_key][
+            "title"
+        ],
+    )
+
+
+def color_bar_options_ctrl_width(config, col_key):
+    return (
+        config["ui"]["labels"]["colorscale-options"]["columns"][col_key][
+            "width"
+        ],
+    )
+
+
+def map_tab_label(config):
+    return config["ui"]["labels"]["main_tabs"]["map-tab"]
+
+
+def table_c2_label(config):
+    return config["ui"]["labels"]["main_tabs"]["table-tab"]
+
+
+def help_tab_label(config):
+    return config["ui"]["labels"]["main_tabs"]["help-tab"]
+
+
+def help_subtab_label(config, index):
+    return config["help"]["tabs"][index]["label"]
+
+
+def help_subtab_content(config, index):
+    return config["help"]["tabs"][index]["content"]
+
+
+def about_tab_label(config):
+    return config["ui"]["labels"]["main_tabs"]["about-tab"]
+
+
+def about_subtab_label(config, index):
+    return config["about"]["tabs"][index]["label"]
+
+
+def about_subtab_card_spec(config, index):
+    # TODO: This will need some extra effort for multilang
+    return config["about"]["tabs"][index]["cards"]
+
+
+def table_c2_title(config, design_variable):
+    return config["ui"]["labels"]["table_C2"]["title"].format(
+        name=dv_name(config, design_variable),
+        tier=dv_tier(config, design_variable),
+        name_and_units=dv_label(
+            config, design_variable, climate_regime="historical"
+        ),
+    )
+
+
+def table_c2_no_table_data_msg(config):
+    return config["ui"]["labels"]["table_C2"]["no_table_data_error"]
+
+
+def table_c2_no_station_data_msg(config, design_variable):
+    return config["ui"]["labels"]["table_C2"]["no_station_data"].format(
+        design_variable
     )

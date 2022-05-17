@@ -33,3 +33,4 @@ def path_set(d, path, value, separator="."):
             if key not in d or not isinstance(d[key], dict):
                 d[key] = {}
             path_set(d[key], path[1:], value)
+    return d

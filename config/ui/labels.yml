@@ -12,6 +12,7 @@ overlay-options:
       width: 4
     - title: Stations
       width: 2
+      label: (HISTORICAL ONLY)
     - title: Grid
       width: 2
 colorscale-options:
@@ -45,11 +46,10 @@ climate_regime:
 historical_dataset:
   model: Model
   reconstruction: Reconstruction
+interpolation: "Interpolation value"
 future_change_factors:
   short: "{value}{separator}{units}"
-  short_nice: "{}°C"      # deprecated
-  short_ascii: "{} degC"  # deprecated
-  long: "{}°C above 1986-2016"
+  long: "{value}°C above 1986-2016"
 map:
   title:
     historical: "{dv} • {climate_regime}{dataset}"
@@ -61,4 +61,8 @@ table_C2:
   title: |
     Design values for {name_and_units} at Table C-2 locations. 
     For future projections, {name} is a Tier {tier} variable.
+  no_table_data_error: |
+    Error: Data is not available for this table. 
+    Please report this error to the application contact given 
+    in the **About > Contact** tab.    
   no_station_data: "Variable {} does not have historical data"

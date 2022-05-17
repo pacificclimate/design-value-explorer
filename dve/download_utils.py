@@ -1,7 +1,9 @@
 import os
 import os.path
 import csv
-from dve.config import dv_has_climate_regime
+from dve.config import (
+    dv_has_climate_regime, interpolation_value_label, download_table_label,
+)
 from dve.data import dv_value
 from dve.config import dv_units, dv_roundto, future_change_factor_label
 from dve.math_utils import round_to_multiple
@@ -118,11 +120,7 @@ def create_download_file(
         writer.writerow(tuple())
 
         if climate_regime == "historical":
-            # TODO: These label(s) should be defined in config
-            # value_headers = tuple(
-            #     f"{dataset_id.capitalize()}" for dataset_id in dataset_ids
-            # )
-            value_headers = ("Interpolation value",)
+            value_headers = (interpolation_value_label(config),)
         else:
             value_headers = tuple(
                 future_change_factor_label(config, dataset_id, nice=False)
@@ -131,8 +129,8 @@ def create_download_file(
 
         writer.writerow(
             tuple(
-                config["ui"]["labels"]["download_table"][k]
-                for k in ("dv", "units")
+                download_table_label(config, column)
+                for column in ("dv", "units")
             )
             + value_headers
         )

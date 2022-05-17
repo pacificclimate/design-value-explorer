@@ -6,7 +6,8 @@ from dash import dash_table, dcc
 
 from dve.config import (
     dv_has_climate_regime, future_change_factor_label, dv_roundto, dv_name,
-    dv_units, file_exists, filepath_for, units_suffix, dv_tier,
+    dv_units, file_exists, filepath_for, units_suffix, dv_tier, table_c2_title,
+    table_c2_no_table_data_msg, table_c2_no_station_data_msg,
 )
 from dve.data import get_data_object
 from dve.config import dv_label
@@ -20,7 +21,6 @@ timing_log = logger.info
 
 def add(app, config):
     def make_data_table(design_variable):
-        name = dv_name(config, design_variable)
         historical_name_and_units = dv_label(
             config, design_variable, climate_regime="historical"
         )
@@ -30,11 +30,7 @@ def add(app, config):
         )
         future_dataset_ids = config["ui"]["future_change_factors"]
 
-        title = config["ui"]["labels"]["table_C2"]["title"].format(
-            name=name,
-            tier=dv_tier(config, design_variable),
-            name_and_units=historical_name_and_units,
-        )
+        title = table_c2_title(config, design_variable)
 
         # Show error message if configured data file does not exist.
         if not file_exists(
@@ -47,12 +43,7 @@ def add(app, config):
         ):
             return (
                 title,
-                dcc.Markdown(
-                    "Error: Data is not available for this table. "
-                    "Please report this error to the "
-                    "application contact given "
-                    "in the **About > Contact** tab."
-                )
+                dcc.Markdown(table_c2_no_table_data_msg(config))
             )
 
         historical_dataset = get_data_object(
@@ -184,9 +175,7 @@ def add(app, config):
         # Show "No data" if there is no data for this variable
         if not dv_has_climate_regime(config, design_variable, "historical"):
             return (
-                config["ui"]["labels"]["table_C2"]["no_station_data"].format(
-                    design_variable
-                ),
+                table_c2_no_station_data_msg(config, design_variable),
                 None,
             )
 

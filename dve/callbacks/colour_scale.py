@@ -33,7 +33,7 @@ def add(app, config):
                     )
                 ),
             }
-            for option in dve.layout.scale_ctrl_options
+            for option in dve.layout.scale_ctrl_options(config)
         ]
         return options
 

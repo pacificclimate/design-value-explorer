@@ -7,7 +7,7 @@ from dash.dependencies import Input, Output, State
 from dash import html
 import dash_bootstrap_components as dbc
 
-from dve.config import dv_has_climate_regime, filepath_for
+from dve.config import dv_has_climate_regime, filepath_for, download_table_label
 from dve.data import get_data_object
 from dve.download_utils import (
     download_filename,
@@ -76,8 +76,8 @@ def map_pointer_table(
                         html.Th(hdg)
                         for hdg in (
                             tuple(
-                                config["ui"]["labels"]["download_table"][k]
-                                for k in ("dv", "units")
+                                download_table_label(config, column)
+                                for column in ("dv", "units")
                             )
                             + value_headers
                         )
