@@ -5,9 +5,22 @@ from dash.dependencies import Input, Output, State
 from dash import dash_table, dcc
 
 from dve.config import (
-    dv_has_climate_regime, future_change_factor_label, dv_roundto, dv_name,
-    dv_units, file_exists, filepath_for, units_suffix, dv_tier, table_c2_title,
-    table_c2_no_table_data_msg, table_c2_no_station_data_msg,
+    dv_has_climate_regime,
+    future_change_factor_label,
+    dv_roundto,
+    dv_name,
+    dv_units,
+    file_exists,
+    filepath_for,
+    units_suffix,
+    dv_tier,
+    table_c2_title,
+    table_c2_no_table_data_msg,
+    table_c2_no_station_data_msg,
+    table_c2_location_label,
+    table_c2_province_label,
+    table_c2_longitude_label,
+    table_c2_latitude_label,
 )
 from dve.data import get_data_object
 from dve.config import dv_label
@@ -45,7 +58,7 @@ def add(app, config):
         ):
             return (
                 title,
-                dcc.Markdown(table_c2_no_table_data_msg(config, lang))
+                dcc.Markdown(table_c2_no_table_data_msg(config, lang)),
             )
 
         historical_dataset = get_data_object(
@@ -88,36 +101,45 @@ def add(app, config):
             )
 
         column_info = {
-            "Location": {"name": ["", "Location"], "type": "text"},
-            "prov": {"name": ["", "Province"], "type": "text"},
-            "Longitude": {"name": ["", "Longitude"], "type": "numeric"},
-            "Latitude": {"name": ["", "Latitude"], "type": "numeric"},
+            "Location": {
+                "name": ["", table_c2_location_label(config, lang)],
+                "type": "text",
+            },
+            "prov": {
+                "name": ["", table_c2_province_label(config, lang)],
+                "type": "text",
+            },
+            "Longitude": {
+                "name": ["", table_c2_longitude_label(config, lang)],
+                "type": "numeric",
+            },
+            "Latitude": {
+                "name": ["", table_c2_latitude_label(config, lang)],
+                "type": "numeric",
+            },
             pcic_revised_hx_value_col_id: {
                 "name": [historical_name_and_units, "PCIC"],
                 "type": "numeric",
-                "format": {
-                    "nully": "n/a",
-                },
+                "format": {"nully": "n/a"},
             },
             nbcc_hx_value_col_id: {
                 "name": [historical_name_and_units, "NBCC"],
                 "type": "numeric",
-                "format": {
-                    "nully": "n/a",
-                },
+                "format": {"nully": "n/a"},
             },
             **{
                 cf_value_col_id: {
                     "name": [
                         dv_label(
-                            config, lang, design_variable, climate_regime="future"
+                            config,
+                            lang,
+                            design_variable,
+                            climate_regime="future",
                         ),
                         f"CF {future_change_factor_label(config, lang, future_dataset_id)}",
                     ],
                     "type": "numeric",
-                    "format": {
-                        "nully": "n/a",
-                    },
+                    "format": {"nully": "n/a"},
                 }
                 for cf_value_col_id, future_dataset_id in zip(
                     cf_value_col_ids, future_dataset_ids

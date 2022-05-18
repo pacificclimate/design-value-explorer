@@ -376,3 +376,19 @@ def table_c2_no_station_data_msg(config, lang, design_variable):
     return config["ui"]["labels"]["table_C2"]["no_station_data"].format(
         design_variable
     )
+
+
+def table_c2_location_label(config, lang):
+    return config["ui"]["labels"]["table_C2"]["location"]
+
+
+def table_c2_province_label(config, lang):
+    return config["ui"]["labels"]["table_C2"]["province"]
+
+
+def table_c2_longitude_label(config, lang):
+    return config["ui"]["labels"]["table_C2"]["longitude"]
+
+
+def table_c2_latitude_label(config, lang):
+    return config["ui"]["labels"]["table_C2"]["latitude"]

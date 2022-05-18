@@ -66,3 +66,7 @@ table_C2:
     Please report this error to the application contact given 
     in the **About > Contact** tab.    
   no_station_data: "Variable {} does not have historical data"
+  location: Location
+  province: Province
+  longitude: Longitude
+  latitude: Latitude
