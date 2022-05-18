@@ -3,7 +3,8 @@ ui:
     ticks: !include config/ui/ticks.yml
     dvs: !include config/ui/dvs.yml
     future_change_factors: !include config/ui/future_change_factors.yml
-    labels: !include config/ui/labels.yml
+    labels:
+      en: !include config/ui/labels.yml
     loading: !include config/ui/loading.yml
     graph: !include config/ui/graph.yml
 

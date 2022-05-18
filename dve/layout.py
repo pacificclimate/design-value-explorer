@@ -209,10 +209,8 @@ def main(app, config, lang="en"):
                             ),
                         ),
                         [
-                            column["width"]
-                            for column in config["ui"]["labels"][
-                                "overlay-options"
-                            ]["columns"]
+                            width
+                            for title, width in overlay_options_control_columns(config, lang)
                         ],
                     )
                 ],
@@ -230,7 +228,7 @@ def main(app, config, lang="en"):
         cmap_r = tuple(f"{color}_r" for color in colour_maps)
         colour_maps += cmap_r
 
-        cfg = config["ui"]["labels"]["colorscale-options"]
+        cfg = config["ui"]["labels"][lang]["colorscale-options"]
 
         # Controls by column key in config
         controls = {
@@ -275,7 +273,7 @@ def main(app, config, lang="en"):
                                 id=f"colorscale_options_label_{col_key}",
                             )
                         ),
-                        width=color_bar_options_ctrl_width(config, col_key),
+                        width=color_bar_options_ctrl_width(config, lang, col_key),
                     )
                     for col_key in cfg["column-order"]
                 ]
@@ -285,7 +283,7 @@ def main(app, config, lang="en"):
                 [
                     dbc.Col(
                         controls[col_key],
-                        width=color_bar_options_ctrl_width(config, col_key)
+                        width=color_bar_options_ctrl_width(config, lang, col_key)
                     )
                     for col_key in cfg["column-order"]
                 ],
@@ -435,7 +433,7 @@ def main(app, config, lang="en"):
                             ),
                             className="help_tab pt-3",
                         )
-                        for index in range(len(config["help"]["tabs"]))
+                        for index in range(len(config["help"]["tabs"][lang]))
                     ],
                     className="pt-3",
                     **config["ui"]["controls"]["help_tabs"],
@@ -459,7 +457,7 @@ def main(app, config, lang="en"):
                         ),
                         className="about_tab pt-3",
                     )
-                    for index in range(len(config["about"]["tabs"]))
+                    for index in range(len(config["about"]["tabs"][lang]))
                 ],
                 className="pt-3",
                 **config["ui"]["controls"]["about_tabs"],
