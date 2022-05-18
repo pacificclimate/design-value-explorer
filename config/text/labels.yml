@@ -1,1 +1,2 @@
-en: !include config/text/labels/labels.yml
+en: !include config/text/labels/en/labels.yml
+#fr: !include config/text/labels/fr/labels.yml

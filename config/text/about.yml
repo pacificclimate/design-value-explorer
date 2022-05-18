@@ -1,6 +1,11 @@
 tabs:
   en:
-    - !include config/text/about/dve.yml
-    - !include config/text/about/credits.yml
-    - !include config/text/about/contact.yml
-    - !include config/text/about/team.yml
+    - !include config/text/about/en/dve.yml
+    - !include config/text/about/en/credits.yml
+    - !include config/text/about/en/contact.yml
+    - !include config/text/about/en/team.yml
+#  fr:
+#    - !include config/text/about/fr/dve.yml
+#    - !include config/text/about/fr/credits.yml
+#    - !include config/text/about/fr/contact.yml
+#    - !include config/text/about/fr/team.yml
