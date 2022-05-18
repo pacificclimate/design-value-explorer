@@ -11,7 +11,7 @@ from dve.config import (
     color_bar_options_ctrl_width, color_bar_options_ctrl_title, map_tab_label,
     table_c2_label, help_tab_label, help_subtab_label, help_subtab_content,
     about_tab_label, about_subtab_label, about_subtab_card_spec,
-    future_change_factor_label, app_title,
+    future_change_factor_label, app_title, dv_dropdown_options,
 )
 from dve.dict_utils import path_set
 
@@ -73,18 +73,6 @@ def main(app, config, lang="en"):
 
         Returns a list of rows.
         """
-        dd_options = [
-            {
-                "label": dv_label(
-                    config, lang,
-                    design_variable,
-                    with_units=False,
-                    with_description=True,
-                ),
-                "value": design_variable,
-            }
-            for design_variable in config["values"]["ui"]["dvs"]
-        ]
         return [
             dbc.Row(
                 [
@@ -128,7 +116,7 @@ def main(app, config, lang="en"):
             dbc.Row(
                 [
                     dbc.Col(
-                        html.Label("Design Variable"),
+                        html.Label(id="dv_dropdown_label"),
                         xs=12,
                         md=3,
                         lg=2,
@@ -138,7 +126,6 @@ def main(app, config, lang="en"):
                     dbc.Col(
                         dcc.Dropdown(
                             id="design_variable",
-                            options=dd_options,
                             **config["values"]["ui"]["controls"]["design-value-id"],
                         ),
                         xs=12,

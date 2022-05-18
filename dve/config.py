@@ -203,10 +203,29 @@ def dv_historical_stations_column(config, design_variable):
     ]
 
 
-# Text
+# Text(ish)
 
 def app_title(config, lang):
     return config["text"]["labels"][lang]["app_title"]
+
+
+def dv_dropdown_label(config, lang):
+    return config["text"]["labels"][lang]["dv_dropdown"]
+
+
+def dv_dropdown_options(config, lang):
+    return [
+        {
+            "label": dv_label(
+                config, lang,
+                design_variable,
+                with_units=False,
+                with_description=True,
+            ),
+            "value": design_variable,
+        }
+        for design_variable in config["values"]["ui"]["dvs"]
+    ]
 
 
 def climate_regime_label(config, lang, climate_regime, which="long"):
