@@ -53,7 +53,7 @@ def card_set(cards, row_args={}, col_args={}):
     )
 
 
-def main(app, config):
+def main(app, config, lang="en"):
     """
     Top-level layout component. `app.layout` should be set to what this function
     returns.
@@ -76,7 +76,7 @@ def main(app, config):
         dd_options = [
             {
                 "label": dv_label(
-                    config,
+                    config, lang,
                     design_variable,
                     with_units=False,
                     with_description=True,
@@ -149,7 +149,7 @@ def main(app, config):
         future_dataset_ctrl_options = [
             {
                 "label": future_change_factor_label(
-                    config, dataset_id, which="long"
+                    config, lang, dataset_id, which="long"
                 ),
                 "value": dataset_id,
             }
@@ -158,12 +158,12 @@ def main(app, config):
 
         return [
             # Section title
-            dbc.Row(dbc.Col(html.H5(overlay_options_section_title(config)))),
+            dbc.Row(dbc.Col(html.H5(overlay_options_section_title(config, lang)))),
             # Control titles
             dbc.Row(
                 [
                     dbc.Col(html.Label(title), width=width)
-                    for title, width in overlay_options_control_columns(config)
+                    for title, width in overlay_options_control_columns(config, lang)
                 ]
             ),
             # Controls
@@ -174,7 +174,7 @@ def main(app, config):
                         (
                             dcc.RadioItems(
                                 id="climate_regime",
-                                options=climate_regime_ctrl_options(config),
+                                options=climate_regime_ctrl_options(config, lang),
                                 **config["ui"]["controls"]["climate-regime"],
                             ),
                             html.Div(
@@ -200,7 +200,7 @@ def main(app, config):
                                         config["ui"]["controls"]["stations"]
                                     ),
                                     "label.label",
-                                    overlay_options_stations_label(config),
+                                    overlay_options_stations_label(config, lang),
                                 ),
                             ),
                             daq.BooleanSwitch(
@@ -236,12 +236,12 @@ def main(app, config):
         controls = {
             "color-map": dcc.Dropdown(
                 id="color_map",
-                options=color_map_ctrl_options(config),
+                options=color_map_ctrl_options(config, lang),
                 **config["ui"]["controls"]["colour-map"],
             ),
             "scale": dcc.Dropdown(
                 id="color_scale_type",
-                options=scale_ctrl_options(config),
+                options=scale_ctrl_options(config, lang),
                 **config["ui"]["controls"]["scale"],
             ),
             "num-colors": html.Div(
@@ -264,14 +264,14 @@ def main(app, config):
 
         return [
             # Section title
-            dbc.Row(dbc.Col(html.H5(colourbar_options_section_title(config)))),
+            dbc.Row(dbc.Col(html.H5(colourbar_options_section_title(config, lang)))),
             # Control titles
             dbc.Row(
                 [
                     dbc.Col(
                         Loading(
                             html.Label(
-                                color_bar_options_ctrl_title(config, col_key),
+                                color_bar_options_ctrl_title(config, lang, col_key),
                                 id=f"colorscale_options_label_{col_key}",
                             )
                         ),
@@ -362,7 +362,7 @@ def main(app, config):
         """
         return dbc.Tab(
             tab_id="map-tab",
-            label=map_tab_label(config),
+            label=map_tab_label(config, lang),
             children=[
                 dbc.Row(
                     [
@@ -404,7 +404,7 @@ def main(app, config):
     def table_C2_tab():
         return dbc.Tab(
             tab_id="table-tab",
-            label=table_c2_label(config),
+            label=table_c2_label(config, lang),
             children=[
                 Loading(html.H5(id="table-C2-title", className="mt-3")),
                 Loading(html.Div(id="table-C2")),
@@ -417,18 +417,18 @@ def main(app, config):
         """
         return dbc.Tab(
             tab_id="help-tab",
-            label=help_tab_label(config),
+            label=help_tab_label(config, lang),
             children=[
                 dbc.Tabs(
                     id="help_tabs",
                     children=[
                         dbc.Tab(
                             tab_id=f"help_tab-{index}",
-                            label=help_subtab_label(config, index),
+                            label=help_subtab_label(config, lang, index),
                             children=dbc.Row(
                                 dbc.Col(
                                     interpret(
-                                        help_subtab_content(config, index)
+                                        help_subtab_content(config, lang, index)
                                     ),
                                     xs=12, xl=6
                                 )
@@ -446,15 +446,15 @@ def main(app, config):
     def about_tab():
         return dbc.Tab(
             tab_id="about-tab",
-            label=about_tab_label(config),
+            label=about_tab_label(config, lang),
             children=dbc.Tabs(
                 id="about_tabs",
                 children=[
                     dbc.Tab(
                         tab_id=f"about_tab-{index}",
-                        label=about_subtab_label(config, index),
+                        label=about_subtab_label(config, lang, index),
                         children=card_set(
-                            about_subtab_card_spec(config, index),
+                            about_subtab_card_spec(config, lang, index),
                             col_args=dict(xs=12, md=6, xxl=4, className="mb-3"),
                         ),
                         className="about_tab pt-3",

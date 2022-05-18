@@ -18,11 +18,13 @@ from dve.timing import timing
 logger = logging.getLogger(__name__)
 timing_log = logger.info
 
+lang = "en"  # TODO: Replace with language selection
+
 
 def add(app, config):
     def make_data_table(design_variable):
         historical_name_and_units = dv_label(
-            config, design_variable, climate_regime="historical"
+            config, lang, design_variable, climate_regime="historical"
         )
         historical_units, future_units = (
             dv_units(config, design_variable, climate_regime, nice=False)
@@ -30,7 +32,7 @@ def add(app, config):
         )
         future_dataset_ids = config["ui"]["future_change_factors"]
 
-        title = table_c2_title(config, design_variable)
+        title = table_c2_title(config, lang, design_variable)
 
         # Show error message if configured data file does not exist.
         if not file_exists(
@@ -43,7 +45,7 @@ def add(app, config):
         ):
             return (
                 title,
-                dcc.Markdown(table_c2_no_table_data_msg(config))
+                dcc.Markdown(table_c2_no_table_data_msg(config, lang))
             )
 
         historical_dataset = get_data_object(
@@ -108,9 +110,9 @@ def add(app, config):
                 cf_value_col_id: {
                     "name": [
                         dv_label(
-                            config, design_variable, climate_regime="future"
+                            config, lang, design_variable, climate_regime="future"
                         ),
-                        f"CF {future_change_factor_label(config, future_dataset_id)}",
+                        f"CF {future_change_factor_label(config, lang, future_dataset_id)}",
                     ],
                     "type": "numeric",
                     "format": {
@@ -175,7 +177,7 @@ def add(app, config):
         # Show "No data" if there is no data for this variable
         if not dv_has_climate_regime(config, design_variable, "historical"):
             return (
-                table_c2_no_station_data_msg(config, design_variable),
+                table_c2_no_station_data_msg(config, lang, design_variable),
                 None,
             )
 

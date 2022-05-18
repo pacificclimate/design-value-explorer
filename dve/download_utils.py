@@ -109,7 +109,7 @@ def get_download_data(
 
 
 def create_download_file(
-    lon, lat, config, climate_regime, design_variables, dataset_ids, data_values
+    lon, lat, config, lang, climate_regime, design_variables, dataset_ids, data_values
 ):
     with open(
         os.path.join("/", download_filepath(lon, lat, climate_regime)), "w"
@@ -120,16 +120,16 @@ def create_download_file(
         writer.writerow(tuple())
 
         if climate_regime == "historical":
-            value_headers = (interpolation_value_label(config),)
+            value_headers = (interpolation_value_label(config, lang),)
         else:
             value_headers = tuple(
-                future_change_factor_label(config, dataset_id, nice=False)
+                future_change_factor_label(config, lang, dataset_id, nice=False)
                 for dataset_id in dataset_ids
             )
 
         writer.writerow(
             tuple(
-                download_table_label(config, column)
+                download_table_label(config, lang, column)
                 for column in ("dv", "units")
             )
             + value_headers

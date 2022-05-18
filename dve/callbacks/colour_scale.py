@@ -14,6 +14,7 @@ import dve.layout
 from dve.math_utils import sigfigs, round_to_multiple
 
 logger = logging.getLogger(__name__)
+lang = "en"  # TODO: Replace with language selection
 
 
 def add(app, config):
@@ -33,7 +34,7 @@ def add(app, config):
                     )
                 ),
             }
-            for option in dve.layout.scale_ctrl_options(config)
+            for option in dve.layout.scale_ctrl_options(config, lang)
         ]
         return options
 

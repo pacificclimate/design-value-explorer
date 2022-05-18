@@ -42,6 +42,8 @@ logger = logging.getLogger(__name__)
 timing_log_info = logger.info
 timing_log_debug = logger.debug  # Set to None to not log debug timing
 
+lang = "en"  # TODO: Replace with language selection
+
 
 def message_figure(message):
     """Return a figure containing only a text message"""
@@ -165,14 +167,14 @@ def add(app, config):
                 }[climate_regime]
                 return message_figure(
                     f"No {what} are available for "
-                    f"{dv_name(config, design_variable)} "
+                    f"{dv_name(config, lang, design_variable)} "
                     f"at this time."
                 )
 
             # Show error message if configured data file does not exist.
             if not file_exists(raster_filepath):
                 title = map_title(
-                    config,
+                    config, lang,
                     design_variable,
                     climate_regime,
                     historical_dataset_id,
@@ -317,7 +319,7 @@ def add(app, config):
                         showscale=False,  # Hide colorbar
                         visible=True,
                         hovertemplate=(
-                            f"<b>Interpolated {dv_label(config, design_variable, climate_regime)}: %{{z}} </b><br>"
+                            f"<b>Interpolated {dv_label(config, lang, design_variable, climate_regime)}: %{{z}} </b><br>"
                         ),
                         name="",
                     )
@@ -356,7 +358,7 @@ def add(app, config):
                             showscale=False,  # Hide colorbar
                         ),
                         hovertemplate=(
-                            f"<b>Station {dv_label(config, design_variable, climate_regime)}: "
+                            f"<b>Station {dv_label(config, lang, design_variable, climate_regime)}: "
                             f"%{{text}}</b><br>"
                         ),
                         name="",
@@ -395,7 +397,7 @@ def add(app, config):
                 layout=go.Layout(
                     title=go.layout.Title(
                         text=map_title(
-                            config,
+                            config, lang,
                             design_variable,
                             climate_regime,
                             historical_dataset_id,

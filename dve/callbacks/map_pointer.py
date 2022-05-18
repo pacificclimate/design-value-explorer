@@ -37,10 +37,12 @@ logger = logging.getLogger(__name__)
 timing_log_info = logger.info
 timing_log_debug = logger.debug  # Set to None to not log debug timing
 
+lang = "en"  # TODO: Replace with language selection
+
 
 # TODO: Place somewhere else (layout.components)?
 def map_pointer_table(
-    config,
+    config, lang,
     climate_regime,
     design_variables,
     dataset_ids,
@@ -60,14 +62,14 @@ def map_pointer_table(
         value_headers = ("Interpolation value",)
     else:
         value_headers = tuple(
-            future_change_factor_label(config, dataset_id)
+            future_change_factor_label(config, lang, dataset_id)
             for dataset_id in dataset_ids
         )
 
     return dbc.Table(
         [
             html.Caption(
-                climate_regime_label(config, climate_regime),
+                climate_regime_label(config, lang, climate_regime),
                 style={"caption-side": "top", "padding": "0 0 0.5em 0"},
             ),
             html.Thead(
@@ -76,7 +78,7 @@ def map_pointer_table(
                         html.Th(hdg)
                         for hdg in (
                             tuple(
-                                download_table_label(config, column)
+                                download_table_label(config, lang, column)
                                 for column in ("dv", "units")
                             )
                             + value_headers
@@ -88,7 +90,7 @@ def map_pointer_table(
                 [
                     html.Tr(
                         [
-                            html.Th(dv_name(config, design_variable)),
+                            html.Th(dv_name(config, lang, design_variable)),
                             html.Th(
                                 dv_units(
                                     config, design_variable, climate_regime
@@ -392,7 +394,7 @@ def add(app, config):
 
             # Create data file for download
             create_download_file(
-                lon, lat, config, climate_regime, *download_data
+                lon, lat, config, lang, climate_regime, *download_data
             )
 
             return [
@@ -401,5 +403,5 @@ def add(app, config):
                     ("Lon", round(lon, 6)),
                     # (f"Z ({design_variable_ctrl}) ({source})", round(z, 6)),
                 ),
-                map_pointer_table(config, climate_regime, *download_data),
+                map_pointer_table(config, lang, climate_regime, *download_data),
             ]
