@@ -13,6 +13,7 @@ import dve.callbacks.table_c2
 import dve.callbacks.colour_scale
 import dve.callbacks.map_pointer
 import dve.callbacks.overlay
+import dve.callbacks.labels
 import dve.data
 import dve.layout
 
@@ -52,6 +53,7 @@ def make_dash_app(config):
     dve.callbacks.colour_scale.add(app, config)
     dve.callbacks.map_pointer.add(app, config)
     dve.callbacks.map_figure.add(app, config)
+    dve.callbacks.labels.add(app, config)
 
     # Add routes
     @app.server.route(f"{str(download_base_url())}/<filename>")

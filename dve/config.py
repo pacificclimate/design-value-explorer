@@ -203,6 +203,12 @@ def dv_historical_stations_column(config, design_variable):
     ]
 
 
+# Text
+
+def app_title(config, lang):
+    return config["text"]["labels"][lang]["app_title"]
+
+
 def climate_regime_label(config, lang, climate_regime, which="long"):
     return config["text"]["labels"][lang]["climate_regime"][climate_regime][which]
 

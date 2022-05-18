@@ -6,12 +6,12 @@ from dash import dcc
 import dash_daq as daq
 from dve.config import (
     dv_label, climate_regime_ctrl_options, overlay_options_stations_label,
-    overlay_options_section_title,
-    overlay_options_control_columns, color_map_ctrl_options, scale_ctrl_options,
-    colourbar_options_section_title, color_bar_options_ctrl_width,
-    color_bar_options_ctrl_title, map_tab_label, table_c2_label, help_tab_label,
-    help_subtab_label, help_subtab_content, about_tab_label, about_subtab_label,
-    about_subtab_card_spec, future_change_factor_label,
+    overlay_options_section_title, overlay_options_control_columns,
+    color_map_ctrl_options, scale_ctrl_options, colourbar_options_section_title,
+    color_bar_options_ctrl_width, color_bar_options_ctrl_title, map_tab_label,
+    table_c2_label, help_tab_label, help_subtab_label, help_subtab_content,
+    about_tab_label, about_subtab_label, about_subtab_card_spec,
+    future_change_factor_label, app_title,
 )
 from dve.dict_utils import path_set
 
@@ -95,12 +95,12 @@ def main(app, config, lang="en"):
                             target="_blank",
                             title="Pacific Climate Impacts Consortium website",
                         ),
-                        xs=6,
+                        xs=5,
                         className="align-self-center text-end",
                     ),
                     dbc.Col(
                         html.A(
-                            "Design Value Explorer",
+                            id="app_title",
                             href=app.get_relative_path("/"),
                             style={
                                 "font-size": "2em",
@@ -108,9 +108,20 @@ def main(app, config, lang="en"):
                                 "text-decoration": "none",
                             },
                         ),
-                        xs=6,
+                        xs=5,
                         className="align-self-center text-start",
                     ),
+                    dbc.Col(
+                        dcc.Dropdown(
+                            id="language",
+                            options=[
+                                {"label": "English", "value": "en"},
+                                # {"label": "Français", "value": "fr"},
+                            ],
+                            value="en",
+                        ),
+                        xs=2,
+                    )
                 ],
                 className="pb-1 mb-3 border-bottom",
             ),
