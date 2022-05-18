@@ -1,0 +1,10 @@
+label: Contact
+cards:
+    - header: Feedback on Application
+      body: |
+        Please address questions and suggestions on the functioning of this
+        tool to [PCIC Support](mailto:pcic.support@uvic.ca).
+    - header: Scientific Questions
+      body: |
+        Please address questions about science and interpretation of the 
+        data presented in this tool to [Regional Climate Impacts](mailto:climate@uvic.ca).

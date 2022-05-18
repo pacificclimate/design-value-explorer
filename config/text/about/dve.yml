@@ -1,0 +1,183 @@
+label: Design Value Explorer
+cards:
+  - header: Description
+    body: |
+      Design Value Explorer provides revised climatic design data relevant
+      to the National Building Code of Canada (NBCC 2015, Table C-2) and
+      the Canadian Highway Bridge Design Code (CHBDC/ CSA S6 2014,
+      Annex A3.1) that has not yet been reviewed and accepted for
+      inclusion into updates to these codes, and thus should only be
+      considered as advisory information. Design decisions should always
+      be made following the appropriate codes and standards. It is
+      important to note that it remains the responsibility of the users
+      of these climatic data to determine whether it is suitable for their
+      particular purpose. In many instances, new methods were developed
+      to quality control the underlying raw data and also to make the
+      best use of these data to calculate design values. State-of-the-art
+      regional climate model simulations were used both to aid in the
+      interpolation of historical design values, and also to derive
+      future changes in these elements. This future-looking information
+      comes with an associated uncertainty, as fully described for each
+      design value element in ECCC’s recent Climate Resilient Buildings
+      and Core Public Infrastructure report (hereafter CRBCPI; Cannon et al. 2020),
+      which should be consulted for further guidance.
+      
+      In brief, **Tier 1** variables are those for which there is generally
+      high or very high confidence in the future projections for a given
+      level of global warming. These variables reflect the well-understood
+      thermal response of the climate to external radiative forcing of the
+      Earth system, and include:
+      - heating degree days
+      - hourly design temperatures (January 2.5% dry bulb, January 1% dry bulb, July 2.5% dry bulb, and
+        July 2.5% wet bulb)
+      - maximum and minimum mean daily air temperatures
+      
+      **Tier 2** variables are those for which there is generally medium
+      confidence in the future projections for a given level of global
+      warming, and include:
+      - annual total precipitation and annual total rainfall
+      - annual maximum 1-day rain (50-yr return period)
+      - annual maximum 15-min rainfall (10-yr return period)
+      - IDF change factors (CF)
+      
+      **Tier 3** variables are those for which there is low or very low
+      confidence in the future projections for a given level of global
+      warming, and include:
+      - annual mean relative humidity
+      - annual maximum hourly wind pressures (10, 25, 50, and 100-yr return periods)
+      - annual maximum driving rain wind pressures (5-yr return period)
+      - annual maximum snow load & rain-on-snow load (50-yr return period)
+      - moisture index
+      
+      Future projections in DVE are presented at specified global warming
+      levels in °C above a baseline period (1986-2016).
+      The approximate year at which a specified level of global warming
+      is reached, according to an ensemble of Earth System Models (CMIP5)
+      running several alternative emissions scenarios, is provided in the
+      following table, from the CRBCPI report:
+      
+      <table>
+        <tr>
+          <th>Global ∆T</th>
+          <th>RCP8.5</th>
+          <th>RCP6.0</th>
+          <th>RCP4.5</th>
+          <th>RCP2.6</th>
+        </tr>
+        <tr>
+          <th>0.5°C</th>
+          <td align="center" colspan="4">2023</td>
+        </tr>
+        <tr>
+          <th>1.0°C</th>
+          <td align="center">2035</td>
+          <td align="center" colspan="2">2046</td>
+          <td align="center">—</td>
+        </tr>
+        <tr>
+          <th>1.5°C</th>
+          <td align="center">2047</td>
+          <td align="center" colspan="2">2070</td>
+          <td align="center">—</td>
+        </tr>
+        <tr>
+          <th>2.0°C</th>
+          <td align="center">2059</td>
+          <td align="center">2087</td>
+          <td align="center">—</td>
+          <td align="center">—</td>
+        </tr>
+        <tr>
+          <th>2.5°C</th>
+          <td align="center">2069</td>
+          <td align="center">—</td>
+          <td align="center">—</td>
+          <td align="center">—</td>
+        </tr>
+        <tr>
+          <th>3.0°C</th>
+          <td align="center">2080</td>
+          <td align="center">—</td>
+          <td align="center">—</td>
+          <td align="center">—</td>
+        </tr>
+        <tr>
+          <th>3.5°C</th>
+          <td align="center">2090</td>
+          <td align="center">—</td>
+          <td align="center">—</td>
+          <td align="center">—</td>
+        </tr>
+      </table>
+      
+      A dash indicates that the corresponding global ∆T is not reached 
+      before 2100 for that RCP. Results from different RCPs are averaged 
+      if the years of exceedence are within 6 years of each other.
+      
+      Design-related decisions made today should consider both the 
+      level of acceptable risk and the future-projected direction of 
+      change for different types of loads. For increasing loads associated 
+      with Tier 1 variables, for example, the risk that arises from 
+      underestimating these loads might need be balanced against the 
+      additional cost associated with their overestimation. As discussed 
+      in the CRBCPI report: "A compromise approach for increasing loads 
+      might be to use design data no smaller than those appropriate 
+      for a 50-year time horizon under the RCP8.5 scenario, which would 
+      imply using design data for +2.5°C warming, the level that occurs 
+      under RCP8.5 in 2069. Such a design could be expected to continue 
+      to perform well at least to the end of this century under lower 
+      emissions scenarios, such as RCP6.0, for which global warming 
+      levels are not projected to consistently exceed 2.5°C in this 
+      century." Conversely, for design variables whose loads are 
+      projected to decrease under global warming, such as snow, a 
+      conservative approach might be to use current climatic design 
+      data, acknowledging that this would incur about the same cost 
+      as in the past.
+      
+      Reference
+      
+      Cannon, A. J., et al. 2020: _Climate-resilient buildings and core 
+      public infrastructure (CRBCPI) 2020: An assessment of the impact 
+      of climate change on climatic design data in Canada._
+      https://publications.gc.ca/site/eng/9.893021/publication.html
+
+
+  - header: No Warranty
+    color: warning
+    body: |
+      The data in this tool are provided by the Pacific Climate Impacts Consortium with an open licence on an
+      “AS IS” basis without any warranty or representation, express or implied, as to its accuracy or completeness.
+      Any reliance you place upon the information contained here is your sole responsibility and strictly at
+      your own risk. In no event will the Pacific Climate Impacts Consortium be liable for any loss or damage
+      whatsoever, including, without limitation, indirect or consequential loss or damage, arising from reliance
+      upon the data or derived information.
+
+  - header: Version
+    body: |
+      **Design Value Explorer {DVE_VERSION_TAG_ONLY}**
+      
+      {DVE_VERSION}
+
+  - header: Version Notes
+    body: |
+      Note that in in this version of DVE:
+      - The nominal resolution of the interpolation is 4.5 km, true at 60°N.
+      - RHAnn, Tmax and Tmin are not part of the NBCC, but are provided 
+        in the Canadian Highway Bridge Design Code.
+      - For projected change factors, only central estimates are provided, 
+        not ranges as is the norm for climate model projections. 
+        Future versions of DVE may include ranges of projected change factors.
+      - Future change factors for the Moisture Index (MI) are not 
+        available at this time.
+
+
+  - header: Author
+    body: '[Pacific Climate Impacts Consortium (PCIC)](https://pacificclimate.org/)'
+
+  - header: Terms of Use
+    body: Please see PCIC's [terms of use](https://pacificclimate.org/terms-of-use).
+
+  - header: Methods
+    body: |
+      [Methods used to derive design values](http://pacificclimate.org/sites/default/files/DVE_methods_final.pdf)
+

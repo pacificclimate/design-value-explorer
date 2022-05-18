@@ -1,0 +1,16 @@
+label: Credits
+cards:
+  - header: Development
+    body: |
+      Development of this version of DVE was made possible through funding 
+      and support provided by 
+      Infrastructure Canada and the National Research Council, and also 
+      benefited from collaborative research with the Climate Research 
+      Division of Environment and Climate Change Canada. 
+
+  - header: Data
+    body: |
+      PCIC gratefully acknowledges Environment and Climate Change Canada, 
+      and specifically the Meteorological Service of Canada, for the 
+      provision of the underlying station data on which DVE is based.
+
