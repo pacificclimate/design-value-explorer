@@ -67,7 +67,7 @@ def message_figure(message):
 def add(app, config):
     # Load Canada map polygons
     canada = gpd.read_file(
-        resource_filename("dve", config["paths"]["canada_vector"])
+        resource_filename("dve", config["values"]["paths"]["canada_vector"])
     ).geometry
     canada_x, canada_y = stratify_coords(canada)
 
@@ -223,7 +223,7 @@ def add(app, config):
             # Note that log scale is prohibited for several datasets, but is allowed
             # for a few (e.g., RL50) that can include 0.
             if color_scale_type == "logarithmic" and zmin == 0:
-                zmin = zmax / config["map"]["logscale_zmin_factor"]
+                zmin = zmax / config["values"]["map"]["logscale_zmin_factor"]
 
             boundaries = uniformly_spaced_with_target(
                 zmin,
@@ -253,7 +253,7 @@ def add(app, config):
 
             # Trace: Lon-lat overlay
             if show_grid:
-                lonlat_overlay_config = config["map"]["lonlat_overlay"]
+                lonlat_overlay_config = config["values"]["map"]["lonlat_overlay"]
 
                 with timing("create lon-lat graticule", log=timing_log_debug):
                     maps += lonlat_overlay(
@@ -373,7 +373,7 @@ def add(app, config):
                 target,
                 color_scale_type,
                 num_actual_colors,
-                config["ui"]["ticks"]["max-num"],
+                config["values"]["ui"]["ticks"]["max-num"],
             )
             colorbar = discrete_colorscale_colorbar(
                 boundaries,
@@ -403,21 +403,21 @@ def add(app, config):
                             historical_dataset_id,
                             future_dataset_id,
                         ),
-                        **config["map"]["layout"]["title"],
+                        **config["values"]["map"]["layout"]["title"],
                     ),
                     showlegend=False,
                     uirevision="None",
-                    **config["map"]["layout"]["main"],
+                    **config["values"]["map"]["layout"]["main"],
                 )
             )
-            figure.set_subplots(**config["map"]["layout"]["subplots"]["layout"])
+            figure.set_subplots(**config["values"]["map"]["layout"]["subplots"]["layout"])
 
             # Add colorbar trace to figure. Do this first so that the colourbar
             # traces have the first (3) curve numbers, as reported by the
             # `hoverData` and `clickData` properties of the map component. This
             # makes it possible to consistently respond only to hovers/clicks on
             # the map traces.
-            colorbar_location = config["map"]["layout"]["subplots"]["colorbar"][
+            colorbar_location = config["values"]["map"]["layout"]["subplots"]["colorbar"][
                 "location"
             ]
             figure.add_trace(colorbar["trace"], **colorbar_location)
@@ -425,7 +425,7 @@ def add(app, config):
             figure.update_yaxes(colorbar["yaxis"], **colorbar_location)
 
             # Add map traces to figure
-            map_location = config["map"]["layout"]["subplots"]["maps"][
+            map_location = config["values"]["map"]["layout"]["subplots"]["maps"][
                 "location"
             ]
             for m in maps:

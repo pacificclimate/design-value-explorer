@@ -1,25 +1,26 @@
-ui:
-    controls: !include config/ui/controls.yml
-    ticks: !include config/ui/ticks.yml
-    dvs: !include config/ui/dvs.yml
-    future_change_factors: !include config/ui/future_change_factors.yml
+text:
+    help: !include config/text/help.yml
+    about: !include config/text/about.yml
     labels:
-      en: !include config/ui/labels.yml
-    loading: !include config/ui/loading.yml
-    graph: !include config/ui/graph.yml
+        en: !include config/text/labels.yml
 
-paths: !include config/paths.yml
+values:
+    ui:
+        controls: !include config/values/ui/controls.yml
+        ticks: !include config/values/ui/ticks.yml
+        dvs: !include config/values/ui/dvs.yml
+        future_change_factors: !include config/values/ui/future_change_factors.yml
+        loading: !include config/values/ui/loading.yml
+        graph: !include config/values/ui/graph.yml
 
-dvs: !include config/dvs.yml
+    paths: !include config/values/paths.yml
 
-map: !include config/map.yml
+    dvs: !include config/values/dvs.yml
 
-table_C2: !include config/table_C2.yml
+    map: !include config/values/map.yml
 
-units: !include config/units.yml
+    table_C2: !include config/values/table_C2.yml
 
-local_preferences: !include config/local_preferences.yml
+    units: !include config/values/units.yml
 
-help: !include config/help.yml
-
-about: !include config/about.yml
+    local_preferences: !include config/values/local_preferences.yml

@@ -1,6 +1,6 @@
 # For documentation of this config, see dve/callbacks/local_preferences.py
 
-version: 19
+version: 20
 path_separator: ";"
 function_marker: "@"
 ui_elements:
@@ -12,53 +12,53 @@ ui_elements:
 
   - selector: main_tabs.active_tab
     paths:
-      global: ui;controls;main_tabs;active_tab
+      global: values;ui;controls;main_tabs;active_tab
 
   - selector: help_tabs.active_tab
     paths:
-      global: ui;controls;help_tabs;active_tab
+      global: values;ui;controls;help_tabs;active_tab
 
   - selector: about_tabs.active_tab
     paths:
-      global: ui;controls;about_tabs;active_tab
+      global: values;ui;controls;about_tabs;active_tab
 
   - selector: climate_regime.value
     paths:
-      global: ui;controls;climate-regime;value
+      global: values;ui;controls;climate-regime;value
 
   - selector: future_dataset_id.value
     paths:
-      global: ui;controls;future-dataset;value
+      global: values;ui;controls;future-dataset;value
 
   - selector: show_stations.on
     inputs:
       climate_regime: climate_regime.value
     paths:
       global: "@show_stations"
-      local: ui;controls;stations;{climate_regime};on
+      local: values;ui;controls;stations;{climate_regime};on
 
   - selector: show_grid.on
     paths:
-      global: ui;controls;grid;on
+      global: values;ui;controls;grid;on
 
   - selector: num_colors.value
     inputs:
       design_variable: design_variable.value
       climate_regime: climate_regime.value
     paths:
-      global: ui;controls;num-colours;value
-      local: dvs;{design_variable};{climate_regime};num_colours
+      global: values;ui;controls;num-colours;value
+      local: values;dvs;{design_variable};{climate_regime};num_colours
 
   - selector: color_map.value
     inputs:
       design_variable: design_variable.value
       climate_regime: climate_regime.value
     paths:
-      global: dvs;{design_variable};{climate_regime};colour_map
+      global: values;dvs;{design_variable};{climate_regime};colour_map
 
   - selector: color_scale_type.value
     inputs:
       design_variable: design_variable.value
       climate_regime: climate_regime.value
     paths:
-      global: dvs;{design_variable};{climate_regime};scale;default
+      global: values;dvs;{design_variable};{climate_regime};scale;default

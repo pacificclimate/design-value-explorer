@@ -154,9 +154,9 @@ def add(app, config):
     # These variables define the UI elements that mutually set and are set by
     # local preferences. To add a new UI element whose state is maintained in
     # local storage, add a new item to a list.
-    updatable_ui_elements = path_get(config, "local_preferences.ui_elements")
-    path_separator = path_get(config, "local_preferences.path_separator")
-    function_marker = path_get(config, "local_preferences.function_marker")
+    updatable_ui_elements = path_get(config, "values.local_preferences.ui_elements")
+    path_separator = path_get(config, "values.local_preferences.path_separator")
+    function_marker = path_get(config, "values.local_preferences.function_marker")
 
     # TODO: Use flexible callback signature to simplify args unpacking
     @app.callback(
@@ -203,7 +203,7 @@ def add(app, config):
             for e in updatable_ui_elements:
                 raw_put_path = local_path(e)
                 dvs = (
-                    config["ui"]["dvs"]
+                    config["values"]["ui"]["dvs"]
                     if "{design_variable}" in raw_put_path
                     else (None,)
                 )

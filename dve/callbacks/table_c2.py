@@ -43,7 +43,7 @@ def add(app, config):
             dv_units(config, design_variable, climate_regime, nice=False)
             for climate_regime in ("historical", "future")
         )
-        future_dataset_ids = config["ui"]["future_change_factors"]
+        future_dataset_ids = config["values"]["ui"]["future_change_factors"]
 
         title = table_c2_title(config, lang, design_variable)
 

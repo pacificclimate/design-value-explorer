@@ -63,7 +63,7 @@ def main(app, config, lang="en"):
         """
         Add loading config to a dcc.Loading call.
         """
-        return dcc.Loading(*args, **kwargs, **config["ui"]["loading"])
+        return dcc.Loading(*args, **kwargs, **config["values"]["ui"]["loading"])
 
     def header():
         """
@@ -83,7 +83,7 @@ def main(app, config, lang="en"):
                 ),
                 "value": design_variable,
             }
-            for design_variable in config["ui"]["dvs"]
+            for design_variable in config["values"]["ui"]["dvs"]
         ]
         return [
             dbc.Row(
@@ -128,7 +128,7 @@ def main(app, config, lang="en"):
                         dcc.Dropdown(
                             id="design_variable",
                             options=dd_options,
-                            **config["ui"]["controls"]["design-value-id"],
+                            **config["values"]["ui"]["controls"]["design-value-id"],
                         ),
                         xs=12,
                         md=9,
@@ -153,7 +153,7 @@ def main(app, config, lang="en"):
                 ),
                 "value": dataset_id,
             }
-            for dataset_id in config["ui"]["future_change_factors"]
+            for dataset_id in config["values"]["ui"]["future_change_factors"]
         ]
 
         return [
@@ -175,7 +175,7 @@ def main(app, config, lang="en"):
                             dcc.RadioItems(
                                 id="climate_regime",
                                 options=climate_regime_ctrl_options(config, lang),
-                                **config["ui"]["controls"]["climate-regime"],
+                                **config["values"]["ui"]["controls"]["climate-regime"],
                             ),
                             html.Div(
                                 id="global_warming",
@@ -184,12 +184,12 @@ def main(app, config, lang="en"):
                                     dcc.Dropdown(
                                         id="future_dataset_id",
                                         options=future_dataset_ctrl_options,
-                                        **config["ui"]["controls"][
+                                        **config["values"]["ui"]["controls"][
                                             "future-dataset"
                                         ],
                                     ),
                                 ],
-                                **config["ui"]["controls"]["global_warming"],
+                                **config["values"]["ui"]["controls"]["global_warming"],
                             ),
                             daq.BooleanSwitch(
                                 id="show_stations",
@@ -197,7 +197,7 @@ def main(app, config, lang="en"):
                                 # into an existing dict.
                                 **path_set(
                                     deepcopy(
-                                        config["ui"]["controls"]["stations"]
+                                        config["values"]["ui"]["controls"]["stations"]
                                     ),
                                     "label.label",
                                     overlay_options_stations_label(config, lang),
@@ -205,7 +205,7 @@ def main(app, config, lang="en"):
                             ),
                             daq.BooleanSwitch(
                                 id="show_grid",
-                                **config["ui"]["controls"]["grid"],
+                                **config["values"]["ui"]["controls"]["grid"],
                             ),
                         ),
                         [
@@ -223,28 +223,28 @@ def main(app, config, lang="en"):
         Layout for Colourbar Options section.
         This function returns a list of rows.
         """
-        colour_maps = config["map"]["colour_maps"]
+        colour_maps = config["values"]["map"]["colour_maps"]
         # Add reverse options, too
         cmap_r = tuple(f"{color}_r" for color in colour_maps)
         colour_maps += cmap_r
 
-        cfg = config["ui"]["labels"][lang]["colorscale-options"]
+        cfg = config["text"]["labels"][lang]["colorscale-options"]
 
         # Controls by column key in config
         controls = {
             "color-map": dcc.Dropdown(
                 id="color_map",
                 options=color_map_ctrl_options(config, lang),
-                **config["ui"]["controls"]["colour-map"],
+                **config["values"]["ui"]["controls"]["colour-map"],
             ),
             "scale": dcc.Dropdown(
                 id="color_scale_type",
                 options=scale_ctrl_options(config, lang),
-                **config["ui"]["controls"]["scale"],
+                **config["values"]["ui"]["controls"]["scale"],
             ),
             "num-colors": html.Div(
                 daq.Slider(
-                    id="num_colors", **config["ui"]["controls"]["num-colours"]
+                    id="num_colors", **config["values"]["ui"]["controls"]["num-colours"]
                 ),
                 style={"padding-top": "3em"},
             ),
@@ -252,7 +252,7 @@ def main(app, config, lang="en"):
                 html.Div(
                     dcc.RangeSlider(
                         id="color_scale_data_range",
-                        **config["ui"]["controls"]["colourbar-range"],
+                        **config["values"]["ui"]["controls"]["colourbar-range"],
                     ),
                     # RangeSlider has unwanted horiz padding of 25px.
                     style={"margin": "2em -25px"},
@@ -380,7 +380,7 @@ def main(app, config, lang="en"):
                             Loading(
                                 dcc.Graph(
                                     id="map_main_graph",
-                                    config=config["ui"]["graph"],
+                                    config=config["values"]["ui"]["graph"],
                                 )
                             ),
                             xxl={"size": 7, "order": 3},
@@ -433,10 +433,10 @@ def main(app, config, lang="en"):
                             ),
                             className="help_tab pt-3",
                         )
-                        for index in range(len(config["help"]["tabs"][lang]))
+                        for index in range(len(config["text"]["help"]["tabs"][lang]))
                     ],
                     className="pt-3",
-                    **config["ui"]["controls"]["help_tabs"],
+                    **config["values"]["ui"]["controls"]["help_tabs"],
                 )
             ],
         )
@@ -457,10 +457,10 @@ def main(app, config, lang="en"):
                         ),
                         className="about_tab pt-3",
                     )
-                    for index in range(len(config["about"]["tabs"][lang]))
+                    for index in range(len(config["text"]["about"]["tabs"][lang]))
                 ],
                 className="pt-3",
-                **config["ui"]["controls"]["about_tabs"],
+                **config["values"]["ui"]["controls"]["about_tabs"],
             ),
         )
 
@@ -494,7 +494,7 @@ def main(app, config, lang="en"):
                             help_tab(),
                             about_tab(),
                         ],
-                        **config["ui"]["controls"]["main_tabs"],
+                        **config["values"]["ui"]["controls"]["main_tabs"],
                     )
                 ),
                 style={"margin-top": "1em"},

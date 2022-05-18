@@ -42,10 +42,10 @@ def validate(config):
     - Check that all filepaths specified in config exist. Log a warning message
       for those which do not exist.
     """
-    for filepath in config["paths"].values():
+    for filepath in config["values"]["paths"].values():
         validate_filepath(filepath)
 
-    for design_variable in config["ui"]["dvs"]:
+    for design_variable in config["values"]["ui"]["dvs"]:
 
         # Validate historical filepaths, if present
         cfg_base_path = f"dvs/{design_variable}/historical/datasets"
@@ -69,7 +69,7 @@ def validate(config):
         if path_get(config, cfg_base_path, separator="/") is None:
             logger.info(f"No future datasets specified for {design_variable}")
         else:
-            for cfg_ext_path in config["ui"]["future_change_factors"]:
+            for cfg_ext_path in config["values"]["ui"]["future_change_factors"]:
                 validate_config(
                     config, f"{cfg_base_path}/{cfg_ext_path}", separator="/"
                 )
@@ -82,7 +82,7 @@ def filepath_for(
     historical_dataset_id=None,
     future_dataset_id=None,
 ):
-    root_path = f"dvs/{design_variable}/{climate_regime}/datasets"
+    root_path = f"values/dvs/{design_variable}/{climate_regime}/datasets"
 
     if climate_regime == "historical":
         ext_path = {
@@ -106,7 +106,7 @@ def dv_has_climate_regime(config, design_variable, climate_regime):
     Return a boolean indicating whether a DV has definitions for specific
     climate regime (historical or future) datasets.
     """
-    return climate_regime in config["dvs"][design_variable]
+    return climate_regime in config["values"]["dvs"][design_variable]
 
 
 def dv_name(config, lang, design_variable):
@@ -119,12 +119,12 @@ def dv_name(config, lang, design_variable):
 
 
 def dv_tier(config, design_variable):
-    return config["dvs"][design_variable]["tier"]
+    return config["values"]["dvs"][design_variable]["tier"]
 
 
 def nice_units(config, units):
     try:
-        definition = config["units"][units]
+        definition = config["values"]["units"][units]
         return (
             definition["nice"],
             (" " if definition.get("separator", True) else ""),
@@ -144,7 +144,7 @@ def dv_units(config, design_variable, climate_regime, nice=True):
     Return the units of a given design variable, for historical or future
     projections.
     """
-    units = config["dvs"][design_variable][climate_regime]["units"]
+    units = config["values"]["dvs"][design_variable][climate_regime]["units"]
     if not nice:
         return units
     return nice_units(config, units)[0]
@@ -161,7 +161,7 @@ def dv_label(
     Return the name, with optional description, and units of a DV.
     """
     description = (
-        f" {config['ui']['labels'][lang]['dvs'][design_variable]['description']}"
+        f" {config['text']['labels'][lang]['dvs'][design_variable]['description']}"
         if with_description
         else ""
     )
@@ -174,56 +174,56 @@ def dv_label(
 
 
 def dv_roundto(config, design_variable, climate_regime):
-    return config["dvs"][design_variable][climate_regime]["roundto"]
+    return config["values"]["dvs"][design_variable][climate_regime]["roundto"]
 
 
 def dv_colour_map(config, design_variable, climate_regime):
-    return config["dvs"][design_variable][climate_regime]["colour_map"]
+    return config["values"]["dvs"][design_variable][climate_regime]["colour_map"]
 
 
 def dv_colour_scale_default(config, design_variable, climate_regime):
-    return config["dvs"][design_variable][climate_regime]["scale"]["default"]
+    return config["values"]["dvs"][design_variable][climate_regime]["scale"]["default"]
 
 
 def dv_colour_scale_disable_logarithmic(
     config, design_variable, climate_regime
 ):
-    return config["dvs"][design_variable][climate_regime]["scale"].get(
+    return config["values"]["dvs"][design_variable][climate_regime]["scale"].get(
         "disable_logarithmic", False
     )
 
 
 def dv_colour_bar_sigfigs(config, design_variable, climate_regime):
-    return config["dvs"][design_variable][climate_regime]["colorbar"]["sigfigs"]
+    return config["values"]["dvs"][design_variable][climate_regime]["colorbar"]["sigfigs"]
 
 
 def dv_historical_stations_column(config, design_variable):
-    return config["dvs"][design_variable]["historical"]["datasets"]["stations"][
+    return config["values"]["dvs"][design_variable]["historical"]["datasets"]["stations"][
         "column"
     ]
 
 
 def climate_regime_label(config, lang, climate_regime, which="long"):
-    return config["ui"]["labels"][lang]["climate_regime"][climate_regime][which]
+    return config["text"]["labels"][lang]["climate_regime"][climate_regime][which]
 
 
 def historical_dataset_label(config, lang, dataset_id):
-    return config["ui"]["labels"][lang]["historical_dataset"][dataset_id]
+    return config["text"]["labels"][lang]["historical_dataset"][dataset_id]
 
 
 def interpolation_value_label(config, lang):
-    return config["ui"]["labels"][lang]["interpolation"]
+    return config["text"]["labels"][lang]["interpolation"]
 
 
 def future_change_factor_label(config, lang, dataset_id, which="short", nice=True):
     units, separator = nice_units(config, "degC") if nice else ("degC", " ")
-    return config["ui"]["labels"][lang]["future_change_factors"][which].format(
+    return config["text"]["labels"][lang]["future_change_factors"][which].format(
         value=dataset_id, separator=separator, units=units
     )
 
 
 def download_table_label(config, lang, column):
-    return config["ui"]["labels"][lang]["download_table"][column]
+    return config["text"]["labels"][lang]["download_table"][column]
 
 
 def dataset_label(
@@ -257,7 +257,7 @@ def map_title(
         nice=True,
     )
     dataset = "" if climate_regime == "historical" else f" ({dl})"
-    return config["ui"]["labels"][lang]["map"]["title"][climate_regime].format(
+    return config["text"]["labels"][lang]["map"]["title"][climate_regime].format(
         dv=dv_label(
             config, lang, design_variable, climate_regime, with_description=True
         ),
@@ -272,7 +272,7 @@ def map_title(
 def climate_regime_ctrl_options(config, lang, which="long"):
     return [
         {
-            "label": config["ui"]["labels"][lang]["climate_regime"][cr][which],
+            "label": config["text"]["labels"][lang]["climate_regime"][cr][which],
             "value": cr,
         }
         for cr in ("historical", "future")
@@ -280,11 +280,11 @@ def climate_regime_ctrl_options(config, lang, which="long"):
 
 
 def overlay_options_section_title(config, lang):
-    return config["ui"]["labels"][lang]["overlay-options"]["title"]
+    return config["text"]["labels"][lang]["overlay-options"]["title"]
 
 
 def overlay_options_control_columns(config, lang):
-    columns = config["ui"]["labels"][lang]["overlay-options"]["columns"]
+    columns = config["text"]["labels"][lang]["overlay-options"]["columns"]
     return [(column["title"], column["width"]) for column in columns]
 
 
@@ -295,7 +295,7 @@ def overlay_options_stations_label(config, lang):
 
 
 def color_map_ctrl_options(config, lang):
-    return [{"value": x, "label": x} for x in config["map"]["colour_maps"]]
+    return [{"value": x, "label": x} for x in config["values"]["map"]["colour_maps"]]
 
 
 def scale_ctrl_options(config, lang):
@@ -307,12 +307,12 @@ def scale_ctrl_options(config, lang):
 
 
 def colourbar_options_section_title(config, lang):
-    return config["ui"]["labels"][lang]["colorscale-options"]["title"]
+    return config["text"]["labels"][lang]["colorscale-options"]["title"]
 
 
 def color_bar_options_ctrl_title(config, lang, col_key):
     return (
-        config["ui"]["labels"][lang]["colorscale-options"]["columns"][col_key][
+        config["text"]["labels"][lang]["colorscale-options"]["columns"][col_key][
             "title"
         ],
     )
@@ -320,47 +320,47 @@ def color_bar_options_ctrl_title(config, lang, col_key):
 
 def color_bar_options_ctrl_width(config, lang, col_key):
     return (
-        config["ui"]["labels"][lang]["colorscale-options"]["columns"][col_key][
+        config["text"]["labels"][lang]["colorscale-options"]["columns"][col_key][
             "width"
         ],
     )
 
 
 def map_tab_label(config, lang):
-    return config["ui"]["labels"][lang]["main_tabs"]["map-tab"]
+    return config["text"]["labels"][lang]["main_tabs"]["map-tab"]
 
 
 def table_c2_label(config, lang):
-    return config["ui"]["labels"][lang]["main_tabs"]["table-tab"]
+    return config["text"]["labels"][lang]["main_tabs"]["table-tab"]
 
 
 def help_tab_label(config, lang):
-    return config["ui"]["labels"][lang]["main_tabs"]["help-tab"]
+    return config["text"]["labels"][lang]["main_tabs"]["help-tab"]
 
 
 def help_subtab_label(config, lang, index):
-    return config["help"]["tabs"][lang][index]["label"]
+    return config["text"]["help"]["tabs"][lang][index]["label"]
 
 
 def help_subtab_content(config, lang, index):
-    return config["help"]["tabs"][lang][index]["content"]
+    return config["text"]["help"]["tabs"][lang][index]["content"]
 
 
 def about_tab_label(config, lang):
-    return config["ui"]["labels"][lang]["main_tabs"]["about-tab"]
+    return config["text"]["labels"][lang]["main_tabs"]["about-tab"]
 
 
 def about_subtab_label(config, lang, index):
-    return config["about"]["tabs"][lang][index]["label"]
+    return config["text"]["about"]["tabs"][lang][index]["label"]
 
 
 def about_subtab_card_spec(config, lang, index):
     # TODO: This will need some extra effort for multilang
-    return config["about"]["tabs"][lang][index]["cards"]
+    return config["text"]["about"]["tabs"][lang][index]["cards"]
 
 
 def table_c2_title(config, lang, design_variable):
-    return config["ui"]["labels"][lang]["table_C2"]["title"].format(
+    return config["text"]["labels"][lang]["table_C2"]["title"].format(
         name=dv_name(config, lang, design_variable),
         tier=dv_tier(config, design_variable),
         name_and_units=dv_label(
@@ -370,26 +370,26 @@ def table_c2_title(config, lang, design_variable):
 
 
 def table_c2_no_table_data_msg(config, lang):
-    return config["ui"]["labels"][lang]["table_C2"]["no_table_data_error"]
+    return config["text"]["labels"][lang]["table_C2"]["no_table_data_error"]
 
 
 def table_c2_no_station_data_msg(config, lang, design_variable):
-    return config["ui"]["labels"][lang]["table_C2"]["no_station_data"].format(
+    return config["text"]["labels"][lang]["table_C2"]["no_station_data"].format(
         design_variable
     )
 
 
 def table_c2_location_label(config, lang):
-    return config["ui"]["labels"][lang]["table_C2"]["location"]
+    return config["text"]["labels"][lang]["table_C2"]["location"]
 
 
 def table_c2_province_label(config, lang):
-    return config["ui"]["labels"][lang]["table_C2"]["province"]
+    return config["text"]["labels"][lang]["table_C2"]["province"]
 
 
 def table_c2_longitude_label(config, lang):
-    return config["ui"]["labels"][lang]["table_C2"]["longitude"]
+    return config["text"]["labels"][lang]["table_C2"]["longitude"]
 
 
 def table_c2_latitude_label(config, lang):
-    return config["ui"]["labels"][lang]["table_C2"]["latitude"]
+    return config["text"]["labels"][lang]["table_C2"]["latitude"]

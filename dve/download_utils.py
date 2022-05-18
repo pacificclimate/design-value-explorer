@@ -76,7 +76,7 @@ def get_download_data(
     # Row ids
     design_variables = tuple(
         dv_id
-        for dv_id in config["ui"]["dvs"]
+        for dv_id in config["values"]["ui"]["dvs"]
         if dv_has_climate_regime(config, dv_id, climate_regime)
     )
 
@@ -84,7 +84,7 @@ def get_download_data(
     if climate_regime == "historical":
         dataset_ids = ("reconstruction",)
     else:
-        dataset_ids = tuple(config["ui"]["future_change_factors"])
+        dataset_ids = tuple(config["values"]["ui"]["future_change_factors"])
 
     # Data
     data_values = tuple(
