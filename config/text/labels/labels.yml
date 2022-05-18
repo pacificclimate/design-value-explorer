@@ -1,0 +1,114 @@
+app_title: Design Value Explorer
+dv_dropdown: Design Value
+main_tabs:
+  map-tab: Map
+  table-tab: Table C-2
+  help-tab: Help
+  about-tab: About
+overlay-options:
+  title: Overlay Options
+  columns:
+    - title: Period
+      width: 4
+    - title: Global Warming
+      width: 4
+    - title: Stations
+      width: 2
+      label: (HISTORICAL ONLY)
+    - title: Grid
+      width: 2
+colorscale-options:
+  title: Colour Scale Options
+  columns:
+    color-map:
+      title: Colour Map
+      width: 3
+    scale:
+      title: Scale
+      width: 2
+    num-colors:
+      title: Num. Colours
+      width: 3
+    range:
+      title: Range (loading)
+      width: 4
+  column-order:
+    - color-map
+    - scale
+    - num-colors
+    - range
+climate_regime:
+  # Labels for the two climate regime selections
+  historical:
+    short: Historical
+    long: Historical design values
+  future:
+    short: Future
+    long: Future change relative to 1986-2016
+historical_dataset:
+  model: Model
+  reconstruction: Reconstruction
+interpolation: "Interpolation value"
+future_change_factors:
+  short: "{value}{separator}{units}"
+  long: "{value}°C above 1986-2016"
+map:
+  title:
+    historical: "{dv} • {climate_regime}{dataset}"
+    future: "{dv} • Tier {tier} variable • {climate_regime}{dataset}"
+download_table:
+  dv: Design value
+  units: Units
+table_C2:
+  title: |
+    Design values for {name_and_units} at Table C-2 locations. 
+    For future projections, {name} is a Tier {tier} variable.
+  no_table_data_error: |
+    Error: Data is not available for this table. 
+    Please report this error to the application contact given 
+    in the **About > Contact** tab.    
+  no_station_data: "Variable {} does not have historical data"
+  location: Location
+  province: Province
+  longitude: Longitude
+  latitude: Latitude
+dvs:
+  DRWP5:
+    description: Driving rain wind pressure, 1/5
+  HDD:
+    description: "Heating degree days below 18 \xB0C"
+  IDFCF:
+    description: IDF future change factor
+  MI:
+    description: Moisture index
+  PAnn:
+    description: Annual total precipitation
+  R15m10:
+    description: 15-min rainfall, 1/10
+  R1d50:
+    description: 1-day rainfall, 1/50
+  RAnn:
+    description: Annual total rainfall
+  RHAnn:
+    description: Annual mean relative humidity
+  RL50:
+    description: Annual maximum rain-on-snow, 1/50
+  SL50:
+    description: Annual maximum snow load, 1/50
+  TJan1.0:
+    description: January temperature 1%
+  TJan2.5:
+    description: January temperature 2.5%
+  TJul97.5:
+    description: July temperature 97.5%
+  Tmax:
+    description: Annual maximum daily temperature
+  Tmin:
+    description: Annual minimum daily temperature
+  TwJul97.5:
+    description: July wet-bulb temperature 97.5%
+  WP10:
+    description: Annual maximum wind pressure, 1/10
+  WP50:
+    description: Annual maximum wind pressure, 1/50
+  

@@ -1,8 +1,7 @@
 text:
     help: !include config/text/help.yml
     about: !include config/text/about.yml
-    labels:
-        en: !include config/text/labels.yml
+    labels: !include config/text/labels.yml
 
 values:
     ui:
