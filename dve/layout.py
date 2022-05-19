@@ -5,13 +5,26 @@ import dash_bootstrap_components as dbc
 from dash import dcc
 import dash_daq as daq
 from dve.config import (
-    dv_label, climate_regime_ctrl_options, overlay_options_stations_label,
-    overlay_options_section_title, overlay_options_control_columns,
-    color_map_ctrl_options, scale_ctrl_options, colourbar_options_section_title,
-    color_bar_options_ctrl_width, color_bar_options_ctrl_title, map_tab_label,
-    table_c2_label, help_tab_label, help_subtab_label, help_subtab_content,
-    about_tab_label, about_subtab_label, about_subtab_card_spec,
-    future_change_factor_label, app_title, dv_dropdown_options,
+    dv_label,
+    climate_regime_ctrl_options,
+    overlay_options_section_title,
+    overlay_options_control_columns,
+    color_map_ctrl_options,
+    scale_ctrl_options,
+    colourbar_options_section_title,
+    color_bar_options_ctrl_width,
+    color_bar_options_ctrl_title,
+    map_tab_label,
+    table_c2_label,
+    help_tab_label,
+    help_subtab_label,
+    help_subtab_content,
+    about_tab_label,
+    about_subtab_label,
+    about_subtab_card_spec,
+    future_change_factor_label,
+    app_title,
+    dv_dropdown_options,
     overlay_options_control_titles,
 )
 from dve.dict_utils import path_set
@@ -110,7 +123,7 @@ def main(app, config, lang="en"):
                             value="en",
                         ),
                         xs=2,
-                    )
+                    ),
                 ],
                 className="pb-1 mb-3 border-bottom",
             ),
@@ -127,7 +140,9 @@ def main(app, config, lang="en"):
                     dbc.Col(
                         dcc.Dropdown(
                             id="design_variable",
-                            **config["values"]["ui"]["controls"]["design-value-id"],
+                            **config["values"]["ui"]["controls"][
+                                "design-value-id"
+                            ],
                         ),
                         xs=12,
                         md=9,
@@ -158,7 +173,9 @@ def main(app, config, lang="en"):
                         (
                             dcc.RadioItems(
                                 id="climate_regime",
-                                **config["values"]["ui"]["controls"]["climate-regime"],
+                                **config["values"]["ui"]["controls"][
+                                    "climate-regime"
+                                ],
                             ),
                             html.Div(
                                 id="global_warming",
@@ -171,19 +188,15 @@ def main(app, config, lang="en"):
                                         ],
                                     ),
                                 ],
-                                **config["values"]["ui"]["controls"]["global_warming"],
+                                **config["values"]["ui"]["controls"][
+                                    "global_warming"
+                                ],
                             ),
                             daq.BooleanSwitch(
                                 id="show_stations",
-                                # This is a cheap and nasty way to merge a value
-                                # into an existing dict.
-                                **path_set(
-                                    deepcopy(
-                                        config["values"]["ui"]["controls"]["stations"]
-                                    ),
-                                    "label.label",
-                                    overlay_options_stations_label(config, lang),
-                                ),
+                                **config["values"]["ui"]["controls"][
+                                    "stations"
+                                ],
                             ),
                             daq.BooleanSwitch(
                                 id="show_grid",
@@ -192,7 +205,9 @@ def main(app, config, lang="en"):
                         ),
                         [
                             column["width"]
-                            for column in overlay_options_control_columns(config, lang)
+                            for column in overlay_options_control_columns(
+                                config, lang
+                            )
                         ],
                     )
                 ],
@@ -216,17 +231,16 @@ def main(app, config, lang="en"):
         controls = {
             "color-map": dcc.Dropdown(
                 id="color_map",
-                options=color_map_ctrl_options(config, lang),
                 **config["values"]["ui"]["controls"]["colour-map"],
             ),
             "scale": dcc.Dropdown(
                 id="color_scale_type",
-                options=scale_ctrl_options(config, lang),
                 **config["values"]["ui"]["controls"]["scale"],
             ),
             "num-colors": html.Div(
                 daq.Slider(
-                    id="num_colors", **config["values"]["ui"]["controls"]["num-colours"]
+                    id="num_colors",
+                    **config["values"]["ui"]["controls"]["num-colours"],
                 ),
                 style={"padding-top": "3em"},
             ),
@@ -244,28 +258,17 @@ def main(app, config, lang="en"):
 
         return [
             # Section title
-            dbc.Row(dbc.Col(html.H5(colourbar_options_section_title(config, lang)))),
+            dbc.Row(dbc.Col(html.H5(id="colourbar_options_section_title"))),
             # Control titles
-            dbc.Row(
-                [
-                    dbc.Col(
-                        Loading(
-                            html.Label(
-                                color_bar_options_ctrl_title(config, lang, col_key),
-                                id=f"colorscale_options_label_{col_key}",
-                            )
-                        ),
-                        width=color_bar_options_ctrl_width(config, lang, col_key),
-                    )
-                    for col_key in cfg["column-order"]
-                ]
-            ),
+            dbc.Row(id="colourbar_options_control_titles"),
             # Controls
             dbc.Row(
                 [
                     dbc.Col(
                         controls[col_key],
-                        width=color_bar_options_ctrl_width(config, lang, col_key)
+                        width=color_bar_options_ctrl_width(
+                            config, lang, col_key
+                        ),
                     )
                     for col_key in cfg["column-order"]
                 ],
@@ -410,12 +413,15 @@ def main(app, config, lang="en"):
                                     interpret(
                                         help_subtab_content(config, lang, index)
                                     ),
-                                    xs=12, xl=6
+                                    xs=12,
+                                    xl=6,
                                 )
                             ),
                             className="help_tab pt-3",
                         )
-                        for index in range(len(config["text"]["help"]["tabs"][lang]))
+                        for index in range(
+                            len(config["text"]["help"]["tabs"][lang])
+                        )
                     ],
                     className="pt-3",
                     **config["values"]["ui"]["controls"]["help_tabs"],
@@ -439,7 +445,9 @@ def main(app, config, lang="en"):
                         ),
                         className="about_tab pt-3",
                     )
-                    for index in range(len(config["text"]["about"]["tabs"][lang]))
+                    for index in range(
+                        len(config["text"]["about"]["tabs"][lang])
+                    )
                 ],
                 className="pt-3",
                 **config["values"]["ui"]["controls"]["about_tabs"],

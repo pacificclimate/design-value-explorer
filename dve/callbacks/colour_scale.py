@@ -5,9 +5,8 @@ from dash.dependencies import Input, Output, State
 import numpy as np
 
 from dve.config import (
-    dv_roundto,
-    dv_colour_scale_disable_logarithmic,
-    filepath_for,
+    dv_roundto, dv_colour_scale_disable_logarithmic, filepath_for,
+    colorscale_options_label_range,
 )
 from dve.data import get_data_object
 import dve.layout
@@ -22,8 +21,9 @@ def add(app, config):
         Output("color_scale_type", "options"),
         Input("design_variable", "value"),
         Input("climate_regime", "value"),
+        Input("language", "value"),
     )
-    def update_scale_ctrl_options(design_variable, climate_regime):
+    def update_scale_ctrl_options(design_variable, climate_regime, lang):
         options = [
             {
                 **option,
@@ -41,9 +41,12 @@ def add(app, config):
     @app.callback(
         Output("colorscale_options_label_range", "children"),
         Input("color_scale_data_range", "value"),
+        Input("language", "value"),
     )
-    def update_colourbar_range_label(range):
-        return f"Range: {sigfigs(range[0])} to {sigfigs(range[1])}"
+    def update_colorscale_options_label_range(range, lang):
+        return colorscale_options_label_range(
+            config, lang, min=sigfigs(range[0]), max=sigfigs(range[1])
+        )
 
     @app.callback(
         Output("color_scale_data_range", "min"),

@@ -9,8 +9,7 @@ import logging
 from pkg_resources import resource_filename
 from dash import html
 import dash_bootstrap_components as dbc
-from dve.dict_utils import path_get
-
+from dve.dict_utils import path_get, path_set
 
 logger = logging.getLogger(__name__)
 
@@ -153,7 +152,8 @@ def dv_units(config, design_variable, climate_regime, nice=True):
 
 
 def dv_label(
-    config, lang,
+    config,
+    lang,
     design_variable,
     climate_regime="historical",
     with_units=True,
@@ -180,32 +180,39 @@ def dv_roundto(config, design_variable, climate_regime):
 
 
 def dv_colour_map(config, design_variable, climate_regime):
-    return config["values"]["dvs"][design_variable][climate_regime]["colour_map"]
+    return config["values"]["dvs"][design_variable][climate_regime][
+        "colour_map"
+    ]
 
 
 def dv_colour_scale_default(config, design_variable, climate_regime):
-    return config["values"]["dvs"][design_variable][climate_regime]["scale"]["default"]
+    return config["values"]["dvs"][design_variable][climate_regime]["scale"][
+        "default"
+    ]
 
 
 def dv_colour_scale_disable_logarithmic(
     config, design_variable, climate_regime
 ):
-    return config["values"]["dvs"][design_variable][climate_regime]["scale"].get(
-        "disable_logarithmic", False
-    )
+    return config["values"]["dvs"][design_variable][climate_regime][
+        "scale"
+    ].get("disable_logarithmic", False)
 
 
 def dv_colour_bar_sigfigs(config, design_variable, climate_regime):
-    return config["values"]["dvs"][design_variable][climate_regime]["colorbar"]["sigfigs"]
-
-
-def dv_historical_stations_column(config, design_variable):
-    return config["values"]["dvs"][design_variable]["historical"]["datasets"]["stations"][
-        "column"
+    return config["values"]["dvs"][design_variable][climate_regime]["colorbar"][
+        "sigfigs"
     ]
 
 
+def dv_historical_stations_column(config, design_variable):
+    return config["values"]["dvs"][design_variable]["historical"]["datasets"][
+        "stations"
+    ]["column"]
+
+
 # Text(ish)
+
 
 def app_title(config, lang):
     return config["text"]["labels"][lang]["app_title"]
@@ -219,7 +226,8 @@ def dv_dropdown_options(config, lang):
     return [
         {
             "label": dv_label(
-                config, lang,
+                config,
+                lang,
                 design_variable,
                 with_units=False,
                 with_description=True,
@@ -243,7 +251,9 @@ def future_dataset_ctrl_options(config, lang):
 
 
 def climate_regime_label(config, lang, climate_regime, which="long"):
-    return config["text"]["labels"][lang]["climate_regime"][climate_regime][which]
+    return config["text"]["labels"][lang]["climate_regime"][climate_regime][
+        which
+    ]
 
 
 def historical_dataset_label(config, lang, dataset_id):
@@ -254,11 +264,13 @@ def interpolation_value_label(config, lang):
     return config["text"]["labels"][lang]["interpolation"]
 
 
-def future_change_factor_label(config, lang, dataset_id, which="short", nice=True):
+def future_change_factor_label(
+    config, lang, dataset_id, which="short", nice=True
+):
     units, separator = nice_units(config, "degC") if nice else ("degC", " ")
-    return config["text"]["labels"][lang]["future_change_factors"][which].format(
-        value=dataset_id, separator=separator, units=units
-    )
+    return config["text"]["labels"][lang]["future_change_factors"][
+        which
+    ].format(value=dataset_id, separator=separator, units=units)
 
 
 def download_table_label(config, lang, column):
@@ -266,7 +278,8 @@ def download_table_label(config, lang, column):
 
 
 def dataset_label(
-    config, lang,
+    config,
+    lang,
     climate_regime,
     historical_dataset_id,
     future_dataset_id,
@@ -281,14 +294,16 @@ def dataset_label(
 
 
 def map_title(
-    config, lang,
+    config,
+    lang,
     design_variable,
     climate_regime,
     historical_dataset_id,
     future_dataset_id,
 ):
     dl = dataset_label(
-        config, lang,
+        config,
+        lang,
         climate_regime,
         historical_dataset_id,
         future_dataset_id,
@@ -296,7 +311,9 @@ def map_title(
         nice=True,
     )
     dataset = "" if climate_regime == "historical" else f" ({dl})"
-    return config["text"]["labels"][lang]["map"]["title"][climate_regime].format(
+    return config["text"]["labels"][lang]["map"]["title"][
+        climate_regime
+    ].format(
         dv=dv_label(
             config, lang, design_variable, climate_regime, with_description=True
         ),
@@ -311,7 +328,9 @@ def map_title(
 def climate_regime_ctrl_options(config, lang, which="long"):
     return [
         {
-            "label": config["text"]["labels"][lang]["climate_regime"][cr][which],
+            "label": config["text"]["labels"][lang]["climate_regime"][cr][
+                which
+            ],
             "value": cr,
         }
         for cr in ("historical", "future")
@@ -328,25 +347,27 @@ def overlay_options_control_titles(config, lang):
         for column in overlay_options_control_columns(config, lang)
     ]
 
+
 def overlay_options_control_columns(config, lang):
     return config["text"]["labels"][lang]["overlay-options"]["columns"]
 
 
-def overlay_options_stations_label(config, lang):
-    # TODO: Put into config
-    return "(HISTORICAL ONLY)"
+def show_stations_label(config, lang):
+    return {
+        **config["values"]["ui"]["controls"]["stations"]["label"],
+        "label": config["text"]["labels"][lang]["show_stations"]["label"],
+    }
 
 
 def color_map_ctrl_options(config, lang):
-    return [{"value": x, "label": x} for x in config["values"]["map"]["colour_maps"]]
+    return [
+        {"value": x, "label": x} for x in config["values"]["map"]["colour_maps"]
+    ]
 
 
 def scale_ctrl_options(config, lang):
     # TODO: Put into config
-    return [
-        {"label": "Linear", "value": "linear"},
-        {"label": "Logarithmic", "value": "logarithmic"},
-    ]
+    return config["text"]["labels"][lang]["color_scale_type"]
 
 
 def colourbar_options_section_title(config, lang):
@@ -355,18 +376,38 @@ def colourbar_options_section_title(config, lang):
 
 def color_bar_options_ctrl_title(config, lang, col_key):
     return (
-        config["text"]["labels"][lang]["colorscale-options"]["columns"][col_key][
-            "title"
-        ],
+        config["text"]["labels"][lang]["colorscale-options"]["columns"][
+            col_key
+        ]["title"],
     )
+
+
+def colourbar_options_control_titles(config, lang):
+    cfg = config["text"]["labels"][lang]["colorscale-options"]
+    return [
+        dbc.Col(
+            html.Label(
+                color_bar_options_ctrl_title(config, lang, col_key),
+                id=f"colorscale_options_label_{col_key}",
+            ),
+            width=color_bar_options_ctrl_width(config, lang, col_key),
+        )
+        for col_key in cfg["column-order"]
+    ]
 
 
 def color_bar_options_ctrl_width(config, lang, col_key):
     return (
-        config["text"]["labels"][lang]["colorscale-options"]["columns"][col_key][
-            "width"
-        ],
+        config["text"]["labels"][lang]["colorscale-options"]["columns"][
+            col_key
+        ]["width"],
     )
+
+
+def colorscale_options_label_range(config, lang, min=None, max=None):
+    return config["text"]["labels"][lang]["colorscale_options_range"][
+        "label"
+    ].format(min=min, max=max)
 
 
 def map_tab_label(config, lang):

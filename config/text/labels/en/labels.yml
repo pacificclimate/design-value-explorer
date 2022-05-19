@@ -1,10 +1,13 @@
 app_title: Design Value Explorer
+
 dv_dropdown: Design Value
+
 main_tabs:
   map-tab: Map
   table-tab: Table C-2
   help-tab: Help
   about-tab: About
+
 overlay-options:
   title: Overlay Options
   columns:
@@ -14,9 +17,12 @@ overlay-options:
       width: 4
     - title: Stations
       width: 2
-      label: (HISTORICAL ONLY)
     - title: Grid
       width: 2
+
+show_stations:
+  label: (HISTORICAL ONLY)
+
 colorscale-options:
   title: Colour Scale Options
   columns:
@@ -37,6 +43,16 @@ colorscale-options:
     - scale
     - num-colors
     - range
+
+color_scale_type:
+  - value: linear
+    label: Linear
+  - value: logarithmic
+    label: Logarithmic
+
+colorscale_options_range:
+  label: "Range: {min} to {max}"
+
 climate_regime:
   # Labels for the two climate regime selections
   historical:
@@ -45,20 +61,26 @@ climate_regime:
   future:
     short: Future
     long: Future change relative to 1986-2016
+
 historical_dataset:
   model: Model
   reconstruction: Reconstruction
+
 interpolation: "Interpolation value"
+
 future_change_factors:
   short: "{value}{separator}{units}"
   long: "{value}°C above 1986-2016"
+
 map:
   title:
     historical: "{dv} • {climate_regime}{dataset}"
     future: "{dv} • Tier {tier} variable • {climate_regime}{dataset}"
+
 download_table:
   dv: Design value
   units: Units
+
 table_C2:
   title: |
     Design values for {name_and_units} at Table C-2 locations. 
@@ -72,6 +94,7 @@ table_C2:
   province: Province
   longitude: Longitude
   latitude: Latitude
+
 dvs:
   DRWP5:
     description: Driving rain wind pressure, 1/5

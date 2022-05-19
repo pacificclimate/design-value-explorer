@@ -1,10 +1,13 @@
 app_title: l’Explorateur de valeurs de calcul
+
 dv_dropdown: Valeurs de conception
+
 main_tabs:
   map-tab: Carte
   table-tab: Tableau C-2
   help-tab: Aide
   about-tab: À propos
+
 overlay-options:
   title: Options de superposition
   columns:
@@ -17,6 +20,10 @@ overlay-options:
       label: (HISTORICAL ONLY)
     - title: Grille
       width: 2
+
+show_stations:
+  label: (HISTORIQUE SEULEMENT)
+
 colorscale-options:
   title: Options de l'échelle de couleurs
   columns:
@@ -37,6 +44,16 @@ colorscale-options:
     - scale
     - num-colors
     - range
+
+color_scale_type:
+  - value: linear
+    label: Linéaire
+  - value: logarithmic
+    label: Logarithmique
+
+colorscale_options_range:
+  label: "Échelle: {min} à {max}"
+
 climate_regime:
   # Labels for the two climate regime selections
   historical:
@@ -45,20 +62,26 @@ climate_regime:
   future:
     short: Futur
     long: Changement futur par rapport à 1986-201
+
 historical_dataset:
   model: Model
   reconstruction: Reconstruction
+
 interpolation: Donnée interpolée
+
 future_change_factors:
   short: "{value}{separator}{units}"
   long: "{value}°C par rapport à 1986-2016"
+
 map:
   title:
     historical: "{dv} • {climate_regime}{dataset}"
     future: "{dv} • Variable de niveau {tier}  • {climate_regime}{dataset}"
+
 download_table:
   dv: Valeur de conception
   units: Unités
+
 table_C2:
   title: |
     Valeur de conception pour {name_and_units} aux emplacements de Table C-2. 
@@ -74,6 +97,7 @@ table_C2:
   province: Province
   longitude: Longitude
   latitude: Latitude
+
 dvs:
   DRWP5:
     description: Pression de la pluie chassée par le vent, 1/5
