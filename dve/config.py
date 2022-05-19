@@ -7,6 +7,8 @@ cases are centralized here.
 import os.path
 import logging
 from pkg_resources import resource_filename
+from dash import html
+import dash_bootstrap_components as dbc
 from dve.dict_utils import path_get
 
 
@@ -228,6 +230,18 @@ def dv_dropdown_options(config, lang):
     ]
 
 
+def future_dataset_ctrl_options(config, lang):
+    return [
+        {
+            "label": future_change_factor_label(
+                config, lang, dataset_id, which="long"
+            ),
+            "value": dataset_id,
+        }
+        for dataset_id in config["values"]["ui"]["future_change_factors"]
+    ]
+
+
 def climate_regime_label(config, lang, climate_regime, which="long"):
     return config["text"]["labels"][lang]["climate_regime"][climate_regime][which]
 
@@ -308,14 +322,18 @@ def overlay_options_section_title(config, lang):
     return config["text"]["labels"][lang]["overlay-options"]["title"]
 
 
+def overlay_options_control_titles(config, lang):
+    return [
+        dbc.Col(html.Label(column["title"]), width=column["width"])
+        for column in overlay_options_control_columns(config, lang)
+    ]
+
 def overlay_options_control_columns(config, lang):
-    columns = config["text"]["labels"][lang]["overlay-options"]["columns"]
-    return [(column["title"], column["width"]) for column in columns]
+    return config["text"]["labels"][lang]["overlay-options"]["columns"]
 
 
 def overlay_options_stations_label(config, lang):
-    # TODO: This will need some fixing for multilang; poss do like
-    #  colorscale-options
+    # TODO: Put into config
     return "(HISTORICAL ONLY)"
 
 

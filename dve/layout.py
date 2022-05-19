@@ -12,6 +12,7 @@ from dve.config import (
     table_c2_label, help_tab_label, help_subtab_label, help_subtab_content,
     about_tab_label, about_subtab_label, about_subtab_card_spec,
     future_change_factor_label, app_title, dv_dropdown_options,
+    overlay_options_control_titles,
 )
 from dve.dict_utils import path_set
 
@@ -144,26 +145,11 @@ def main(app, config, lang="en"):
         Layout for Overlay Options section.
         This function returns a list of rows.
         """
-        future_dataset_ctrl_options = [
-            {
-                "label": future_change_factor_label(
-                    config, lang, dataset_id, which="long"
-                ),
-                "value": dataset_id,
-            }
-            for dataset_id in config["values"]["ui"]["future_change_factors"]
-        ]
-
         return [
             # Section title
-            dbc.Row(dbc.Col(html.H5(overlay_options_section_title(config, lang)))),
+            dbc.Row(dbc.Col(html.H5(id="overlay_options_section_title"))),
             # Control titles
-            dbc.Row(
-                [
-                    dbc.Col(html.Label(title), width=width)
-                    for title, width in overlay_options_control_columns(config, lang)
-                ]
-            ),
+            dbc.Row(id="overlay_options_control_titles"),
             # Controls
             dbc.Row(
                 [
@@ -172,7 +158,6 @@ def main(app, config, lang="en"):
                         (
                             dcc.RadioItems(
                                 id="climate_regime",
-                                options=climate_regime_ctrl_options(config, lang),
                                 **config["values"]["ui"]["controls"]["climate-regime"],
                             ),
                             html.Div(
@@ -181,7 +166,6 @@ def main(app, config, lang="en"):
                                     html.Div(style={"height": "2.5em"}),
                                     dcc.Dropdown(
                                         id="future_dataset_id",
-                                        options=future_dataset_ctrl_options,
                                         **config["values"]["ui"]["controls"][
                                             "future-dataset"
                                         ],
@@ -207,8 +191,8 @@ def main(app, config, lang="en"):
                             ),
                         ),
                         [
-                            width
-                            for title, width in overlay_options_control_columns(config, lang)
+                            column["width"]
+                            for column in overlay_options_control_columns(config, lang)
                         ],
                     )
                 ],
