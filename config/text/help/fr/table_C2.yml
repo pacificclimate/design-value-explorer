@@ -1,0 +1,23 @@
+|
+  Les valeurs de conception sont fournies à des endroits précisés par la 
+  localisation géographique dans le tableau C-2 du Code national du bâtiment 
+  du Canada (CNBC) et rassemblés par province.
+  La colonne **NBCC** indique la valeur de l'édition la plus récente du 
+  code (actuelle jusqu'en 2020), la colonne **PCIC** donne la valeur extraite 
+  du EVC pour la période de référence historique (1986-2016) ; et les 
+  colonnes restantes contiennent les facteurs de changement (FC), par 
+  rapport à la période de référence, à des niveaux spécifiques de 
+  réchauffement climatique.
+
+  - Pour les variables basées sur la température, les facteurs de changement 
+  sont additifs et en unités de la variable originale.
+  - Pour toutes les autres variables, les facteurs de changement sont 
+  multiplicatifs et donc sans unité. Cela inclut le facteur de changement 
+  pour les courbes IDF, IDFCF, qui devrait être appliquée à toutes les durées.
+
+  Notez également que dans cette version de EVC :
+
+  - Les variables de conception RHAnn, Tmax et Tmin ne font pas partie du CCNB,
+  mais sont fournis dans le Code canadien sur le calcul des ponts routiers.
+  - Les facteurs de changement futurs pour l'indice d'humidité, MI, ne 
+  sont pas disponibles pour le moment.

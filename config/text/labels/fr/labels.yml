@@ -1,0 +1,115 @@
+app_title: l’Explorateur de valeurs de calcul
+dv_dropdown: Valeurs de conception
+main_tabs:
+  map-tab: Carte
+  table-tab: Tableau C-2
+  help-tab: Aide
+  about-tab: À propos
+overlay-options:
+  title: Options de superposition
+  columns:
+    - title: Période
+      width: 4
+    - title: Réchauffement climatique
+      width: 4
+    - title: Stations
+      width: 2
+      label: (HISTORICAL ONLY)
+    - title: Grille
+      width: 2
+colorscale-options:
+  title: Options de l'échelle de couleurs
+  columns:
+    color-map:
+      title: Palette de couleurs
+      width: 3
+    scale:
+      title: Échelle
+      width: 2
+    num-colors:
+      title: Nombre de couleurs
+      width: 3
+    range:
+      title: Gamme (loading)
+      width: 4
+  column-order:
+    - color-map
+    - scale
+    - num-colors
+    - range
+climate_regime:
+  # Labels for the two climate regime selections
+  historical:
+    short: Historique
+    long: Valeurs de conception historiques
+  future:
+    short: Futur
+    long: Changement futur par rapport à 1986-201
+historical_dataset:
+  model: Model
+  reconstruction: Reconstruction
+interpolation: Donnée interpolée
+future_change_factors:
+  short: "{value}{separator}{units}"
+  long: "{value}°C par rapport à 1986-2016"
+map:
+  title:
+    historical: "{dv} • {climate_regime}{dataset}"
+    future: "{dv} • Variable de niveau {tier}  • {climate_regime}{dataset}"
+download_table:
+  dv: Valeur de conception
+  units: Unités
+table_C2:
+  title: |
+    Valeur de conception pour {name_and_units} aux emplacements de Table C-2. 
+    Pour les projections futures, {name} est une variable de niveau {tier}.
+  no_table_data_error: |
+    Erreur: Il n'y a pas de donné disponible pour ce tableau.
+    SVP 
+    Data is not available for this table. 
+    Veuillez signaler cette erreur au contact de l'application fournit 
+    dans l'onglet **À propos > Contact** tab.
+  no_station_data: "Variable {} does not have historical data"
+  location: Emplacement
+  province: Province
+  longitude: Longitude
+  latitude: Latitude
+dvs:
+  DRWP5:
+    description: Pression de la pluie chassée par le vent, 1/5
+  HDD:
+    description: "Degrés-jours de chauffage en dessous de 18 \xB0C"
+  IDFCF:
+    description: Facteur de changement de l'IDF
+  MI:
+    description: L’indice d'humidité
+  PAnn:
+    description: Précipitations totales annuelles
+  R15m10:
+    description: Pluies sur 15 minutes, 1/10
+  R1d50:
+    description: Pluies sur 1 jour, 1/50
+  RAnn:
+    description: Pluies totales annuelles
+  RHAnn:
+    description: L’humidité relative moyenne annuelle
+  RL50:
+    description: Charge de pluie sur la neige, 1/50
+  SL50:
+    description: Charge de neige, 1/50
+  TJan1.0:
+    description: Température de janvier, 1%
+  TJan2.5:
+    description: Température de janvier, 2,5%
+  TJul97.5:
+    description: Température de juillet, 97,5%
+  Tmax:
+    description: Température journalière maximale annuelle
+  Tmin:
+    description: Température journalière minimale annuelle
+  TwJul97.5:
+    description: Température de juillet du thermomètre mouillé, 97,5%
+  WP10:
+    description: Pressions de vent maximales annuelles, 1/10
+  WP50:
+    description: Pressions de vent maximales annuelles, 1/50

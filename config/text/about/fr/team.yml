@@ -1,0 +1,16 @@
+label: Team
+cards:
+    - header: '[Charles Curry](https://pacificclimate.org/about-pcic/people/charles-curry)'
+      body: Responsable de la science du climat.
+    - header: '[James Hiebert](https://pacificclimate.org/about-pcic/people/james-hiebert)'
+      body: Responsable de l'équipe de développement.
+    - header: '[Rod Glover](https://pacificclimate.org/about-pcic/people/rod-glover)'
+      body: Responsable du développement du front-end.
+    - header: '[Tom Kunkel](https://pacificclimate.org/about-pcic/people/tom-kunkel)'
+      body: Administrateur du système.
+    - header: Nic Annau
+      body: |
+        Développeur d'un logiciel de hybride cartographie spatiale et de la 
+        version initiale de DVE.
+    - header: '[Dhouha Ouali](https://pacificclimate.org/about-pcic/people/dhouha-ouali)'
+      body: Aide à la traduction française.
