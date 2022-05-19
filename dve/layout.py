@@ -104,7 +104,7 @@ def main(app, config, lang="en"):
                             id="language",
                             options=[
                                 {"label": "English", "value": "en"},
-                                # {"label": "Français", "value": "fr"},
+                                {"label": "Français", "value": "fr"},
                             ],
                             value="en",
                         ),
