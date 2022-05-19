@@ -32,8 +32,8 @@ cards:
       forçage radiatif externe du système terrestre, et incluent :
       - degrés-jours de chauffage
       - les températures de conception horaires (janvier 2,5 %  
-      du thermomètre sec, janvier 1 % du thermomètre sec, juillet 2,5 % 
-      du thermomètre sec, et juillet 2,5% du thermomètre mouillé)
+      du thermomètre sec, janvier 1 % du thermomètre sec, juillet 97,5 % 
+      du thermomètre sec, et juillet 97,5% du thermomètre mouillé)
       - les températures moyennes journalières maximales et minimales de l'air
       
       Les variables de **niveau 2** sont celles pour lesquelles il y a 
@@ -48,9 +48,12 @@ cards:
       dans les projections futures est faible ou très faible pour un niveau 
       donné de réchauffement climatique, et comprennent :
       - l’humidité relative moyenne annuelle
-      - les pressions de vent horaires maximales annuelles (périodes de retour de 10, 25, 50 et 100 ans)
-      - les pressions maximales annuelles de la pluie chassée par le vent (période de retour de 5 ans)
-      - la charge de neige maximale annuelle et la charge de pluie sur la neige maximale annuelle (période de retour de 50 ans)
+      - les pressions de vent horaires maximales annuelles (périodes de 
+      retour de 10 et 50 ans)
+      - les pressions maximales annuelles de la pluie chassée par le vent 
+      (période de retour de 5 ans)
+      - la charge de neige maximale annuelle et la charge de pluie sur 
+      la neige maximale annuelle (période de retour de 50 ans)
       - l’indice d'humidité
       
       Les projections futures dans EVC sont présentées à des niveaux de 

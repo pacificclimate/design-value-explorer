@@ -28,8 +28,8 @@ cards:
       thermal response of the climate to external radiative forcing of the
       Earth system, and include:
       - heating degree days
-      - hourly design temperatures (January 2.5% dry bulb, January 1% dry bulb, July 2.5% dry bulb, and
-        July 2.5% wet bulb)
+      - hourly design temperatures (January 2.5% dry bulb, January 1% dry bulb, 
+      July 97.5% dry bulb, and July 97.5% wet bulb)
       - maximum and minimum mean daily air temperatures
       
       **Tier 2** variables are those for which there is generally medium
@@ -44,7 +44,7 @@ cards:
       confidence in the future projections for a given level of global
       warming, and include:
       - annual mean relative humidity
-      - annual maximum hourly wind pressures (10, 25, 50, and 100-yr return periods)
+      - annual maximum hourly wind pressures (10- and 50-yr return periods)
       - annual maximum driving rain wind pressures (5-yr return period)
       - annual maximum snow load & rain-on-snow load (50-yr return period)
       - moisture index
