@@ -77,6 +77,15 @@ map:
   title:
     historical: "{dv} • {climate_regime}{dataset}"
     future: "{dv} • Variable de niveau {tier}  • {climate_regime}{dataset}"
+  no_dvs_for_climate_regime: |
+    Aucune valeur {what} n'est disponible pour le variable {dv} pour le moment.
+  no_data_error: |
+    Error: Les données ne sont pas disponibles pour <br>
+    <b>{title}</b> <br><br>
+    Veuillez signaler cette erreur au contact de l'application fournit 
+    dans l'onglet <b>À propos > Contact</b> tab.
+  hover_template: |
+    <b>{dv_label} interpolé: %{{z}} </b><br>
 
 map_pointer_output:
   title: Données du pointeur de la carte
@@ -93,10 +102,10 @@ table_C2:
     Valeur de conception pour {name_and_units} aux emplacements de Table C-2. 
     Pour les projections futures, {name} est une variable de niveau {tier}.
   no_table_data_error: |
-    Erreur: Il n'y a pas de donné disponible pour ce tableau.
+    Erreur: Aucune donnée n'est disponible pour ce tableau.
     Veuillez signaler cette erreur au contact de l'application fournit 
     dans l'onglet **À propos > Contact** tab.
-  no_station_data: "Le variable {} n'a pas de donné historique"
+  no_station_data: "Le variable {} n'a pas de données historiques"
 
 misc:
   location:

@@ -214,6 +214,7 @@ def dv_historical_stations_column(config, design_variable):
 
 # Text(ish)
 
+
 def app_title(config, lang):
     return config["text"]["labels"][lang]["app_title"]
 
@@ -283,10 +284,13 @@ def download_table_headers(
             future_change_factor_label(config, lang, dataset_id, nice=nice)
             for dataset_id in dataset_ids
         )
-    return tuple(
-        download_table_label(config, lang, column)
-        for column in ("dv", "units")
-    ) + value_headers
+    return (
+        tuple(
+            download_table_label(config, lang, column)
+            for column in ("dv", "units")
+        )
+        + value_headers
+    )
 
 
 def download_table_label(config, lang, column):
@@ -506,4 +510,46 @@ def map_pointer_output_heading(config, lang):
             html.H5(cfg["title"]),
             dcc.Markdown(cfg["subtitle"], style={"font-size": "0.8em"}),
         ]
+    )
+
+
+def map_no_dvs_for_climate_regime_msg(
+    config, lang, climate_regime, design_variable
+):
+    # TODO: In French, this message is grammatically slightly wrong because
+    #  the gender of the adjective "futur" does not accord with the noun
+    #  it modifies in the message. Argh.
+    return config["text"]["labels"][lang]["map"][
+        "no_dvs_for_climate_regime"
+    ].format(
+        what=climate_regime_label(
+            config, lang, climate_regime, which="short"
+        ).lower(),
+        dv=dv_name(config, lang, design_variable),
+    )
+
+
+def map_no_data_error(
+    config,
+    lang,
+    design_variable,
+    climate_regime,
+    historical_dataset_id,
+    future_dataset_id,
+):
+    return config["text"]["labels"][lang]["map"]["no_data_error"].format(
+        title=map_title(
+            config,
+            lang,
+            design_variable,
+            climate_regime,
+            historical_dataset_id,
+            future_dataset_id,
+        )
+    )
+
+
+def map_hover_template(config, lang, design_variable, climate_regime):
+    return config["text"]["labels"][lang]["map"]["hover_template"].format(
+        dv_label=dv_label(config, lang, design_variable, climate_regime)
     )

@@ -76,6 +76,16 @@ map:
   title:
     historical: "{dv} • {climate_regime}{dataset}"
     future: "{dv} • Tier {tier} variable • {climate_regime}{dataset}"
+  no_dvs_for_climate_regime: |
+    No {what} values are available for {dv} at this time.
+  no_data_error: |
+    Error: Data is not available for <br>
+    <b>{title}</b> <br><br>
+    Please report this error to the 
+    application contact given 
+    in the <b>About > Contact</b> tab.
+  hover_template: |
+    <b>Interpolated {dv_label}: %{{z}} </b><br>
 
 map_pointer_output:
   title: Data from map pointer

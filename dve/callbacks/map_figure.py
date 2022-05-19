@@ -19,6 +19,9 @@ from dve.config import (
     dv_name,
     file_exists,
     filepath_for,
+    map_no_dvs_for_climate_regime_msg,
+    map_no_data_error,
+    map_hover_template,
 )
 from dve.data import get_data_object
 from dve.colorbar import (
@@ -96,6 +99,7 @@ def add(app, config):
         Input("color_scale_data_range", "value"),
         # Client-side state
         Input("viewport-ds", "children"),
+        Input("language", "value"),
     )
     def update_map(
         # Tab selection
@@ -114,6 +118,7 @@ def add(app, config):
         color_scale_data_range,
         # Client-side state
         viewport_ds,
+        lang,
     ):
         with timing("Update map", log=timing_log_info):
             # Do not update if the tab is not selected
@@ -158,40 +163,33 @@ def add(app, config):
                 future_dataset_id,
             )
 
-            # Show info message if design values for requested climate regime do not
-            # exist.
+            # Show info message if design values for requested climate regime
+            # do not exist.
             if raster_filepath is None:
-                what = {
-                    "historical": "historical values",
-                    "future": "future projections",
-                }[climate_regime]
                 return message_figure(
-                    f"No {what} are available for "
-                    f"{dv_name(config, lang, design_variable)} "
-                    f"at this time."
+                    map_no_dvs_for_climate_regime_msg(
+                        config, lang, climate_regime, design_variable
+                    )
                 )
 
             # Show error message if configured data file does not exist.
             if not file_exists(raster_filepath):
-                title = map_title(
-                    config, lang,
-                    design_variable,
-                    climate_regime,
-                    historical_dataset_id,
-                    future_dataset_id,
-                )
                 return message_figure(
-                    f"Error: Data is not available for <br>"
-                    f"<b>{title}</b> <br><br>"
-                    f"Please report this error to the "
-                    f"application contact given "
-                    f"in the <b>About > Contact</b> tab."
+                    map_no_data_error(
+                        config,
+                        lang,
+                        design_variable,
+                        climate_regime,
+                        historical_dataset_id,
+                        future_dataset_id,
+                    )
                 )
 
             # Build the maps figure.
 
-            # The list `maps` is the set of overlaid traces that comprise the map.
-            # It is built up incrementally depending on the values of the inputs.
+            # The list `maps` is the set of overlaid traces comprising the map.
+            # It is built up incrementally depending on the values of the
+            # inputs.
             maps = []
 
             roundto = dv_roundto(config, design_variable, climate_regime)
@@ -220,8 +218,8 @@ def add(app, config):
                 target = target if (zmin <= target <= zmax) else None
 
             # Hacky fix for logarithmic scales for data with min value zero.
-            # Note that log scale is prohibited for several datasets, but is allowed
-            # for a few (e.g., RL50) that can include 0.
+            # Note that log scale is prohibited for several datasets, but is
+            # allowed for a few (e.g., RL50) that can include 0.
             if color_scale_type == "logarithmic" and zmin == 0:
                 zmin = zmax / config["values"]["map"]["logscale_zmin_factor"]
 
@@ -253,7 +251,9 @@ def add(app, config):
 
             # Trace: Lon-lat overlay
             if show_grid:
-                lonlat_overlay_config = config["values"]["map"]["lonlat_overlay"]
+                lonlat_overlay_config = config["values"]["map"][
+                    "lonlat_overlay"
+                ]
 
                 with timing("create lon-lat graticule", log=timing_log_debug):
                     maps += lonlat_overlay(
@@ -318,8 +318,8 @@ def add(app, config):
                         colorscale=colorscale,
                         showscale=False,  # Hide colorbar
                         visible=True,
-                        hovertemplate=(
-                            f"<b>Interpolated {dv_label(config, lang, design_variable, climate_regime)}: %{{z}} </b><br>"
+                        hovertemplate=map_hover_template(
+                            config, lang, design_variable, climate_regime
                         ),
                         name="",
                     )
@@ -397,7 +397,8 @@ def add(app, config):
                 layout=go.Layout(
                     title=go.layout.Title(
                         text=map_title(
-                            config, lang,
+                            config,
+                            lang,
                             design_variable,
                             climate_regime,
                             historical_dataset_id,
@@ -410,24 +411,26 @@ def add(app, config):
                     **config["values"]["map"]["layout"]["main"],
                 )
             )
-            figure.set_subplots(**config["values"]["map"]["layout"]["subplots"]["layout"])
+            figure.set_subplots(
+                **config["values"]["map"]["layout"]["subplots"]["layout"]
+            )
 
             # Add colorbar trace to figure. Do this first so that the colourbar
             # traces have the first (3) curve numbers, as reported by the
             # `hoverData` and `clickData` properties of the map component. This
             # makes it possible to consistently respond only to hovers/clicks on
             # the map traces.
-            colorbar_location = config["values"]["map"]["layout"]["subplots"]["colorbar"][
-                "location"
-            ]
+            colorbar_location = config["values"]["map"]["layout"]["subplots"][
+                "colorbar"
+            ]["location"]
             figure.add_trace(colorbar["trace"], **colorbar_location)
             figure.update_xaxes(colorbar["xaxis"], **colorbar_location)
             figure.update_yaxes(colorbar["yaxis"], **colorbar_location)
 
             # Add map traces to figure
-            map_location = config["values"]["map"]["layout"]["subplots"]["maps"][
-                "location"
-            ]
+            map_location = config["values"]["map"]["layout"]["subplots"][
+                "maps"
+            ]["location"]
             for m in maps:
                 figure.add_trace(m, **map_location)
             figure.update_xaxes(
