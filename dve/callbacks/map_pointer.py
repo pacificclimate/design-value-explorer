@@ -7,7 +7,11 @@ from dash.dependencies import Input, Output, State
 from dash import html
 import dash_bootstrap_components as dbc
 
-from dve.config import dv_has_climate_regime, filepath_for, download_table_label
+from dve.config import (
+    dv_has_climate_regime, filepath_for, download_table_label,
+    download_table_headers, latitude_label, longitude_label,
+    download_data_button_text,
+)
 from dve.data import get_data_object
 from dve.download_utils import (
     download_filename,
@@ -41,8 +45,18 @@ lang = "en"  # TODO: Replace with language selection
 
 
 # TODO: Place somewhere else (layout.components)?
+def map_lon_lat_table(config, lang, lon=None, lat=None):
+    return value_table(
+        (latitude_label(config, lang, which="short"), round(lat, 6)),
+        (longitude_label(config, lang, which="short"), round(lon, 6)),
+        # (f"Z ({design_variable_ctrl}) ({source})", round(z, 6)),
+    )
+
+
+# TODO: Place somewhere else (layout.components)?
 def map_pointer_table(
-    config, lang,
+    config,
+    lang,
     climate_regime,
     design_variables,
     dataset_ids,
@@ -54,18 +68,6 @@ def map_pointer_table(
     Return a table listing values of design values at a location specified
     by rotated coordinates rlon, rlat
     """
-    if climate_regime == "historical":
-        # TODO: These label(s) should be defined in config
-        # value_headers = tuple(
-        #     f"{dataset_id.capitalize()} value" for dataset_id in dataset_ids
-        # )
-        value_headers = ("Interpolation value",)
-    else:
-        value_headers = tuple(
-            future_change_factor_label(config, lang, dataset_id)
-            for dataset_id in dataset_ids
-        )
-
     return dbc.Table(
         [
             html.Caption(
@@ -76,12 +78,8 @@ def map_pointer_table(
                 html.Tr(
                     [
                         html.Th(hdg)
-                        for hdg in (
-                            tuple(
-                                download_table_label(config, lang, column)
-                                for column in ("dv", "units")
-                            )
-                            + value_headers
+                        for hdg in download_table_headers(
+                            config, lang, climate_regime, dataset_ids, nice=True
                         )
                     ]
                 )
@@ -224,13 +222,8 @@ def add(app, config):
             future_dataset_id,
         )
 
-        return [
-            value_table(
-                ("Lat", round(lat, 6)),
-                ("Lon", round(lon, 6)),
-                # (f"Z ({design_variable_ctrl}) ({source})", round(z, 6)),
-            )
-        ]
+        # TODO: Must this return a list?
+        return [map_lon_lat_table(config, lang, lon=lon, lat=lat)]
 
     # TODO: This can be better done by setting the "href" and "download"
     #   properties on a static download link established in layout.py.
@@ -242,6 +235,7 @@ def add(app, config):
         Input("climate_regime", "value"),
         # Input("historical_dataset_id", "value"),
         Input("future_dataset_id", "value"),
+        Input("language", "value"),
     )
     def display_download_button(
         main_tabs_active_tab,
@@ -250,6 +244,7 @@ def add(app, config):
         climate_regime,
         # historical_dataset_id,
         future_dataset_id,
+        lang,
     ):
         """
         To get the layout we want, we have to break the map-click callback into
@@ -302,7 +297,7 @@ def add(app, config):
 
         return [
             html.A(
-                "Download this data",
+                download_data_button_text(config, lang),
                 href=url,
                 download=filename,
                 className="btn btn-primary btn-sm mb-1",
@@ -317,6 +312,7 @@ def add(app, config):
         Input("climate_regime", "value"),
         # Input("historical_dataset_id", "value"),
         Input("future_dataset_id", "value"),
+        Input("language", "value"),
     )
     def display_click_info(
         main_tabs_active_tab,
@@ -325,6 +321,7 @@ def add(app, config):
         climate_regime,
         # historical_dataset_id,
         future_dataset_id,
+        lang,
     ):
         """
         To get the layout we want, we have to break the map-click callback into
@@ -398,10 +395,6 @@ def add(app, config):
             )
 
             return [
-                value_table(
-                    ("Lat", round(lat, 6)),
-                    ("Lon", round(lon, 6)),
-                    # (f"Z ({design_variable_ctrl}) ({source})", round(z, 6)),
-                ),
+                map_lon_lat_table(config, lang, lon=lon, lat=lat),
                 map_pointer_table(config, lang, climate_regime, *download_data),
             ]

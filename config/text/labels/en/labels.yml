@@ -77,6 +77,12 @@ map:
     historical: "{dv} • {climate_regime}{dataset}"
     future: "{dv} • Tier {tier} variable • {climate_regime}{dataset}"
 
+map_pointer_output:
+  title: Data from map pointer
+  subtitle: |
+    *Hover over map to show position of cursor. 
+    Click to hold design values for download.*
+
 download_table:
   dv: Design value
   units: Units
@@ -90,10 +96,21 @@ table_C2:
     Please report this error to the application contact given 
     in the **About > Contact** tab.    
   no_station_data: "Variable {} does not have historical data"
-  location: Location
-  province: Province
-  longitude: Longitude
-  latitude: Latitude
+
+misc:
+  location:
+    long: Location
+    short: Loc
+  province:
+    long: Province
+    short: Prov
+  longitude:
+    long: Longitude
+    short: Lon
+  latitude:
+    long: Latitude
+    short: Lat
+  download_data_button_text: Download this data
 
 dvs:
   DRWP5:

@@ -17,10 +17,10 @@ from dve.config import (
     table_c2_title,
     table_c2_no_table_data_msg,
     table_c2_no_station_data_msg,
-    table_c2_location_label,
-    table_c2_province_label,
-    table_c2_longitude_label,
-    table_c2_latitude_label,
+    location_label,
+    province_label,
+    longitude_label,
+    latitude_label,
 )
 from dve.data import get_data_object
 from dve.config import dv_label
@@ -102,19 +102,19 @@ def add(app, config):
 
         column_info = {
             "Location": {
-                "name": ["", table_c2_location_label(config, lang)],
+                "name": ["", location_label(config, lang)],
                 "type": "text",
             },
             "prov": {
-                "name": ["", table_c2_province_label(config, lang)],
+                "name": ["", province_label(config, lang)],
                 "type": "text",
             },
             "Longitude": {
-                "name": ["", table_c2_longitude_label(config, lang)],
+                "name": ["", longitude_label(config, lang)],
                 "type": "numeric",
             },
             "Latitude": {
-                "name": ["", table_c2_latitude_label(config, lang)],
+                "name": ["", latitude_label(config, lang)],
                 "type": "numeric",
             },
             pcic_revised_hx_value_col_id: {

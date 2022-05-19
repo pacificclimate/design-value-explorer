@@ -7,7 +7,7 @@ from dve.config import (
     overlay_options_control_titles, overlay_options_section_title,
     color_map_ctrl_options, scale_ctrl_options, colourbar_options_section_title,
     colourbar_options_control_titles, colorscale_options_label_range,
-    show_stations_label,
+    show_stations_label, map_pointer_output_heading,
 )
 
 logger = logging.getLogger(__name__)
@@ -81,3 +81,9 @@ def add(app, config):
     def update_color_map_ctrl_options(lang):
         return color_map_ctrl_options(config, lang)
 
+    @app.callback(
+        Output("map_pointer_output_heading", "children"),
+        Input("language", "value")
+    )
+    def update_map_pointer_output_heading(lang):
+        return map_pointer_output_heading(config, lang)

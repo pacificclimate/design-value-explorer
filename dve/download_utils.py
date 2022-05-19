@@ -3,6 +3,7 @@ import os.path
 import csv
 from dve.config import (
     dv_has_climate_regime, interpolation_value_label, download_table_label,
+    download_table_headers, latitude_label, longitude_label,
 )
 from dve.data import dv_value
 from dve.config import dv_units, dv_roundto, future_change_factor_label
@@ -109,30 +110,27 @@ def get_download_data(
 
 
 def create_download_file(
-    lon, lat, config, lang, climate_regime, design_variables, dataset_ids, data_values
+    lon,
+    lat,
+    config,
+    lang,
+    climate_regime,
+    design_variables,
+    dataset_ids,
+    data_values,
 ):
     with open(
         os.path.join("/", download_filepath(lon, lat, climate_regime)), "w"
     ) as file:
         writer = csv.writer(file, delimiter=",")
-        writer.writerow(("Latitude", lat))
-        writer.writerow(("Longitude", lon))
+        writer.writerow((latitude_label(config, lang), lat))
+        writer.writerow((longitude_label(config, lang), lon))
         writer.writerow(tuple())
 
-        if climate_regime == "historical":
-            value_headers = (interpolation_value_label(config, lang),)
-        else:
-            value_headers = tuple(
-                future_change_factor_label(config, lang, dataset_id, nice=False)
-                for dataset_id in dataset_ids
-            )
-
         writer.writerow(
-            tuple(
-                download_table_label(config, lang, column)
-                for column in ("dv", "units")
+            download_table_headers(
+                config, lang, climate_regime, dataset_ids, nice=False
             )
-            + value_headers
         )
         for design_variable, data_row in zip(design_variables, data_values):
             writer.writerow(

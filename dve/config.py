@@ -8,6 +8,7 @@ import os.path
 import logging
 from pkg_resources import resource_filename
 from dash import html
+from dash import dcc
 import dash_bootstrap_components as dbc
 from dve.dict_utils import path_get
 
@@ -213,7 +214,6 @@ def dv_historical_stations_column(config, design_variable):
 
 # Text(ish)
 
-
 def app_title(config, lang):
     return config["text"]["labels"][lang]["app_title"]
 
@@ -271,6 +271,22 @@ def future_change_factor_label(
     return config["text"]["labels"][lang]["future_change_factors"][
         which
     ].format(value=dataset_id, separator=separator, units=units)
+
+
+def download_table_headers(
+    config, lang, climate_regime, dataset_ids, nice=True
+):
+    if climate_regime == "historical":
+        value_headers = (interpolation_value_label(config, lang),)
+    else:
+        value_headers = tuple(
+            future_change_factor_label(config, lang, dataset_id, nice=nice)
+            for dataset_id in dataset_ids
+        )
+    return tuple(
+        download_table_label(config, lang, column)
+        for column in ("dv", "units")
+    ) + value_headers
 
 
 def download_table_label(config, lang, column):
@@ -463,17 +479,31 @@ def table_c2_no_station_data_msg(config, lang, design_variable):
     )
 
 
-def table_c2_location_label(config, lang):
-    return config["text"]["labels"][lang]["table_C2"]["location"]
+def location_label(config, lang, which="long"):
+    return config["text"]["labels"][lang]["table_C2"]["location"][which]
 
 
-def table_c2_province_label(config, lang):
-    return config["text"]["labels"][lang]["table_C2"]["province"]
+def province_label(config, lang, which="long"):
+    return config["text"]["labels"][lang]["table_C2"]["province"][which]
 
 
-def table_c2_longitude_label(config, lang):
-    return config["text"]["labels"][lang]["table_C2"]["longitude"]
+def longitude_label(config, lang, which="long"):
+    return config["text"]["labels"][lang]["misc"]["longitude"][which]
 
 
-def table_c2_latitude_label(config, lang):
-    return config["text"]["labels"][lang]["table_C2"]["latitude"]
+def latitude_label(config, lang, which="long"):
+    return config["text"]["labels"][lang]["misc"]["latitude"][which]
+
+
+def download_data_button_text(config, lang):
+    return config["text"]["labels"][lang]["misc"]["download_data_button_text"]
+
+
+def map_pointer_output_heading(config, lang):
+    cfg = config["text"]["labels"][lang]["map_pointer_output"]
+    return dbc.Col(
+        [
+            html.H5(cfg["title"]),
+            dcc.Markdown(cfg["subtitle"], style={"font-size": "0.8em"}),
+        ]
+    )

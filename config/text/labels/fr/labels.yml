@@ -78,6 +78,12 @@ map:
     historical: "{dv} • {climate_regime}{dataset}"
     future: "{dv} • Variable de niveau {tier}  • {climate_regime}{dataset}"
 
+map_pointer_output:
+  title: Données du pointeur de la carte
+  subtitle: |
+    *Passez le pointeur sur la carte pour montrer l'emplacement actuel du pointeur. 
+    Cliquez pour conserver les valeurs pour téléchargement.*
+
 download_table:
   dv: Valeur de conception
   units: Unités
@@ -88,15 +94,24 @@ table_C2:
     Pour les projections futures, {name} est une variable de niveau {tier}.
   no_table_data_error: |
     Erreur: Il n'y a pas de donné disponible pour ce tableau.
-    SVP 
-    Data is not available for this table. 
     Veuillez signaler cette erreur au contact de l'application fournit 
     dans l'onglet **À propos > Contact** tab.
-  no_station_data: "Variable {} does not have historical data"
-  location: Emplacement
-  province: Province
-  longitude: Longitude
-  latitude: Latitude
+  no_station_data: "Le variable {} n'a pas de donné historique"
+
+misc:
+  location:
+    long: Emplacement
+    short: Empl
+  province:
+    long: Province
+    short: Prov
+  longitude:
+    long: Longitude
+    short: Lon
+  latitude:
+    short: Lat
+    long: Latitude
+  download_data_button_text: Télécharger ces données
 
 dvs:
   DRWP5:

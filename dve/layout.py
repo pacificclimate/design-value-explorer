@@ -267,24 +267,13 @@ def main(app, config, lang="en"):
             ),
         ]
 
-    def user_graph_interaction():
+    def map_pointer_output():
         """
-        Layout for user graph interaction elements.
+        Layout for map pointer output.
         :return: list of dbc.Row
         """
         return [
-            dbc.Row(
-                dbc.Col(
-                    [
-                        html.H5("Data from map pointer"),
-                        dcc.Markdown(
-                            "*Hover over map to show position of cursor. "
-                            "Click to hold design values for download.*",
-                            style={"font-size": "0.8em"},
-                        ),
-                    ]
-                )
-            ),
+            dbc.Row(id="map_pointer_output_heading"),
             dbc.Row(
                 [
                     dbc.Col(
@@ -362,7 +351,7 @@ def main(app, config, lang="en"):
                             className="border-top",
                         ),
                         dbc.Col(
-                            user_graph_interaction(),
+                            map_pointer_output(),
                             xxl={"size": 5, "order": 3},
                             xs=12,
                             className="pt-3 border-top",
