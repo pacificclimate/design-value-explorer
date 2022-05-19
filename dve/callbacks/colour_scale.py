@@ -1,15 +1,14 @@
 import logging
 
-from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Output
 
 import numpy as np
 
 from dve.config import (
     dv_roundto, dv_colour_scale_disable_logarithmic, filepath_for,
-    colorscale_options_label_range,
+    colorscale_options_label_range, scale_ctrl_options,
 )
 from dve.data import get_data_object
-import dve.layout
 from dve.math_utils import sigfigs, round_to_multiple
 
 logger = logging.getLogger(__name__)
@@ -34,7 +33,7 @@ def add(app, config):
                     )
                 ),
             }
-            for option in dve.layout.scale_ctrl_options(config, lang)
+            for option in scale_ctrl_options(config, lang)
         ]
         return options
 
@@ -43,9 +42,9 @@ def add(app, config):
         Input("color_scale_data_range", "value"),
         Input("language", "value"),
     )
-    def update_colorscale_options_label_range(range, lang):
+    def update_colorscale_options_label_range(data_range, lang):
         return colorscale_options_label_range(
-            config, lang, min=sigfigs(range[0]), max=sigfigs(range[1])
+            config, lang, min=sigfigs(data_range[0]), max=sigfigs(data_range[1])
         )
 
     @app.callback(

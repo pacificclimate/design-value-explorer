@@ -9,7 +9,7 @@ import logging
 from pkg_resources import resource_filename
 from dash import html
 import dash_bootstrap_components as dbc
-from dve.dict_utils import path_get, path_set
+from dve.dict_utils import path_get
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ def validate_filepath(filepath):
 def validate_config(config, cfg_path, log=logger.warning, **kwargs):
     """
     Validate the config addressed by `cfg_path`. If there is nothing at the
-    specified path in the config object, log this fact. Otherwise validate
+    specified path in the config object, log this fact. Otherwise, validate
     the filepath found at that path.
     """
     filepath = path_get(config, cfg_path, **kwargs)
@@ -112,7 +112,7 @@ def dv_has_climate_regime(config, design_variable, climate_regime):
 
 def dv_name(config, lang, design_variable):
     """
-    Return the name of a design variable. Currently this is the internal
+    Return the name of a design variable. Currently, this is the internal
     id of the DV, so `config` and `lang` are not used. 
     That could conceivably change.
     """
@@ -359,14 +359,14 @@ def show_stations_label(config, lang):
     }
 
 
-def color_map_ctrl_options(config, lang):
+def color_map_ctrl_options(config, lang=None):
+    # At present this is language-independent
     return [
         {"value": x, "label": x} for x in config["values"]["map"]["colour_maps"]
     ]
 
 
 def scale_ctrl_options(config, lang):
-    # TODO: Put into config
     return config["text"]["labels"][lang]["color_scale_type"]
 
 

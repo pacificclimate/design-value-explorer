@@ -1,19 +1,11 @@
 import os
-from copy import deepcopy
 from dash import html
 import dash_bootstrap_components as dbc
 from dash import dcc
 import dash_daq as daq
 from dve.config import (
-    dv_label,
-    climate_regime_ctrl_options,
-    overlay_options_section_title,
     overlay_options_control_columns,
-    color_map_ctrl_options,
-    scale_ctrl_options,
-    colourbar_options_section_title,
     color_bar_options_ctrl_width,
-    color_bar_options_ctrl_title,
     map_tab_label,
     table_c2_label,
     help_tab_label,
@@ -22,12 +14,7 @@ from dve.config import (
     about_tab_label,
     about_subtab_label,
     about_subtab_card_spec,
-    future_change_factor_label,
-    app_title,
-    dv_dropdown_options,
-    overlay_options_control_titles,
 )
-from dve.dict_utils import path_set
 
 
 def interpret(source):
@@ -60,7 +47,11 @@ def card_item(card):
     )
 
 
-def card_set(cards, row_args={}, col_args={}):
+def card_set(cards, row_args=None, col_args=None):
+    if row_args is None:
+        row_args = {}
+    if col_args is None:
+        col_args = {}
     return dbc.Row(dbc.Col([card_item(card) for card in cards]), **row_args)
     return dbc.Row(
         [dbc.Col(card_item(card), **col_args) for card in cards], **row_args
@@ -339,8 +330,6 @@ def main(app, config, lang="en"):
     def map_tab():
         """
         Top-level layout of map tab.
-
-        :param config:
         :return: dbc.Tab
         """
         return dbc.Tab(
@@ -456,8 +445,8 @@ def main(app, config, lang="en"):
 
     def internal_data():
         """
-        Layout components for storing/sharing data between callbacks (and callback
-        invocations) on the client side, using a hidden div (ick!). See
+        Layout components for storing/sharing data between callbacks (and
+        callback invocations) on the client side, using a hidden div (ick!). See
         https://dash.plotly.com/sharing-data-between-callbacks.
 
         :return: List of components.
