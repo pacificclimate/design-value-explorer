@@ -484,11 +484,11 @@ def table_c2_no_station_data_msg(config, lang, design_variable):
 
 
 def location_label(config, lang, which="long"):
-    return config["text"]["labels"][lang]["table_C2"]["location"][which]
+    return config["text"]["labels"][lang]["misc"]["location"][which]
 
 
 def province_label(config, lang, which="long"):
-    return config["text"]["labels"][lang]["table_C2"]["province"][which]
+    return config["text"]["labels"][lang]["misc"]["province"][which]
 
 
 def longitude_label(config, lang, which="long"):
