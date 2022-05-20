@@ -7,14 +7,16 @@ from dash.dependencies import Input, Output
 from dash import html
 import dash_bootstrap_components as dbc
 
-from dve.config import (
-    dv_has_climate_regime,
-    filepath_for,
+from dve.config.text import (
     download_table_headers,
     latitude_label,
     longitude_label,
     download_data_button_text,
+    dv_name,
+    dv_units,
+    climate_regime_label,
 )
+from dve.config.values import dv_has_climate_regime, dv_roundto, filepath_for
 from dve.data import get_data_object
 from dve.download_utils import (
     download_filename,
@@ -22,7 +24,6 @@ from dve.download_utils import (
     get_download_data,
     create_download_file,
 )
-from dve.config import dv_name, dv_units, dv_roundto, climate_regime_label
 from dve.map_utils import pointer_rlonlat
 from dve.math_utils import round_to_multiple
 from dve.timing import timing

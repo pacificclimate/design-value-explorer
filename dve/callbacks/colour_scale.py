@@ -4,12 +4,9 @@ from dash.dependencies import Input, Output
 
 import numpy as np
 
-from dve.config import (
-    dv_roundto,
-    dv_colour_scale_disable_logarithmic,
-    filepath_for,
-    colorscale_options_label_range,
-    scale_ctrl_options,
+from dve.config.text import scale_ctrl_options, colorscale_options_label_range
+from dve.config.values import (
+    dv_colour_scale_disable_logarithmic, filepath_for, dv_roundto,
 )
 from dve.data import get_data_object
 from dve.math_utils import sigfigs, round_to_multiple

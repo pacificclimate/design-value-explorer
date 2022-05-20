@@ -1,7 +1,7 @@
 import logging
 from dash.dependencies import Input, Output
 
-from dve.config import (
+from dve.config.text import (
     app_title,
     dv_dropdown_label,
     dv_dropdown_options,

@@ -1,14 +1,12 @@
 import os
 import os.path
 import csv
-from dve.config import (
-    dv_has_climate_regime,
-    download_table_headers,
-    latitude_label,
-    longitude_label,
+
+from dve.config.text import (
+    latitude_label, longitude_label, download_table_headers,
 )
+from dve.config.values import dv_has_climate_regime, dv_units, dv_roundto
 from dve.data import dv_value
-from dve.config import dv_units, dv_roundto, future_change_factor_label
 from dve.math_utils import round_to_multiple
 
 

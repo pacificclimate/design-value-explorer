@@ -2,7 +2,7 @@ from dash import html
 import dash_bootstrap_components as dbc
 from dash import dcc
 import dash_daq as daq
-from dve.config import (
+from dve.config.text import (
     overlay_options_control_columns,
     color_bar_options_ctrl_width,
 )

@@ -6,7 +6,7 @@ import yaml
 from yamlinclude import YamlIncludeConstructor
 
 import dve
-import dve.config
+import dve.config.validation
 import dve.callbacks.local_preferences
 import dve.callbacks.about
 import dve.callbacks.help
@@ -108,7 +108,7 @@ def make_app(
         config = yaml.load(config_file)
     logger.debug(f"Configuration loaded.")
 
-    dve.config.validate(config)
+    dve.config.validation.validate(config)
 
     app = make_dash_app(config)
 

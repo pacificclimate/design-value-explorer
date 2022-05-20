@@ -4,13 +4,9 @@ import dash
 from dash.dependencies import Input, Output
 from dash import dash_table, dcc
 
-from dve.config import (
-    dv_has_climate_regime,
+from dve.config.text import (
     future_change_factor_label,
-    dv_roundto,
     dv_units,
-    file_exists,
-    filepath_for,
     table_c2_title,
     table_c2_no_table_data_msg,
     table_c2_no_station_data_msg,
@@ -19,9 +15,11 @@ from dve.config import (
     longitude_label,
     latitude_label,
     table_c2_tab_label,
+    dv_label,
 )
+from dve.config.values import dv_has_climate_regime, dv_roundto, filepath_for
+from dve.config.validation import file_exists
 from dve.data import get_data_object
-from dve.config import dv_label
 from dve.math_utils import round_to_multiple
 from dve.timing import timing
 

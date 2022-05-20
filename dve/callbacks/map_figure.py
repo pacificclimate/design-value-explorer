@@ -9,20 +9,22 @@ import plotly.graph_objects as go
 
 import geopandas as gpd
 
-from dve.config import (
-    dv_has_climate_regime,
-    dv_roundto,
-    dv_units,
+from dve.config.text import (
     map_title,
-    dv_historical_stations_column,
-    dv_colour_bar_sigfigs,
-    file_exists,
-    filepath_for,
     map_no_dvs_for_climate_regime_msg,
     map_no_data_error,
     map_heatmap_hover_template,
     map_station_hover_template,
 )
+from dve.config.values import (
+    dv_has_climate_regime,
+    dv_roundto,
+    dv_units,
+    dv_historical_stations_column,
+    dv_colour_bar_sigfigs,
+    filepath_for,
+)
+from dve.config.validation import file_exists
 from dve.data import get_data_object
 from dve.colorbar import (
     discrete_colorscale,

@@ -1,5 +1,5 @@
 from dash.dependencies import Input, Output
-from dve.config import map_tab_label
+from dve.config.text import map_tab_label
 
 
 def add(app, config):
