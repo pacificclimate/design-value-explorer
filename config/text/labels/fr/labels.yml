@@ -101,7 +101,7 @@ download_table:
 
 table_C2:
   title: |
-    Valeur de conception pour {name_and_units} aux emplacements de Table C-2. 
+    Valeur de conception pour {name_and_units} aux emplacements de Tableau C-2. 
     Pour les projections futures, {name} est une variable de niveau {tier}.
   no_table_data_error: |
     Erreur: Aucune donnée n'est disponible pour ce tableau.
