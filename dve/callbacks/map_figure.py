@@ -10,18 +10,10 @@ import plotly.graph_objects as go
 import geopandas as gpd
 
 from dve.config import (
-    dv_has_climate_regime,
-    dv_roundto,
-    dv_units,
-    map_title,
-    dv_historical_stations_column,
-    dv_colour_bar_sigfigs,
-    dv_name,
-    file_exists,
-    filepath_for,
-    map_no_dvs_for_climate_regime_msg,
-    map_no_data_error,
-    map_hover_template,
+    dv_has_climate_regime, dv_roundto, dv_units, map_title,
+    dv_historical_stations_column, dv_colour_bar_sigfigs, dv_name, file_exists,
+    filepath_for, map_no_dvs_for_climate_regime_msg, map_no_data_error,
+    map_heatmap_hover_template, map_station_hover_template,
 )
 from dve.data import get_data_object
 from dve.colorbar import (
@@ -318,7 +310,7 @@ def add(app, config):
                         colorscale=colorscale,
                         showscale=False,  # Hide colorbar
                         visible=True,
-                        hovertemplate=map_hover_template(
+                        hovertemplate=map_heatmap_hover_template(
                             config, lang, design_variable, climate_regime
                         ),
                         name="",
@@ -357,9 +349,8 @@ def add(app, config):
                             colorscale=colorscale,
                             showscale=False,  # Hide colorbar
                         ),
-                        hovertemplate=(
-                            f"<b>Station {dv_label(config, lang, design_variable, climate_regime)}: "
-                            f"%{{text}}</b><br>"
+                        hovertemplate=map_station_hover_template(
+                            config, lang, design_variable, climate_regime
                         ),
                         name="",
                     )

@@ -550,8 +550,14 @@ def map_no_data_error(
     )
 
 
-def map_hover_template(config, lang, design_variable, climate_regime):
-    return config["text"]["labels"][lang]["map"]["hover_template"].format(
+def map_heatmap_hover_template(config, lang, design_variable, climate_regime):
+    return config["text"]["labels"][lang]["map"]["heatmap_hover_template"].format(
+        dv_label=dv_label(config, lang, design_variable, climate_regime)
+    )
+
+
+def map_station_hover_template(config, lang, design_variable, climate_regime):
+    return config["text"]["labels"][lang]["map"]["station_hover_template"].format(
         dv_label=dv_label(config, lang, design_variable, climate_regime)
     )
 

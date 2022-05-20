@@ -84,8 +84,10 @@ map:
     Please report this error to the 
     application contact given 
     in the <b>About > Contact</b> tab.
-  hover_template: |
+  heatmap_hover_template: |
     <b>Interpolated {dv_label}: %{{z}} </b><br>
+  station_hover_template: |
+    <b>Station {dv_label}: %{{text}}</b><br>
 
 map_pointer_output:
   title: Data from map pointer
