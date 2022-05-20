@@ -27,8 +27,6 @@ from dve.timing import timing
 logger = logging.getLogger(__name__)
 timing_log = logger.info
 
-lang = "en"  # TODO: Replace with language selection
-
 
 def make_data_table(config, lang, design_variable):
     historical_name_and_units = dv_label(

@@ -33,8 +33,6 @@ logger = logging.getLogger(__name__)
 timing_log_info = logger.info
 timing_log_debug = logger.debug  # Set to None to not log debug timing
 
-lang = "en"  # TODO: Replace with language selection
-
 
 # TODO: Place somewhere else (layout.components)?
 def map_lon_lat_table(config, lang, lon=None, lat=None):

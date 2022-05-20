@@ -41,12 +41,9 @@ from dve.timing import timing
 from climpyrical.gridding import find_nearest_index
 from climpyrical.mask import stratify_coords
 
-
 logger = logging.getLogger(__name__)
 timing_log_info = logger.info
 timing_log_debug = logger.debug  # Set to None to not log debug timing
-
-lang = "en"  # TODO: Replace with language selection
 
 
 def message_figure(message):
