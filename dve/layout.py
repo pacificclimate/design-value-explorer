@@ -14,40 +14,6 @@ from dve.config import (
 from dve.text_utils import interpret
 
 
-def compact(iterable):
-    return list(filter(None, iterable))
-
-
-def card_item(card):
-    color = card.get("color")
-    title = card.get("title")
-    header = card.get("header")
-    body = card.get("body")
-    return dbc.Card(
-        className="me-3 mb-3 float-start",
-        style={"width": "30%"},
-        color=color,
-        children=compact(
-            (
-                header and dbc.CardHeader(interpret(header)),
-                title and html.H4(interpret(title), className="card-title"),
-                body and dbc.CardBody(interpret(body)),
-            )
-        ),
-    )
-
-
-def card_set(cards, row_args=None, col_args=None):
-    if row_args is None:
-        row_args = {}
-    if col_args is None:
-        col_args = {}
-    return dbc.Row(dbc.Col([card_item(card) for card in cards]), **row_args)
-    return dbc.Row(
-        [dbc.Col(card_item(card), **col_args) for card in cards], **row_args
-    )
-
-
 def main(app, config, lang="en"):
     """
     Top-level layout component. `app.layout` should be set to what this function
@@ -380,24 +346,10 @@ def main(app, config, lang="en"):
 
     def about_tab():
         return dbc.Tab(
+            id="about-tab",
             tab_id="about-tab",
-            label=about_tab_label(config, lang),
             children=dbc.Tabs(
                 id="about_tabs",
-                children=[
-                    dbc.Tab(
-                        tab_id=f"about_tab-{index}",
-                        label=about_subtab_label(config, lang, index),
-                        children=card_set(
-                            about_subtab_card_spec(config, lang, index),
-                            col_args=dict(xs=12, md=6, xxl=4, className="mb-3"),
-                        ),
-                        className="about_tab pt-3",
-                    )
-                    for index in range(
-                        len(config["text"]["about"]["tabs"][lang])
-                    )
-                ],
                 className="pt-3",
                 **config["values"]["ui"]["controls"]["about_tabs"],
             ),

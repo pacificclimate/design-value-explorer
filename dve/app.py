@@ -8,6 +8,7 @@ from yamlinclude import YamlIncludeConstructor
 import dve
 import dve.config
 import dve.callbacks.local_preferences
+import dve.callbacks.about
 import dve.callbacks.help
 import dve.callbacks.map_figure
 import dve.callbacks.table_c2
@@ -50,6 +51,7 @@ def make_dash_app(config):
     # Add callbacks
     dve.callbacks.local_preferences.add(app, config)
     dve.callbacks.help.add(app, config)
+    dve.callbacks.about.add(app, config)
     dve.callbacks.table_c2.add(app, config)
     dve.callbacks.overlay.add(app, config)
     dve.callbacks.colour_scale.add(app, config)

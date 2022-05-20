@@ -11,7 +11,7 @@ from dash import html
 from dash import dcc
 import dash_bootstrap_components as dbc
 from dve.dict_utils import path_get
-from dve.text_utils import interpret
+from dve.text_utils import interpret, card_set
 
 logger = logging.getLogger(__name__)
 
@@ -571,4 +571,21 @@ def help_subtabs(config, lang):
             className="help_tab pt-3",
         )
         for index in range(len(config["text"]["help"]["tabs"][lang]))
+    ]
+
+
+def about_subtabs(config, lang):
+    return [
+        dbc.Tab(
+            tab_id=f"about_tab-{index}",
+            label=about_subtab_label(config, lang, index),
+            children=card_set(
+                about_subtab_card_spec(config, lang, index),
+                col_args=dict(xs=12, md=6, xxl=4, className="mb-3"),
+            ),
+            className="about_tab pt-3",
+        )
+        for index in range(
+            len(config["text"]["about"]["tabs"][lang])
+        )
     ]
