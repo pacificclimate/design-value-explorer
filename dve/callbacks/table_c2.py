@@ -5,10 +5,23 @@ from dash.dependencies import Input, Output, State
 from dash import dash_table, dcc
 
 from dve.config import (
-    dv_has_climate_regime, future_change_factor_label, dv_roundto, dv_name,
-    dv_units, file_exists, filepath_for, units_suffix, dv_tier, table_c2_title,
-    table_c2_no_table_data_msg, table_c2_no_station_data_msg, location_label,
-    province_label, longitude_label, latitude_label, table_c2_tab_label,
+    dv_has_climate_regime,
+    future_change_factor_label,
+    dv_roundto,
+    dv_name,
+    dv_units,
+    file_exists,
+    filepath_for,
+    units_suffix,
+    dv_tier,
+    table_c2_title,
+    table_c2_no_table_data_msg,
+    table_c2_no_station_data_msg,
+    location_label,
+    province_label,
+    longitude_label,
+    latitude_label,
+    table_c2_tab_label,
 )
 from dve.data import get_data_object
 from dve.config import dv_label
@@ -43,10 +56,7 @@ def make_data_table(config, lang, design_variable):
             historical_dataset_id="table",
         )
     ):
-        return (
-            title,
-            dcc.Markdown(table_c2_no_table_data_msg(config, lang)),
-        )
+        return (title, dcc.Markdown(table_c2_no_table_data_msg(config, lang)))
 
     historical_dataset = get_data_object(
         config, design_variable, "historical", historical_dataset_id="table"
@@ -92,10 +102,7 @@ def make_data_table(config, lang, design_variable):
             "name": ["", location_label(config, lang)],
             "type": "text",
         },
-        "prov": {
-            "name": ["", province_label(config, lang)],
-            "type": "text",
-        },
+        "prov": {"name": ["", province_label(config, lang)], "type": "text"},
         "Longitude": {
             "name": ["", longitude_label(config, lang)],
             "type": "numeric",
@@ -118,10 +125,7 @@ def make_data_table(config, lang, design_variable):
             cf_value_col_id: {
                 "name": [
                     dv_label(
-                        config,
-                        lang,
-                        design_variable,
-                        climate_regime="future",
+                        config, lang, design_variable, climate_regime="future"
                     ),
                     f"CF {future_change_factor_label(config, lang, future_dataset_id)}",
                 ],

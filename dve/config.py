@@ -585,7 +585,5 @@ def about_subtabs(config, lang):
             ),
             className="about_tab pt-3",
         )
-        for index in range(
-            len(config["text"]["about"]["tabs"][lang])
-        )
+        for index in range(len(config["text"]["about"]["tabs"][lang]))
     ]

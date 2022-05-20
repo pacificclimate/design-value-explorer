@@ -2,12 +2,20 @@ import logging
 from dash.dependencies import Input, Output, State
 
 from dve.config import (
-    app_title, dv_dropdown_label, dv_dropdown_options,
-    future_dataset_ctrl_options, climate_regime_ctrl_options,
-    overlay_options_control_titles, overlay_options_section_title,
-    color_map_ctrl_options, scale_ctrl_options, colourbar_options_section_title,
-    colourbar_options_control_titles, colorscale_options_label_range,
-    show_stations_label, map_pointer_output_heading,
+    app_title,
+    dv_dropdown_label,
+    dv_dropdown_options,
+    future_dataset_ctrl_options,
+    climate_regime_ctrl_options,
+    overlay_options_control_titles,
+    overlay_options_section_title,
+    color_map_ctrl_options,
+    scale_ctrl_options,
+    colourbar_options_section_title,
+    colourbar_options_control_titles,
+    colorscale_options_label_range,
+    show_stations_label,
+    map_pointer_output_heading,
 )
 
 logger = logging.getLogger(__name__)
@@ -56,10 +64,7 @@ def add(app, config):
     def update_overlay_options_control_titles(lang):
         return overlay_options_control_titles(config, lang)
 
-    @app.callback(
-        Output("show_stations", "label"),
-        Input("language", "value"),
-    )
+    @app.callback(Output("show_stations", "label"), Input("language", "value"))
     def update_show_stations_label(lang):
         return show_stations_label(config, lang)
 
@@ -83,7 +88,7 @@ def add(app, config):
 
     @app.callback(
         Output("map_pointer_output_heading", "children"),
-        Input("language", "value")
+        Input("language", "value"),
     )
     def update_map_pointer_output_heading(lang):
         return map_pointer_output_heading(config, lang)

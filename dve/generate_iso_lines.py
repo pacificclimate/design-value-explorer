@@ -53,8 +53,13 @@ def lonlat_overlay(
     :param num_lat_intervals: (int) Number of intervals of latitude in overlay.
     :param lon_round_to: (list) Values of longitude increment to use.
     :param lat_round_to: (list) Values of latitude increment to use.
+    :param lon_min: (list) Minimum longitude covered by overlay.
+    :param lon_max: (list) Maximum longitude covered by overlay.
+    :param lat_min: (list) Minimum latitude covered by overlay.
+    :param lat_max: (list) Maximum latitude covered by overlay.
     :return: (list) Graphical objects representing lon-lat overlay.
     """
+    # Normalize longitudes
     lon_min = lon_0_to_360(lon_min)
     lon_max = lon_0_to_360(lon_max)
 

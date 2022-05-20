@@ -8,8 +8,12 @@ from dash import html
 import dash_bootstrap_components as dbc
 
 from dve.config import (
-    dv_has_climate_regime, filepath_for, download_table_label,
-    download_table_headers, latitude_label, longitude_label,
+    dv_has_climate_regime,
+    filepath_for,
+    download_table_label,
+    download_table_headers,
+    latitude_label,
+    longitude_label,
     download_data_button_text,
 )
 from dve.data import get_data_object

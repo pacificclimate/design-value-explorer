@@ -2,8 +2,12 @@ import os
 import os.path
 import csv
 from dve.config import (
-    dv_has_climate_regime, interpolation_value_label, download_table_label,
-    download_table_headers, latitude_label, longitude_label,
+    dv_has_climate_regime,
+    interpolation_value_label,
+    download_table_label,
+    download_table_headers,
+    latitude_label,
+    longitude_label,
 )
 from dve.data import dv_value
 from dve.config import dv_units, dv_roundto, future_change_factor_label
@@ -16,10 +20,12 @@ download_by_location_dir = "downloads/by-location"
 
 def download_filename(lon, lat, climate_regime):
     """
-    Return a unique filename the download data for position lon, lat.
+    Return a unique filename for the download data for the
+    specified position (lon, lat) and climate regime.
 
     :param lon:
     :param lat:
+    :param climate_regime:
     :return: string
     """
     return f"dvs_{climate_regime}_{lon}_{lat}.csv"
