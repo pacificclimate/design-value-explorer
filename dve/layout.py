@@ -5,9 +5,7 @@ import dash_daq as daq
 from dve.config import (
     overlay_options_control_columns,
     color_bar_options_ctrl_width,
-    map_tab_label,
 )
-from dve.text_utils import interpret
 
 
 def main(app, config, lang="en"):

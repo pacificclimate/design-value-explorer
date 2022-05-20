@@ -10,10 +10,18 @@ import plotly.graph_objects as go
 import geopandas as gpd
 
 from dve.config import (
-    dv_has_climate_regime, dv_roundto, dv_units, map_title,
-    dv_historical_stations_column, dv_colour_bar_sigfigs, dv_name, file_exists,
-    filepath_for, map_no_dvs_for_climate_regime_msg, map_no_data_error,
-    map_heatmap_hover_template, map_station_hover_template,
+    dv_has_climate_regime,
+    dv_roundto,
+    dv_units,
+    map_title,
+    dv_historical_stations_column,
+    dv_colour_bar_sigfigs,
+    file_exists,
+    filepath_for,
+    map_no_dvs_for_climate_regime_msg,
+    map_no_data_error,
+    map_heatmap_hover_template,
+    map_station_hover_template,
 )
 from dve.data import get_data_object
 from dve.colorbar import (
@@ -24,7 +32,6 @@ from dve.colorbar import (
     uniformly_spaced_with_target,
 )
 from dve.generate_iso_lines import lonlat_overlay
-from dve.config import dv_label
 from dve.processing import coord_prep
 from dve.math_utils import round_to_multiple, sigfigs
 from dve.timing import timing
@@ -249,8 +256,8 @@ def add(app, config):
 
                 with timing("create lon-lat graticule", log=timing_log_debug):
                     maps += lonlat_overlay(
-                        # It's not clear why the grid sizes should be taken from the
-                        # dataset, but that's how the code works. Ick.
+                        # It's not clear why the grid sizes should be taken
+                        # from the dataset, but that's how the code works. Ick.
                         rlon_grid_size=rlon.size,
                         rlat_grid_size=rlat.size,
                         viewport=viewport and viewport["current"],
@@ -356,8 +363,9 @@ def add(app, config):
                     )
                 )
 
-            # Accompanying colorbar. It would be nice to use the built-in colorbar,
-            # but Plotly's logarithmic colorbar is not suitable to our purposes.
+            # Accompanying colorbar. It would be nice to use the built-in
+            # colorbar, but Plotly's logarithmic colorbar is not suitable to our
+            # purposes.
             tickvals = use_ticks(
                 zmin,
                 zmax,
@@ -382,8 +390,8 @@ def add(app, config):
                 ],
             )
 
-            # Create the figure that will be populated with the heatmap and colorbar
-            # as subplots.
+            # Create the figure that will be populated with the heatmap and
+            # colorbar as subplots.
             figure = go.Figure(
                 layout=go.Layout(
                     title=go.layout.Title(

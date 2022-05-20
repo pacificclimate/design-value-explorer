@@ -3,14 +3,13 @@ import functools
 import math
 
 import dash
-from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Output
 from dash import html
 import dash_bootstrap_components as dbc
 
 from dve.config import (
     dv_has_climate_regime,
     filepath_for,
-    download_table_label,
     download_table_headers,
     latitude_label,
     longitude_label,
@@ -23,20 +22,8 @@ from dve.download_utils import (
     get_download_data,
     create_download_file,
 )
-from dve.config import (
-    dv_name,
-    dv_units,
-    dv_roundto,
-    climate_regime_label,
-    future_change_factor_label,
-)
-from dve.map_utils import (
-    pointer_rlonlat,
-    pointer_rindices,
-    rlonlat_to_rindices,
-    rindices_to_lonlat,
-    pointer_value,
-)
+from dve.config import dv_name, dv_units, dv_roundto, climate_regime_label
+from dve.map_utils import pointer_rlonlat
 from dve.math_utils import round_to_multiple
 from dve.timing import timing
 

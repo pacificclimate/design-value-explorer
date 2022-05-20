@@ -3,8 +3,6 @@ import os.path
 import csv
 from dve.config import (
     dv_has_climate_regime,
-    interpolation_value_label,
-    download_table_label,
     download_table_headers,
     latitude_label,
     longitude_label,

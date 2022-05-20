@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from dve.app import make_app, make_wsgi_app
+from dve.app import make_app
 
 
 if __name__ == "__main__":

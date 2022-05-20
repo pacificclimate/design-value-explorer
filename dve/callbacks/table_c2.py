@@ -1,19 +1,16 @@
 import logging
 
 import dash
-from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Output
 from dash import dash_table, dcc
 
 from dve.config import (
     dv_has_climate_regime,
     future_change_factor_label,
     dv_roundto,
-    dv_name,
     dv_units,
     file_exists,
     filepath_for,
-    units_suffix,
-    dv_tier,
     table_c2_title,
     table_c2_no_table_data_msg,
     table_c2_no_station_data_msg,

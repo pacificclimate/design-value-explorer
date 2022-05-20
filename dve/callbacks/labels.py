@@ -1,5 +1,5 @@
 import logging
-from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Output
 
 from dve.config import (
     app_title,
@@ -10,10 +10,8 @@ from dve.config import (
     overlay_options_control_titles,
     overlay_options_section_title,
     color_map_ctrl_options,
-    scale_ctrl_options,
     colourbar_options_section_title,
     colourbar_options_control_titles,
-    colorscale_options_label_range,
     show_stations_label,
     map_pointer_output_heading,
 )

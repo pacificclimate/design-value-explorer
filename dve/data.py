@@ -28,7 +28,6 @@ TODO: `DvXrDataset`, `PdCsvDataset` have a very common structure. Factor this
 """
 import math
 import os
-import functools
 from collections import namedtuple
 from random import randrange
 import logging

@@ -95,8 +95,8 @@ Implementation notes:
   see "Retrieving the initial store data" in
   https://dash.plotly.com/dash-core-components/store . We follow that advice.
 
-- To accommodate changes in the contents of local preferences (e.g., what options
-  are managed by it, its layout), the global config value
+- To accommodate changes in the contents of local preferences (e.g., what
+  options are managed by it, its layout), the global config value
   `local_preferences.version` is stored locally and compared on each load.
   If it differs, the local preferences is reloaded from global config,
   preserving local preferences settings if possible.

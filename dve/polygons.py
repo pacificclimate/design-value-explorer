@@ -1,5 +1,3 @@
-from climpyrical.mask import rotate_shapefile
-
 import geopandas as gpd
 from shapely.geometry import MultiPolygon
 
@@ -7,12 +5,13 @@ from shapely.geometry import MultiPolygon
 def load_north_america_polygons_plotly(path_to_shapefile: str) -> str:
     """Loads a polygon from Natural Earth to plot in plotly
     Args: 
-        path_to_shapefile (str): Path to desired shapefile. This function uses geopandas,
-        and can use any filetype supporrted by geopandas.read_file
+        path_to_shapefile (str): Path to desired shapefile. This function uses
+        geopandas, and can use any filetype supporrted by geopandas.read_file
     Returns:
-        X, Y (list): List of points on the exterior of all of the polygons. Each polygon
-        instance is separated by a pair None, None. This is for plotly plotting purposes
-        so that it doesn't connect islands to another land point
+        X, Y (list): List of points on the exterior of all of the polygons.
+        Each polygon instance is separated by a pair None, None. This is for
+        plotly plotting purposes so that it doesn't connect islands to another
+        land point
     """
     canada = gpd.read_file(path_to_shapefile).geometry
     # # include Canada, US, Greenland, Mexico, Cuba
@@ -44,5 +43,4 @@ def load_north_america_polygons_plotly(path_to_shapefile: str) -> str:
             pts.extend(poly.exterior.coords)
             pts.append([None, None])
 
-    X, Y = zip(*pts)
-    return X, Y
+    return zip(*pts)

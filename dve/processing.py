@@ -1,8 +1,4 @@
-from climpyrical.gridding import (
-    flatten_coords,
-    transform_coords,
-    find_element_wise_nearest_pos,
-)
+from climpyrical.gridding import transform_coords
 
 import logging
 import numpy as np

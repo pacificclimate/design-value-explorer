@@ -8,7 +8,8 @@ def triggered_by(names, ctx):
     as `<id>.<prop>`. To avoid overlap with similarly named components,
     specify `<id>.` if you are just checking the id.
 
-    :param names: list of names of Input dependency (optionally including property).
+    :param names: list of names of Input dependency (optionally including
+      property).
     :param ctx: dash.callback_context inside callback
     :return: Boolean
     """

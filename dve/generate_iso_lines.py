@@ -1,5 +1,4 @@
 from climpyrical.gridding import (
-    find_nearest_index,
     flatten_coords,
     transform_coords,
 )
