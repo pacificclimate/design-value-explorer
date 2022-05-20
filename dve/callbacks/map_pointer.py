@@ -169,9 +169,10 @@ def add(app, config):
         Input("design_variable", "value"),
         Input("climate_regime", "value"),
         Input("future_dataset_id", "value"),
+        Input("language", "value"),
     )
     def display_hover_info(
-        hover_data, design_variable, climate_regime, future_dataset_id
+        hover_data, design_variable, climate_regime, future_dataset_id, lang
     ):
         # logger.debug(f"hover_data {hover_data}")
 
