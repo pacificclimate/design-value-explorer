@@ -6,10 +6,6 @@ from dve.config import (
     overlay_options_control_columns,
     color_bar_options_ctrl_width,
     map_tab_label,
-    table_c2_label,
-    about_tab_label,
-    about_subtab_label,
-    about_subtab_card_spec,
 )
 from dve.text_utils import interpret
 
@@ -278,8 +274,8 @@ def main(app, config, lang="en"):
         :return: dbc.Tab
         """
         return dbc.Tab(
+            id="map-tab",
             tab_id="map-tab",
-            label=map_tab_label(config, lang),
             children=[
                 dbc.Row(
                     [
@@ -320,8 +316,8 @@ def main(app, config, lang="en"):
 
     def table_C2_tab():
         return dbc.Tab(
+            id="table-tab",
             tab_id="table-tab",
-            label=table_c2_label(config, lang),
             children=[
                 Loading(html.H5(id="table-C2-title", className="mt-3")),
                 Loading(html.Div(id="table-C2")),

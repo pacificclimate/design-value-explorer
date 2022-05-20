@@ -435,7 +435,7 @@ def map_tab_label(config, lang):
     return config["text"]["labels"][lang]["main_tabs"]["map-tab"]
 
 
-def table_c2_label(config, lang):
+def table_c2_tab_label(config, lang):
     return config["text"]["labels"][lang]["main_tabs"]["table-tab"]
 
 

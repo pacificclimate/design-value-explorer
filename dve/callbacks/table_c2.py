@@ -5,22 +5,10 @@ from dash.dependencies import Input, Output, State
 from dash import dash_table, dcc
 
 from dve.config import (
-    dv_has_climate_regime,
-    future_change_factor_label,
-    dv_roundto,
-    dv_name,
-    dv_units,
-    file_exists,
-    filepath_for,
-    units_suffix,
-    dv_tier,
-    table_c2_title,
-    table_c2_no_table_data_msg,
-    table_c2_no_station_data_msg,
-    location_label,
-    province_label,
-    longitude_label,
-    latitude_label,
+    dv_has_climate_regime, future_change_factor_label, dv_roundto, dv_name,
+    dv_units, file_exists, filepath_for, units_suffix, dv_tier, table_c2_title,
+    table_c2_no_table_data_msg, table_c2_no_station_data_msg, location_label,
+    province_label, longitude_label, latitude_label, table_c2_tab_label,
 )
 from dve.data import get_data_object
 from dve.config import dv_label
@@ -186,6 +174,9 @@ def make_data_table(config, lang, design_variable):
 
 
 def add(app, config):
+    @app.callback(Output("table-tab", "label"), Input("language", "value"))
+    def update_about_tab_label(lang):
+        return table_c2_tab_label(config, lang)
 
     @app.callback(
         Output("table-C2-title", "children"),
