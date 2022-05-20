@@ -1,0 +1,3 @@
+about: !include config/text/en/about.yml
+help: !include config/text/en/help.yml
+labels: !include config/text/en/labels.yml

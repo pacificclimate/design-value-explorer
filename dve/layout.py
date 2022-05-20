@@ -166,7 +166,7 @@ def main(app, config, lang="en"):
         cmap_r = tuple(f"{color}_r" for color in colour_maps)
         colour_maps += cmap_r
 
-        cfg = config["text"]["labels"][lang]["colorscale-options"]
+        cfg = config["text"][lang]["labels"]["colorscale-options"]
 
         # Controls by column key in config
         controls = {

@@ -61,7 +61,7 @@ climate_regime:
     long: Valeurs de conception historiques
   future:
     short: Futur
-    long: Changement futur par rapport à 1986-201
+    long: Changement futur par rapport à 1986-2016
 
 historical_dataset:
   model: Model
