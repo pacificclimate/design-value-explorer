@@ -9,7 +9,7 @@ tabs:
   fr:
     - label: Introduction
       content: !include config/text/help/fr/intro.yml
-    - label: Map tab
+    - label: Onglet «Carte»
       content: !include config/text/help/fr/map.yml
-    - label: Table C-2 tab
+    - label: Onglet «Tableau C-2»
       content: !include config/text/help/fr/table_C2.yml

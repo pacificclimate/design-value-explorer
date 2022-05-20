@@ -1,4 +1,3 @@
-import os
 from dash import html
 import dash_bootstrap_components as dbc
 from dash import dcc
@@ -8,20 +7,11 @@ from dve.config import (
     color_bar_options_ctrl_width,
     map_tab_label,
     table_c2_label,
-    help_tab_label,
-    help_subtab_label,
-    help_subtab_content,
     about_tab_label,
     about_subtab_label,
     about_subtab_card_spec,
 )
-
-
-def interpret(source):
-    os.environ["DVE_VERSION_TAG_ONLY"] = os.environ["DVE_VERSION"].split()[0]
-    return dcc.Markdown(
-        source.format(**os.environ), dangerously_allow_html=True
-    )
+from dve.text_utils import interpret
 
 
 def compact(iterable):
@@ -377,30 +367,11 @@ def main(app, config, lang="en"):
         Tab for software usage documentation.
         """
         return dbc.Tab(
+            id="help-tab",
             tab_id="help-tab",
-            label=help_tab_label(config, lang),
             children=[
                 dbc.Tabs(
                     id="help_tabs",
-                    children=[
-                        dbc.Tab(
-                            tab_id=f"help_tab-{index}",
-                            label=help_subtab_label(config, lang, index),
-                            children=dbc.Row(
-                                dbc.Col(
-                                    interpret(
-                                        help_subtab_content(config, lang, index)
-                                    ),
-                                    xs=12,
-                                    xl=6,
-                                )
-                            ),
-                            className="help_tab pt-3",
-                        )
-                        for index in range(
-                            len(config["text"]["help"]["tabs"][lang])
-                        )
-                    ],
                     className="pt-3",
                     **config["values"]["ui"]["controls"]["help_tabs"],
                 )

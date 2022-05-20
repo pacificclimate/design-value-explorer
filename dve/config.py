@@ -11,6 +11,7 @@ from dash import html
 from dash import dcc
 import dash_bootstrap_components as dbc
 from dve.dict_utils import path_get
+from dve.text_utils import interpret
 
 logger = logging.getLogger(__name__)
 
@@ -553,3 +554,21 @@ def map_hover_template(config, lang, design_variable, climate_regime):
     return config["text"]["labels"][lang]["map"]["hover_template"].format(
         dv_label=dv_label(config, lang, design_variable, climate_regime)
     )
+
+
+def help_subtabs(config, lang):
+    return [
+        dbc.Tab(
+            tab_id=f"help_tab-{index}",
+            label=help_subtab_label(config, lang, index),
+            children=dbc.Row(
+                dbc.Col(
+                    interpret(help_subtab_content(config, lang, index)),
+                    xs=12,
+                    xl=6,
+                )
+            ),
+            className="help_tab pt-3",
+        )
+        for index in range(len(config["text"]["help"]["tabs"][lang]))
+    ]
