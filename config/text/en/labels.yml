@@ -36,7 +36,7 @@ colorscale-options:
       title: Num. Colours
       width: 3
     range:
-      title: Range (loading)
+      title: Range (...)
       width: 4
   column-order:
     - color-map

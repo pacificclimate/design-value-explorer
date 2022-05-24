@@ -37,7 +37,7 @@ colorscale-options:
       title: Nombre de couleurs
       width: 3
     range:
-      title: Gamme (loading)
+      title: Gamme (...)
       width: 4
   column-order:
     - color-map
@@ -52,7 +52,7 @@ color_scale_type:
     label: Logarithmique
 
 colorscale_options_range:
-  label: "Échelle: {min} à {max}"
+  label: "Gamme: {min} à {max}"
 
 climate_regime:
   # Labels for the two climate regime selections
