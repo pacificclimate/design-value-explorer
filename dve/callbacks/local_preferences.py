@@ -186,7 +186,7 @@ def add(app, config):
         # Helper
         def init_local_preferences(preserve_local=True):
             result = {}
-            v_path = "local_preferences.version"
+            v_path = "values.local_preferences.version"
             path_set(result, v_path, path_get(config, v_path))
 
             def update_result(element, **kwargs):
