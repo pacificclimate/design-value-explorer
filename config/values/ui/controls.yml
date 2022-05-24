@@ -3,6 +3,8 @@
 # dcc.RadioItems, and that determines the argument names, values, and
 # effects. This is not quite as abstract as would be nice, but it does
 # move the details of formatting from code to config.
+language:
+  value: "en"
 main_tabs:
   active_tab: map-tab
 help_tabs:

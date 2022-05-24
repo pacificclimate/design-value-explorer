@@ -1,6 +1,6 @@
 # For documentation of this config, see dve/callbacks/local_preferences.py
 
-version: 20
+version: 26
 path_separator: ";"
 function_marker: "@"
 ui_elements:
@@ -9,6 +9,10 @@ ui_elements:
   # - selector: design_variable.value
   #    paths:
   #      global: ui;controls;design-value-id;value
+
+  - selector: language.value
+    paths:
+      global: values;ui;controls;language;value
 
   - selector: main_tabs.active_tab
     paths:
