@@ -3,8 +3,8 @@ import dash_bootstrap_components as dbc
 from dash import dcc
 import dash_daq as daq
 from dve.config.text import (
-    overlay_options_control_columns,
-    color_bar_options_ctrl_width,
+    overlay_options_control_columns, color_bar_options_ctrl_width,
+    language_ctrl_options,
 )
 
 
@@ -57,11 +57,8 @@ def main(app, config, lang="en"):
                     dbc.Col(
                         dcc.Dropdown(
                             id="language",
-                            options=[
-                                {"label": "English", "value": "en"},
-                                {"label": "Français", "value": "fr"},
-                            ],
-                            value="en",
+                            options=language_ctrl_options(config),
+                            **config["values"]["ui"]["controls"]["language"],
                         ),
                         xs=2,
                     ),

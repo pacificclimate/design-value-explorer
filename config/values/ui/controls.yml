@@ -5,6 +5,8 @@
 # move the details of formatting from code to config.
 language:
   value: "en"
+  style:
+    font-size: 0.9rem
 main_tabs:
   active_tab: map-tab
 help_tabs:

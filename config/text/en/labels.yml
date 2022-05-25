@@ -1,5 +1,11 @@
 app_title: Design Value Explorer
 
+language:
+  - label: English
+    value: en
+  - label: Français
+    value: fr
+
 dv_dropdown: Design Variable
 
 main_tabs:

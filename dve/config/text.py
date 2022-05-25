@@ -46,6 +46,10 @@ def app_title(config, lang):
     return config["text"][lang]["labels"]["app_title"]
 
 
+def language_ctrl_options(config):
+    return config["text"]["en"]["labels"]["language"]
+
+
 def dv_dropdown_label(config, lang):
     return config["text"][lang]["labels"]["dv_dropdown"]
 
