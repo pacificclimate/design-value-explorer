@@ -5,6 +5,8 @@
 # move the details of formatting from code to config.
 language:
   value: "en"
+  searchable: true
+  clearable: false
   style:
     font-size: 0.9rem
 main_tabs:
