@@ -128,7 +128,8 @@
 
   ### Échelle
 
-  Sélectionnez le mappage linéaire ou logarithmique des couleurs. Quelques  
+  Sélectionnez un mappage linéaire ou logarithmique des valeurs des données 
+  aux couleurs. Quelques  
   sélections de **Variable de conception ** et **Période** ne permettent 
   pas l'utilisation d'échelles logarithmiques; dans ce cas, l'option
   est désactivée et l'échelle est fixée sur linéaire. Les intervalles de 

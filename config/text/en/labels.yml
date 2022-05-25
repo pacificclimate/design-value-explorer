@@ -1,6 +1,6 @@
 app_title: Design Value Explorer
 
-dv_dropdown: Design Value
+dv_dropdown: Design Variable
 
 main_tabs:
   map-tab: Map
@@ -27,7 +27,7 @@ colorscale-options:
   title: Colour Scale Options
   columns:
     color-map:
-      title: Colour Map
+      title: Colour Palette
       width: 3
     scale:
       title: Scale
@@ -57,7 +57,7 @@ climate_regime:
   # Labels for the two climate regime selections
   historical:
     short: Historical
-    long: Historical design values
+    long: Historical
   future:
     short: Future
     long: Future change relative to 1986-2016

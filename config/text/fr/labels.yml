@@ -1,6 +1,6 @@
 app_title: l’Explorateur de valeurs de calcul
 
-dv_dropdown: Valeurs de conception
+dv_dropdown: Variable de conception
 
 main_tabs:
   map-tab: Carte
@@ -58,7 +58,7 @@ climate_regime:
   # Labels for the two climate regime selections
   historical:
     short: Historique
-    long: Valeurs de conception historiques
+    long: Historique
   future:
     short: Futur
     long: Changement futur par rapport à 1986-2016
