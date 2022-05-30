@@ -1,0 +1,21 @@
+dash: !include config/values/dash.yml
+
+ui:
+  controls: !include config/values/ui/controls.yml
+  ticks: !include config/values/ui/ticks.yml
+  dvs: !include config/values/ui/dvs.yml
+  future_change_factors: !include config/values/ui/future_change_factors.yml
+  loading: !include config/values/ui/loading.yml
+  graph: !include config/values/ui/graph.yml
+
+paths: !include config/values/paths.yml
+
+dvs: !include config/values/dvs.yml
+
+map: !include config/values/map.yml
+
+table_C2: !include config/values/table_C2.yml
+
+units: !include config/values/units.yml
+
+local_preferences: !include config/values/local_preferences.yml

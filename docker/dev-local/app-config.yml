@@ -1,6 +1,7 @@
 text: !include config/text.yml
 
 values:
+    dash: !include config/values/dash.yml
     ui:
         controls: !include config/values/ui/controls.yml
         ticks: !include config/values/ui/ticks.yml
