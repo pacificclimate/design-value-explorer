@@ -90,3 +90,10 @@ def add(app, config):
     )
     def update_map_pointer_output_heading(lang):
         return map_pointer_output_heading(config, lang)
+
+    @app.callback(Output("map_main_graph", "config"), Input("language", "value"))
+    def update_color_map_ctrl_options(lang):
+        return {
+            **config["values"]["ui"]["graph"],
+            "locale": lang,
+        }
