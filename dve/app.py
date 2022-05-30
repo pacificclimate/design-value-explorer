@@ -42,7 +42,11 @@ def make_dash_app(config):
 
     # Initialize Dash app
     external_stylesheets = [dbc.themes.BOOTSTRAP]
-    app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+    app = dash.Dash(
+        __name__,
+        external_stylesheets=external_stylesheets,
+        **config["values"]["dash"],
+    )
     app.title = "Pacific Climate Impacts Consortium Design Value Explorer"
     app.config.suppress_callback_exceptions = True
 
