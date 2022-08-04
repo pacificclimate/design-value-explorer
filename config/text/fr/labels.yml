@@ -126,7 +126,7 @@ misc:
 
 dvs:
   DRWP5:
-    description: Pression de la pluie chassée par le vent, 1/5
+    description: Pression du vent coïncidant avec la pluie, 1/5
   HDD:
     description: "Degrés-jours de chauffage en dessous de 18 \xB0C"
   IDFCF:
