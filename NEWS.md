@@ -1,5 +1,16 @@
 # News / Release Notes
 
+## 2.4.0
+
+A couple of important new features in this release:
+- Multilingual (French, English)
+- Set design variable from query parameter, and vice-versa, making it easier for a user to send a link that highlights specific data. 
+
+Updates:
+- [Set design variable from query parameter](https://github.com/pacificclimate/design-value-explorer/pull/233)
+- [Support multiple languages; add French](https://github.com/pacificclimate/design-value-explorer/pull/230)
+- [Update internal documentation](https://github.com/pacificclimate/design-value-explorer/pull/228)
+
 ## 2.3.0
 
 Updates:
