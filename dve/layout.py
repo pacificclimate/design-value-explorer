@@ -365,6 +365,7 @@ def main(app, config, lang="en"):
         fluid=True,
         style={"padding": "0.5em 1em 0"},
         children=[
+            dcc.Location(id="url", refresh=False),
             *header(),
             dbc.Row(
                 dbc.Col(

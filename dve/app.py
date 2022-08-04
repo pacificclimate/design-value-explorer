@@ -8,6 +8,7 @@ from yamlinclude import YamlIncludeConstructor
 import dve
 import dve.config.validation
 import dve.callbacks.local_preferences
+import dve.callbacks.url_query_params
 import dve.callbacks.about
 import dve.callbacks.help
 import dve.callbacks.map_tab
@@ -55,6 +56,7 @@ def make_dash_app(config):
 
     # Add callbacks
     dve.callbacks.local_preferences.add(app, config)
+    dve.callbacks.url_query_params.add(app, config)
     dve.callbacks.map_tab.add(app, config)
     dve.callbacks.help.add(app, config)
     dve.callbacks.about.add(app, config)
