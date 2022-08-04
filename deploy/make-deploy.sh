@@ -43,16 +43,19 @@ if ! cd "$repo_dir"; then
   echo "Error: Project repo is missing. Please clone project into '$repo_dir'"
   exit 1
 fi
-if ! git fetch origin "$tag"; then
-  echo "Error: Ref '$tag' does not exist in project repo."
-  exit 1
+if ! git checkout --track "origin/$tag"; then
+  # Might already have checked out this tag (in which case it is likely a branch)
+  # ... try checking it out
+  if ! git checkout "$tag"; then
+    echo "Error: Ref '$tag' does not exist in project repo."
+    exit 1
+  fi
+  # This covers the case where we are re-deploying an existing tag. That case is
+  # is almost certainly when we are working on a branch in dev.
+  git pull
 fi
-# TODO: An error occurs(ed) at the git checkout step when the repo had been
-#   left with a branch checked out that no longer had an upstream branch
-#   (it had been deleted). IIRC, it wants to merge instead of just do a clean
-#   checkout. Find out how to do this without an error in this case.
-git checkout "$tag"
-git pull
+
+# Back to project root directory
 cd ..
 
 # Create the new deployment directory

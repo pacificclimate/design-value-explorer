@@ -1,9 +1,12 @@
 import os
 import os.path
 import csv
-from dve.config import dv_has_climate_regime
+
+from dve.config.text import (
+    latitude_label, longitude_label, download_table_headers,
+)
+from dve.config.values import dv_has_climate_regime, dv_units, dv_roundto
 from dve.data import dv_value
-from dve.config import dv_units, dv_roundto, future_change_factor_label
 from dve.math_utils import round_to_multiple
 
 
@@ -13,10 +16,12 @@ download_by_location_dir = "downloads/by-location"
 
 def download_filename(lon, lat, climate_regime):
     """
-    Return a unique filename the download data for position lon, lat.
+    Return a unique filename for the download data for the
+    specified position (lon, lat) and climate regime.
 
     :param lon:
     :param lat:
+    :param climate_regime:
     :return: string
     """
     return f"dvs_{climate_regime}_{lon}_{lat}.csv"
@@ -74,7 +79,7 @@ def get_download_data(
     # Row ids
     design_variables = tuple(
         dv_id
-        for dv_id in config["ui"]["dvs"]
+        for dv_id in config["values"]["ui"]["dvs"]
         if dv_has_climate_regime(config, dv_id, climate_regime)
     )
 
@@ -82,7 +87,7 @@ def get_download_data(
     if climate_regime == "historical":
         dataset_ids = ("reconstruction",)
     else:
-        dataset_ids = tuple(config["ui"]["future_change_factors"])
+        dataset_ids = tuple(config["values"]["ui"]["future_change_factors"])
 
     # Data
     data_values = tuple(
@@ -107,34 +112,27 @@ def get_download_data(
 
 
 def create_download_file(
-    lon, lat, config, climate_regime, design_variables, dataset_ids, data_values
+    lon,
+    lat,
+    config,
+    lang,
+    climate_regime,
+    design_variables,
+    dataset_ids,
+    data_values,
 ):
     with open(
         os.path.join("/", download_filepath(lon, lat, climate_regime)), "w"
     ) as file:
         writer = csv.writer(file, delimiter=",")
-        writer.writerow(("Latitude", lat))
-        writer.writerow(("Longitude", lon))
+        writer.writerow((latitude_label(config, lang), lat))
+        writer.writerow((longitude_label(config, lang), lon))
         writer.writerow(tuple())
 
-        if climate_regime == "historical":
-            # TODO: These label(s) should be defined in config
-            # value_headers = tuple(
-            #     f"{dataset_id.capitalize()}" for dataset_id in dataset_ids
-            # )
-            value_headers = ("Interpolation value",)
-        else:
-            value_headers = tuple(
-                future_change_factor_label(config, dataset_id, nice=False)
-                for dataset_id in dataset_ids
-            )
-
         writer.writerow(
-            tuple(
-                config["ui"]["labels"]["download_table"][k]
-                for k in ("dv", "units")
+            download_table_headers(
+                config, lang, climate_regime, dataset_ids, nice=False
             )
-            + value_headers
         )
         for design_variable, data_row in zip(design_variables, data_values):
             writer.writerow(

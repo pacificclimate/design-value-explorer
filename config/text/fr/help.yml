@@ -1,0 +1,7 @@
+tabs:
+  - label: Introduction
+    content: !include config/text/fr/help/intro.yml
+  - label: Onglet «Carte»
+    content: !include config/text/fr/help/map.yml
+  - label: Onglet «Tableau C-2»
+    content: !include config/text/fr/help/table_C2.yml

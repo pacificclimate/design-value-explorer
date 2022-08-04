@@ -1,67 +1,14 @@
-import os
 from dash import html
 import dash_bootstrap_components as dbc
 from dash import dcc
 import dash_daq as daq
-from dve.config import dv_label
+from dve.config.text import (
+    overlay_options_control_columns, color_bar_options_ctrl_width,
+    language_ctrl_options,
+)
 
 
-def interpret(source):
-    os.environ['DVE_VERSION_TAG_ONLY'] = os.environ['DVE_VERSION'].split()[0]
-    return dcc.Markdown(
-        source.format(**os.environ), dangerously_allow_html=True
-    )
-
-
-def compact(iterable):
-    return list(filter(None, iterable))
-
-
-def card_item(card):
-    color = card.get("color")
-    title = card.get("title")
-    header = card.get("header")
-    body = card.get("body")
-    return dbc.Card(
-        className="me-3 mb-3 float-start",
-        style={"width": "30%"},
-        color=color,
-        children=compact(
-            (
-                header and dbc.CardHeader(interpret(header)),
-                title and html.H4(interpret(title), className="card-title"),
-                body and dbc.CardBody(interpret(body)),
-            )
-        ),
-    )
-
-
-def card_set(cards, row_args={}, col_args={}):
-    return dbc.Row(
-        dbc.Col([card_item(card) for card in cards]), **row_args
-    )
-    return dbc.Row(
-        [dbc.Col(card_item(card), **col_args) for card in cards], **row_args
-    )
-
-
-scale_ctrl_options = [
-    {"label": "Linear", "value": "linear"},
-    {"label": "Logarithmic", "value": "logarithmic"},
-]
-
-
-def climate_regime_ctrl_options(config, which="long"):
-    return [
-        {
-            "label": config["ui"]["labels"]["climate_regime"][cr][which],
-            "value": cr,
-        }
-        for cr in ("historical", "future")
-    ]
-
-
-def main(app, config):
+def main(app, config, lang="en"):
     """
     Top-level layout component. `app.layout` should be set to what this function
     returns.
@@ -71,7 +18,7 @@ def main(app, config):
         """
         Add loading config to a dcc.Loading call.
         """
-        return dcc.Loading(*args, **kwargs, **config["ui"]["loading"])
+        return dcc.Loading(*args, **kwargs, **config["values"]["ui"]["loading"])
 
     def header():
         """
@@ -81,45 +28,39 @@ def main(app, config):
 
         Returns a list of rows.
         """
-        dd_options = [
-            {
-                "label": dv_label(
-                    config,
-                    design_variable,
-                    with_units=False,
-                    with_description=True,
-                ),
-                "value": design_variable,
-            }
-            for design_variable in config["ui"]["dvs"]
-        ]
         return [
             dbc.Row(
                 [
                     dbc.Col(
                         html.A(
-                            html.Img(
-                                src=app.get_asset_url('pcic-logo.png'),
-                            ),
+                            html.Img(src=app.get_asset_url("pcic-logo.png")),
                             href="https://pacificclimate.org/",
                             target="_blank",
-                            title="Pacific Climate Impacts Consortium website",
+                            title="Pacific Climate Impacts Consortium",
                         ),
-                        xs=6,
+                        xs=5,
                         className="align-self-center text-end",
                     ),
                     dbc.Col(
                         html.A(
-                            "Design Value Explorer",
+                            id="app_title",
                             href=app.get_relative_path("/"),
                             style={
                                 "font-size": "2em",
                                 "color": "inherit",
                                 "text-decoration": "none",
-                            }
+                            },
                         ),
-                        xs=6,
+                        xs=5,
                         className="align-self-center text-start",
+                    ),
+                    dbc.Col(
+                        dcc.Dropdown(
+                            id="language",
+                            options=language_ctrl_options(config),
+                            **config["values"]["ui"]["controls"]["language"],
+                        ),
+                        xs=2,
                     ),
                 ],
                 className="pb-1 mb-3 border-bottom",
@@ -127,15 +68,19 @@ def main(app, config):
             dbc.Row(
                 [
                     dbc.Col(
-                        html.Label("Design Variable"),
-                        xs=12, md=3, lg=2, xxl=1,
+                        html.Label(id="dv_dropdown_label"),
+                        xs=12,
+                        md=3,
+                        lg=2,
+                        xxl=1,
                         className="align-self-center",
                     ),
                     dbc.Col(
                         dcc.Dropdown(
                             id="design_variable",
-                            options=dd_options,
-                            **config["ui"]["controls"]["design-value-id"],
+                            **config["values"]["ui"]["controls"][
+                                "design-value-id"
+                            ],
                         ),
                         xs=12,
                         md=9,
@@ -153,32 +98,11 @@ def main(app, config):
         Layout for Overlay Options section.
         This function returns a list of rows.
         """
-        future_dataset_ctrl_options = [
-            {
-                "label": (
-                    config["ui"]["labels"]["future_change_factors"][
-                        "long"
-                    ].format(id)
-                ),
-                "value": id,
-            }
-            for id in config["ui"]["future_change_factors"]
-        ]
-
-        climate_regime_ctrl_opts = climate_regime_ctrl_options(config)
-
-        cfg = config["ui"]["labels"]["overlay-options"]
-
         return [
             # Section title
-            dbc.Row(dbc.Col(html.H5(cfg["title"]))),
+            dbc.Row(dbc.Col(html.H5(id="overlay_options_section_title"))),
             # Control titles
-            dbc.Row(
-                [
-                    dbc.Col(html.Label(column["title"]), width=column["width"])
-                    for column in cfg["columns"]
-                ]
-            ),
+            dbc.Row(id="overlay_options_control_titles"),
             # Controls
             dbc.Row(
                 [
@@ -187,8 +111,9 @@ def main(app, config):
                         (
                             dcc.RadioItems(
                                 id="climate_regime",
-                                options=climate_regime_ctrl_opts,
-                                **config["ui"]["controls"]["climate-regime"],
+                                **config["values"]["ui"]["controls"][
+                                    "climate-regime"
+                                ],
                             ),
                             html.Div(
                                 id="global_warming",
@@ -196,24 +121,32 @@ def main(app, config):
                                     html.Div(style={"height": "2.5em"}),
                                     dcc.Dropdown(
                                         id="future_dataset_id",
-                                        options=future_dataset_ctrl_options,
-                                        **config["ui"]["controls"][
+                                        **config["values"]["ui"]["controls"][
                                             "future-dataset"
                                         ],
-                                    )
+                                    ),
                                 ],
-                                **config["ui"]["controls"]["global_warming"],
+                                **config["values"]["ui"]["controls"][
+                                    "global_warming"
+                                ],
                             ),
                             daq.BooleanSwitch(
                                 id="show_stations",
-                                **config["ui"]["controls"]["stations"],
+                                **config["values"]["ui"]["controls"][
+                                    "stations"
+                                ],
                             ),
                             daq.BooleanSwitch(
                                 id="show_grid",
-                                **config["ui"]["controls"]["grid"],
+                                **config["values"]["ui"]["controls"]["grid"],
                             ),
                         ),
-                        [column["width"] for column in cfg["columns"]],
+                        [
+                            column["width"]
+                            for column in overlay_options_control_columns(
+                                config, lang
+                            )
+                        ],
                     )
                 ],
                 style={"font-size": "0.8em"},
@@ -225,28 +158,27 @@ def main(app, config):
         Layout for Colourbar Options section.
         This function returns a list of rows.
         """
-        colour_maps = config["map"]["colour_maps"]
+        colour_maps = config["values"]["map"]["colour_maps"]
         # Add reverse options, too
         cmap_r = tuple(f"{color}_r" for color in colour_maps)
         colour_maps += cmap_r
 
-        cfg = config["ui"]["labels"]["colorscale-options"]
+        cfg = config["text"][lang]["labels"]["colorscale-options"]
 
         # Controls by column key in config
         controls = {
             "color-map": dcc.Dropdown(
                 id="color_map",
-                options=[{"value": x, "label": x} for x in colour_maps],
-                **config["ui"]["controls"]["colour-map"],
+                **config["values"]["ui"]["controls"]["colour-map"],
             ),
             "scale": dcc.Dropdown(
                 id="color_scale_type",
-                options=scale_ctrl_options,
-                **config["ui"]["controls"]["scale"],
+                **config["values"]["ui"]["controls"]["scale"],
             ),
             "num-colors": html.Div(
                 daq.Slider(
-                    id="num_colors", **config["ui"]["controls"]["num-colours"]
+                    id="num_colors",
+                    **config["values"]["ui"]["controls"]["num-colours"],
                 ),
                 style={"padding-top": "3em"},
             ),
@@ -254,7 +186,7 @@ def main(app, config):
                 html.Div(
                     dcc.RangeSlider(
                         id="color_scale_data_range",
-                        **config["ui"]["controls"]["colourbar-range"],
+                        **config["values"]["ui"]["controls"]["colourbar-range"],
                     ),
                     # RangeSlider has unwanted horiz padding of 25px.
                     style={"margin": "2em -25px"},
@@ -264,56 +196,31 @@ def main(app, config):
 
         return [
             # Section title
-            dbc.Row(dbc.Col(html.H5(cfg["title"]))),
+            dbc.Row(dbc.Col(html.H5(id="colourbar_options_section_title"))),
             # Control titles
-            dbc.Row(
-                [
-                    dbc.Col(
-                        Loading(
-                            html.Label(
-                                column["title"],
-                                id=f"colorscale_options_label_{col_key}",
-                            )
-                        ),
-                        width=column["width"],
-                    )
-                    for col_key, column in (
-                        (col_key, cfg["columns"][col_key])
-                        for col_key in cfg["column-order"]
-                    )
-                ]
-            ),
+            dbc.Row(id="colourbar_options_control_titles"),
             # Controls
             dbc.Row(
                 [
-                    dbc.Col(controls[col_key], width=column["width"])
-                    for col_key, column in (
-                        (col_key, cfg["columns"][col_key])
-                        for col_key in cfg["column-order"]
+                    dbc.Col(
+                        controls[col_key],
+                        width=color_bar_options_ctrl_width(
+                            config, lang, col_key
+                        ),
                     )
+                    for col_key in cfg["column-order"]
                 ],
                 style={"font-size": "0.8em"},
             ),
         ]
 
-    def user_graph_interaction():
+    def map_pointer_output():
         """
-        Layout for user graph interaction elements.
+        Layout for map pointer output.
         :return: list of dbc.Row
         """
         return [
-            dbc.Row(
-                dbc.Col(
-                    [
-                        html.H5("Data from map pointer"),
-                        dcc.Markdown(
-                            "*Hover over map to show position of cursor. "
-                            "Click to hold design values for download.*",
-                            style={"font-size": "0.8em"},
-                        ),
-                    ]
-                )
-            ),
+            dbc.Row(id="map_pointer_output_heading"),
             dbc.Row(
                 [
                     dbc.Col(
@@ -359,13 +266,11 @@ def main(app, config):
     def map_tab():
         """
         Top-level layout of map tab.
-
-        :param config:
         :return: dbc.Tab
         """
         return dbc.Tab(
+            id="map-tab",
             tab_id="map-tab",
-            label=config["ui"]["labels"]["main_tabs"]["map-tab"],
             children=[
                 dbc.Row(
                     [
@@ -385,7 +290,7 @@ def main(app, config):
                             Loading(
                                 dcc.Graph(
                                     id="map_main_graph",
-                                    config=config["ui"]["graph"],
+                                    config=config["values"]["ui"]["graph"],
                                 )
                             ),
                             xxl={"size": 7, "order": 3},
@@ -393,7 +298,7 @@ def main(app, config):
                             className="border-top",
                         ),
                         dbc.Col(
-                            user_graph_interaction(),
+                            map_pointer_output(),
                             xxl={"size": 5, "order": 3},
                             xs=12,
                             className="pt-3 border-top",
@@ -406,8 +311,8 @@ def main(app, config):
 
     def table_C2_tab():
         return dbc.Tab(
+            id="table-tab",
             tab_id="table-tab",
-            label=config["ui"]["labels"]["main_tabs"]["table-tab"],
             children=[
                 Loading(html.H5(id="table-C2-title", className="mt-3")),
                 Loading(html.Div(id="table-C2")),
@@ -419,55 +324,32 @@ def main(app, config):
         Tab for software usage documentation.
         """
         return dbc.Tab(
+            id="help-tab",
             tab_id="help-tab",
-            label=config["ui"]["labels"]["main_tabs"]["help-tab"],
             children=[
                 dbc.Tabs(
                     id="help_tabs",
-                    children=[
-                        dbc.Tab(
-                            tab_id=f"help_tab-{index}",
-                            label=tab["label"],
-                            children=dbc.Row(
-                                dbc.Col(interpret(tab["content"]), xs=12, xl=6)
-                            ),
-                            className="help_tab pt-3",
-                        )
-                        for index, tab in enumerate(config["help"]["tabs"])
-                    ],
                     className="pt-3",
-                    **config["ui"]["controls"]["help_tabs"],
+                    **config["values"]["ui"]["controls"]["help_tabs"],
                 )
             ],
         )
 
     def about_tab():
         return dbc.Tab(
+            id="about-tab",
             tab_id="about-tab",
-            label=config["ui"]["labels"]["main_tabs"]["about-tab"],
             children=dbc.Tabs(
                 id="about_tabs",
-                children=[
-                    dbc.Tab(
-                        tab_id=f"about_tab-{index}",
-                        label=tab["label"],
-                        children=card_set(
-                            tab["cards"],
-                            col_args=dict(xs=12, md=6, xxl=4, className="mb-3"),
-                        ),
-                        className="about_tab pt-3",
-                    )
-                    for index, tab in enumerate(config["about"]["tabs"])
-                ],
                 className="pt-3",
-                **config["ui"]["controls"]["about_tabs"],
+                **config["values"]["ui"]["controls"]["about_tabs"],
             ),
         )
 
     def internal_data():
         """
-        Layout components for storing/sharing data between callbacks (and callback
-        invocations) on the client side, using a hidden div (ick!). See
+        Layout components for storing/sharing data between callbacks (and
+        callback invocations) on the client side, using a hidden div (ick!). See
         https://dash.plotly.com/sharing-data-between-callbacks.
 
         :return: List of components.
@@ -494,7 +376,7 @@ def main(app, config):
                             help_tab(),
                             about_tab(),
                         ],
-                        **config["ui"]["controls"]["main_tabs"],
+                        **config["values"]["ui"]["controls"]["main_tabs"],
                     )
                 ),
                 style={"margin-top": "1em"},

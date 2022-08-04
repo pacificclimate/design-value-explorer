@@ -1,17 +1,22 @@
 import os
 import warnings
 import logging
+import logging.config
 import yaml
 from yamlinclude import YamlIncludeConstructor
 
 import dve
-import dve.config
+import dve.config.validation
 import dve.callbacks.local_preferences
+import dve.callbacks.about
+import dve.callbacks.help
+import dve.callbacks.map_tab
 import dve.callbacks.map_figure
 import dve.callbacks.table_c2
 import dve.callbacks.colour_scale
 import dve.callbacks.map_pointer
 import dve.callbacks.overlay
+import dve.callbacks.labels
 import dve.data
 import dve.layout
 
@@ -37,7 +42,11 @@ def make_dash_app(config):
 
     # Initialize Dash app
     external_stylesheets = [dbc.themes.BOOTSTRAP]
-    app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+    app = dash.Dash(
+        __name__,
+        external_stylesheets=external_stylesheets,
+        **config["values"]["dash"],
+    )
     app.title = "Pacific Climate Impacts Consortium Design Value Explorer"
     app.config.suppress_callback_exceptions = True
 
@@ -46,11 +55,15 @@ def make_dash_app(config):
 
     # Add callbacks
     dve.callbacks.local_preferences.add(app, config)
+    dve.callbacks.map_tab.add(app, config)
+    dve.callbacks.help.add(app, config)
+    dve.callbacks.about.add(app, config)
     dve.callbacks.table_c2.add(app, config)
     dve.callbacks.overlay.add(app, config)
     dve.callbacks.colour_scale.add(app, config)
     dve.callbacks.map_pointer.add(app, config)
     dve.callbacks.map_figure.add(app, config)
+    dve.callbacks.labels.add(app, config)
 
     # Add routes
     @app.server.route(f"{str(download_base_url())}/<filename>")
@@ -99,7 +112,7 @@ def make_app(
         config = yaml.load(config_file)
     logger.debug(f"Configuration loaded.")
 
-    dve.config.validate(config)
+    dve.config.validation.validate(config)
 
     app = make_dash_app(config)
 

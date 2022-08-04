@@ -1,55 +1,52 @@
-ui:
-    controls: !include config/ui/controls.yml
-    ticks: !include config/ui/ticks.yml
+text: !include config/text.yml
 
-    dvs:
-        # Design variables to actually offer in the UI.
-        # Simplifies commenting them in and out of service.
-        - DRWP5
-        - HDD
-        - IDFCF
-        - MI
-        - PAnn
-        - R1d50
-        - R15m10
-        - RAnn
-        - RL50
-        - RHAnn
-        - SL50
-        - TJan1.0
-        - TJan2.5
-        - TJul97.5
-        - TwJul97.5
-        - Tmin
-        - Tmax
-        - WP10
-        - WP50
-
-    future_change_factors:
-        - "0.5"
-        - "1.0"
-        - "1.5"
-        - "2.0"
-        - "2.5"
-        - "3.0"
-        - "3.5"
-
-    labels: !include config/ui/labels.yml
-    loading: !include config/ui/loading.yml
-    graph: !include config/ui/graph.yml
-
-paths: !include config/paths.yml
-
-dvs: !include config/dvs.yml
-
-map: !include config/map.yml
-
-table_C2: !include config/table_C2.yml
-
-units: !include config/units.yml
-
-local_preferences: !include config/local_preferences.yml
-
-help: !include config/help.yml
-
-about: !include config/about.yml
+values:
+    dash: !include config/values/dash.yml
+    ui:
+        controls: !include config/values/ui/controls.yml
+        ticks: !include config/values/ui/ticks.yml
+        dvs:
+            # Design variables to actually offer in the UI.
+            # Simplifies commenting them in and out of service.
+            - DRWP5
+            - HDD
+            - IDFCF
+            - MI
+            - PAnn
+            - R1d50
+            - R15m10
+            - RAnn
+            - RL50
+            - RHAnn
+            - SL50
+            - TJan1.0
+            - TJan2.5
+            - TJul97.5
+            - TwJul97.5
+            - Tmin
+            - Tmax
+            - WP10
+            - WP50
+        future_change_factors:
+            - "0.5"
+            - "1.0"
+            - "1.5"
+            - "2.0"
+            - "2.5"
+            - "3.0"
+            - "3.5"
+        loading: !include config/values/ui/loading.yml
+        graph: !include config/values/ui/graph.yml
+    
+    paths: !include config/values/paths.yml
+    
+    dvs: !include config/values/dvs.yml
+    
+    map: !include config/values/map.yml
+    
+    table_C2: !include config/values/table_C2.yml
+    
+    units: !include config/values/units.yml
+    
+    local_preferences: !include config/values/local_preferences.yml
+    

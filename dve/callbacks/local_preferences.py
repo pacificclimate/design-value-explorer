@@ -95,8 +95,8 @@ Implementation notes:
   see "Retrieving the initial store data" in
   https://dash.plotly.com/dash-core-components/store . We follow that advice.
 
-- To accommodate changes in the contents of local preferences (e.g., what options
-  are managed by it, its layout), the global config value
+- To accommodate changes in the contents of local preferences (e.g., what
+  options are managed by it, its layout), the global config value
   `local_preferences.version` is stored locally and compared on each load.
   If it differs, the local preferences is reloaded from global config,
   preserving local preferences settings if possible.
@@ -154,9 +154,13 @@ def add(app, config):
     # These variables define the UI elements that mutually set and are set by
     # local preferences. To add a new UI element whose state is maintained in
     # local storage, add a new item to a list.
-    updatable_ui_elements = path_get(config, "local_preferences.ui_elements")
-    path_separator = path_get(config, "local_preferences.path_separator")
-    function_marker = path_get(config, "local_preferences.function_marker")
+    updatable_ui_elements = path_get(
+        config, "values.local_preferences.ui_elements"
+    )
+    path_separator = path_get(config, "values.local_preferences.path_separator")
+    function_marker = path_get(
+        config, "values.local_preferences.function_marker"
+    )
 
     # TODO: Use flexible callback signature to simplify args unpacking
     @app.callback(
@@ -182,7 +186,7 @@ def add(app, config):
         # Helper
         def init_local_preferences(preserve_local=True):
             result = {}
-            v_path = "local_preferences.version"
+            v_path = "values.local_preferences.version"
             path_set(result, v_path, path_get(config, v_path))
 
             def update_result(element, **kwargs):
@@ -194,7 +198,12 @@ def add(app, config):
                 )
                 lpath = local_path(element, **kwargs)
                 local_value = (
-                    path_get(local_preferences, lpath, default=global_value, separator=path_separator)
+                    path_get(
+                        local_preferences,
+                        lpath,
+                        default=global_value,
+                        separator=path_separator,
+                    )
                     if preserve_local
                     else global_value
                 )
@@ -203,7 +212,7 @@ def add(app, config):
             for e in updatable_ui_elements:
                 raw_put_path = local_path(e)
                 dvs = (
-                    config["ui"]["dvs"]
+                    config["values"]["ui"]["dvs"]
                     if "{design_variable}" in raw_put_path
                     else (None,)
                 )
@@ -280,19 +289,12 @@ def add(app, config):
         argument ui_element.
         """
 
-        def callback(
-            per_ui_inputs,
-            local_preferences_ts,
-            local_preferences,
-        ):
+        def callback(per_ui_inputs, local_preferences_ts, local_preferences):
             if not local_preferences_ts or local_preferences_ts < 0:
                 return dash.no_update
             return path_get(
                 local_preferences,
-                local_path(
-                    ui_element,
-                    **per_ui_inputs,
-                ),
+                local_path(ui_element, **per_ui_inputs),
                 separator=path_separator,
             )
 
@@ -309,7 +311,9 @@ def add(app, config):
             output=output,
             inputs=dict(
                 per_ui_inputs=per_ui_inputs,
-                local_preferences_ts=Input("local_preferences", "modified_timestamp"),
+                local_preferences_ts=Input(
+                    "local_preferences", "modified_timestamp"
+                ),
                 local_preferences=State("local_preferences", "data"),
-            )
+            ),
         )(make_ui_update_callback(ui_element))

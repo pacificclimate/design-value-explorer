@@ -1,0 +1,7 @@
+tabs:
+  - label: Introduction
+    content: !include config/text/en/help/intro.yml
+  - label: Map tab
+    content: !include config/text/en/help/map.yml
+  - label: Table C-2 tab
+    content: !include config/text/en/help/table_C2.yml

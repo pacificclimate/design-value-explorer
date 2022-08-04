@@ -28,7 +28,6 @@ TODO: `DvXrDataset`, `PdCsvDataset` have a very common structure. Factor this
 """
 import math
 import os
-import functools
 from collections import namedtuple
 from random import randrange
 import logging
@@ -40,7 +39,8 @@ import xarray
 
 from climpyrical.data import check_valid_data, check_valid_keys
 
-from dve.config import filepath_for, file_exists
+from dve.config.validation import file_exists
+from dve.config.values import filepath_for
 from dve.map_utils import rlonlat_to_rindices, rindices_to_lonlat
 from dve.timing import timing
 

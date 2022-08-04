@@ -1,24 +1,2 @@
-ui:
-    controls: !include config/ui/controls.yml
-    ticks: !include config/ui/ticks.yml
-    dvs: !include config/ui/dvs.yml
-    future_change_factors: !include config/ui/future_change_factors.yml
-    labels: !include config/ui/labels.yml
-    loading: !include config/ui/loading.yml
-    graph: !include config/ui/graph.yml
-
-paths: !include config/paths.yml
-
-dvs: !include config/dvs.yml
-
-map: !include config/map.yml
-
-table_C2: !include config/table_C2.yml
-
-units: !include config/units.yml
-
-local_preferences: !include config/local_preferences.yml
-
-help: !include config/help.yml
-
-about: !include config/about.yml
+text: !include config/text.yml
+values: !include config/values.yml

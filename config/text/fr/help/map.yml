@@ -1,0 +1,207 @@
+|
+  L'onglet **Carte** affiche la valeur de conception sélectionnée sur une 
+  carte du Canada.
+  Voici une explication des différentes commandes disponibles pour 
+  personnaliser la carte.
+
+  ## Affichage de la carte
+
+  **Note** : La projection sous-jacente des cartes est une grille 
+  stéréographique polaire tournée,
+  mais l'apparence d'une carte donnée est affectée par les paramètres du 
+  navigateur ; voir ci-dessous pour plus de détails.
+  
+  L'affichage de la carte est un graphique Plotly, qui est équipé d'outils de 
+  zoom, de panoramique et de capture d'écran. Pour plus d'informations sur 
+  ces outils, qui apparaissent dans la "barre de mode" en haut à droite de 
+  l'écran, voir :
+
+    <a href="https://plotly.com/chart-studio-help/getting-to-know-the-plotly-modebar/" target="_blank">
+    An Introduction to Chart Studio Modebar
+    </a>.
+
+  En plus de la carte elle-même, l'affichage de la carte contient un titre 
+  et une barre de couleur.
+
+  ### Titre de la carte
+
+  Comprend la variable de conception, les unités et l'indicateur Historique/Futur.
+
+  ### Barre de couleur
+
+  La barre de couleur utilise l'échelle de couleurs sélectionnées, avec des 
+  annotations indiquant les valeurs uniformément réparties sur la gamme. 
+  Lorsque le nombre de couleurs sélectionnées est de 10 ou
+  moins, les annotations sont placées aux limites de l'intervalle de couleur. 
+  Dans le cas contraire, 11 annotations sont placées uniformément sur toute 
+  la gamme.
+
+  Passez le pointeur sur la barre de couleur pour afficher la valeur médiane 
+  de l'intervalle représenté par la couleur. Cela peut être utile lorsque le 
+  nombre de couleurs est grande et que vous souhaitez avoir une idée de la 
+  valeur représentée par une couleur particulière.
+
+  ### Rapport d'aspect de la carte et capacité de zoom
+
+  Le rapport d'aspect de la carte dépend de la largeur de la fenêtre du 
+  navigateur dans lequel DVE s'exécute.
+  Par conséquent, vous pouvez ajuster le rapport d'aspect en redimensionnant 
+  la fenêtre du navigateur et/ou en utilisant la fonction de zoom 
+  avant/arrière de votre navigateur (touches Ctrl+ / Ctrl- sous Windows,
+  Command+ / Command- sous MacOS, dans les navigateurs Firefox et Chrome).
+
+  La fonction de zoom est activée en cliquant sur la carte, en faisant glisser 
+  un rectangle et en relâchant.
+  La région sélectionnée remplit maintenant la totalité de l'affichage de 
+  la carte.
+  Dans certains cas, cela peut faire apparaître la carte déformée, car le 
+  format d'image d'origine n'est pas conservé.
+  Le redimensionnement du navigateur ou l'utilisation de sa fonction de 
+  zoom comme décrit ci-dessus devrait améliorer l'apparence. Vous pouvez 
+  également quitter le mode zoom (en double-cliquant sur la carte) et 
+  choisir un autre rectangle.
+
+  ## Options de superposition
+
+  "La superposition" désigne les différentes couches composant la carte.
+
+  - Une carte en couleur du Canada est toujours affichée.
+  - Les valeurs de conception des stations (pour les données historiques 
+  uniquement) peuvent être superposées.
+  - Une grille de référence longitude-latitude peut être superposée.
+
+  ### Options de mappage
+
+  Pour afficher une carte des données historiques interpolées :
+
+  1. Cliquez sur le bouton radio **Valeurs de conception historiques** 
+  sous **Période** dans la section **Options de superposition**.
+  2. La carte affiche le champ de valeur de conception sélectionné, ainsi 
+  que ses unités.
+
+  Pour afficher une carte des futurs projetées changements :
+
+  1. Cliquez sur le bouton radio **Changement futur par rapport à 1986-2016** sous **Période** dans la section **Options de superposition**.
+  2. Sélectionnez le niveau de **Réchauffement climatique** dans le menu déroulant correspondant dans la section **Options de superposition**.
+  3. La carte affiche les changements par rapport à la période de référence au niveau de réchauffement global choisi.
+     - Pour les variables basées sur la température, les changements sont additifs en unités de la variable d’origine.
+     - Pour les autres variables, les changements sont des facteurs multiplicatifs avec les unités indiquées comme "ratio".
+
+  ### Emplacement des stations
+
+  Les stations sont la principale source de données pour les valeurs de 
+  conception historiques.
+  Pour voir les stations affichées sous forme de marqueurs circulaires sur 
+  la carte, faites glisser le bouton **Stations** vers la droite (position "on").
+  La valeur de la variable de conception à la station est indiquée en 
+  utilisant la même échelle de couleurs que celle  utilisée pour la carte.
+
+  ### Grille longitude-latitude
+
+  Pour superposer la grille de longitude-latitude, faites glisser le 
+  commutateur **Grille** vers la droite (position "on"). L'espacement de 
+  la grille est automatiquement ajusté en mode zoom.
+
+  ## Options de l'échelle de couleurs
+
+  Les options d'échelle de couleurs contrôlent la façon dont les valeurs des 
+  données de la carte et de la station sont affichées.
+
+  - **Couleurs de Carte** détermine l'ensemble fondamental des couleurs 
+  utilisées pour construire l'échelle de couleurs.
+  - **Echelle** détermine si les données sont mappées à l'échelle de 
+  couleurs linéairement ou logarithmiquement.
+  - **Nombre de couleurs** spécifie le nombre de couleurs dans l'échelle 
+  de couleurs.
+  - **Gamme** détermine quelle gamme de valeurs est représentée par des couleurs.
+
+
+  ### Palette de couleurs
+
+  Sélectionnez le palette de couleurs fondamental. De nombreuses palettes 
+  de couleurs sont interpolées entre deux ou trois couleurs fixes, tandis 
+  que d'autres sont plus hétérogènes. 
+  Les noms des palettes interpolées indiquent généralement les couleurs 
+  concernées.
+  Les noms se terminant par "_r" ont les mêmes couleurs que la palette de 
+  base, mais dans l'ordre inverse.
+
+  ### Échelle
+
+  Sélectionnez un mappage linéaire ou logarithmique des valeurs des données 
+  aux couleurs. Quelques  
+  sélections de **Variable de conception ** et **Période** ne permettent 
+  pas l'utilisation d'échelles logarithmiques; dans ce cas, l'option
+  est désactivée et l'échelle est fixée sur linéaire. Les intervalles de 
+  données dans l'échelle de couleurs sont uniformément espacés (linéairement 
+  ou logarithmiquement)sur toute la plage. Enfin, pour les champs de valeurs 
+  de conception dont les minima sont proches de zéro, la valeur minimale 
+  est ajustée à une fraction fixe (généralement 1/100) de la valeur maximale.
+
+  ### Nombre de couleurs
+
+  Sélectionnez le nombre de couleurs de l'échelle en faisant glisser le 
+  pointeur. Un petit nombre de couleurs peut être utile pour identifier des 
+  valeurs d'intérêt particulières, tandis qu'un grand nombre de couleurs
+  donne un effet de gradient continu.
+
+  ### Gamme
+
+  Sélectionnez la plage de valeurs de données à colorer. 
+  Les valeurs de données inférieures ou supérieures aux valeurs minimales ou 
+  maximales du champ sont représentées par lacouleur de valeur la plus 
+  faible/la plus élevée. Les valeurs de données manquantes sont représentées 
+  comme transparentes, ce qui signifie que la couleur du fond de la carte 
+  est visible. La portée maximale est fixée par les valeurs du champ, mais 
+  l'utilisateur peut réduire cette fourchette s'il le souhaite.
+
+  ## Extraction des données de l'affichage de la carte
+
+  L'affichage de la carte est interactif et fournit des informations 
+  détaillées sur les valeurs lorsque le pointeur est survolé ou cliqué sur 
+  la carte. Ces informations peuvent être téléchargées sous forme d’un 
+  fichier CSV.
+
+  ### Pointeur : Valeur de conception et emplacement uniques
+
+  Lorsque vous passez le pointeur sur la carte :
+
+  - une fenêtre affiche la valeur de conception à l'emplacement actuel du 
+  pointeur.
+  - un tableau dans la zone **Données du pointeur de la carte** affiche  
+  la latitude et la longitude de l'emplacement actuel du pointeur. Ces 
+  valeurs sont mises jour continuellement lorsque le pointeur est déplacé, 
+  à moins qu'il n'y ait aucune donnée sous le pointeur.
+
+  ### Clic : Toutes les valeurs de conception et l'emplacement
+
+  Lorsque vous cliquez sur le pointeur sur la carte, deux tableaux dans la 
+  section **Données du pointeur de la carte** montrent :
+
+  - l'emplacement de la cellule sur laquelle vous avez cliqué.
+  - les valeurs de toutes les variables de conception à cet endroit.
+
+  Les valeurs sont mises à jour uniquement lorsque vous cliquez sur une cellule.
+
+  **Note** : Le tableau **Données du pointeur de carte** présente beaucoup 
+  d'informations, et son texte peut apparaître trop petit. Pour agrandir 
+  le texte, vous pouvez utiliser la fonction de zoom avant/arrière de votre 
+  navigateur (touches Ctrl+ / Ctrl- sous Windows, Command+ / Command- 
+  sous MacOS, dans Firefox et Chrome).
+
+  ### Téléchargement des données de clics
+
+  Lorsque vous avez cliqué sur une cellule pour afficher l'emplacement et 
+  les valeurs de conception, vous pouvez télécharger ces informations sous 
+  forme de fichier CSV (unique) en cliquant sur le bouton **Télécharger 
+  ces données**.
+
+  ### Sortie au format PNG
+
+  Cliquez sur l'icône de la caméra dans la barre de mode pour télécharger 
+  la carte affichée sous forme de fichier PNG. Notez que la sortie reflète 
+  exactement ce qui apparaît à l'écran, y compris les superpositions, la 
+  taille et le rapport d’aspect. Ce dernier peut être réglé à l'aide de la 
+  fonction Zoom avant/arrière de votre navigateur (touches Ctrl+ / Ctrl- sous 
+  Windows, Command+ / Command- sous MacOS, dans les navigateurs Firefox 
+  et Chrome).

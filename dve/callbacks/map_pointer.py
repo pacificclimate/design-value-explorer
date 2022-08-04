@@ -3,11 +3,20 @@ import functools
 import math
 
 import dash
-from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Output
 from dash import html
 import dash_bootstrap_components as dbc
 
-from dve.config import dv_has_climate_regime, filepath_for
+from dve.config.text import (
+    download_table_headers,
+    latitude_label,
+    longitude_label,
+    download_data_button_text,
+    dv_name,
+    dv_units,
+    climate_regime_label,
+)
+from dve.config.values import dv_has_climate_regime, dv_roundto, filepath_for
 from dve.data import get_data_object
 from dve.download_utils import (
     download_filename,
@@ -15,20 +24,7 @@ from dve.download_utils import (
     get_download_data,
     create_download_file,
 )
-from dve.config import (
-    dv_name,
-    dv_units,
-    dv_roundto,
-    climate_regime_label,
-    future_change_factor_label,
-)
-from dve.map_utils import (
-    pointer_rlonlat,
-    pointer_rindices,
-    rlonlat_to_rindices,
-    rindices_to_lonlat,
-    pointer_value,
-)
+from dve.map_utils import pointer_rlonlat
 from dve.math_utils import round_to_multiple
 from dve.timing import timing
 
@@ -39,8 +35,18 @@ timing_log_debug = logger.debug  # Set to None to not log debug timing
 
 
 # TODO: Place somewhere else (layout.components)?
+def map_lon_lat_table(config, lang, lon=None, lat=None):
+    return value_table(
+        (latitude_label(config, lang, which="short"), round(lat, 6)),
+        (longitude_label(config, lang, which="short"), round(lon, 6)),
+        # (f"Z ({design_variable_ctrl}) ({source})", round(z, 6)),
+    )
+
+
+# TODO: Place somewhere else (layout.components)?
 def map_pointer_table(
     config,
+    lang,
     climate_regime,
     design_variables,
     dataset_ids,
@@ -52,34 +58,18 @@ def map_pointer_table(
     Return a table listing values of design values at a location specified
     by rotated coordinates rlon, rlat
     """
-    if climate_regime == "historical":
-        # TODO: These label(s) should be defined in config
-        # value_headers = tuple(
-        #     f"{dataset_id.capitalize()} value" for dataset_id in dataset_ids
-        # )
-        value_headers = ("Interpolation value",)
-    else:
-        value_headers = tuple(
-            future_change_factor_label(config, dataset_id)
-            for dataset_id in dataset_ids
-        )
-
     return dbc.Table(
         [
             html.Caption(
-                climate_regime_label(config, climate_regime),
+                climate_regime_label(config, lang, climate_regime),
                 style={"caption-side": "top", "padding": "0 0 0.5em 0"},
             ),
             html.Thead(
                 html.Tr(
                     [
                         html.Th(hdg)
-                        for hdg in (
-                            tuple(
-                                config["ui"]["labels"]["download_table"][k]
-                                for k in ("dv", "units")
-                            )
-                            + value_headers
+                        for hdg in download_table_headers(
+                            config, lang, climate_regime, dataset_ids, nice=True
                         )
                     ]
                 )
@@ -88,7 +78,7 @@ def map_pointer_table(
                 [
                     html.Tr(
                         [
-                            html.Th(dv_name(config, design_variable)),
+                            html.Th(dv_name(config, lang, design_variable)),
                             html.Th(
                                 dv_units(
                                     config, design_variable, climate_regime
@@ -177,9 +167,10 @@ def add(app, config):
         Input("design_variable", "value"),
         Input("climate_regime", "value"),
         Input("future_dataset_id", "value"),
+        Input("language", "value"),
     )
     def display_hover_info(
-        hover_data, design_variable, climate_regime, future_dataset_id
+        hover_data, design_variable, climate_regime, future_dataset_id, lang
     ):
         # logger.debug(f"hover_data {hover_data}")
 
@@ -222,13 +213,8 @@ def add(app, config):
             future_dataset_id,
         )
 
-        return [
-            value_table(
-                ("Lat", round(lat, 6)),
-                ("Lon", round(lon, 6)),
-                # (f"Z ({design_variable_ctrl}) ({source})", round(z, 6)),
-            )
-        ]
+        # TODO: Must this return a list?
+        return [map_lon_lat_table(config, lang, lon=lon, lat=lat)]
 
     # TODO: This can be better done by setting the "href" and "download"
     #   properties on a static download link established in layout.py.
@@ -240,6 +226,7 @@ def add(app, config):
         Input("climate_regime", "value"),
         # Input("historical_dataset_id", "value"),
         Input("future_dataset_id", "value"),
+        Input("language", "value"),
     )
     def display_download_button(
         main_tabs_active_tab,
@@ -248,6 +235,7 @@ def add(app, config):
         climate_regime,
         # historical_dataset_id,
         future_dataset_id,
+        lang,
     ):
         """
         To get the layout we want, we have to break the map-click callback into
@@ -300,7 +288,7 @@ def add(app, config):
 
         return [
             html.A(
-                "Download this data",
+                download_data_button_text(config, lang),
                 href=url,
                 download=filename,
                 className="btn btn-primary btn-sm mb-1",
@@ -315,6 +303,7 @@ def add(app, config):
         Input("climate_regime", "value"),
         # Input("historical_dataset_id", "value"),
         Input("future_dataset_id", "value"),
+        Input("language", "value"),
     )
     def display_click_info(
         main_tabs_active_tab,
@@ -323,6 +312,7 @@ def add(app, config):
         climate_regime,
         # historical_dataset_id,
         future_dataset_id,
+        lang,
     ):
         """
         To get the layout we want, we have to break the map-click callback into
@@ -392,14 +382,10 @@ def add(app, config):
 
             # Create data file for download
             create_download_file(
-                lon, lat, config, climate_regime, *download_data
+                lon, lat, config, lang, climate_regime, *download_data
             )
 
             return [
-                value_table(
-                    ("Lat", round(lat, 6)),
-                    ("Lon", round(lon, 6)),
-                    # (f"Z ({design_variable_ctrl}) ({source})", round(z, 6)),
-                ),
-                map_pointer_table(config, climate_regime, *download_data),
+                map_lon_lat_table(config, lang, lon=lon, lat=lat),
+                map_pointer_table(config, lang, climate_regime, *download_data),
             ]

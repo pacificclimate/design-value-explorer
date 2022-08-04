@@ -1,0 +1,18 @@
+label: Crédits
+cards:
+  - header: Développement
+    body: |
+      Le développement de cette version de EVC a été rendu possible grâce au 
+      financement et au soutien d'Infrastructure Canada et du Conseil National 
+      de Recherches du Canada, et a également bénéficié de la collaboration 
+      avec la Division de la Recherche Climatique d'Environnement et 
+      Changement Climatique Canada. L'aide à la traduction française a été 
+      fournie par le Centre canadien des services climatiques. 
+
+  - header: Données
+    body: |
+      Le PCIC tient à remercier Environnement et Changement Climatique Canada, 
+      et particulièrement le Service météorologique du Canada, pour la 
+      fourniture des données des stations sous-jacentes sur lesquelles 
+      repose le EVC.
+

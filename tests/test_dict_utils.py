@@ -24,7 +24,7 @@ d1 = {"a": {"b": {"c": 42}}}
         (d1, "a.x", None, None),
         (d1, "a.b.x", None, None),
         (d1, "a.b.c.x", None, None),
-    ]
+    ],
 )
 def test_path_get(d, path, default, expected):
     assert path_get(d, path, default) == expected
@@ -38,11 +38,11 @@ def test_path_get(d, path, default, expected):
         (d1, "a", 99, {"a": 99}),
         (d1, "a.b", 99, {"a": {"b": 99}}),
         (d1, "a.b.c", 99, {"a": {"b": {"c": 99}}}),
-        (d1, "x", 99,   {"a": {"b": {"c": 42}}, "x": 99}),
+        (d1, "x", 99, {"a": {"b": {"c": 42}}, "x": 99}),
         (d1, "a.x", 99, {"a": {"b": {"c": 42}, "x": 99}}),
         (d1, "a.b.x", 99, {"a": {"b": {"c": 42, "x": 99}}}),
         (d1, "a.b.c.x", 99, {"a": {"b": {"c": {"x": 99}}}}),
-    ]
+    ],
 )
 def test_path_set(d, path, value, expected):
     e = copy.deepcopy(d)

@@ -91,28 +91,32 @@
 
   The Colour Scale Options control how the map and station data values are displayed.
 
-  - **Colour Map** determines the fundamental set of
+  - **Colour Palette** determines the fundamental set of
     colours used to build the colour scale.
   - **Scale** determines whether data are mapped to the colour scale
     linearly or logarithmically.
   - **Num. Colours** specifies the number of colours in the colour scale.
   - **Range** determines what range of values are represented as colours.
 
-  ### Colour Map
+  ### Colour Palette
 
-  Select the fundamental colour set. Many colour maps are interpolated between two
-  or three fixed colours, while others are more heterogeneous. 
-  Names for interpolated colour maps usually indicate thecolours involved.
-  Names ending in "_r" have the same colours as the base colour map, but in reverse order.
+  Select the fundamental colour palette. Many colour palette are interpolated 
+  between two or three fixed colours, while others are more heterogeneous. 
+  Names for interpolated colour palettes usually indicate the colours involved.
+  Names ending in "_r" have the same colours as the base colour palette, but in 
+  reverse order.
 
   ### Scale
 
-  Select Linear or Logarithmic colour mapping. Some selections of **Design Variable**
+  Select Linear or Logarithmic mapping of data values to colours. 
+  Some selections of **Design Variable**
   and **Period** do not permit logarithmic scales; in this case the
   selector is disabled and the scale is fixed to linear. The 
-  data intervals in the colour scale are uniformly spaced (linearly or logarithmically)
+  data intervals in the colour scale are uniformly spaced (linearly or 
+  logarithmically)
   over the range. Finally, for design value fields with minima near zero, the
-  minimum value is adjusted to a fixed fraction (typically 1/100) of the maximum value.
+  minimum value is adjusted to a fixed fraction (typically 1/100) of the 
+  maximum value.
 
   ### Num. Colours
 

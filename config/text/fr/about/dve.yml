@@ -1,0 +1,199 @@
+label: l’Explorateur de valeurs de calcul
+cards:
+  - header: Description
+    body: |
+      l’Explorateur de valeurs de calcul (EVC) fournit des données de 
+      conception climatique révisées relatives au Code national du bâtiment 
+      du Canada (CNB 2015, tableau C-2) et au Code canadien sur le calcul des 
+      ponts routiers (CHBDC/ CSA S6 2014, annexe A3.1) qui n'ont pas encore 
+      été examinées et acceptées pour être incluses dans les mises à jour de 
+      ces codes, et ne doivent donc être considérées que comme des 
+      renseignements consultatifs. Les décisions de conception doivent 
+      toujours être prises conformément aux codes et aux normes appropriés. 
+      Il est important de noter qu'il incombe aux utilisateurs de ces données 
+      climatiques de déterminer si elles conviennent à leur usage particulier. 
+      Dans de nombreux cas, de nouvelles méthodes ont été développées pour 
+      contrôler la qualité des données brutes sous-jacentes et également pour 
+      utiliser au mieux ces données afin de calculer les valeurs de conception. 
+      Des simulations de modèles climatiques régionaux de pointe ont été 
+      utilisées à la fois pour faciliter l'interpolation des valeurs de 
+      conception historiques et pour déduire les changements futurs de ces 
+      éléments. Ces informations prospectives s'accompagnent d'une 
+      incertitude associée, décrite en détail pour chaque élément de valeur 
+      de conception dans le récent rapport de l'ECCC intitulé Bâtiments et 
+      infrastructures publiques de base résistants aux changements climatiques 
+      (ci-après BIPBRCC ; Cannon et al. 2020), qu'il convient de consulter 
+      pour obtenir des conseils supplémentaires.
+      
+      En bref, les variables de **niveau 1** sont celles pour lesquelles il 
+      existe une confiance généralement élevée ou très élevée dans les 
+      projections futures pour un niveau donné de réchauffement climatique. 
+      Ces variables reflètent la réponse thermique bien comprise du climat au 
+      forçage radiatif externe du système terrestre, et incluent :
+      - degrés-jours de chauffage
+      - les températures de conception horaires (janvier 2,5 %  
+      du thermomètre sec, janvier 1 % du thermomètre sec, juillet 97,5 % 
+      du thermomètre sec, et juillet 97,5% du thermomètre mouillé)
+      - les températures moyennes journalières maximales et minimales de l'air
+      
+      Les variables de **niveau 2** sont celles pour lesquelles il y a 
+      généralement une confiance moyenne dans les projections futures pour 
+      un niveau donné de réchauffement climatique, et comprennent :
+      - les précipitations totales annuelles et pluies totales annuelles
+      - la pluie maximale annuelle d'un jour (période de retour de 50 ans)
+      - les pluies maximales annuelles sur 15 minutes (période de retour de 10 ans)
+      - les facteurs de changement des IDF (CF) 
+    
+      Les variables de **niveau 3** sont celles pour lesquelles la confiance 
+      dans les projections futures est faible ou très faible pour un niveau 
+      donné de réchauffement climatique, et comprennent :
+      - l’humidité relative moyenne annuelle
+      - les pressions de vent horaires maximales annuelles (périodes de 
+      retour de 10 et 50 ans)
+      - les pressions maximales annuelles de la pluie chassée par le vent 
+      (période de retour de 5 ans)
+      - la charge de neige maximale annuelle et la charge de pluie sur 
+      la neige maximale annuelle (période de retour de 50 ans)
+      - l’indice d'humidité
+      
+      Les projections futures dans EVC sont présentées à des niveaux de 
+      réchauffement planétaire spécifiés en °C par rapport à une période de 
+      référence (1986-2016). L'année approximative à laquelle un niveau 
+      spécifié de réchauffement climatique est atteint, selon un ensemble 
+      de modèles du système terrestre (CMIP5) exécutant plusieurs scénarios 
+      d'émissions alternatifs, est indiquée dans le tableau suivant, tiré du 
+      rapport du BIPBRCC :
+      
+      <table>
+        <tr>
+          <th>Global ∆T</th>
+          <th>RCP8.5</th>
+          <th>RCP6.0</th>
+          <th>RCP4.5</th>
+          <th>RCP2.6</th>
+        </tr>
+        <tr>
+          <th>0.5°C</th>
+          <td align="center" colspan="4">2023</td>
+        </tr>
+        <tr>
+          <th>1.0°C</th>
+          <td align="center">2035</td>
+          <td align="center" colspan="2">2046</td>
+          <td align="center">—</td>
+        </tr>
+        <tr>
+          <th>1.5°C</th>
+          <td align="center">2047</td>
+          <td align="center" colspan="2">2070</td>
+          <td align="center">—</td>
+        </tr>
+        <tr>
+          <th>2.0°C</th>
+          <td align="center">2059</td>
+          <td align="center">2087</td>
+          <td align="center">—</td>
+          <td align="center">—</td>
+        </tr>
+        <tr>
+          <th>2.5°C</th>
+          <td align="center">2069</td>
+          <td align="center">—</td>
+          <td align="center">—</td>
+          <td align="center">—</td>
+        </tr>
+        <tr>
+          <th>3.0°C</th>
+          <td align="center">2080</td>
+          <td align="center">—</td>
+          <td align="center">—</td>
+          <td align="center">—</td>
+        </tr>
+        <tr>
+          <th>3.5°C</th>
+          <td align="center">2090</td>
+          <td align="center">—</td>
+          <td align="center">—</td>
+          <td align="center">—</td>
+        </tr>
+      </table>
+      
+      Un tiret indique que le ∆T global correspondant n'est pas atteint avant 
+      2100 pour ce RCP. Les résultats de différents RCP sont moyennés si 
+      les années de dépassement sont à moins de 6 ans les unes des autres.
+      
+      Les décisions liées à la conception prises aujourd'hui doivent tenir 
+      compte à la fois du niveau de risque acceptable et de la direction 
+      des changements prévus pour les différents types de charges. Pour les 
+      charges croissantes associées aux variables de niveau 1, par exemple, 
+      le risque qui découle de la sous-estimation de ces charges pourrait 
+      devoir être mis en balance avec le coût supplémentaire associé à leur 
+      surestimation. Comme indiqué dans le rapport du BIPBRCC : "Une approche 
+      de compromis pour l'augmentation des charges pourrait consister à 
+      utiliser des données de conception non inférieures à celles appropriées 
+      pour un horizon temporel de 50 ans dans le cadre du scénario RCP8.5, 
+      ce qui impliquerait d'utiliser des données de conception pour un 
+      réchauffement de +2,5°C, le niveau qui se produit dans le cadre du 
+      RCP8.5 en 2069. On pourrait s'attendre à ce qu'une telle conception 
+      continue à être performante au moins jusqu'à la fin de ce siècle 
+      sous des scénarios d'émissions plus faibles, comme le RCP6.0, pour 
+      lesquels on ne prévoit pas que les niveaux de réchauffement planétaire 
+      dépassent systématiquement 2,5°C au cours de ce siècle." Inversement, 
+      pour les variables de conception dont les charges devraient diminuer 
+      avec le réchauffement climatique, comme la neige, une approche prudente 
+      pourrait consister à utiliser les données de conception climatiques 
+      actuelles, tout en reconnaissant que cela entraînerait environ le 
+      même coût que par le passé.
+      
+      Référence
+      
+      Cannon, Alex J., Dae Il Jeong, Xuebin Zhang et Francis W. Zwiers. 2020:
+      _Bâtiments et infrastructures publiques de base résistants aux changements 
+      climatiques 2020 : évaluation des effets des changements climatiques 
+      sur les données de conception climatique au Canada._
+      https://publications.gc.ca/site/eng/9.893023/publication.html
+      
+  - header: Aucune garantie
+    color: warning
+    body: |
+      Les données de cet outil sont fournies par le Pacific Climate Impacts 
+      Consortium avec une licence ouverte sur une base "AS IS" sans aucune 
+      garantie ou représentation, explicite ou implicite, quant à leur 
+      exactitude ou leur exhaustivité. Toute confiance que vous accordez 
+      aux informations contenues dans ce document relève de votre seule 
+      responsabilité et est strictement à vos risques et périls. En aucun 
+      cas, le Pacific Climate Impacts Consortium ne pourra être tenu 
+      responsable de toute perte ou de tout dommage de quelque nature que 
+      ce soit, y compris, mais sans s'y limiter, les pertes ou dommages 
+      indirects ou consécutifs, résultant de la confiance accordée aux 
+      données ou aux informations dérivées.
+
+  - header: Version
+    body: |
+      **l’Explorateur de valeurs de calcul {DVE_VERSION_TAG_ONLY}**
+      
+      {DVE_VERSION}
+
+  - header: Notes sur la version
+    body: |
+      Notez que dans cette version de EVC :
+      - La résolution nominale de l'interpolation est de 4,5 km, vraie à 60°N.
+      - RHAnn, Tmax et Tmin ne font pas partie du CNB, mais sont fournis dans 
+      le Code canadien sur le calcul des ponts routiers.
+      - Pour les facteurs de changement projetés, seules des estimations 
+      centrales sont fournies, et non des fourchettes comme c'est la norme 
+      pour les projections climatiques. Les futures versions de EVC pourront 
+      inclure des fourchettes de facteurs de changement projetés.
+      - Les facteurs de changement futurs pour l'indice d'humidité (MI) ne 
+      sont pas disponibles pour le moment.
+
+  - header: Auteur
+    body: '[Pacific Climate Impacts Consortium (PCIC)](https://pacificclimate.org/)'
+
+  - header: Conditions d'utilisation
+    body: Veuillez consulter [les conditions d'utilisation de PCIC](https://pacificclimate.org/terms-of-use).
+
+  - header: Méthodes
+    body: |
+      [Méthodes utilisées pour dériver les valeurs de conception.](http://pacificclimate.org/sites/default/files/DVE_methods_final_fr.pdf)
+

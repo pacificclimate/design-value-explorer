@@ -136,7 +136,7 @@ commands can be run, including running tests and running the app.
    From the container bash prompt:
 
     ```
-    pipenv run python /codebase/dve.py --debug
+    pipenv run python /codebase/app.py --debug
     ```
 
    The `--debug` option does two things: Runs the server with `debug=True`, and

@@ -1,0 +1,5 @@
+tabs:
+  - !include config/text/en/about/dve.yml
+  - !include config/text/en/about/credits.yml
+  - !include config/text/en/about/contact.yml
+  - !include config/text/en/about/team.yml

@@ -44,10 +44,10 @@
   (This preference information is stored locally in your browser. There is
   no way for DVE to know who you are apart from the browser you are using.)
   
-  For example, when you select a Colour Map for
+  For example, when you select a Colour Palette for
   a map display, DVE stores that selection in association with the currently
   selected Design Variable and Period. Whenever you select that particular
-  combination of DV and Period again, the stored Colour Map for that
+  combination of DV and Period again, the stored Colour Palette for that
   combination is set.
   
   All options start out with default settings. As you use the app,

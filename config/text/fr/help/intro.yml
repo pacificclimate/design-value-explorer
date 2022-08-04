@@ -1,0 +1,68 @@
+|
+  L'onglet **Aide** contient des informations sur l'interface utilisateur de 
+  l'application. Pour plus d'informations sur l'interprétation des valeurs et 
+  sur la science et les méthodes derrière les données présentées dans 
+  Explorateur de valeurs de calcul, veuillez consulter le document 
+  [_Explorateur de valeurs de calcul : Contexte et méthodologie_](http://pacificclimate.org/sites/default/files/DVE_methods_final_fr.pdf).
+  
+  ## Aperçu
+  
+  L’Explorateur de valeurs de calcul (EVC) permet aux utilisateurs d'accéder 
+  aux variables de conception historiques à travers le Canada, sous forme de 
+  carte ou de tableau, examiner les changements futurs projetées des variables 
+  de conception, et téléchargez les cartes et les tableaux.
+
+  - Pour la période historique, des cartes à l'échelle du Canada ont été créées 
+  à partir de l'interpolation optimale  des observations des stations à l'aide 
+  d'un modèle climatique régional, avec l'option de superposer les valeurs 
+  des stations.
+  
+  - Pour les périodes futures, des cartes de changement ont été créées à 
+  partir d'un modèle climatique régional qui couvre la majeure partie du 
+  Canada (jusqu'à 75°N). Chaque projection future est  caractérisé par un 
+  niveau de réchauffement global en °C par rapport à une période de référence 
+  (1986-2016).
+
+  ## Onglets principaux
+
+  EVC présente les données de conception de deux manières : sous forme de 
+  cartes et sous forme de tableaux, sous les onglets **Carte** et 
+  **Tableau C-2**, respectivement.
+
+  - L'onglet **Carte** montre les rasters interpolés (historiques ou futurs), 
+  avec la possibilité de superposer les observations des stations pour la 
+  période historique.
+
+  - L'onglet **Tableau C-2** présente les valeurs de conception historiques 
+  et projetées futures à un ensemble d'emplacements standards compilés dans 
+  le Code national du bâtiment de Canada.
+
+  - Pour les deux onglets, EVC affiche les données pour une seule variable 
+  de conception à la fois, qui est sélectionnée dans le menu déroulant de 
+  la variable de conception.
+
+  - Les onglets **Aide** et **À propos ** contiennent des informations 
+  supplémentaires sur EVC.
+
+  ## Stockage local de vos préférences
+
+  EVC "se souvient" de la valeur des différentes options que vous avez 
+  sélectionnées. De cette façon, il constitue une base de données locale de 
+  vos préférences pour l'affichage des données.
+  (Ces informations de préférence sont stockées localement dans votre 
+  navigateur. Il n’y a aucun moyen pour EVC de savoir qui vous êtes en 
+  dehors du navigateur que vous utilisez).
+  
+  Par exemple, lorsque vous sélectionnez une palette de couleurs pour un 
+  affichage cartographique, le EVC stocke cette sélection en association avec 
+  la Variable de Conception et la Période sélectionnées. Chaque fois que 
+  vous sélectionnez à nouveau cette combinaison de VC et de Période, la 
+  palette de couleurs mémorisée pour cette combinaison est définie.
+  Toutes les options démarrent avec les paramètres par défaut. Au fur et à 
+  mesure que vous utilisez l'application,les paramètres par défaut sont 
+  remplacés par vos préférences.
+  
+  Le stockage des préférences persiste entre les sessions avec EVC, de sorte 
+  que vos préférences persistent même si vous fermez la fenêtre du navigateur 
+  EVC ou si vous actualisez la page.
+

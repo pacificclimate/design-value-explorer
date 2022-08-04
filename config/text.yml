@@ -1,0 +1,2 @@
+en: !include config/text/en.yml
+fr: !include config/text/fr.yml
