@@ -35,7 +35,6 @@ def main(app, config, lang="en"):
                         html.A(
                             html.Img(src=app.get_asset_url("pcic-logo.png")),
                             href="https://pacificclimate.org/",
-                            target="_blank",
                             title="Pacific Climate Impacts Consortium",
                         ),
                         xs=5,
