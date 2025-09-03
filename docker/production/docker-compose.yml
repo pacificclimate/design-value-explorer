@@ -1,7 +1,7 @@
 version: '2.3'
 services:
   design-value-explorer:
-    image: pcic/design-value-explorer:2.3.0
+    image: pcic/design-value-explorer:2.4.1
     container_name: design-value-explorer
     env_file:
       - env.env
@@ -48,7 +48,7 @@ services:
         target: /app/dve/data/station_inputs/
         read_only: true
       - type: bind
-        source:  /storage/data/projects/comp_support/design-value-explorer/data/tables_2022_02/
+        source:  /storage/data/projects/comp_support/design-value-explorer/data/tables_2025_08/
         target: /app/dve/data/tables/
         read_only: true
       - type: bind

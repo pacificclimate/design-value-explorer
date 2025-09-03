@@ -1,5 +1,9 @@
 # News / Release Notes
 
+## 2.4.1
+
+- Updated Table C-2 RAnn values. Change factors for RAnn modified to maintain consistency with future PAnn totals.
+
 ## 2.4.0
 
 A couple of important new features in this release:

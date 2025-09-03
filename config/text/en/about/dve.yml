@@ -161,6 +161,8 @@ cards:
   - header: Version Notes
     body: |
       Note that in in this version of DVE:
+      - Table C-2 change factors for RAnn modified to maintain consistency with future PAnn totals. 
+        Where mapped and tabulated values disagree, the latter should be used.
       - The nominal resolution of the interpolation is 4.5 km, true at 60°N.
       - RHAnn, Tmax and Tmin are not part of the NBCC, but are provided 
         in the Canadian Highway Bridge Design Code.
