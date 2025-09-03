@@ -15,6 +15,8 @@ tables.
 - [Testing](docs/testing.md)
 - [Dev notes](docs/dev-notes.md)
 
+### *Note that the CI version of the tests is currently failing until this project goes through an upgrade cycle.*
+
 ## Changelog
 
 For a summary of releases and changes, see [`NEWS.md`](NEWS.md).
