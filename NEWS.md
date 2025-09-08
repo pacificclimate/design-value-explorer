@@ -1,5 +1,9 @@
 # News / Release Notes
 
+## 2.4.2
+
+- [Upgraded github runners](https://github.com/pacificclimate/crmprtd/pull/187)
+
 ## 2.4.1
 
 - Updated Table C-2 RAnn values. Change factors for RAnn modified to maintain consistency with future PAnn totals.
