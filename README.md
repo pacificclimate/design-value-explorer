@@ -3,6 +3,8 @@
 
 # Design Value Explorer
 
+### *Note that the CI version of the tests is currently failing until this project goes through an upgrade cycle. [Upgrade Github Issue](https://github.com/pacificclimate/design-value-explorer/issues/242)*
+
 Web application for visualizing and downloading design value fields and 
 tables.
 
