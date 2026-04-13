@@ -75,6 +75,7 @@ Werkzeug = "==2.0.3"
 xarray = "==0.21.1"
 zipp = "==3.7.0"
 python-json-logger = "2.0.2"
+setuptools = "<71.0.0"
 
 [dev-packages]
 pytest = "*"
