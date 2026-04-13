@@ -7,25 +7,35 @@ on:
     tags:
       - '[0-9]+\.[0-9]+\.[0-9]+'
 
+permissions:
+  contents: read
 jobs:
   publish-production:
 
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - name: Export version env var
         run: |
           git fetch --prune --unshallow
           echo "DVE_VERSION=$(git describe --tags --abbrev=0) ($(git rev-parse --abbrev-ref HEAD):$(git log -1 --format=%h))" >> $GITHUB_ENV
 
-      - name: Publish to Registry
-        uses: docker/build-push-action@v1
+      - name: Log in to Docker Hub
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
           username: ${{ secrets.pcicdevops_at_dockerhub_username }}
           password: ${{ secrets.pcicdevops_at_dockerhub_password }}
-          dockerfile: ./docker/production/Dockerfile
-          build_args: DVE_VERSION=${{ env.DVE_VERSION }}
-          repository: pcic/design-value-explorer
-          tag_with_ref: true
+
+      - name: Publish to Registry
+        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
+        with:
+          file: ./docker/production/Dockerfile
+          push: true
+          tags: |
+            pcic/design-value-explorer:${{ github.ref_name }}
+            ${{ github.ref_name == 'main' && 'pcic/design-value-explorer:latest' || '' }}
+          build-args: DVE_VERSION=${{ env.DVE_VERSION }}
