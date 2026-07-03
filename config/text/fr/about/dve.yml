@@ -188,12 +188,12 @@ cards:
       sont pas disponibles pour le moment.
 
   - header: Auteur
-    body: '[Pacific Climate Impacts Consortium (PCIC)](https://pacificclimate.org/)'
+    body: '[Pacific Climate Impacts Consortium (PCIC)](https://www.uvic.ca/pcic/)'
 
   - header: Conditions d'utilisation
-    body: Veuillez consulter [les conditions d'utilisation de PCIC](https://pacificclimate.org/terms-of-use).
+    body: Veuillez consulter [les conditions d'utilisation de PCIC](https://www.uvic.ca/pcic/about/terms-of-use/index.php).
 
   - header: Méthodes
     body: |
-      [Méthodes utilisées pour dériver les valeurs de conception.](http://pacificclimate.org/sites/default/files/DVE_methods_final_fr.pdf)
+      [Méthodes utilisées pour dériver les valeurs de conception.](https://www.uvic.ca/pcic/_assets/docs/dve_methods_final_fr.pdf)
 
