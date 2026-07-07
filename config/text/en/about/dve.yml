@@ -174,12 +174,12 @@ cards:
 
 
   - header: Author
-    body: '[Pacific Climate Impacts Consortium (PCIC)](https://pacificclimate.org/)'
+    body: '[Pacific Climate Impacts Consortium (PCIC)](https://www.uvic.ca/pcic/)'
 
   - header: Terms of Use
-    body: Please see PCIC's [terms of use](https://pacificclimate.org/terms-of-use).
+    body: Please see PCIC's [terms of use](https://www.uvic.ca/pcic/about/terms-of-use/index.php).
 
   - header: Methods
     body: |
-      [Methods used to derive design values](http://pacificclimate.org/sites/default/files/DVE_methods_final.pdf)
+      [Methods used to derive design values](https://www.uvic.ca/pcic/_assets/docs/dve_methods_final.pdf)
 
