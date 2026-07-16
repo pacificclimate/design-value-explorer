@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-__version__ = (2, 4, 2)
+__version__ = (2, 4, 3)
 
 setup(
     name="dve",
@@ -10,7 +10,10 @@ setup(
     packages=find_packages(),
     url="http://www.pacificclimate.org/",
     author="Nic Annau",
-    author_email="nannau@uvic.ca",
+
+    maintainer="Pacific Climate Impacts Consortium",
+    maintainer_email="pcic.support@uvic.ca",
+
     zip_safe=True,
     # TODO: These are not scripts! Why is this here?
     scripts=[

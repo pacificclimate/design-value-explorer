@@ -40,5 +40,7 @@ git push --follow-tags
 
 ## Authors
 
-- Nic Annau, nannau@uvic.ca, Pacific Climate Impacts Consortium
-- Rod Glover, rglover@uvic.ca, Pacific Climate Impacts Consortium
+- Nic Annau, Pacific Climate Impacts Consortium
+- Rod Glover, Pacific Climate Impacts Consortium
+
+Please address questions and suggestions on the functioning of this tool to [PCIC Support](mailto:pcic.support@uvic.ca).

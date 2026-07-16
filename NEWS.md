@@ -1,5 +1,10 @@
 # News / Release Notes
 
+## 2.4.3
+
+- [Maintenance updates](https://github.com/pacificclimate/design-value-explorer/pull/244)
+- [I243 Fix broken links](https://github.com/pacificclimate/crmprtd/pull/245)
+
 ## 2.4.2
 
 - [Upgraded github runners](https://github.com/pacificclimate/crmprtd/pull/187)
