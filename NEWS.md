@@ -1,5 +1,9 @@
 # News / Release Notes
 
+## 2.4.4
+
+- [Bump Brotli to 1.2.1 to address security vulnerability](https://github.com/pacificclimate/design-value-explorer/pull/246)
+
 ## 2.4.3
 
 - [Maintenance updates](https://github.com/pacificclimate/design-value-explorer/pull/244)
